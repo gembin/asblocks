@@ -43,7 +43,7 @@ public interface IScanner
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether to allow whitespace tokens to be returned.
 	 */
 	function get allowWhiteSpace():Boolean;
 	
