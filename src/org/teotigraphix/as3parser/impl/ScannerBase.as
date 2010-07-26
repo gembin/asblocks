@@ -511,7 +511,7 @@ public class ScannerBase implements IScanner
 	/**
 	 * @private
 	 */
-	protected static function isHexChar(currentCharacter:String):Boolean
+	public static function isHexChar(currentCharacter:String):Boolean
 	{
 		var code:Number = currentCharacter.charCodeAt(0);
 		var isNum:Boolean = (code > 47 && code < 58);
@@ -524,7 +524,7 @@ public class ScannerBase implements IScanner
 	/**
 	 * @private
 	 */
-	protected static function isDecimalChar(currentCharacter:String):Boolean
+	public static function isDecimalChar(currentCharacter:String):Boolean
 	{
 		var code:int = currentCharacter.charCodeAt(0);
 		return (code > 47 && code < 58);
