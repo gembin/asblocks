@@ -177,7 +177,7 @@ public class AS3Parser extends ParserBase
 	 * 
 	 * @throws UnExpectedTokenException
 	 */
-	private function parsePackageContent():Node
+	internal function parsePackageContent():Node
 	{
 		var result:Node = Node.create(AS3NodeKind.CONTENT, 
 			token.line, token.column);
