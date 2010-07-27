@@ -447,8 +447,12 @@ public class AS3Parser extends ParserBase
 			return null;
 		}
 		
-		var result:Node = Node.create(AS3NodeKind.META_LIST, 
-			token.line, token.column);
+		var meta:Node = metas[0];
+		
+		var result:Node = Node.create(
+			AS3NodeKind.META_LIST, 
+			meta.line, 
+			meta.column);
 		
 		var len:int = metas.length;
 		for (var i:int = 0; i < metas.length; i++)
@@ -543,7 +547,7 @@ public class AS3Parser extends ParserBase
 	 * 
 	 * @throws TokenException
 	 */
-	private function parseClassContent():Node
+	internal function parseClassContent():Node
 	{
 		var result:Node = Node.create(AS3NodeKind.CONTENT,
 			token.line,
@@ -590,6 +594,10 @@ public class AS3Parser extends ParserBase
 				ISourceCodeScanner(scanner).asdocOffset = -1;
 				currentAsDoc.start = scanner.offset - token.text.length;
 				currentAsDoc.end = scanner.offset;
+				nextToken();
+			}
+			else if (tokenStartsWith("/*")) // junk comment
+			{
 				nextToken();
 			}
 			else
@@ -829,7 +837,7 @@ public class AS3Parser extends ParserBase
 			"");
 		if (tokIs(Operators.COLUMN))
 		{
-			nextToken();
+			nextToken(); // :
 			result = parseType();
 		}
 		if (tokenStartsWith("/*"))
@@ -850,6 +858,8 @@ public class AS3Parser extends ParserBase
 		{
 			// type could be qualified
 			var buffer:String = "";
+			var line:int = token.line;
+			var column:int = token.column;
 			
 			buffer += token.text;
 			nextToken();
@@ -861,10 +871,7 @@ public class AS3Parser extends ParserBase
 				nextToken(); // name
 			}
 			
-			result = Node.create(AS3NodeKind.TYPE,
-				token.line,
-				token.column,
-				buffer);
+			result = Node.create(AS3NodeKind.TYPE, line, column, buffer);
 		}
 		return result;
 	}
