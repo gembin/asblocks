@@ -67,6 +67,14 @@ public class NestedNode
 		return _kind;
 	}
 	
+	/**
+	 * @private
+	 */
+	public function set kind(value:String):void
+	{
+		_kind = value;
+	}
+	
 	//----------------------------------
 	//  children
 	//----------------------------------
@@ -177,6 +185,16 @@ public class NestedNode
 								stringValue:String):IParserNode
 	{
 		return addChild(Node.create(kind, line, column, stringValue));
+	}
+	
+	public function addNodeChild(kind:String,
+								 line:int,
+								 column:int,
+								 sibling:IParserNode):IParserNode
+	{
+		var node:IParserNode = Node.create(kind, line, column, null);
+		node.addChild(sibling);
+		return addChild(node);
 	}
 }
 }

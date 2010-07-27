@@ -133,7 +133,7 @@ public class AS3Parser extends ParserBase
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * tok is package
+	 * token is package
 	 * 
 	 * @throws UnExpectedTokenException
 	 */
@@ -173,11 +173,11 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is first token of content
+	 * token is first token of content
 	 * 
 	 * @throws UnExpectedTokenException
 	 */
-	internal function parsePackageContent():Node
+	internal function parsePackageContent():IParserNode
 	{
 		var result:Node = Node.create(AS3NodeKind.CONTENT, 
 			token.line, token.column);
@@ -193,7 +193,7 @@ public class AS3Parser extends ParserBase
 			{
 				result.addChild(parseImport());
 			}
-			// added 05-30-10
+				// added 05-30-10
 			else if (tokIs(KeyWords.INCLUDE))
 			{
 				result.addChild(parseIncludeExpression());
@@ -253,7 +253,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is import
+	 * token is import
 	 * 
 	 * @throws TokenException
 	 */
@@ -267,7 +267,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is the first part of a name the last part can be a star exit tok is
+	 * token is the first part of a name the last part can be a star exit token is
 	 * the first token, which doesn't belong to the name
 	 * 
 	 * @throws TokenException
@@ -307,7 +307,7 @@ public class AS3Parser extends ParserBase
 	
 	
 	/**
-	 * tok is [ [id] [id ("test")] [id (name="test",type="a.b.c.Event")] exit
+	 * token is [ [id] [id ("test")] [id (name="test",type="a.b.c.Event")] exit
 	 * token is the first token after ]
 	 * 
 	 * @throws TokenException
@@ -343,7 +343,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is class
+	 * token is class
 	 * 
 	 * @param meta Node
 	 * @param modifier Token
@@ -391,7 +391,7 @@ public class AS3Parser extends ParserBase
 	
 	
 	/**
-	 * tok is interface
+	 * token is interface
 	 * 
 	 * @param meta
 	 * @param modifier
@@ -496,7 +496,7 @@ public class AS3Parser extends ParserBase
 	private var qualifiedNameEnd:int = -1;
 	
 	/**
-	 * tok is first part of the name exit tok is the first token after the name
+	 * token is first part of the name exit token is the first token after the name
 	 * 
 	 * @throws TokenException
 	 */
@@ -518,7 +518,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is implements implements a,b,c exit tok is the first token after the
+	 * token is implements implements a,b,c exit token is the first token after the
 	 * list of qualfied names
 	 * 
 	 * @throws TokenException
@@ -544,7 +544,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is first content token
+	 * token is first content token
 	 * 
 	 * @throws TokenException
 	 */
@@ -612,11 +612,11 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is first content token
+	 * token is first content token
 	 * 
 	 * @throws TokenException
 	 */
-	private function parseInterfaceContent():Node
+	internal function parseInterfaceContent():IParserNode
 	{
 		var result:Node = Node.create(AS3NodeKind.CONTENT,
 			token.line,
@@ -674,7 +674,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is function exit tok is the first token after the optional ;
+	 * token is function exit token is the first token after the optional ;
 	 * 
 	 * @throws TokenException
 	 */
@@ -697,8 +697,11 @@ public class AS3Parser extends ParserBase
 		return result;
 	}
 	
+	
+	private var _deepParse:Boolean = true;
+	
 	/**
-	 * tok is { exit tok is the first tok after }
+	 * token is { exit token is the first token after }
 	 * 
 	 * @throws TokenException
 	 */
@@ -716,39 +719,38 @@ public class AS3Parser extends ParserBase
 			token.line,
 			token.column);
 		
-		/*
-		while ( !tokIs( Operators.RIGHT_CURLY_BRACKET ) )
-		{
-		result.addChild( parseStatement() );
-		}
-		
-		consume( Operators.RIGHT_CURLY_BRACKET );
-		*/
-		
-		///*
 		ISourceCodeScanner(scanner).inBlock = true;
 		
-		braceCount = 1;
-		
-		while (braceCount != 0)
+		if (_deepParse)
 		{
-			if (tokIs("{"))
+			while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
 			{
-				braceCount++;
+				result.addChild(parseStatement());
 			}
-			if (tokIs("}"))
-			{
-				braceCount--;
-			}
-			
-			if (braceCount == 0)
-			{
-				break;
-			}
-			
-			nextTokenIgnoringAsDoc();
 		}
-		//*/
+		else
+		{
+			braceCount = 1;
+			
+			while (braceCount != 0)
+			{
+				if (tokIs("{"))
+				{
+					braceCount++;
+				}
+				if (tokIs("}"))
+				{
+					braceCount--;
+				}
+				
+				if (braceCount == 0)
+				{
+					break;
+				}
+				
+				nextTokenIgnoringAsDoc();
+			}
+		}
 		
 		consume(Operators.RIGHT_CURLY_BRACKET);
 		
@@ -781,7 +783,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is var var x, y : String, z : int = 0;
+	 * token is var var x, y : String, z : int = 0;
 	 * 
 	 * @param modifiers
 	 * @param meta
@@ -827,7 +829,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * if tok is ":" parse the type otherwise do nothing
+	 * if token is ":" parse the type otherwise do nothing
 	 * 
 	 * @return
 	 * @throws TokenException
@@ -896,7 +898,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * if tok is "=" parse the expression otherwise do nothing
+	 * if token is "=" parse the expression otherwise do nothing
 	 * 
 	 * @return
 	 */
@@ -918,7 +920,7 @@ public class AS3Parser extends ParserBase
 		return result;
 	}
 	
-	private function parseExpression():IParserNode
+	internal function parseExpression():IParserNode
 	{
 		return parseAssignmentExpression();
 	}
@@ -1154,7 +1156,7 @@ public class AS3Parser extends ParserBase
 		return result.numChildren > 1 ? result : result.getChild(0);
 	}
 	
-	private function parseUnaryExpression():Node
+	internal function parseUnaryExpression():IParserNode
 	{
 		var result:Node;
 		if (tokIs(Operators.INCREMENT))
@@ -1274,7 +1276,7 @@ public class AS3Parser extends ParserBase
 		return node;
 	}
 	
-	private function parsePrimaryExpression():Node
+	internal function parsePrimaryExpression():Node
 	{
 		var result:Node = Node.create(AS3NodeKind.PRIMARY,
 			token.line,
@@ -1301,13 +1303,13 @@ public class AS3Parser extends ParserBase
 		{
 			result.addChild(parseEncapsulatedExpression());
 		}
-			// else if ( tok.isNum()
+			// else if ( token.isNum()
 			// || tokIs( KeyWords.TRUE ) || tokIs( KeyWords.FALSE ) || tokIs(
 			// KeyWords.NULL )
-			// || tok.text.startsWith( Operators.DOUBLE_QUOTE.toString() )
-			// || tok.text.startsWith( Operators.SIMPLE_QUOTE.toString() )
-			// || tok.text.startsWith( Operators.SLASH.toString() )
-			// || tok.text.startsWith( Operators.INFERIOR.toString() ) || tokIs(
+			// || token.text.startsWith( Operators.DOUBLE_QUOTE.toString() )
+			// || token.text.startsWith( Operators.SIMPLE_QUOTE.toString() )
+			// || token.text.startsWith( Operators.SLASH.toString() )
+			// || token.text.startsWith( Operators.INFERIOR.toString() ) || tokIs(
 			// KeyWords.UNDEFINED ) )
 			// {
 			// nextToken();
@@ -1320,7 +1322,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is [
+	 * token is [
 	 */
 	private function parseArrayLiteral():IParserNode
 	{
@@ -1338,7 +1340,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is {
+	 * token is {
 	 */
 	private function parseObjectLiteral():Node
 	{
@@ -1356,7 +1358,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/*
-	* tok is name
+	* token is name
 	*/
 	private function parseObjectLiteralPropertyDeclaration():Node
 	{
@@ -1378,7 +1380,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is function
+	 * token is function
 	 * 
 	 * @throws TokenException
 	 */
@@ -1509,8 +1511,38 @@ public class AS3Parser extends ParserBase
 		return result;
 	}
 	
+	private function parseE4XAttributeIdentifier():Node
+	{
+		consume(Operators.AT);
+		
+		var result:Node = Node.create(AS3NodeKind.E4X_ATTR,
+			token.line,
+			token.column);
+		if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+		{
+			nextToken();
+			result.addChild(parseExpression());
+			consume(Operators.RIGHT_SQUARE_BRACKET);
+		}
+		else if (tokIs(Operators.TIMES))
+		{
+			nextToken();
+			result.addChild(Node.create(AS3NodeKind.STAR,
+				token.line,
+				token.column));
+		}
+		else
+		{
+			result.addChild(Node.create(AS3NodeKind.NAME,
+				token.line,
+				token.column,
+				parseQualifiedName()));
+		}
+		return result;
+	}
+	
 	/**
-	 * tok is (
+	 * token is (
 	 * 
 	 * @throws TokenException
 	 */
@@ -1538,7 +1570,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is the name of a parameter or ...
+	 * token is the name of a parameter or ...
 	 */
 	private function parseParameter():Node
 	{
@@ -1563,7 +1595,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is ( exit tok is first token after )
+	 * token is ( exit token is first token after )
 	 */
 	private function parseArgumentList():Node
 	{
@@ -1608,7 +1640,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is const
+	 * token is const
 	 * 
 	 * @param modifiers
 	 * @param meta
@@ -1642,7 +1674,7 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is function
+	 * token is function
 	 * 
 	 * @param modifiers
 	 * @param meta
@@ -1698,7 +1730,7 @@ public class AS3Parser extends ParserBase
 		return [type, name, params, returnType];
 	}
 	
-	private function findFunctionTypeFromSignature(signature:Array):String // NodeKind
+	private function findFunctionTypeFromSignature(signature:Array):String // AS3NodeKind
 	{
 		for each (var node:Node in signature)
 		{
@@ -1764,6 +1796,469 @@ public class AS3Parser extends ParserBase
 			nextToken();
 		}
 		while (tokenStartsWith(MULTIPLE_LINES_COMMENT));
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//  ADDED statement impl
+	
+	internal function parseStatement():IParserNode
+	{
+		var result:IParserNode;
+		
+		if (tokIs(KeyWords.FOR))
+		{
+			result = parseFor();
+		}
+		else if (tokIs(KeyWords.IF))
+		{
+			result = parseIf();
+		}
+		else if (tokIs(KeyWords.SWITCH))
+		{
+			result = parseSwitch();
+		}
+		else if (tokIs(KeyWords.DO))
+		{
+			result = parseDo();
+		}
+		else if (tokIs(KeyWords.WHILE))
+		{
+			result = parseWhile();
+		}
+		else if (tokIs(KeyWords.TRY))
+		{
+			result = parseTry();
+		}
+		else if (tokIs(KeyWords.CATCH))
+		{
+			result = parseCatch();
+		}
+		else if (tokIs(KeyWords.FINALLY))
+		{
+			result = parseFinally();
+		}
+		else if (tokIs(Operators.LEFT_CURLY_BRACKET))
+		{
+			result = parseBlock();
+		}
+		else if (tokIs(KeyWords.VAR))
+		{
+			result = parseVar();
+		}
+		else if (tokIs(KeyWords.CONST))
+		{
+			result = parseConst();
+		}
+		else if (tokIs(KeyWords.RETURN))
+		{
+			result = parseReturnStatement();
+		}
+		else if (tokIs(Operators.SEMI_COLUMN))
+		{
+			result = parseEmptyStatement();
+		}
+		else
+		{
+			result = parseExpressionList();
+			skip(Operators.SEMI_COLUMN);
+		}
+		return result;
+	}
+	
+	/**
+	 * token is for
+	 * 
+	 * @throws TokenError
+	 */
+	private function parseFor():Node
+	{
+		consume(KeyWords.FOR);
+		
+		if (tokIs(KeyWords.EACH))
+		{
+			nextToken();
+			return parseForEach();
+		}
+		else
+		{
+			return parseTraditionalFor();
+		}
+	}
+	
+	/**
+	 * token is ( for each( var obj : Type in List )
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseForEach():Node
+	{
+		consume(Operators.LEFT_PARENTHESIS);
+		
+		var result:Node = Node.create(AS3NodeKind.FOREACH,
+			token.line,
+			token.column);
+		if (tokIs(KeyWords.VAR))
+		{
+			var variable:Node = Node.create(AS3NodeKind.VAR,
+				token.line,
+				token.column);
+			nextToken();
+			variable.addChild(parseNameTypeInit());
+			result.addChild(variable);
+		}
+		else
+		{
+			result.addRawChild(AS3NodeKind.NAME,
+				token.line,
+				token.column,
+				token.text);
+			// names allowed?
+			nextToken();
+		}
+		nextToken(); // in
+		result.addNodeChild(AS3NodeKind.IN,
+			token.line,
+			token.column,
+			parseExpression());
+		consume(Operators.RIGHT_PARENTHESIS);
+		result.addChild(parseStatement());
+		return result;
+	}
+	
+	/**
+	 * token is ( for( var x : int = 0; i < length; i++ ) for( var s : String in
+	 * Object )
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseTraditionalFor():Node
+	{
+		consume(Operators.LEFT_PARENTHESIS);
+		
+		var result:Node = Node.create(AS3NodeKind.FOR,
+			token.line,
+			token.column);
+		if (!tokIs(Operators.SEMI_COLUMN))
+		{
+			if (tokIs(KeyWords.VAR))
+			{
+				result.addNodeChild(AS3NodeKind.INIT,
+					token.line,
+					token.column,
+					parseVarList(null, null));
+			}
+			else
+			{
+				isInFor = true;
+				result.addNodeChild(AS3NodeKind.INIT,
+					token.line,
+					token.column,
+					parseExpression());
+				isInFor = false;
+			}
+			if (tokIs(AS3NodeKind.IN))
+			{
+				return parseForIn(result);
+			}
+		}
+		consume(Operators.SEMI_COLUMN);
+		if (!tokIs(Operators.SEMI_COLUMN))
+		{
+			result.addNodeChild(AS3NodeKind.COND,
+				token.line,
+				token.column,
+				parseExpression());
+		}
+		consume(Operators.SEMI_COLUMN);
+		if (!tokIs(Operators.RIGHT_PARENTHESIS))
+		{
+			result.addNodeChild(AS3NodeKind.ITER,
+				token.line,
+				token.column,
+				parseExpressionList());
+		}
+		consume(Operators.RIGHT_PARENTHESIS);
+		result.addChild(parseStatement());
+		return result;
+	}
+	
+	private function parseForIn(result:Node):Node
+	{
+		nextToken();
+		result.addNodeChild(AS3NodeKind.IN,
+			token.line,
+			token.column,
+			parseExpression());
+		result.kind = AS3NodeKind.FORIN;
+		return result;
+	}
+	
+	/**
+	 * token is if
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseIf():Node
+	{
+		consume(KeyWords.IF);
+		var result:Node = Node.createChild(AS3NodeKind.IF,
+			token.line,
+			token.column,
+			parseCondition());
+		result.addChild(parseStatement());
+		if (tokIs(KeyWords.ELSE))
+		{
+			nextToken();
+			result.addChild(parseStatement());
+		}
+		return result;
+	}
+	
+	/**
+	 * token is (
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseCondition():Node
+	{
+		consume(Operators.LEFT_PARENTHESIS);
+		var result:Node = Node.createChild(AS3NodeKind.CONDITION,
+			token.line,
+			token.column,
+			parseExpression());
+		consume(Operators.RIGHT_PARENTHESIS);
+		return result;
+	}
+	
+	/**
+	 * tok is switch
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseSwitch():Node
+	{
+		consume(KeyWords.SWITCH);
+		var result:Node = Node.createChild(AS3NodeKind.SWITCH,
+			token.line,
+			token.column,
+			parseCondition());
+		if (tokIs(Operators.LEFT_CURLY_BRACKET))
+		{
+			nextToken();
+			result.addChild(parseSwitchCases());
+			consume(Operators.RIGHT_CURLY_BRACKET);
+		}
+		return result;
+	}
+	
+	/**
+	 * tok is { exit tok is }
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseSwitchCases():Node
+	{
+		var caseNode:Node;
+		var result:Node = Node.create(AS3NodeKind.CASES,
+			token.line,
+			token.column);
+		for (;;)
+		{
+			if (tokIs(Operators.RIGHT_CURLY_BRACKET))
+			{
+				break;
+			}
+			else if (tokIs( KeyWords.CASE))
+			{
+				nextToken(); // case
+				caseNode = Node.createChild(AS3NodeKind.CASE,
+					token.line,
+					token.column,
+					parseExpression());
+				consume(Operators.COLUMN);
+				caseNode.addChild(parseSwitchBlock());
+				result.addChild(caseNode);
+			}
+			else if (tokIs(KeyWords.DEFAULT))
+			{
+				nextToken(); // default
+				consume(Operators.COLUMN);
+				caseNode = Node.createChild(AS3NodeKind.CASE,
+					token.line,
+					token.column,
+					Node.create(AS3NodeKind.DEFAULT,
+						token.line,
+						token.column,
+						KeyWords.DEFAULT));
+				caseNode.addChild(parseSwitchBlock());
+				result.addChild(caseNode);
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * tok is case, default or the first token of the first statement
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseSwitchBlock():Node
+	{
+		var result:Node = Node.create(AS3NodeKind.SWITCH_BLOCK,
+			token.line,
+			token.column);
+		while (!tokIs(KeyWords.CASE)
+			&& !tokIs(KeyWords.DEFAULT) && !tokIs(Operators.RIGHT_CURLY_BRACKET))
+		{
+			result.addChild(parseStatement());
+		}
+		return result;
+	}
+	
+	/**
+	 * tok is do
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseDo():Node
+	{
+		consume(KeyWords.DO);
+		var result:Node = Node.createChild(AS3NodeKind.DO,
+			token.line,
+			token.column,
+			parseStatement());
+		consume(KeyWords.WHILE);
+		result.addChild(parseCondition());
+		if (tokIs(Operators.SEMI_COLUMN))
+		{
+			nextToken();
+		}
+		return result;
+	}
+	
+	/**
+	 * tok is while
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseWhile():Node
+	{
+		consume(KeyWords.WHILE);
+		var result:Node = Node.create(AS3NodeKind.WHILE,
+			token.line,
+			token.column);
+		result.addChild(parseCondition());
+		result.addChild(parseStatement());
+		return result;
+	}
+	
+	private function parseTry():Node
+	{
+		nextToken();
+		var result:Node = Node.createChild(AS3NodeKind.TRY,
+			token.line,
+			token.column,
+			parseBlock());
+		return result;
+	}
+	
+	/**
+	 * tok is catch
+	 * 
+	 * @throws TokenException
+	 */
+	private function parseCatch():Node
+	{
+		consume(KeyWords.CATCH);
+		consume(Operators.LEFT_PARENTHESIS);
+		var result:Node = Node.createChild(AS3NodeKind.CATCH,
+			token.line,
+			token.column,
+			Node.create(AS3NodeKind.NAME,
+				token.line,
+				token.column,
+				token.text));
+		nextToken(); // name
+		if (tokIs(Operators.COLUMN))
+		{
+			nextToken(); // :
+			result.addChild(Node.create(AS3NodeKind.TYPE,
+				token.line,
+				token.column,
+				token.text));
+			nextToken(); // type
+		}
+		consume(Operators.RIGHT_PARENTHESIS);
+		result.addChild(parseBlock());
+		return result;
+	}
+	
+	private function parseFinally():Node
+	{
+		nextToken();
+		var result:Node = Node.createChild(AS3NodeKind.FINALLY,
+			token.line,
+			token.column,
+			parseBlock());
+		return result;
+	}
+	
+	private function parseVar():Node
+	{
+		var result:Node = parseVarList(null, null);
+		skip(Operators.SEMI_COLUMN);
+		return result;
+	}
+	
+	private function parseConst():Node
+	{
+		var result:Node = parseConstList(null, null);
+		skip(Operators.SEMI_COLUMN);
+		return result;
+	}
+	
+	private function parseReturnStatement():IParserNode
+	{
+		var result:Node;
+		
+		nextTokenAllowNewLine();
+		if (tokIs(NEW_LINE) || tokIs(Operators.SEMI_COLUMN))
+		{
+			nextToken();
+			result = Node.create(AS3NodeKind.RETURN,
+				token.line,
+				token.column,
+				"");
+		}
+		else
+		{
+			result = Node.createChild(AS3NodeKind.RETURN,
+				token.line,
+				token.column,
+				parseExpression());
+			skip(Operators.SEMI_COLUMN);
+		}
+		return result;
+	}
+	
+	private function parseEmptyStatement():Node
+	{
+		var result:Node = Node.create(AS3NodeKind.STMT_EMPTY,
+			token.line,
+			token.column,
+			Operators.SEMI_COLUMN);
+		nextToken();
+		return result;
 	}
 }
 }
