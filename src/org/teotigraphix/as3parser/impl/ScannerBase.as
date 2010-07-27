@@ -385,7 +385,7 @@ public class ScannerBase implements IScanner
 	 * Returns the next character that is not a \s or \t. Newlines should
 	 * not be here since we are using a line Vector.
 	 */
-	protected final function nextNonWhitespaceCharacter():String
+	protected function nextNonWhitespaceCharacter():String
 	{
 		var result:String;
 		
