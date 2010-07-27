@@ -1,6 +1,8 @@
 package testSuites
 {
 
+import mx.controls.Text;
+
 import org.teotigraphix.as3parser.impl.TestAS3Scanner;
 import org.teotigraphix.as3parser.impl.TestClass;
 import org.teotigraphix.as3parser.impl.TestClassContent;
@@ -13,6 +15,9 @@ import org.teotigraphix.as3parser.impl.TestForStatement;
 import org.teotigraphix.as3parser.impl.TestIfStatement;
 import org.teotigraphix.as3parser.impl.TestInterface;
 import org.teotigraphix.as3parser.impl.TestInterfaceContent;
+import org.teotigraphix.as3parser.impl.TestMXMLNonASDocComment;
+import org.teotigraphix.as3parser.impl.TestMXMLNonBound;
+import org.teotigraphix.as3parser.impl.TestMXMLScanner;
 import org.teotigraphix.as3parser.impl.TestPackageContent;
 import org.teotigraphix.as3parser.impl.TestPrimaryExpression;
 import org.teotigraphix.as3parser.impl.TestReturnStatement;
@@ -26,6 +31,9 @@ import org.teotigraphix.as3parser.impl.TestWhileStatement;
 [RunWith("org.flexunit.runners.Suite")]
 public class AllTests
 {
+	//----------------------------------
+	// .as
+	//----------------------------------
 	// TestAS3Parser
 	public var testAS3Scanner:TestAS3Scanner;
 	public var testClass:TestClass;
@@ -48,5 +56,12 @@ public class AllTests
 	public var testUnaryExpression:TestUnaryExpression;
 	public var testVarStatement:TestVarStatement;
 	public var testWhileStatement:TestWhileStatement;
+	
+	//----------------------------------
+	// .mxml
+	//----------------------------------
+	public var testMXMScanner:TestMXMLScanner;
+	public var testMXMLNonBound:TestMXMLNonBound;
+	public var testMXMLNonASDocComment:TestMXMLNonASDocComment;
 }
 }
