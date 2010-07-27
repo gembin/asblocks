@@ -4,6 +4,8 @@ package testSuites
 import mx.controls.Text;
 
 import org.teotigraphix.as3parser.impl.TestAS3Scanner;
+import org.teotigraphix.as3parser.impl.TestASDocParser;
+import org.teotigraphix.as3parser.impl.TestASDocScanner;
 import org.teotigraphix.as3parser.impl.TestClass;
 import org.teotigraphix.as3parser.impl.TestClassContent;
 import org.teotigraphix.as3parser.impl.TestCompilationUnit;
@@ -63,5 +65,12 @@ public class AllTests
 	public var testMXMScanner:TestMXMLScanner;
 	public var testMXMLNonBound:TestMXMLNonBound;
 	public var testMXMLNonASDocComment:TestMXMLNonASDocComment;
+	
+	//----------------------------------
+	// asdoc
+	//----------------------------------
+	public var testASDocScanner:TestASDocScanner;
+	public var testASDocParser:TestASDocParser;
+	
 }
 }
