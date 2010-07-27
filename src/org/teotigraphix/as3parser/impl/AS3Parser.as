@@ -227,10 +227,11 @@ public class AS3Parser extends ParserBase
 			else if (tokenStartsWith("/**"))
 			{
 				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
-					ISourceCodeScanner(scanner).asdocOffset,
-					token.column,
+					ISourceCodeScanner(scanner).commentLine,
+					ISourceCodeScanner(scanner).commentColumn,
 					token.text);
-				ISourceCodeScanner(scanner).asdocOffset = -1;
+				ISourceCodeScanner(scanner).commentLine = -1;
+				ISourceCodeScanner(scanner).commentColumn = -1;
 				currentAsDoc.start = scanner.offset - token.text.length;
 				currentAsDoc.end = scanner.offset;
 				nextToken();
@@ -588,10 +589,11 @@ public class AS3Parser extends ParserBase
 			else if (tokenStartsWith("/**"))
 			{
 				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
-					ISourceCodeScanner(scanner).asdocOffset,
-					token.column,
+					ISourceCodeScanner(scanner).commentLine,
+					ISourceCodeScanner(scanner).commentColumn,
 					token.text);
-				ISourceCodeScanner(scanner).asdocOffset = -1;
+				ISourceCodeScanner(scanner).commentLine = -1;
+				ISourceCodeScanner(scanner).commentColumn = -1;
 				currentAsDoc.start = scanner.offset - token.text.length;
 				currentAsDoc.end = scanner.offset;
 				nextToken();
@@ -644,10 +646,11 @@ public class AS3Parser extends ParserBase
 			else if (tokenStartsWith("/**"))
 			{
 				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
-					ISourceCodeScanner(scanner).asdocOffset,
-					token.column,
+					ISourceCodeScanner(scanner).commentLine,
+					ISourceCodeScanner(scanner).commentColumn,
 					token.text);
-				ISourceCodeScanner(scanner).asdocOffset = -1;
+				ISourceCodeScanner(scanner).commentLine = -1;
+				ISourceCodeScanner(scanner).commentColumn = -1;
 				currentAsDoc.start = scanner.offset - token.text.length;
 				currentAsDoc.end = scanner.offset;
 				nextToken();
@@ -723,7 +726,7 @@ public class AS3Parser extends ParserBase
 		*/
 		
 		///*
-		ISourceCodeScanner(scanner).setInBlock(true);
+		ISourceCodeScanner(scanner).inBlock = true;
 		
 		braceCount = 1;
 		
@@ -749,7 +752,7 @@ public class AS3Parser extends ParserBase
 		
 		consume(Operators.RIGHT_CURLY_BRACKET);
 		
-		ISourceCodeScanner(scanner).setInBlock(false);
+		ISourceCodeScanner(scanner).inBlock = false;
 		
 		return result;
 	}

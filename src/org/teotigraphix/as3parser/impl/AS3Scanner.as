@@ -56,6 +56,87 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 	
 	//--------------------------------------------------------------------------
 	//
+	//  ISourceCodeScanner API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  commentLine
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _commentLine:int;
+	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.ISourceCodeScanner#commentLine
+	 */
+	public function get commentLine():int
+	{
+		return _commentLine;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set commentLine(value:int):void
+	{
+		_commentLine = value;
+	}
+	
+	//----------------------------------
+	//  commentColumn
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _commentColumn:int;
+	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.ISourceCodeScanner#commentColumn
+	 */
+	public function get commentColumn():int
+	{
+		return _commentColumn;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set commentColumn(value:int):void
+	{
+		_commentColumn = value;
+	}
+	
+	//----------------------------------
+	//  inBlock
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _inBlock:Boolean = false;
+	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.ISourceCodeScanner#inBlock
+	 */
+	public function get inBlock():Boolean
+	{
+		return _inBlock;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set inBlock(value:Boolean):void
+	{
+		_inBlock = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -306,10 +387,11 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		var currentCharacter:String = " ";
 		var previousCharacter:String = " ";
 		
-		skipChar();
+		// Token adds one
+		commentLine = line + 1;
+		commentColumn = column + 1;
 		
-		// FIXME Why +1
-		asdocOffset = line + 1;
+		skipChar();
 		
 		// run the loop until '*/' sequence is encountered
 		do

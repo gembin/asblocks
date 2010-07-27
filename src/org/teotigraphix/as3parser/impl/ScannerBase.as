@@ -122,87 +122,6 @@ public class ScannerBase implements IScanner
 	
 	//--------------------------------------------------------------------------
 	//
-	//  ISourceCodeScanner API :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  commentLine
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _commentLine:int;
-	
-	/**
-	 * @copy org.teotigraphix.as3parser.api.ISourceCodeScanner#commentLine
-	 */
-	public function get commentLine():int
-	{
-		return _commentLine;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set commentLine(value:int):void
-	{
-		_commentLine = value;
-	}
-	
-	//----------------------------------
-	//  commentColumn
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _commentColumn:int;
-	
-	/**
-	 * @copy org.teotigraphix.as3parser.api.ISourceCodeScanner#commentColumn
-	 */
-	public function get commentColumn():int
-	{
-		return _commentColumn;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set commentColumn(value:int):void
-	{
-		_commentColumn = value;
-	}
-	
-	//----------------------------------
-	//  asdocOffset
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _asdocOffset:int = -1;
-	
-	/**
-	 * @copy org.teotigraphix.as3parser.api.ISourceCodeScanner#asdocOffset
-	 */
-	public function get asdocOffset():int
-	{
-		return _asdocOffset;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set asdocOffset(value:int):void
-	{
-		_asdocOffset = value;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -239,25 +158,6 @@ public class ScannerBase implements IScanner
 	public function nextToken():Token
 	{
 		return null;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  ISourceCodeScanner API :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	protected var inBlock:Boolean = false;
-	
-	/**
-	 * @copy org.teotigraphix.as3parser.api.ISourceCodeScanner#setInBlock()
-	 */
-	public function setInBlock(value:Boolean):void
-	{
-		inBlock = value;
 	}
 	
 	//--------------------------------------------------------------------------
