@@ -79,7 +79,7 @@ public class TestCompilationUnit
 			"<package line=\"1\" column=\"1\"><name line=\"1\" column=\"9\">" +
 			"a</name><content line=\"1\" column=\"13\"><class line=\"1\" " +
 			"column=\"26\"><name line=\"1\" column=\"26\">B</name><mod-list " +
-			"line=\"1\" column=\"28\"><mod line=\"1\" column=\"28\">public" +
+			"line=\"1\" column=\"13\"><mod line=\"1\" column=\"13\">public" +
 			"</mod></mod-list><content line=\"1\" column=\"30\"></content>" +
 			"</class></content></package><content line=\"2\" column=\"1\">" +
 			"</content></compilation-unit>",
@@ -103,7 +103,7 @@ public class TestCompilationUnit
 			"<package line=\"1\" column=\"1\"><name line=\"1\" column=\"9\">" +
 			"a</name><content line=\"1\" column=\"13\"><interface line=\"1\" " +
 			"column=\"30\"><name line=\"1\" column=\"30\">B</name><mod-list " +
-			"line=\"1\" column=\"32\"><mod line=\"1\" column=\"32\">public" +
+			"line=\"1\" column=\"13\"><mod line=\"1\" column=\"13\">public" +
 			"</mod></mod-list><content line=\"1\" column=\"34\"></content>" +
 			"</interface></content></package><content line=\"2\" column=\"1\">" +
 			"</content></compilation-unit>",

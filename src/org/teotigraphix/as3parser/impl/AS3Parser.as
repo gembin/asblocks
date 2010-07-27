@@ -193,7 +193,7 @@ public class AS3Parser extends ParserBase
 			{
 				result.addChild(parseImport());
 			}
-				// added 05-30-10
+			// added 05-30-10
 			else if (tokIs(KeyWords.INCLUDE))
 			{
 				result.addChild(parseIncludeExpression());
@@ -348,8 +348,8 @@ public class AS3Parser extends ParserBase
 	 * @param modifier Token
 	 * @throws TokenException
 	 */
-	private function parseClass(meta:Vector.<Node>, 
-								modifier:Vector.<Token>):Node
+	private function parseClass(metas:Vector.<Node>, 
+								modifiers:Vector.<Token>):Node
 	{
 		consume(KeyWords.CLASS);
 		
@@ -364,8 +364,8 @@ public class AS3Parser extends ParserBase
 		result.addRawChild(AS3NodeKind.NAME, 
 			token.line, token.column ,token.text);
 		nextToken(); // name
-		result.addChild(convertMeta(meta));
-		result.addChild(convertModifiers(modifier));
+		result.addChild(convertMeta(metas));
+		result.addChild(convertModifiers(modifiers));
 		do
 		{
 			if (tokIs(KeyWords.EXTENDS))
@@ -396,8 +396,8 @@ public class AS3Parser extends ParserBase
 	 * @param modifier
 	 * @throws TokenException
 	 */
-	private function parseInterface(meta:Vector.<Node>, 
-									modifier:Vector.<Token>):Node
+	private function parseInterface(metas:Vector.<Node>, 
+									modifiers:Vector.<Token>):Node
 	{
 		consume(KeyWords.INTERFACE);
 		var result:Node = Node.create(AS3NodeKind.INTERFACE,
@@ -414,8 +414,8 @@ public class AS3Parser extends ParserBase
 			token.column,
 			token.text);
 		nextToken(); // name
-		result.addChild(convertMeta(meta));
-		result.addChild(convertModifiers(modifier));
+		result.addChild(convertMeta(metas));
+		result.addChild(convertModifiers(modifiers));
 		
 		if (tokIs(KeyWords.EXTENDS))
 		{
@@ -466,16 +466,23 @@ public class AS3Parser extends ParserBase
 			return null;
 		}
 		
-		var result:Node = Node.create(AS3NodeKind.MOD_LIST, 
-			token.line, token.column);
+		var mod:Token = modifiers[0];
+		
+		var result:Node = Node.create(
+			AS3NodeKind.MOD_LIST, 
+			mod.line, 
+			mod.column);
 		
 		var len:int = modifiers.length;
 		for (var i:int = 0; i < modifiers.length; i++)
 		{
-			result.addRawChild(AS3NodeKind.MODIFIER,
-				token.line,
-				token.column,
-				modifiers[i].text);
+			mod = modifiers[i];
+			
+			result.addRawChild(
+				AS3NodeKind.MODIFIER,
+				mod.line,
+				mod.column,
+				mod.text);
 		}
 		
 		return result;
@@ -565,6 +572,10 @@ public class AS3Parser extends ParserBase
 			else if (tokIs(KeyWords.IMPORT))
 			{
 				result.addChild(parseImport());
+			}
+			else if (tokIs(KeyWords.INCLUDE))
+			{
+				result.addChild(parseIncludeExpression());
 			}
 			else if (tokIs(KeyWords.FUNCTION))
 			{
