@@ -19,6 +19,27 @@ public class TestCompilationUnit
 	}
 	
 	[Test]
+	public function testDefaultPackage():void
+	{
+		var lines:Array =
+			[
+				"package { class A {} } ",
+				"__END__"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
+		
+		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
+			"column=\"1\"><name line=\"1\" column=\"9\"></name><content line=\"1\" " +
+			"column=\"11\"><class line=\"1\" column=\"17\"><name line=\"1\" column=\"17\">" +
+			"A</name><content line=\"1\" column=\"20\"></content></class></content>" +
+			"</package><content line=\"2\" column=\"1\"></content></compilation-unit>",
+			result);
+	}
+	
+	[Test]
 	public function testEmptyPackage():void
 	{
 		var lines:Array =

@@ -1,5 +1,6 @@
 package org.teotigraphix.as3parser.impl
 {
+import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class TestForStatement extends AbstractStatementTest
 {

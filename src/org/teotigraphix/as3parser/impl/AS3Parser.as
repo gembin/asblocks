@@ -76,6 +76,31 @@ public class AS3Parser extends ParserBase
 	
 	private var isInFor:Boolean = false;
 	
+	//----------------------------------
+	//  parseBlocks
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _parseBlocks:Boolean = true;
+	
+	/**
+	 * doc
+	 */
+	public function get parseBlocks():Boolean
+	{
+		return _parseBlocks;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set parseBlocks(value:Boolean):void
+	{
+		_parseBlocks = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -155,7 +180,13 @@ public class AS3Parser extends ParserBase
 		
 		var start:int = scanner.offset - token.text.length;
 		
-		var qualifiedName:String = parseQualifiedName();
+		qualifiedNameEnd = scanner.offset;
+		var qualifiedName:String = "";
+		
+		if (!tokIs(Operators.LEFT_CURLY_BRACKET))
+		{
+			qualifiedName = parseQualifiedName();
+		}
 		
 		var name:Node = Node.create(AS3NodeKind.NAME, line, column, qualifiedName);
 		name.start = start;
@@ -193,7 +224,6 @@ public class AS3Parser extends ParserBase
 			{
 				result.addChild(parseImport());
 			}
-				// added 05-30-10
 			else if (tokIs(KeyWords.INCLUDE))
 			{
 				result.addChild(parseIncludeExpression());
@@ -697,9 +727,6 @@ public class AS3Parser extends ParserBase
 		return result;
 	}
 	
-	
-	private var _deepParse:Boolean = true;
-	
 	/**
 	 * token is { exit token is the first token after }
 	 * 
@@ -721,7 +748,7 @@ public class AS3Parser extends ParserBase
 		
 		ISourceCodeScanner(scanner).inBlock = true;
 		
-		if (_deepParse)
+		if (parseBlocks)
 		{
 			while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
 			{

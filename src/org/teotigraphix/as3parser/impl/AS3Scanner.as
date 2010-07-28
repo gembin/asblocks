@@ -189,7 +189,8 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		{
 			return scanString(currentCharacter);
 		}
-		if (currentCharacter == '<' && !inBlock)
+		//if (currentCharacter == '<' && !inBlock)
+		if (currentCharacter == '<')
 		{
 			return scanXMLOrOperator(currentCharacter);
 		}
