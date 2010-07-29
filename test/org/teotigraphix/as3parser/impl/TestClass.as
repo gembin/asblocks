@@ -19,6 +19,13 @@ public class TestClass
 	public function testExtends():void
 	{
 		assertPackageContent("1", 
+			"public /*foo comment*/class A { } ",
+			"<content line=\"2\" column=\"1\"><class line=\"2\" column=\"29\">" +
+			"<name line=\"2\" column=\"29\">A</name><mod-list line=\"2\" column=\"1\">" +
+			"<mod line=\"2\" column=\"1\">public</mod></mod-list><content line=\"2\" " +
+			"column=\"33\"></content></class></content>");
+		
+		assertPackageContent("1", 
 			"public class A extends B { } ",
 			"<content line=\"2\" column=\"1\"><class line=\"2\" " +
 			"column=\"14\"><name line=\"2\" column=\"14\">A</name>" +

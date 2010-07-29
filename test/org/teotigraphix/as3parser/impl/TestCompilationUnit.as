@@ -19,6 +19,30 @@ public class TestCompilationUnit
 	}
 	
 	[Test]
+	public function testGarbageCommentsPackage():void
+	{
+		var lines:Array =
+			[
+				"/*foo*/package /*bar*/{ public /*baz*/class /*bing*/A /*bang*/{",
+				"}/*ring*/", 
+				"}//boom ",
+				"__END__"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
+		
+		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
+			"column=\"8\"><name line=\"1\" column=\"23\"></name><content line=\"1\" " +
+			"column=\"25\"><class line=\"1\" column=\"53\"><name line=\"1\" column=\"53\">" +
+			"A</name><mod-list line=\"1\" column=\"25\"><mod line=\"1\" column=\"25\">" +
+			"public</mod></mod-list><content line=\"2\" column=\"1\"></content></class>" +
+			"</content></package><content line=\"4\" column=\"1\"></content></compilation-unit>",
+			result);
+	}
+	
+	[Test]
 	public function testDefaultPackage():void
 	{
 		var lines:Array =
