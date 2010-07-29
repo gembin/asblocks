@@ -175,6 +175,8 @@ public class AS3Parser extends ParserBase
 		
 		consume(KeyWords.PACKAGE);
 		
+		consumeComment();// added 
+		
 		var line:int = token.line;
 		var column:int = token.column;
 		
@@ -383,6 +385,7 @@ public class AS3Parser extends ParserBase
 								modifiers:Vector.<Token>):Node
 	{
 		consume(KeyWords.CLASS);
+		consumeComment();
 		
 		var result:Node = Node.create(AS3NodeKind.CLASS, 
 			token.line, token.column);
@@ -395,6 +398,8 @@ public class AS3Parser extends ParserBase
 		result.addRawChild(AS3NodeKind.NAME, 
 			token.line, token.column ,token.text);
 		nextToken(); // name
+		consumeComment();
+		
 		result.addChild(convertMeta(metas));
 		result.addChild(convertModifiers(modifiers));
 		do
@@ -410,6 +415,10 @@ public class AS3Parser extends ParserBase
 			else if (tokIs(KeyWords.IMPLEMENTS))
 			{
 				result.addChild(parseImplementsList());
+			}
+			else if (tokenStartsWith("/*")) // junk comment
+			{
+				nextToken();
 			}
 		}
 		while (!tokIs(Operators.LEFT_CURLY_BRACKET));
@@ -1825,7 +1834,13 @@ public class AS3Parser extends ParserBase
 		while (tokenStartsWith(MULTIPLE_LINES_COMMENT));
 	}
 	
-	
+	private function consumeComment():void
+	{
+		while (tokenStartsWith(MULTIPLE_LINES_COMMENT))
+		{
+			nextToken();
+		}
+	}
 	
 	
 	

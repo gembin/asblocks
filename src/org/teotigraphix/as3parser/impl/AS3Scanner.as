@@ -496,8 +496,7 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 			{
 				level--;
 			}
-			else if (!(currentToken.text.indexOf("/>") == 
-				currentToken.text.length - 1))
+			else if (!(currentToken.text.indexOf("/>") == currentToken.text.length - 2))
 			{
 				level++;
 			}
