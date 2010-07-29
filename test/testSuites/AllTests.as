@@ -1,4 +1,4 @@
-package testSuites
+﻿package testSuites
 {
 
 [Suite]
@@ -8,7 +8,5 @@ public class AllTests
 	public var aS3ParserTestSuite:AS3ParserTestSuite;
 	public var mXMLParserTestSuite:MXMLParserTestSuite;
 	public var aSDocParserTestSuite:ASDocParserTestSuite;
-	
-	public var aSDomTestSuite:ASDomTestSuite;
 }
 }
