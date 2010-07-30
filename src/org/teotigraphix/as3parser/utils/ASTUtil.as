@@ -45,13 +45,7 @@ public class ASTUtil
 	 */
 	public static function toVector(list:Array):Vector.<String>
 	{
-		var lines:Vector.<String> = new Vector.<String>();
-		var len:int = list.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			lines.push(list[i]);
-		}
-		return lines;
+		return Vector.<String>(list);
 	}
 	
 	/**
