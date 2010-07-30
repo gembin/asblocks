@@ -20,6 +20,7 @@
 package org.teotigraphix.as3parser.utils
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -31,6 +32,180 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public class ASTUtil
 {
+	public static function getPackage(unit:IParserNode):IParserNode
+	{
+		return unit.getChild(0);
+	}
+	
+	public static function getPackageName(unit:IParserNode):String
+	{
+		var packageNode:IParserNode = getPackage(unit);
+		
+		return packageNode.getChild(0).stringValue;
+	}
+	
+	public static function getPackageContent(unit:IParserNode):IParserNode
+	{
+		var packageNode:IParserNode = getPackage(unit);
+		
+		return packageNode.getChild(1);
+	}	
+	
+	public static function getImports(unit:IParserNode):Vector.<IParserNode>
+	{
+		var packageContent:IParserNode = getPackageContent(unit);
+		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.IMPORT, packageContent);
+		return nodes;
+	}
+	
+	public static function getUses(unit:IParserNode):Vector.<IParserNode>
+	{
+		var packageContent:IParserNode = getPackageContent(unit);
+		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.USE, packageContent);
+		return nodes;
+	}
+	
+	public static function getClass(unit:IParserNode):IParserNode
+	{
+		var packageContentNode:IParserNode = getPackageContent(unit);
+		
+		return packageContentNode.getLastChild();
+	}
+	
+	public static function getClassContent(unit:IParserNode):IParserNode
+	{
+		var classNode:IParserNode = getClass(unit);
+		
+		return classNode.getLastChild();
+	}
+	
+	public static function getClassName(unit:IParserNode):String
+	{
+		var classNode:IParserNode = getClass(unit);
+		var classNameNode:IParserNode = getNode(AS3NodeKind.NAME, classNode);
+		
+		return classNameNode.stringValue;
+	}
+	
+	public static function getClassMetaData(unit:IParserNode):Vector.<IParserNode>
+	{
+		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
+		
+		var classNode:IParserNode = getClass(unit);
+		var nodes:IParserNode = getNode(AS3NodeKind.META_LIST, classNode);
+		
+		if (!nodes || nodes.numChildren == 0)
+			return result;
+		
+		var len:int = nodes.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(nodes.children[i]);
+		}
+		
+		return result;
+	}
+	
+	public static function getClassModifiers(unit:IParserNode):Vector.<IParserNode>
+	{
+		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
+		
+		var classNode:IParserNode = getClass(unit);
+		var nodes:IParserNode = getNode(AS3NodeKind.MOD_LIST, classNode);
+		
+		if (!nodes || nodes.numChildren == 0)
+			return result;
+		
+		var len:int = nodes.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(nodes.children[i]);
+		}
+		
+		return result;
+	}
+	
+	public static function getClassExtends(unit:IParserNode):IParserNode
+	{
+		var classNode:IParserNode = getClass(unit);
+		
+		var extendsNode:IParserNode = getNode(AS3NodeKind.EXTENDS, classNode);
+		
+		return extendsNode;
+	}
+	
+	public static function getImplements(unit:IParserNode):Vector.<IParserNode>
+	{
+		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
+		
+		var classNode:IParserNode = getClass(unit);
+		var nodes:IParserNode = getNode(AS3NodeKind.IMPLEMENTS_LIST, classNode);
+		
+		if (!nodes || nodes.numChildren == 0)
+			return result;
+		
+		var len:int = nodes.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(nodes.children[i]);
+		}
+		
+		return result;
+	}
+	
+	public static function getClassVariables(unit:IParserNode):Vector.<IParserNode>
+	{
+		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
+		
+		var classNode:IParserNode = getClassContent(unit);
+		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.VAR_LIST, classNode);
+		
+		if (!nodes || nodes.length == 0)
+			return result;
+		
+		var len:int = nodes.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(nodes[i]);
+		}
+		
+		return result;
+	}
+	
+	public static function getNodes(kind:String, node:IParserNode):Vector.<IParserNode>
+	{
+		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
+		
+		if (node.numChildren == 0)
+			return result;
+		
+		var len:int = node.children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IParserNode = node.children[i] as IParserNode;
+			if (element.isKind(kind))
+				result.push(element)
+		}
+		
+		return result;
+	}
+	
+	public static function getNode(kind:String, node:IParserNode):IParserNode
+	{
+		if (node.numChildren == 0)
+			return null;
+		
+		var len:int = node.children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IParserNode = node.children[i] as IParserNode;
+			if (element.isKind(kind))
+				return element;
+		}
+		
+		return null;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public Class :: Methods

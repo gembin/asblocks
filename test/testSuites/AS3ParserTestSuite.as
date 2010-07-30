@@ -21,6 +21,7 @@ import org.teotigraphix.as3parser.impl.TestTryCatchFinallyStatement;
 import org.teotigraphix.as3parser.impl.TestUnaryExpression;
 import org.teotigraphix.as3parser.impl.TestVarStatement;
 import org.teotigraphix.as3parser.impl.TestWhileStatement;
+import org.teotigraphix.as3parser.utils.TestASTUtil;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
@@ -48,5 +49,8 @@ public class AS3ParserTestSuite
 	public var testUnaryExpression:TestUnaryExpression;
 	public var testVarStatement:TestVarStatement;
 	public var testWhileStatement:TestWhileStatement;
+	
+	// util
+	public var testASTUtil:TestASTUtil;
 }
 }
