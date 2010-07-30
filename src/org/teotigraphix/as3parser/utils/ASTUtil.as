@@ -206,6 +206,22 @@ public class ASTUtil
 		return null;
 	}
 	
+	public static function getAsDoc(node:IParserNode):IParserNode
+	{
+		if (node.numChildren == 0)
+			return null;
+		
+		var len:int = node.children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IParserNode = node.children[i] as IParserNode;
+			if (element.isKind(AS3NodeKind.AS_DOC))
+				return element;
+		}
+		
+		return null;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public Class :: Methods
