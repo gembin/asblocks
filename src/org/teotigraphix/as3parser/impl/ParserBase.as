@@ -24,9 +24,10 @@ import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
 import org.teotigraphix.as3parser.core.Token;
-import org.teotigraphix.as3parser.errors.Position;
 import org.teotigraphix.as3parser.errors.NullTokenError;
+import org.teotigraphix.as3parser.errors.Position;
 import org.teotigraphix.as3parser.errors.UnExpectedTokenError;
+import org.teotigraphix.as3parser.utils.FileUtil;
 
 /**
  * The default base implementation of the IParser interface.
@@ -107,6 +108,22 @@ public class ParserBase implements IParser
 	//  IParser API :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParser#buildFileAst()
+	 */
+	public function buildFileAst(fileName:String):IParserNode
+	{
+		var lines:Vector.<String>;
+		try {
+			lines = FileUtil.readLines(fileName);
+		}
+		catch (e:Error) {
+			throw e; // TODO different error
+		}
+		
+		return parseLines(lines, fileName);
+	}
 	
 	/**
 	 * @copy org.teotigraphix.as3parser.api.IParser#buildAst()

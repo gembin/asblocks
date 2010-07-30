@@ -39,6 +39,15 @@ public interface IParser
 	/**
 	 * Builds and returns an AST rooted as an <code>IParserNode</code>.
 	 * 
+	 * <p>The method will attempt to load the file data and source line Vector.</p>
+	 * 
+	 * @param filePath A String indicating the location of the source.
+	 */
+	function buildFileAst(filePath:String):IParserNode;
+	
+	/**
+	 * Builds and returns an AST rooted as an <code>IParserNode</code>.
+	 * 
 	 * @param lines A Vector of String lines to be parsed into an AST.
 	 * @param filePath A String indicating the location of the source.
 	 */
