@@ -68,7 +68,7 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Constructor.
+	 * @private
 	 */
 	override protected function compute():void
 	{

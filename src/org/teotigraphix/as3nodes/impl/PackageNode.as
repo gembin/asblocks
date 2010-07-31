@@ -169,7 +169,7 @@ public class PackageNode extends NodeBase implements IPackageNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Constructor.
+	 * @private
 	 */
 	override protected function compute():void
 	{

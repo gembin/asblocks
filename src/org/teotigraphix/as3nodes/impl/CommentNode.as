@@ -1,3 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.as3nodes.impl
 {
 
@@ -12,9 +31,22 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASDocParser;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
+/**
+ * TODO DOCME
+ * 
+ * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
+ * @productversion 1.0
+ */
 public class CommentNode extends NodeBase implements ICommentNode
 {
 	protected var asdocNode:IParserNode;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  ICommentNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
 	//  shortDescription
@@ -26,7 +58,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	private var _shortDescription:String;
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#shortDescription
 	 */
 	public function get shortDescription():String
 	{
@@ -35,7 +67,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	
 	/**
 	 * @private
-	 */	
+	 */
 	public function set shortDescription(value:String):void
 	{
 		_shortDescription = value;
@@ -51,7 +83,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	private var _longDescription:String;
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#longDescription
 	 */
 	public function get longDescription():String
 	{
@@ -76,7 +108,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	private var _docTags:Vector.<IDocTag>;
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#docTags
 	 */
 	public function get docTags():Vector.<IDocTag>
 	{
@@ -105,6 +137,15 @@ public class CommentNode extends NodeBase implements ICommentNode
 		super(node, parent);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  ICommentNode API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#getDocTagAt()
+	 */
 	public function getDocTagAt(index:int):IDocTag
 	{
 		if (!docTags || index > docTags.length)
@@ -113,6 +154,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 		return docTags[index];
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#getDocTag()
+	 */
 	public function getDocTag(name:String):IDocTag
 	{
 		var len:int = docTags.length;
@@ -124,6 +168,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 		return null;
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#hasDocTag()
+	 */
 	public function hasDocTag(name:String):Boolean
 	{
 		var len:int = docTags.length;
@@ -135,6 +182,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 		return false;
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#getDocTags()
+	 */
 	public function getDocTags(name:String):Vector.<IDocTag>
 	{
 		var result:Vector.<IDocTag> = new Vector.<IDocTag>();
@@ -149,12 +199,26 @@ public class CommentNode extends NodeBase implements ICommentNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	public function toString():String
+	{
+		return node.stringValue;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Overridden Protected :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Constructor.
+	 * @private
 	 */
 	override protected function compute():void
 	{
@@ -170,6 +234,15 @@ public class CommentNode extends NodeBase implements ICommentNode
 		docTags = parseDocTagList(contentNode);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
 	protected function parseShortDescription(child:IParserNode):String
 	{
 		var result:String = "";
@@ -187,6 +260,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 		return result;
 	}
 	
+	/**
+	 * @private
+	 */
 	protected function parseLongDescription(child:IParserNode):String
 	{
 		var result:String = "";
@@ -204,6 +280,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 		return result;
 	}
 	
+	/**
+	 * @private
+	 */
 	protected function parseDocTagList(child:IParserNode):Vector.<IDocTag>
 	{
 		var list:IParserNode = ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, child);
@@ -218,11 +297,6 @@ public class CommentNode extends NodeBase implements ICommentNode
 		}
 		
 		return result;
-	}
-	
-	public function toString():String
-	{
-		return node.stringValue;
 	}
 }
 }
