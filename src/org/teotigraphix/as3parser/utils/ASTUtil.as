@@ -300,6 +300,18 @@ public class ASTUtil
 		return visitNodes(ast, "", 0);
 	}
 	
+	public static function toSourceCode(list:Array):String
+	{
+		var code:String = "";
+		var len:int = list.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var line:String = list[i] as String;
+			code += line + "\n";
+		}
+		return code;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Private Class :: Methods

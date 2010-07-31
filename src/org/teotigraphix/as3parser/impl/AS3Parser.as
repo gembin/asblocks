@@ -56,11 +56,11 @@ public class AS3Parser extends ParserBase
 	//
 	//--------------------------------------------------------------------------
 	
-	private static const MULTIPLE_LINES_COMMENT:String = "/*";
+	public static const MULTIPLE_LINES_COMMENT:String = "/*";
 	
-	private static const SINGLE_LINE_COMMENT:String = "//";
+	public static const SINGLE_LINE_COMMENT:String = "//";
 	
-	private static const NEW_LINE:String = "\n";
+	public static const NEW_LINE:String = "\n";
 	
 	private static const VECTOR:String = "Vector";
 	

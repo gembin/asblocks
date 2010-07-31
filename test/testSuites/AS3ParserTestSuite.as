@@ -2,6 +2,7 @@ package testSuites
 {
 
 import org.teotigraphix.as3parser.impl.TestAS3Scanner;
+import org.teotigraphix.as3parser.impl.TestAS3Tokenizer;
 import org.teotigraphix.as3parser.impl.TestClass;
 import org.teotigraphix.as3parser.impl.TestClassContent;
 import org.teotigraphix.as3parser.impl.TestCompilationUnit;
@@ -49,6 +50,8 @@ public class AS3ParserTestSuite
 	public var testUnaryExpression:TestUnaryExpression;
 	public var testVarStatement:TestVarStatement;
 	public var testWhileStatement:TestWhileStatement;
+	
+	public var testAS3Tokenizer:TestAS3Tokenizer;
 	
 	// util
 	public var testASTUtil:TestASTUtil;
