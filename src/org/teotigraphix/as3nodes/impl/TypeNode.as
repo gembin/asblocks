@@ -22,6 +22,7 @@ package org.teotigraphix.as3nodes.impl
 
 import flash.utils.Dictionary;
 
+import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -75,6 +76,31 @@ public class TypeNode extends NodeBase implements ITypeNode
 	public function set constants(value:Vector.<IConstantNode>):void
 	{
 		_constants = value;
+	}
+	
+	//----------------------------------
+	//  attributes
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _attributes:Vector.<IAttributeNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#attributes
+	 */
+	public function get attributes():Vector.<IAttributeNode>
+	{
+		return _attributes;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set attributes(value:Vector.<IAttributeNode>):void
+	{
+		_attributes = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -289,6 +315,7 @@ public class TypeNode extends NodeBase implements ITypeNode
 	private function computeTypeContent(typeContent:IParserNode):void
 	{
 		constants = new Vector.<IConstantNode>();
+		attributes = new Vector.<IAttributeNode>();
 		
 		if (typeContent.numChildren == 0)
 			return;
@@ -296,9 +323,9 @@ public class TypeNode extends NodeBase implements ITypeNode
 		for each (var child:IParserNode in typeContent.children)
 		{
 			detectBlock(child);
-			//detectFunction(child);
-			//detectAttribute(child);
 			detectConstant(child);
+			detectAttribute(child);
+			//detectFunction(child);
 		}
 		// constants
 		// variables
@@ -311,6 +338,14 @@ public class TypeNode extends NodeBase implements ITypeNode
 		if (child.isKind(AS3NodeKind.CONST_LIST))
 		{
 			constants.push(new ConstantNode(child, this));
+		}
+	}
+	
+	private function detectAttribute(child:IParserNode):void
+	{
+		if (child.isKind(AS3NodeKind.VAR_LIST))
+		{
+			attributes.push(new AttributeNode(child, this));
 		}
 	}
 	

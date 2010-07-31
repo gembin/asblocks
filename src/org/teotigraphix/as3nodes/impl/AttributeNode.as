@@ -17,8 +17,12 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
+
+import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * TODO DOCME
@@ -27,30 +31,20 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
+public class AttributeNode extends FieldNode implements IAttributeNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
-	//----------------------------------
-	//  constants
-	//----------------------------------
-	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function get constants():Vector.<IConstantNode>;
-	
-	//----------------------------------
-	//  attributes
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get attributes():Vector.<IAttributeNode>;
+	public function AttributeNode(node:IParserNode, parent:INode)
+	{
+		super(node, parent);
+	}
 }
 }

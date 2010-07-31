@@ -123,6 +123,18 @@ public class CommentNode extends NodeBase implements ICommentNode
 		_docTags = value;
 	}
 	
+	//----------------------------------
+	//  hasDescription
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#hasDescription
+	 */
+	public function get hasDescription():Boolean
+	{
+		return _shortDescription || _longDescription || _docTags;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -208,7 +220,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 	 */
 	public function toString():String
 	{
-		return node.stringValue;
+		if (node)
+			return node.stringValue;
+		return "[undefined]";
 	}
 	
 	//--------------------------------------------------------------------------
@@ -222,6 +236,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 	 */
 	override protected function compute():void
 	{
+		if (!node)
+			return;
+		
 		var parser:ASDocParser = new ASDocParser();
 		var lines:Array = toString().split("\n");
 		

@@ -2,11 +2,13 @@ package org.teotigraphix.as3node.impl
 {
 
 import org.flexunit.Assert;
+import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.impl.AttributeNode;
 import org.teotigraphix.as3nodes.impl.ConstantNode;
 import org.teotigraphix.as3nodes.impl.PackageNode;
 import org.teotigraphix.as3nodes.impl.TypeNode;
@@ -46,6 +48,8 @@ public class TestPackageNode
 				"        public static const NAME:String = \"smile\";",
 				"        [Inject(source=\"model.dataProvider\")]",
 				"        public var variable:String = \"variable\";",
+				"        /** @private */",
+				"        public var variable2:int = 420;",
 				"        public function get property():String{return null;}",
 				"        public function set property(value:String):void{}",
 				"        [Test]",
@@ -137,6 +141,40 @@ public class TestPackageNode
 		Assert.assertEquals("my.Class", comment.docTags[0].body);
 		
 		Assert.assertEquals("private", comment.docTags[1].name);
+	}
+	
+	[Test]
+	public function testAttributeNode():void
+	{
+		var attributes:Vector.<IAttributeNode> = packageNode.typeNode.attributes;
+		Assert.assertNotNull(attributes);
+		Assert.assertEquals(2, attributes.length);
+		
+		// modifiers
+		Assert.assertTrue(attributes[0].hasModifier(Modifier.PUBLIC));
+		Assert.assertTrue(attributes[1].hasModifier(Modifier.PUBLIC));
+		
+		Assert.assertTrue(attributes[0].isPublic);
+		Assert.assertFalse(attributes[0].isStatic);
+		Assert.assertFalse(AttributeNode(attributes[0]).isBindable);
+		
+		Assert.assertEquals("variable", attributes[0].name);
+		Assert.assertEquals("String", attributes[0].type.toString());
+		
+		Assert.assertEquals("variable2", attributes[1].name);
+		Assert.assertEquals("int", attributes[1].type.toString());
+		
+		var comment:ICommentNode = attributes[0].comment;
+		Assert.assertNotNull(comment);
+		Assert.assertFalse(comment.hasDescription);
+		
+		comment = attributes[1].comment;
+		Assert.assertNotNull(comment);
+		Assert.assertTrue(comment.hasDescription);
+		
+		Assert.assertNotNull(comment.docTags);
+		Assert.assertEquals(1, comment.docTags.length);
+		Assert.assertEquals("private", comment.docTags[0].name);
 	}
 }
 }

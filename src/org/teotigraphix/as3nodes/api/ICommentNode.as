@@ -71,16 +71,20 @@ public interface ICommentNode
 	 */
 	function get docTags():Vector.<IDocTag>;
 	
+	//----------------------------------
+	//  hasDescription
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get hasDescription():Boolean;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Methods
 	//
 	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	//function hasDescription():Boolean;
 	
 	/**
 	 * TODO Docme

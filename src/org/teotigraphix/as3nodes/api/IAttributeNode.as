@@ -27,30 +27,8 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
+public interface IAttributeNode extends IFieldNode
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//--------------------------------------------------------------------------
 	
-	//----------------------------------
-	//  constants
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get constants():Vector.<IConstantNode>;
-	
-	//----------------------------------
-	//  attributes
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get attributes():Vector.<IAttributeNode>;
 }
 }

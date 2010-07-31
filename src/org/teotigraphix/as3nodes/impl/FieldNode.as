@@ -118,6 +118,7 @@ public class FieldNode extends VariableNode implements IFieldNode
 		super.compute();
 		
 		modifiers = new Vector.<Modifier>();
+		comment = new CommentNode(null, null);
 		
 		for each (var element:IParserNode in node.children)
 		{
