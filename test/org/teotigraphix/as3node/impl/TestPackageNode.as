@@ -2,6 +2,7 @@ package org.teotigraphix.as3node.impl
 {
 
 import org.flexunit.Assert;
+import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
@@ -36,7 +37,12 @@ public class TestPackageNode
 				"    public final class Test extends OtherTest implements IEventDispatcher",
 				"    {",
 				"        [Bindable]",
-				"        /** A constant comment. */",
+				"        /** ",
+				"         * A constant comment.",
+				"         * <p>Long description.</p>",
+				"         * @see my.Class",
+				"         * @private",
+				"         */",
 				"        public static const NAME:String = \"smile\";",
 				"        [Inject(source=\"model.dataProvider\")]",
 				"        public var variable:String = \"variable\";",
@@ -119,6 +125,18 @@ public class TestPackageNode
 		
 		Assert.assertEquals("NAME", constants[0].name);
 		Assert.assertEquals("String", constants[0].type.toString());
+		
+		var comment:ICommentNode = constants[0].comment;
+		Assert.assertNotNull(comment);
+		Assert.assertEquals("A constant comment.", comment.shortDescription);
+		Assert.assertEquals("<p>Long description.</p>", comment.longDescription);
+		
+		Assert.assertNotNull(comment.docTags);
+		Assert.assertEquals(2, comment.docTags.length);
+		Assert.assertEquals("see", comment.docTags[0].name);
+		Assert.assertEquals("my.Class", comment.docTags[0].body);
+		
+		Assert.assertEquals("private", comment.docTags[1].name);
 	}
 }
 }
