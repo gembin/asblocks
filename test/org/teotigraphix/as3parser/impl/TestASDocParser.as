@@ -107,5 +107,24 @@ public class TestASDocParser
 			+ "</long-list></content>",
 			result);
 	}
+	
+	[Test]
+	public function test_parseCompilationUnit_bug1():void
+	{
+		var lines:Array =
+			[
+				"/** Class comment. */",
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
+		
+		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
+			"<content line=\"1\" column=\"4\"><short-list line=\"1\" column=\"5\">" +
+			"<text line=\"1\" column=\"5\">Class comment. </text></short-list>" +
+			"</content></compilation-unit>",
+			result);
+	}
 }
 }
