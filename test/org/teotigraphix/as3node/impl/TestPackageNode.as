@@ -2,9 +2,11 @@ package org.teotigraphix.as3node.impl
 {
 
 import org.flexunit.Assert;
+import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.impl.ConstantNode;
 import org.teotigraphix.as3nodes.impl.PackageNode;
 import org.teotigraphix.as3nodes.impl.TypeNode;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -16,6 +18,8 @@ public class TestPackageNode
 	private var unit:IParserNode;
 	
 	private var parser:AS3Parser;
+	
+	private var packageNode:PackageNode;
 	
 	[Before]
 	public function setUp():void
@@ -31,6 +35,8 @@ public class TestPackageNode
 				"    /** Class comment. */",
 				"    public final class Test extends OtherTest implements IEventDispatcher",
 				"    {",
+				"        [Bindable]",
+				"        /** A constant comment. */",
 				"        public static const NAME:String = \"smile\";",
 				"        [Inject(source=\"model.dataProvider\")]",
 				"        public var variable:String = \"variable\";",
@@ -45,13 +51,13 @@ public class TestPackageNode
 			];
 		
 		unit = parser.buildAst(ASTUtil.toVector(lines), "internal");
+		
+		packageNode = new PackageNode(unit, null);
 	}
 	
 	[Test]
 	public function testPackageNode():void
 	{
-		var packageNode:PackageNode = new PackageNode(unit, null);
-		
 		Assert.assertNotNull(packageNode.node);
 		Assert.assertEquals("my.domain", packageNode.name);
 		Assert.assertEquals("my.domain.Test", packageNode.qualifiedName);
@@ -62,7 +68,6 @@ public class TestPackageNode
 	[Test]
 	public function testTypeNode():void
 	{
-		var packageNode:PackageNode = new PackageNode(unit, null);
 		var typeNode:TypeNode = packageNode.typeNode as TypeNode;
 		Assert.assertNotNull(typeNode);
 		Assert.assertStrictlyEquals(packageNode, typeNode.parent);
@@ -95,8 +100,25 @@ public class TestPackageNode
 		Assert.assertEquals("Test", typeNode.name);
 		Assert.assertEquals("my.domain", IPackageNode(typeNode.parent).name);
 		Assert.assertEquals("my.domain.Test", IPackageNode(typeNode.parent).qualifiedName);
+	}
+	
+	[Test]
+	public function testConstantNode():void
+	{
+		var constants:Vector.<IConstantNode> = packageNode.typeNode.constants;
+		Assert.assertNotNull(constants);
+		Assert.assertEquals(1, constants.length);
 		
+		// modifiers
+		Assert.assertTrue(constants[0].hasModifier(Modifier.PUBLIC));
+		Assert.assertTrue(constants[0].hasModifier(Modifier.STATIC));
 		
+		Assert.assertTrue(constants[0].isPublic);
+		Assert.assertTrue(constants[0].isStatic);
+		Assert.assertTrue(ConstantNode(constants[0]).isBindable);
+		
+		Assert.assertEquals("NAME", constants[0].name);
+		Assert.assertEquals("String", constants[0].type.toString());
 	}
 }
 }

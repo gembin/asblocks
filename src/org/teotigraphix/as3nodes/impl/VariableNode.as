@@ -8,7 +8,10 @@ import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IVariableNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.utils.MetaDataUtils;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class VariableNode extends NodeBase implements IVariableNode, IModifierAware
 {
@@ -21,6 +24,8 @@ public class VariableNode extends NodeBase implements IVariableNode, IModifierAw
 	//----------------------------------
 	//  name
 	//----------------------------------
+	
+	protected var identifier:IdentifierNode;
 	
 	/**
 	 * @private
@@ -195,8 +200,25 @@ public class VariableNode extends NodeBase implements IVariableNode, IModifierAw
 	 */
 	override protected function compute():void
 	{
+		metaData = new Vector.<IMetaDataNode>();
+		
+		var nti:IParserNode = ASTUtil.getNameTypeInit(node);
+		if (!nti)
+			return;
+		
+		identifier = IdentifierNode.create(nti.getChild(0), this);
+		name = identifier.toString();
+		type = IdentifierNode.create(nti.getChild(1), this);
+		
 		// nameTypeInit
 		// metaList
+		for each (var element:IParserNode in node.children)
+		{
+			if (element.isKind(AS3NodeKind.META_LIST))
+			{
+				MetaDataUtils.computeMetaDataList(this, element);
+			}
+		}
 	}
 }
 }

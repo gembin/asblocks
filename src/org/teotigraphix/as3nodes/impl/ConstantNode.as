@@ -11,5 +11,6 @@ public class ConstantNode extends FieldNode implements IConstantNode
 	{
 		super(node, parent);
 	}
+	
 }
 }

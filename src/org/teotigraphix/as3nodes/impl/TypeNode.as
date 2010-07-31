@@ -48,6 +48,37 @@ public class TypeNode extends NodeBase implements ITypeNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  ITypeNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  constants
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _constants:Vector.<IConstantNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#constants
+	 */
+	public function get constants():Vector.<IConstantNode>
+	{
+		return _constants;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set constants(value:Vector.<IConstantNode>):void
+	{
+		_constants = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  INameAware API :: Properties
 	//
 	//--------------------------------------------------------------------------
@@ -254,8 +285,6 @@ public class TypeNode extends NodeBase implements ITypeNode
 	}
 	
 	private var block:IParserNode;
-	
-	private var constants:Vector.<IConstantNode>;
 	
 	private function computeTypeContent(typeContent:IParserNode):void
 	{
