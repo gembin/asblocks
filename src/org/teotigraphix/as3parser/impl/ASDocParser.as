@@ -311,7 +311,7 @@ public class ASDocParser extends ParserBase
 		
 		return result;
 	}
-
+	
 	//----------------------------------
 	//  long-list
 	//----------------------------------
@@ -622,16 +622,6 @@ public class ASDocParser extends ParserBase
 				break;
 			}
 			
-			/*
-			// TODO this is volitale until more tests are run
-			if (!rightSideOfAtrix && !tok.text.equals(ASTRIX) &&
-			!tok.text.equals(SPACE) && !tok.text.equals(NL))
-			{
-			rightSideOfAtrix = true;
-			break;
-			}
-			*/
-			
 			if (token.text == ASTRIX)
 			{
 				_rightSideOfAtrix = true;
@@ -647,6 +637,12 @@ public class ASDocParser extends ParserBase
 			if (token.text == NL || token.text == DOT_NL)
 			{
 				_rightSideOfAtrix = false;
+			}
+			
+			if (isIdentifierCharacter(token.text))
+			{
+				_rightSideOfAtrix = true;
+				break;
 			}
 		}
 		while (!_rightSideOfAtrix
@@ -697,9 +693,15 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function tokIsValid():Boolean
+	protected function tokIsValid():Boolean
 	{
 		return _rightSideOfAtrix;
+	}
+	
+	protected function isIdentifierCharacter(currentCharacter:String):Boolean
+	{
+		return (currentCharacter != " " && currentCharacter != "*"
+			&& currentCharacter != ".\n"  && currentCharacter != "\n");
 	}
 }
 }
