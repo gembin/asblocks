@@ -32,6 +32,12 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public class ASTUtil
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Package compilation-unit/package :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
 	public static function getPackage(unit:IParserNode):IParserNode
 	{
 		return unit.getChild(0);
@@ -39,138 +45,153 @@ public class ASTUtil
 	
 	public static function getPackageName(unit:IParserNode):String
 	{
-		var packageNode:IParserNode = getPackage(unit);
-		
-		return packageNode.getChild(0).stringValue;
+		return getPackage(unit).getChild(0).stringValue;
 	}
 	
 	public static function getPackageContent(unit:IParserNode):IParserNode
 	{
-		var packageNode:IParserNode = getPackage(unit);
-		
-		return packageNode.getChild(1);
+		return getPackage(unit).getChild(1);
 	}	
 	
 	public static function getImports(unit:IParserNode):Vector.<IParserNode>
 	{
-		var packageContent:IParserNode = getPackageContent(unit);
-		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.IMPORT, packageContent);
-		return nodes;
+		return getNodes(AS3NodeKind.IMPORT, getPackageContent(unit));
 	}
 	
 	public static function getUses(unit:IParserNode):Vector.<IParserNode>
 	{
-		var packageContent:IParserNode = getPackageContent(unit);
-		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.USE, packageContent);
-		return nodes;
+		return getNodes(AS3NodeKind.USE, getPackageContent(unit));
 	}
 	
-	public static function getClass(unit:IParserNode):IParserNode
+	//--------------------------------------------------------------------------
+	//
+	//  Type compilation-unit/package/class|interface :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	public static function getType(unit:IParserNode):IParserNode
 	{
-		var packageContentNode:IParserNode = getPackageContent(unit);
-		
-		return packageContentNode.getLastChild();
+		return getPackageContent(unit).getLastChild();
 	}
 	
-	public static function getClassContent(unit:IParserNode):IParserNode
+	public static function getTypeContent(unit:IParserNode):IParserNode
 	{
-		var classNode:IParserNode = getClass(unit);
-		
-		return classNode.getLastChild();
+		return getType(unit).getLastChild();
 	}
 	
-	public static function getClassName(unit:IParserNode):String
+	public static function getTypeName(unit:IParserNode):String
 	{
-		var classNode:IParserNode = getClass(unit);
-		var classNameNode:IParserNode = getNode(AS3NodeKind.NAME, classNode);
-		
-		return classNameNode.stringValue;
+		return getNode(AS3NodeKind.NAME, getType(unit)).stringValue;
 	}
 	
-	public static function getClassMetaData(unit:IParserNode):Vector.<IParserNode>
+	public static function getTypeMetaData(unit:IParserNode):Vector.<IParserNode>
 	{
-		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
-		
-		var classNode:IParserNode = getClass(unit);
-		var nodes:IParserNode = getNode(AS3NodeKind.META_LIST, classNode);
-		
-		if (!nodes || nodes.numChildren == 0)
-			return result;
-		
-		var len:int = nodes.numChildren;
-		for (var i:int = 0; i < len; i++)
-		{
-			result.push(nodes.children[i]);
-		}
-		
-		return result;
+		var node:IParserNode = getNode(AS3NodeKind.META_LIST, getType(unit));
+		return copyNodeToVector(node);
 	}
 	
-	public static function getClassModifiers(unit:IParserNode):Vector.<IParserNode>
+	public static function getTypeModifiers(unit:IParserNode):Vector.<IParserNode>
 	{
-		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
-		
-		var classNode:IParserNode = getClass(unit);
-		var nodes:IParserNode = getNode(AS3NodeKind.MOD_LIST, classNode);
-		
-		if (!nodes || nodes.numChildren == 0)
-			return result;
-		
-		var len:int = nodes.numChildren;
-		for (var i:int = 0; i < len; i++)
-		{
-			result.push(nodes.children[i]);
-		}
-		
-		return result;
+		var node:IParserNode = getNode(AS3NodeKind.MOD_LIST, getType(unit));
+		return copyNodeToVector(node);
 	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Class compilation-unit/package/class :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	public static function getClassExtends(unit:IParserNode):IParserNode
 	{
-		var classNode:IParserNode = getClass(unit);
-		
-		var extendsNode:IParserNode = getNode(AS3NodeKind.EXTENDS, classNode);
-		
+		var extendsNode:IParserNode = getNode(AS3NodeKind.EXTENDS, getType(unit));
 		return extendsNode;
 	}
 	
-	public static function getImplements(unit:IParserNode):Vector.<IParserNode>
+	public static function getClassImplements(unit:IParserNode):Vector.<IParserNode>
 	{
-		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
-		
-		var classNode:IParserNode = getClass(unit);
-		var nodes:IParserNode = getNode(AS3NodeKind.IMPLEMENTS_LIST, classNode);
-		
-		if (!nodes || nodes.numChildren == 0)
-			return result;
-		
-		var len:int = nodes.numChildren;
-		for (var i:int = 0; i < len; i++)
-		{
-			result.push(nodes.children[i]);
-		}
-		
-		return result;
+		var node:IParserNode = getNode(AS3NodeKind.IMPLEMENTS_LIST, getType(unit));
+		return copyNodeToVector(node);
 	}
 	
-	public static function getClassVariables(unit:IParserNode):Vector.<IParserNode>
+	//--------------------------------------------------------------------------
+	//
+	//  Members compilation-unit/package/class|interface :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	public static function getConstants(unit:IParserNode):Vector.<IParserNode>
 	{
-		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
-		
-		var classNode:IParserNode = getClassContent(unit);
-		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.VAR_LIST, classNode);
-		
-		if (!nodes || nodes.length == 0)
-			return result;
-		
-		var len:int = nodes.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			result.push(nodes[i]);
-		}
-		
-		return result;
+		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.CONST_LIST, getTypeContent(unit));
+		return copyVector(nodes);
 	}
+	
+	public static function getVariables(unit:IParserNode):Vector.<IParserNode>
+	{
+		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.VAR_LIST, getTypeContent(unit));
+		return copyVector(nodes);
+	}
+	
+	public static function getProperties(unit:IParserNode):Vector.<IParserNode>
+	{
+		return mergeVectors(getGetProperties(unit), getSetProperties(unit));
+	}
+	
+	public static function getGetProperties(unit:IParserNode):Vector.<IParserNode>
+	{
+		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.GET, getTypeContent(unit));
+		return copyVector(nodes);
+	}
+	
+	public static function getSetProperties(unit:IParserNode):Vector.<IParserNode>
+	{
+		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.SET, getTypeContent(unit));
+		return copyVector(nodes);
+	}
+	
+	public static function getMethods(unit:IParserNode):Vector.<IParserNode>
+	{
+		var nodes:Vector.<IParserNode> = getNodes(AS3NodeKind.FUNCTION, getTypeContent(unit));
+		return copyVector(nodes);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Function :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	public static function getParameters(node:IParserNode):Vector.<IParserNode>
+	{
+		var node:IParserNode = getNode(AS3NodeKind.PARAMETER_LIST, node);
+		return copyNodeToVector(node);
+	}
+	
+	public static function isParameterRest(node:IParserNode):Boolean
+	{
+		if (node.numChildren == 0)
+			return false;
+		
+		return node.getLastChild().isKind(AS3NodeKind.REST);
+	}
+	
+	public static function getMethodType(node:IParserNode):IParserNode
+	{
+		// method type could either be 'type' or 'vector'
+		var type:IParserNode = getNode(AS3NodeKind.TYPE, node);
+		if (type)
+			return type;
+		
+		type = getNode(AS3NodeKind.VECTOR, node);
+		
+		return type;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Node :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	public static function getNodes(kind:String, node:IParserNode):Vector.<IParserNode>
 	{
@@ -220,6 +241,35 @@ public class ASTUtil
 		}
 		
 		return null;
+	}
+	
+	public static function getModifiers(node:IParserNode):Vector.<IParserNode>
+	{
+		var node:IParserNode = getNode(AS3NodeKind.MOD_LIST, node);
+		return copyNodeToVector(node);
+	}
+	
+	public static function getNameTypeInit(node:IParserNode, 
+										   kind:String = null):IParserNode
+	{
+		var nti:IParserNode = getNode(AS3NodeKind.NAME_TYPE_INIT, node);
+		
+		switch (kind)
+		{
+			case AS3NodeKind.NAME:
+				return nti.getChild(0);
+				break;
+			
+			case AS3NodeKind.TYPE:
+				return nti.getChild(1);
+				break;
+			
+			case AS3NodeKind.INIT:
+				return nti.getChild(2);
+				break;
+		}
+		
+		return nti;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -309,6 +359,53 @@ public class ASTUtil
 			}
 		}
 		return buffer;
+	}
+	
+	/**
+	 * @private
+	 */
+	private static function mergeVectors(vector1:Vector.<IParserNode>,
+										 vector2:Vector.<IParserNode>):Vector.<IParserNode>
+	{
+		return vector1.concat(vector2);
+	}
+	
+	/**
+	 * @private
+	 */
+	private static function copyVector(vector:Vector.<IParserNode>):Vector.<IParserNode>
+	{
+		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
+		
+		if (!vector || vector.length == 0)
+			return result;
+		
+		var len:int = vector.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(vector[i]);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private static function copyNodeToVector(node:IParserNode):Vector.<IParserNode>
+	{
+		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
+		
+		if (!node || node.numChildren == 0)
+			return result;
+		
+		var len:int = node.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(node.children[i]);
+		}
+		
+		return result;
 	}
 }
 }

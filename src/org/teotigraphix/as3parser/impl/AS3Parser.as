@@ -881,6 +881,7 @@ public class AS3Parser extends ParserBase
 			nextToken(); // :
 			result = parseType();
 		}
+		// FIXME should be nextTokenIgnoringAsdoc(), test
 		if (tokenStartsWith("/*"))
 		{
 			nextToken(); // garbage
