@@ -69,6 +69,6 @@ public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
 	/**
 	 * TODO Docme
 	 */
-	function get functions():Vector.<IFunctionNode>;
+	function get methods():Vector.<IMethodNode>;
 }
 }

@@ -17,8 +17,12 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
+
+import org.teotigraphix.as3nodes.api.IMethodNode;
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * TODO DOCME
@@ -27,22 +31,20 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IModifierAware
+public class MethodNode extends FunctionNode implements IMethodNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function addModifier(modifier:Modifier):void;
-	
-	/**
-	 * TODO Docme
-	 */
-	function hasModifier(modifier:Modifier):Boolean;
+	public function MethodNode(node:IParserNode, parent:INode)
+	{
+		super(node, parent);
+	}
 }
 }

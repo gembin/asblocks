@@ -27,22 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IModifierAware
+public interface IMethodNode extends IFunctionNode
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function addModifier(modifier:Modifier):void;
-	
-	/**
-	 * TODO Docme
-	 */
-	function hasModifier(modifier:Modifier):Boolean;
 }
 }

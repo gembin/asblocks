@@ -23,8 +23,8 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
-import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.MetaData;
@@ -127,28 +127,28 @@ public class TypeNode extends NodeBase implements ITypeNode
 	}
 	
 	//----------------------------------
-	//  functions
+	//  methods
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	private var _functions:Vector.<IFunctionNode>;
+	private var _methods:Vector.<IMethodNode>;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#functions
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#methods
 	 */
-	public function get functions():Vector.<IFunctionNode>
+	public function get methods():Vector.<IMethodNode>
 	{
-		return _functions;
+		return _methods;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set functions(value:Vector.<IFunctionNode>):void
+	public function set methods(value:Vector.<IMethodNode>):void
 	{
-		_functions = value;
+		_methods = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -365,7 +365,7 @@ public class TypeNode extends NodeBase implements ITypeNode
 		constants = new Vector.<IConstantNode>();
 		attributes = new Vector.<IAttributeNode>();
 		accessors = new Vector.<IAccessorNode>();
-		functions = new Vector.<IFunctionNode>();
+		methods = new Vector.<IMethodNode>();
 		
 		if (typeContent.numChildren == 0)
 			return;
@@ -376,7 +376,7 @@ public class TypeNode extends NodeBase implements ITypeNode
 			detectConstant(child);
 			detectAttribute(child);
 			detectAccessor(child);
-			detectFunction(child);
+			detectMethod(child);
 		}
 	}
 	
@@ -405,11 +405,11 @@ public class TypeNode extends NodeBase implements ITypeNode
 		}
 	}
 	
-	private function detectFunction(child:IParserNode):void
+	private function detectMethod(child:IParserNode):void
 	{
 		if (child.isKind(AS3NodeKind.FUNCTION))
 		{
-			functions.push(new FunctionNode(child, this));
+			methods.push(new MethodNode(child, this));
 		}
 	}
 	
