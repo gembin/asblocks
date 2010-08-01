@@ -46,6 +46,24 @@ public interface ITypeNode extends INode,
 	function get accessors():Vector.<IAccessorNode>;
 	
 	//----------------------------------
+	//  accessors
+	//----------------------------------
+	
+	/**
+	 * The type's get IAccessorNode children.
+	 */
+	function get getters():Vector.<IAccessorNode>;
+	
+	//----------------------------------
+	//  accessors
+	//----------------------------------
+	
+	/**
+	 * The type's set IAccessorNode children.
+	 */
+	function get setters():Vector.<IAccessorNode>;	
+	
+	//----------------------------------
 	//  functions
 	//----------------------------------
 	

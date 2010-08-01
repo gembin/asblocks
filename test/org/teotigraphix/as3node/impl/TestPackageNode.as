@@ -2,6 +2,7 @@ package org.teotigraphix.as3node.impl
 {
 
 import org.flexunit.Assert;
+import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
@@ -39,6 +40,14 @@ public class TestPackageNode
 				"    import flash.events.IEventDispatcher",
 				"    [Bindable]",
 				"    [Factory(type=\"my.factory.Class\")]",
+				"    /** An event. */",
+				"    [Event(name=\"myEvent\",type=\"flash.events.Event\")]",
+				"    /** An style. */",
+				"    [Style(name=\"myStyle\",type=\"Number\")]",
+				"    /** An effect. */",
+				"    [Effect(name=\"myEffect\",event=\"myEvent\")]",
+				"    /** An state. */",
+				"    [SkinState(\"up\")]",
 				"    /**",
 				"     * Class comment.",
 				"     * ",
@@ -119,12 +128,33 @@ public class TestPackageNode
 		
 		// metadata
 		var meta:Vector.<IMetaDataNode>;
-		Assert.assertEquals(2, typeNode.numMetaData);
+		Assert.assertEquals(6, typeNode.numMetaData);
 		meta = typeNode.getMetaData("Bindable");
 		Assert.assertStrictlyEquals(typeNode, meta[0].parent);
 		Assert.assertNotNull(meta);
 		Assert.assertEquals("Bindable", meta[0].name);
 		Assert.assertEquals("", meta[0].parameter);
+		
+		// events
+		var events:Vector.<IMetaDataNode> = typeNode.getMetaData("Event");
+		Assert.assertNotNull(events);
+		Assert.assertEquals(1, events.length);
+		Assert.assertEquals("Event", events[0].name);
+		Assert.assertEquals("name = \"myEvent\" , type = \"flash.events.Event\"", events[0].parameter);
+		
+		// styles
+		var styles:Vector.<IMetaDataNode> = typeNode.getMetaData("Style");
+		Assert.assertNotNull(styles);
+		Assert.assertEquals(1, styles.length);
+		Assert.assertEquals("Style", styles[0].name);
+		Assert.assertEquals("name = \"myStyle\" , type = \"Number\"", styles[0].parameter);
+		
+		//skinstate
+		var states:Vector.<IMetaDataNode> = typeNode.getMetaData("SkinState");
+		Assert.assertNotNull(states);
+		Assert.assertEquals(1, states.length);
+		Assert.assertEquals("SkinState", states[0].name);
+		Assert.assertEquals("\"up\"", states[0].parameter);
 		
 		meta = typeNode.getMetaData("Factory");
 		Assert.assertStrictlyEquals(typeNode, meta[0].parent);
@@ -216,7 +246,16 @@ public class TestPackageNode
 	[Test]
 	public function testAccessorNode():void
 	{
+		var getters:Vector.<IAccessorNode> = packageNode.typeNode.getters;
+		var setters:Vector.<IAccessorNode> = packageNode.typeNode.setters;
 		
+		Assert.assertNotNull(getters);
+		Assert.assertNotNull(setters);
+		
+		Assert.assertEquals(1, getters.length);
+		Assert.assertEquals(1, getters.length);
+		
+		Assert.assertEquals("property", getters[0].name);
 	}
 	
 	[Test]

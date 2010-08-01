@@ -27,22 +27,9 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IFunctionNode extends IScriptNode, IParameterAware
+public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
+	IVisible, INameAware
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  isConstructor
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isConstructor():Boolean;
 	
 }
 }

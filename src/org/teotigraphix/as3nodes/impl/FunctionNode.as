@@ -32,7 +32,7 @@ import org.teotigraphix.as3parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class FunctionNode extends NodeBase implements IFunctionNode
+public class FunctionNode extends ScriptNode implements IFunctionNode
 {
 	//--------------------------------------------------------------------------
 	//

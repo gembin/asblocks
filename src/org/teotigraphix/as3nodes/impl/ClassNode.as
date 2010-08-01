@@ -20,7 +20,6 @@
 package org.teotigraphix.as3nodes.impl
 {
 
-import org.osmf.metadata.IIdentifier;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
@@ -204,6 +203,8 @@ public class ClassNode extends TypeNode implements IClassNode
 	 */
 	override protected function computeContent(typeContent:IParserNode):void
 	{
+		super.computeContent(typeContent);
+		
 		constants = new Vector.<IConstantNode>();
 		attributes = new Vector.<IAttributeNode>();
 		
