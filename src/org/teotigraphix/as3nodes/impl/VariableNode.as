@@ -27,7 +27,7 @@ import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IVariableNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
-import org.teotigraphix.as3nodes.utils.MetaDataUtils;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -154,11 +154,11 @@ public class VariableNode extends NodeBase implements IVariableNode, IModifierAw
 		return result;
 	}
 	
-	public function hasMetaData(meta:MetaData):Boolean
+	public function hasMetaData(name:String):Boolean
 	{
 		for each (var element:IMetaDataNode in metaData)
 		{
-			if (element.name == meta.name)
+			if (element.name == name)
 				return true;
 		}
 		return false;
@@ -166,7 +166,7 @@ public class VariableNode extends NodeBase implements IVariableNode, IModifierAw
 	
 	public function get isBindable():Boolean
 	{
-		return hasMetaData(MetaData.BINDABLE);
+		return hasMetaData(MetaData.BINDABLE.toString());
 	}
 	
 	//--------------------------------------------------------------------------
@@ -242,7 +242,7 @@ public class VariableNode extends NodeBase implements IVariableNode, IModifierAw
 		{
 			if (element.isKind(AS3NodeKind.META_LIST))
 			{
-				MetaDataUtils.computeMetaDataList(this, element);
+				NodeUtil.computeMetaDataList(this, element);
 			}
 		}
 	}

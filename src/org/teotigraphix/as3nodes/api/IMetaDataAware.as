@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * Clients implement this interface to host IMetaDataNode nodes.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -40,7 +40,7 @@ public interface IMetaDataAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The number of metadata nodes found on the host.
 	 */
 	function get numMetaData():int;
 	
@@ -51,13 +51,26 @@ public interface IMetaDataAware
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Adds an IMetaDataNode node to the host.
+	 * 
+	 * @param node The metadata node to add.
 	 */
 	function addMetaData(node:IMetaDataNode):void;
 	
 	/**
-	 * TODO Docme
+	 * Returns all metadata named name as a Vector.
+	 * 
+	 * @param name A String indicating the metadata nodes to return.
+	 * @return A Vector of IMetaDataNode named name.
 	 */
 	function getMetaData(name:String):Vector.<IMetaDataNode>;
+	
+	/**
+	 * Returns whether the host contains metadata named name.
+	 * 
+	 * @param name A String indicating the metadata name to test.
+	 * @return A Boolean indicating whether the metadata exists.
+	 */
+	function hasMetaData(name:String):Boolean;
 }
 }

@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * An INode's visibility.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -40,7 +40,7 @@ public interface IVisible extends IModifierAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether the node is visible publicly.
 	 */
 	function get isPublic():Boolean;
 }

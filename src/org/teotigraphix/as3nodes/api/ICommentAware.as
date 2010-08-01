@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * Clients implement this interface to host ICommentNode nodes.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -40,7 +40,7 @@ public interface ICommentAware extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The ICommentNode owned by the host.
 	 */
 	function get comment():ICommentNode;
 	

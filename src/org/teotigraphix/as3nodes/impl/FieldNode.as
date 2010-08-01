@@ -25,7 +25,7 @@ import org.teotigraphix.as3nodes.api.IFieldNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.AsDocUtil;
-import org.teotigraphix.as3nodes.utils.ModifierUtil;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
@@ -128,7 +128,7 @@ public class FieldNode extends VariableNode implements IFieldNode
 			}
 			else if (element.isKind(AS3NodeKind.MOD_LIST))
 			{
-				ModifierUtil.computeModifierList(this, element);
+				NodeUtil.computeModifierList(this, element);
 			}
 		}
 	}

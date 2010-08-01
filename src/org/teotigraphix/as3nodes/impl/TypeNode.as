@@ -22,6 +22,7 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
@@ -29,8 +30,7 @@ import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
-import org.teotigraphix.as3nodes.utils.MetaDataUtils;
-import org.teotigraphix.as3nodes.utils.ModifierUtil;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
@@ -43,7 +43,162 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public class TypeNode extends NodeBase implements ITypeNode
 {
-	private var identifier:IdentifierNode;
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  identifier
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _identifier:IdentifierNode;
+	
+	/**
+	 * The type identifier node.
+	 */
+	protected function get identifier():IdentifierNode
+	{
+		return _identifier;
+	}
+	
+	/**
+	 * @private
+	 */	
+	protected function set identifier(value:IdentifierNode):void
+	{
+		_identifier = value;
+		if (_identifier)
+			_name = _identifier.toString();
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IMetaDataAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  numMetaData
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected var metadata:Vector.<IMetaDataNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#numMetaData
+	 */
+	public function get numMetaData():int
+	{
+		return metadata.length;
+	}
+	
+	//----------------------------------
+	//  isBindable
+	//----------------------------------
+	
+	/**
+	 * Returns whether this node is Bindable.
+	 */
+	public function get isBindable():Boolean
+	{
+		return hasMetaData(MetaData.BINDABLE.toString());
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  ICommentAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  comment
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _comment:ICommentNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#comment
+	 */
+	public function get comment():ICommentNode
+	{
+		return _comment;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set comment(value:ICommentNode):void
+	{
+		_comment = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IVisible API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  isPublic
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IVisible#isPublic
+	 */
+	public function get isPublic():Boolean
+	{
+		return hasModifier(Modifier.PUBLIC);
+	}
+	
+	//----------------------------------
+	//  isFinal
+	//----------------------------------
+	
+	public function get isFinal():Boolean
+	{
+		return hasModifier(Modifier.FINAL);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  INameAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _name:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.INameAware#name
+	 */
+	public function get name():String
+	{
+		return _name;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set name(value:String):void
+	{
+		_name = value;
+	}
 	
 	//--------------------------------------------------------------------------
 	//
@@ -153,128 +308,6 @@ public class TypeNode extends NodeBase implements ITypeNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  INameAware API :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _name:String;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.INameAware#name
-	 */
-	public function get name():String
-	{
-		return _name;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set name(value:String):void
-	{
-		_name = value;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  IVisible API :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  isPublic
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.IVisible#isPublic
-	 */
-	public function get isPublic():Boolean
-	{
-		return hasModifier(Modifier.PUBLIC);
-	}
-	
-	//----------------------------------
-	//  isFinal
-	//----------------------------------
-	
-	public function get isFinal():Boolean
-	{
-		return hasModifier(Modifier.FINAL);
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  IMetaDataAware API :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  numMetaData
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	protected var metaData:Vector.<IMetaDataNode>;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#numMetaData
-	 */
-	public function get numMetaData():int
-	{
-		return metaData.length;
-	}
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#addMetaData()
-	 */
-	public function addMetaData(node:IMetaDataNode):void
-	{
-		metaData.push(node);
-	}
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#getMetaData()
-	 */
-	public function getMetaData(name:String):Vector.<IMetaDataNode>
-	{
-		var result:Vector.<IMetaDataNode> = new Vector.<IMetaDataNode>();
-		
-		var len:int = metaData.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var element:IMetaDataNode = metaData[i] as IMetaDataNode;
-			if (element.name == name)
-				result.push(element);
-		}
-		
-		return result;
-	}
-	
-	public function hasMetaData(meta:MetaData):Boolean
-	{
-		for each (var element:IMetaDataNode in metaData)
-		{
-			if (element.name == meta.name)
-				return true;
-		}
-		return false;
-	}
-	
-	public function get isBindable():Boolean
-	{
-		return hasMetaData(MetaData.BINDABLE);
-	}
-	
-	//--------------------------------------------------------------------------
-	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -285,6 +318,51 @@ public class TypeNode extends NodeBase implements ITypeNode
 	public function TypeNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IMetaDataAware API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#addMetaData()
+	 */
+	public function addMetaData(node:IMetaDataNode):void
+	{
+		metadata.push(node);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#getMetaData()
+	 */
+	public function getMetaData(name:String):Vector.<IMetaDataNode>
+	{
+		var result:Vector.<IMetaDataNode> = new Vector.<IMetaDataNode>();
+		
+		var len:int = metadata.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IMetaDataNode = metadata[i] as IMetaDataNode;
+			if (element.name == name)
+				result.push(element);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#hasMetaData()
+	 */
+	public function hasMetaData(name:String):Boolean
+	{
+		for each (var element:IMetaDataNode in metadata)
+		{
+			if (element.name == name)
+				return true;
+		}
+		return false;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -326,41 +404,85 @@ public class TypeNode extends NodeBase implements ITypeNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Constructor.
+	 * @private
 	 */
 	override protected function compute():void
 	{
+		comment = NodeFactory.instance.createCommentPlaceholderNode(this);
+		
 		modifiers = new Vector.<Modifier>();
-		metaData = new Vector.<IMetaDataNode>();
+		metadata = new Vector.<IMetaDataNode>();
 		
 		if (node.numChildren == 0)
 			return;
 		
 		for each (var child:IParserNode in node.children)
 		{
-			if (child.isKind(AS3NodeKind.CONTENT))
+			if (child.isKind(AS3NodeKind.META_LIST))
 			{
-				computeTypeContent(child);
+				computeMetaDataList(child);
+			}
+			else if (child.isKind(AS3NodeKind.AS_DOC))
+			{
+				computeAsDoc(child);
 			}
 			else if (child.isKind(AS3NodeKind.MOD_LIST))
 			{
-				ModifierUtil.computeModifierList(this, child);
-			}
-			else if (child.isKind(AS3NodeKind.META_LIST))
-			{
-				MetaDataUtils.computeMetaDataList(this, child);
+				computeModifierList(child);
 			}
 			else if (child.isKind(AS3NodeKind.NAME))
 			{
-				identifier = IdentifierNode.create(child, this);
-				_name = identifier.toString();
+				computeName(child);
+			}
+			else if (child.isKind(AS3NodeKind.CONTENT))
+			{
+				computeContent(child);
 			}
 		}
 	}
 	
-	private var block:IParserNode;
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
-	private function computeTypeContent(typeContent:IParserNode):void
+	/**
+	 * @private
+	 */
+	protected function computeMetaDataList(typeContent:IParserNode):void
+	{
+		NodeUtil.computeMetaDataList(this, typeContent);
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function computeAsDoc(typeContent:IParserNode):void
+	{
+		NodeUtil.computeAsDoc(this, typeContent);
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function computeModifierList(typeContent:IParserNode):void
+	{
+		NodeUtil.computeModifierList(this, typeContent);
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function computeName(typeContent:IParserNode):void
+	{
+		identifier = IdentifierNode.create(typeContent, this);
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function computeContent(typeContent:IParserNode):void
 	{
 		constants = new Vector.<IConstantNode>();
 		attributes = new Vector.<IAttributeNode>();
@@ -372,7 +494,6 @@ public class TypeNode extends NodeBase implements ITypeNode
 		
 		for each (var child:IParserNode in typeContent.children)
 		{
-			detectBlock(child);
 			detectConstant(child);
 			detectAttribute(child);
 			detectAccessor(child);
@@ -380,44 +501,45 @@ public class TypeNode extends NodeBase implements ITypeNode
 		}
 	}
 	
-	private function detectConstant(child:IParserNode):void
+	/**
+	 * @private
+	 */
+	protected function detectConstant(child:IParserNode):void
 	{
 		if (child.isKind(AS3NodeKind.CONST_LIST))
 		{
-			constants.push(new ConstantNode(child, this));
+			constants.push(NodeFactory.instance.createConstant(child, this));
 		}
 	}
 	
-	private function detectAttribute(child:IParserNode):void
+	/**
+	 * @private
+	 */
+	protected function detectAttribute(child:IParserNode):void
 	{
 		if (child.isKind(AS3NodeKind.VAR_LIST))
 		{
-			attributes.push(new AttributeNode(child, this));
+			attributes.push(NodeFactory.instance.createAttribute(child, this));
 		}
 	}
 	
-	private function detectAccessor(child:IParserNode):void
+	/**
+	 * @private
+	 */
+	protected function detectAccessor(child:IParserNode):void
 	{
 		if (child.isKind(AS3NodeKind.GET)
 			|| child.isKind(AS3NodeKind.SET))
 		{
-			accessors.push(new AccessorNode(child, this));
+			accessors.push(NodeFactory.instance.createAccessor(child, this));
 		}
 	}
 	
-	private function detectMethod(child:IParserNode):void
+	protected function detectMethod(child:IParserNode):void
 	{
 		if (child.isKind(AS3NodeKind.FUNCTION))
 		{
-			methods.push(new MethodNode(child, this));
-		}
-	}
-	
-	private function detectBlock(child:IParserNode):void
-	{
-		if (child.isKind(AS3NodeKind.BLOCK))
-		{
-			block = child;
+			methods.push(NodeFactory.instance.createMethod(child, this));
 		}
 	}
 }

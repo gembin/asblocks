@@ -23,7 +23,7 @@ package org.teotigraphix.as3nodes.api
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * TODO DOCME
+ * A node that holds an internal IParserNode held in a parser AST.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -42,7 +42,7 @@ public interface INode extends INestedNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The internal IParserNode found in a parent AST.
 	 */
 	function get node():IParserNode;
 }

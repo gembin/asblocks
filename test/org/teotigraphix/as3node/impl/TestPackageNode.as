@@ -35,7 +35,15 @@ public class TestPackageNode
 				"    import flash.events.IEventDispatcher",
 				"    [Bindable]",
 				"    [Factory(type=\"my.factory.Class\")]",
-				"    /** Class comment. */",
+				"    /**",
+				"     * Class comment.",
+				"     * ",
+				"     * <p>A long description spanning two separate",
+				"     * comment lines with <code>code text</code><p>.",
+				"     * ",
+				"     * @author Michael Schmalle",
+				"     * @since 1.0",
+				"     */",
 				"    public final class Test extends OtherTest implements IEventDispatcher",
 				"    {",
 				"        [Bindable]",
@@ -73,6 +81,7 @@ public class TestPackageNode
 		Assert.assertEquals("my.domain.Test", packageNode.qualifiedName);
 		Assert.assertNotNull(packageNode.typeNode);
 		Assert.assertNotNull(packageNode.imports);
+		Assert.assertEquals("flash.events.IEventDispatcher", packageNode.imports[0].stringValue);
 	}
 	
 	[Test]

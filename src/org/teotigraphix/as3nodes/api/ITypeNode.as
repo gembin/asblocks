@@ -21,13 +21,14 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * The ITypeNode represents a class or interface node.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
+public interface ITypeNode extends INode, 
+	IMetaDataAware, ICommentAware, IVisible, INameAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -40,7 +41,7 @@ public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type's IConstantNode children.
 	 */
 	function get constants():Vector.<IConstantNode>;
 	
@@ -49,7 +50,7 @@ public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type's IAttributeNode children.
 	 */
 	function get attributes():Vector.<IAttributeNode>;
 	
@@ -58,7 +59,7 @@ public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type's IAccessorNode children.
 	 */
 	function get accessors():Vector.<IAccessorNode>;
 	
@@ -67,7 +68,7 @@ public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type's IMethodNode children.
 	 */
 	function get methods():Vector.<IMethodNode>;
 }

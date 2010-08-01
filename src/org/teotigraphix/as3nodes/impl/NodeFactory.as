@@ -20,7 +20,12 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IAccessorNode;
+import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -34,6 +39,21 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public class NodeFactory
 {
+	/**
+	 * @private
+	 */
+	private static var _instance:NodeFactory;
+	
+	/**
+	 * Returns the single instance of the NodeFactory.
+	 */
+	public static function get instance():NodeFactory
+	{
+		if (!_instance)
+			_instance = new NodeFactory();
+		return _instance;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public Class Factory :: Methods
@@ -41,19 +61,97 @@ public class NodeFactory
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates an ICommentNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
 	 */
-	public static function createPackage(node:IParserNode, parent:INode):IPackageNode
+	public function createCommentNode(node:IParserNode, 
+									  parent:INode):ICommentNode
+	{
+		return new CommentNode(node, parent);
+	}
+	
+	/**
+	 * Creates an ICommentNode placeholder.
+	 * 
+	 * @param parent An INode parent.
+	 */
+	public function createCommentPlaceholderNode(parent:INode):ICommentNode
+	{
+		return new CommentPlaceholderNode(parent);
+	}
+	
+	/**
+	 * Creates an IPackageNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createPackage(node:IParserNode, 
+								  parent:INode):IPackageNode
 	{
 		return new PackageNode(node, parent);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates an IMetaDataNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
 	 */
-	public static function createMetaData(node:IParserNode, parent:INode):IMetaDataNode
+	public function createMetaData(node:IParserNode, 
+								   parent:INode):IMetaDataNode
 	{
 		return new MetaDataNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IConstantNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createConstant(node:IParserNode, 
+								   parent:INode):IConstantNode
+	{
+		return new ConstantNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IAttributeNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createAttribute(node:IParserNode, 
+									parent:INode):IAttributeNode
+	{
+		return new AttributeNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IAccessorNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createAccessor(node:IParserNode, 
+								   parent:INode):IAccessorNode
+	{
+		return new AccessorNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IMethodNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createMethod(node:IParserNode, 
+								 parent:INode):IMethodNode
+	{
+		return new MethodNode(node, parent);
 	}
 }
 }

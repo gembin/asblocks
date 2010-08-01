@@ -21,7 +21,8 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * Clients implement this interface to host Modifier instances that determine
+ * the nodes visibility.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -36,12 +37,17 @@ public interface IModifierAware
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Adds a Modifier to the hosting node.
+	 * 
+	 * @param modifier A node modifier.
 	 */
 	function addModifier(modifier:Modifier):void;
 	
 	/**
-	 * TODO Docme
+	 * Returns whether the hosting nod contains the Modifier.
+	 * 
+	 * @param modifier A node modifier.
+	 * @return A Boolean indicating whether the node contains the Modifier.
 	 */
 	function hasModifier(modifier:Modifier):Boolean;
 }

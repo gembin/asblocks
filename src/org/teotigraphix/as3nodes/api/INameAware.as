@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * Clients implement this interface to allow node naming.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -40,7 +40,7 @@ public interface INameAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The String display name.
 	 */
 	function get name():String;
 }
