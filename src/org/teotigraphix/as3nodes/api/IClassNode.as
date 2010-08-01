@@ -17,61 +17,75 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.impl
+package org.teotigraphix.as3nodes.api
 {
 
-import org.teotigraphix.as3nodes.api.IIdentifierNode;
-import org.teotigraphix.as3nodes.api.INode;
-import org.teotigraphix.as3parser.api.IParserNode;
-
 /**
- * An identifier name node.
+ * TODO DOCME
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class IdentifierNode extends NodeBase implements IIdentifierNode
+public interface IClassNode extends ITypeNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Constructor
+	//  Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  superType
+	//----------------------------------
 	
 	/**
-	 * Constructor.
+	 * TODO Docme
 	 */
-	public function IdentifierNode(node:IParserNode, parent:INode)
-	{
-		super(node, parent);
-	}
+	function get superType():IIdentifierNode;
 	
-	//--------------------------------------------------------------------------
-	//
-	//  Public :: Methods
-	//
-	//--------------------------------------------------------------------------
+	//----------------------------------
+	//  implements
+	//----------------------------------
 	
 	/**
-	 * @private
+	 * TODO Docme
 	 */
-	public function toString():String
-	{
-		return node.stringValue;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Overridden Protected :: Methods
-	//
-	//--------------------------------------------------------------------------
+	function get implementList():Vector.<IIdentifierNode>;
 	
 	/**
 	 * @private
 	 */
-	override protected function compute():void
-	{
-	}
+	function set implementList(value:Vector.<IIdentifierNode>):void;
+	
+	//----------------------------------
+	//  constants
+	//----------------------------------
+	
+	/**
+	 * The type's IConstantNode children.
+	 */
+	function get constants():Vector.<IConstantNode>;
+	
+	//----------------------------------
+	//  attributes
+	//----------------------------------
+	
+	/**
+	 * The type's IAttributeNode children.
+	 */
+	function get attributes():Vector.<IAttributeNode>;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function addImplementation(implementation:IIdentifierNode):void;
+	
 }
 }

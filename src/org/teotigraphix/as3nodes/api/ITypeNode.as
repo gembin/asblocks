@@ -37,24 +37,6 @@ public interface ITypeNode extends INode,
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  constants
-	//----------------------------------
-	
-	/**
-	 * The type's IConstantNode children.
-	 */
-	function get constants():Vector.<IConstantNode>;
-	
-	//----------------------------------
-	//  attributes
-	//----------------------------------
-	
-	/**
-	 * The type's IAttributeNode children.
-	 */
-	function get attributes():Vector.<IAttributeNode>;
-	
-	//----------------------------------
 	//  accessors
 	//----------------------------------
 	
@@ -71,5 +53,13 @@ public interface ITypeNode extends INode,
 	 * The type's IMethodNode children.
 	 */
 	function get methods():Vector.<IMethodNode>;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	function addSuperType(type:IIdentifierNode):void;
 }
 }

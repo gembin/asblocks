@@ -3,12 +3,14 @@ package org.teotigraphix.as3node.impl
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IClassNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.impl.AttributeNode;
+import org.teotigraphix.as3nodes.impl.CompilationNode;
 import org.teotigraphix.as3nodes.impl.ConstantNode;
 import org.teotigraphix.as3nodes.impl.PackageNode;
 import org.teotigraphix.as3nodes.impl.TypeNode;
@@ -21,6 +23,8 @@ public class TestPackageNode
 	private var unit:IParserNode;
 	
 	private var parser:AS3Parser;
+	
+	private var compilationNode:CompilationNode;
 	
 	private var packageNode:PackageNode;
 	
@@ -39,12 +43,13 @@ public class TestPackageNode
 				"     * Class comment.",
 				"     * ",
 				"     * <p>A long description spanning two separate",
-				"     * comment lines with <code>code text</code><p>.",
+				"     * comment lines with text.<p>",
 				"     * ",
 				"     * @author Michael Schmalle",
 				"     * @since 1.0",
 				"     */",
-				"    public final class Test extends OtherTest implements IEventDispatcher",
+				"    public final class Test extends OtherTest ",
+				"        implements IEventDispatcher, my.domain.ITest",
 				"    {",
 				"        [Bindable]",
 				"        /** ",
@@ -70,7 +75,8 @@ public class TestPackageNode
 		
 		unit = parser.buildAst(ASTUtil.toVector(lines), "internal");
 		
-		packageNode = new PackageNode(unit, null);
+		compilationNode = new CompilationNode(unit, null);
+		packageNode = compilationNode.packageNode as PackageNode;
 	}
 	
 	[Test]
@@ -87,9 +93,20 @@ public class TestPackageNode
 	[Test]
 	public function testTypeNode():void
 	{
-		var typeNode:TypeNode = packageNode.typeNode as TypeNode;
+		var typeNode:IClassNode = packageNode.typeNode as IClassNode;
 		Assert.assertNotNull(typeNode);
 		Assert.assertStrictlyEquals(packageNode, typeNode.parent);
+		
+		// comment
+		var comment:ICommentNode = typeNode.comment;
+		Assert.assertNotNull(comment);
+		Assert.assertEquals("Class comment.", comment.shortDescription);
+		Assert.assertEquals("<p>A long description spanning two separate comment lines with text.<p>", comment.longDescription);
+		Assert.assertNotNull(comment.docTags);
+		Assert.assertEquals("author", comment.docTags[0].name);
+		Assert.assertEquals("Michael Schmalle", comment.docTags[0].body);
+		Assert.assertEquals("since", comment.docTags[1].name);
+		Assert.assertEquals("1.0", comment.docTags[1].body);
 		
 		// modifiers
 		Assert.assertTrue(typeNode.hasModifier(Modifier.PUBLIC));
@@ -97,8 +114,8 @@ public class TestPackageNode
 		Assert.assertFalse(typeNode.hasModifier(Modifier.DYNAMIC));
 		
 		Assert.assertTrue(typeNode.isPublic);
-		Assert.assertTrue(typeNode.isFinal);
-		Assert.assertTrue(typeNode.isBindable);
+		Assert.assertTrue(TypeNode(typeNode).isFinal);
+		Assert.assertTrue(TypeNode(typeNode).isBindable);
 		
 		// metadata
 		var meta:Vector.<IMetaDataNode>;
@@ -119,12 +136,22 @@ public class TestPackageNode
 		Assert.assertEquals("Test", typeNode.name);
 		Assert.assertEquals("my.domain", IPackageNode(typeNode.parent).name);
 		Assert.assertEquals("my.domain.Test", IPackageNode(typeNode.parent).qualifiedName);
+		
+		// extends
+		Assert.assertNotNull(typeNode.superType);
+		Assert.assertEquals("OtherTest", typeNode.superType.toString());
+		
+		// implements
+		Assert.assertNotNull(typeNode.implementList);
+		Assert.assertEquals(2, typeNode.implementList.length);
+		Assert.assertEquals("IEventDispatcher", typeNode.implementList[0].toString());
+		Assert.assertEquals("my.domain.ITest", typeNode.implementList[1].toString());
 	}
 	
 	[Test]
 	public function testConstantNode():void
 	{
-		var constants:Vector.<IConstantNode> = packageNode.typeNode.constants;
+		var constants:Vector.<IConstantNode> = IClassNode(packageNode.typeNode).constants;
 		Assert.assertNotNull(constants);
 		Assert.assertEquals(1, constants.length);
 		
@@ -155,7 +182,7 @@ public class TestPackageNode
 	[Test]
 	public function testAttributeNode():void
 	{
-		var attributes:Vector.<IAttributeNode> = packageNode.typeNode.attributes;
+		var attributes:Vector.<IAttributeNode> = IClassNode(packageNode.typeNode).attributes;
 		Assert.assertNotNull(attributes);
 		Assert.assertEquals(2, attributes.length);
 		

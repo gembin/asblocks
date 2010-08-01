@@ -17,61 +17,31 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.impl
+package org.teotigraphix.as3nodes.api
 {
 
-import org.teotigraphix.as3nodes.api.IIdentifierNode;
-import org.teotigraphix.as3nodes.api.INode;
-import org.teotigraphix.as3parser.api.IParserNode;
-
 /**
- * An identifier name node.
+ * TODO DOCME
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class IdentifierNode extends NodeBase implements IIdentifierNode
+public interface IInterfaceNode extends ITypeNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Constructor
+	//  Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  superTypeList
+	//----------------------------------
 	
 	/**
-	 * Constructor.
+	 * TODO Docme
 	 */
-	public function IdentifierNode(node:IParserNode, parent:INode)
-	{
-		super(node, parent);
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Public :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	public function toString():String
-	{
-		return node.stringValue;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Overridden Protected :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	override protected function compute():void
-	{
-	}
+	function get superTypeList():Vector.<IIdentifierNode>;
 }
 }

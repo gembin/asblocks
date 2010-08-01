@@ -23,6 +23,7 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
@@ -173,9 +174,20 @@ public class PackageNode extends NodeBase implements IPackageNode
 	 */
 	override protected function compute():void
 	{
-		_typeNode = new TypeNode(ASTUtil.getType(node), this);
-		_imports = ASTUtil.getImports(node);
-		_name = ASTUtil.getPackageName(node);
+		var type:IParserNode = ASTUtil.getTypeFromPackage(node);
+		//var content:IParserNode = type.getLastChild();
+		
+		if (type.isKind(AS3NodeKind.CLASS))
+		{
+			_typeNode = new ClassNode(type, this);
+		}
+		else if (type.isKind(AS3NodeKind.INTERFACE))
+		{
+			//_typeNode = new (null, this);
+		}
+		
+		_imports = ASTUtil.getNodes(AS3NodeKind.IMPORT, node.getLastChild());
+		_name = ASTUtil.getNode(AS3NodeKind.NAME, node).stringValue;
 		_qualifiedName = _name;
 		if (_typeNode && (_name != null || _name != ""))
 			_qualifiedName = _name + "." + _typeNode.name;

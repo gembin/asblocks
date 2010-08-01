@@ -24,6 +24,7 @@ import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
@@ -59,6 +60,18 @@ public class NodeFactory
 	//  Public Class Factory :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * Creates an IIdentifierNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createIdentifier(node:IParserNode, 
+									 parent:INode):IIdentifierNode
+	{
+		return new IdentifierNode(node, parent);
+	}
 	
 	/**
 	 * Creates an ICommentNode.

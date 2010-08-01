@@ -21,9 +21,8 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.IAccessorNode;
-import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
-import org.teotigraphix.as3nodes.api.IConstantNode;
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
@@ -56,12 +55,12 @@ public class TypeNode extends NodeBase implements ITypeNode
 	/**
 	 * @private
 	 */
-	private var _identifier:IdentifierNode;
+	private var _identifier:IIdentifierNode;
 	
 	/**
 	 * The type identifier node.
 	 */
-	protected function get identifier():IdentifierNode
+	protected function get identifier():IIdentifierNode
 	{
 		return _identifier;
 	}
@@ -69,7 +68,7 @@ public class TypeNode extends NodeBase implements ITypeNode
 	/**
 	 * @private
 	 */	
-	protected function set identifier(value:IdentifierNode):void
+	protected function set identifier(value:IIdentifierNode):void
 	{
 		_identifier = value;
 		if (_identifier)
@@ -207,56 +206,6 @@ public class TypeNode extends NodeBase implements ITypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  constants
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _constants:Vector.<IConstantNode>;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#constants
-	 */
-	public function get constants():Vector.<IConstantNode>
-	{
-		return _constants;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set constants(value:Vector.<IConstantNode>):void
-	{
-		_constants = value;
-	}
-	
-	//----------------------------------
-	//  attributes
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _attributes:Vector.<IAttributeNode>;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#attributes
-	 */
-	public function get attributes():Vector.<IAttributeNode>
-	{
-		return _attributes;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set attributes(value:Vector.<IAttributeNode>):void
-	{
-		_attributes = value;
-	}
-	
-	//----------------------------------
 	//  accessors
 	//----------------------------------
 	
@@ -304,6 +253,31 @@ public class TypeNode extends NodeBase implements ITypeNode
 	public function set methods(value:Vector.<IMethodNode>):void
 	{
 		_methods = value;
+	}
+
+	//----------------------------------
+	//  superTypeList
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _superTypeList:Vector.<IIdentifierNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IInterfaceNode#superTypeList
+	 */
+	public function get superTypeList():Vector.<IIdentifierNode>
+	{
+		return _superTypeList;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set superTypeList(value:Vector.<IIdentifierNode>):void
+	{
+		_superTypeList = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -399,6 +373,20 @@ public class TypeNode extends NodeBase implements ITypeNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  ITypeNode API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#addSuperType()
+	 */
+	public function addSuperType(type:IIdentifierNode):void
+	{
+		_superTypeList.push(type);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Overridden Protected :: Methods
 	//
 	//--------------------------------------------------------------------------
@@ -476,7 +464,7 @@ public class TypeNode extends NodeBase implements ITypeNode
 	 */
 	protected function computeName(typeContent:IParserNode):void
 	{
-		identifier = IdentifierNode.create(typeContent, this);
+		identifier = NodeFactory.instance.createIdentifier(typeContent, this);
 	}
 	
 	/**
@@ -484,8 +472,6 @@ public class TypeNode extends NodeBase implements ITypeNode
 	 */
 	protected function computeContent(typeContent:IParserNode):void
 	{
-		constants = new Vector.<IConstantNode>();
-		attributes = new Vector.<IAttributeNode>();
 		accessors = new Vector.<IAccessorNode>();
 		methods = new Vector.<IMethodNode>();
 		
@@ -494,32 +480,8 @@ public class TypeNode extends NodeBase implements ITypeNode
 		
 		for each (var child:IParserNode in typeContent.children)
 		{
-			detectConstant(child);
-			detectAttribute(child);
 			detectAccessor(child);
 			detectMethod(child);
-		}
-	}
-	
-	/**
-	 * @private
-	 */
-	protected function detectConstant(child:IParserNode):void
-	{
-		if (child.isKind(AS3NodeKind.CONST_LIST))
-		{
-			constants.push(NodeFactory.instance.createConstant(child, this));
-		}
-	}
-	
-	/**
-	 * @private
-	 */
-	protected function detectAttribute(child:IParserNode):void
-	{
-		if (child.isKind(AS3NodeKind.VAR_LIST))
-		{
-			attributes.push(NodeFactory.instance.createAttribute(child, this));
 		}
 	}
 	

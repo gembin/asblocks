@@ -20,19 +20,52 @@
 package org.teotigraphix.as3nodes.impl
 {
 
-import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
- * An identifier name node.
+ * The compilation node.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class IdentifierNode extends NodeBase implements IIdentifierNode
+public class CompilationNode extends NodeBase implements ICompilationNode
 {
+	//--------------------------------------------------------------------------
+	//
+	//  ICompilationNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  packageNode
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _packageNode:IPackageNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICompilationNode#packageNode
+	 */
+	public function get packageNode():IPackageNode
+	{
+		return _packageNode;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set packageNode(value:IPackageNode):void
+	{
+		_packageNode = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -42,23 +75,9 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	/**
 	 * Constructor.
 	 */
-	public function IdentifierNode(node:IParserNode, parent:INode)
+	public function CompilationNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Public :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	public function toString():String
-	{
-		return node.stringValue;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -72,6 +91,8 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	override protected function compute():void
 	{
+		packageNode = NodeFactory.instance.
+			createPackage(ASTUtil.getPackage(node), this);
 	}
 }
 }

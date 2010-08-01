@@ -51,7 +51,7 @@ public class VariableNode extends NodeBase implements IVariableNode, IModifierAw
 	//  name
 	//----------------------------------
 	
-	protected var identifier:IdentifierNode;
+	protected var identifier:IIdentifierNode;
 	
 	/**
 	 * @private
@@ -232,9 +232,9 @@ public class VariableNode extends NodeBase implements IVariableNode, IModifierAw
 		if (!nti)
 			return;
 		
-		identifier = IdentifierNode.create(nti.getChild(0), this);
+		identifier = NodeFactory.instance.createIdentifier(nti.getChild(0), this);
 		name = identifier.toString();
-		type = IdentifierNode.create(nti.getChild(1), this);
+		type = NodeFactory.instance.createIdentifier(nti.getChild(1), this);
 		
 		// nameTypeInit
 		// metaList

@@ -20,10 +20,12 @@
 package org.teotigraphix.as3nodes.utils
 {
 
+import org.teotigraphix.as3nodes.api.IClassNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.impl.NodeFactory;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -99,6 +101,44 @@ public class NodeUtil
 			var element:IParserNode = child.children[i] as IParserNode;
 			var modifier:Modifier = Modifier.create(element.stringValue);
 			node.addModifier(modifier);
+		}
+	}
+	
+	/**
+	 * Computes the <code>node.superType</code> and <code>node.superTypes</code>.
+	 * 
+	 * @param node An ITypeNode node.
+	 * @param child The IParserNode internal node.
+	 */
+	public static function computeExtends(node:ITypeNode, 
+										  child:IParserNode):void
+	{
+		if (!child)
+			return;
+		
+		if (node is IClassNode)
+		{
+			node.addSuperType(NodeFactory.instance.createIdentifier(child, node));
+		}
+	}
+	
+	/**
+	 * Computes the <code>node.implementsList</code>.
+	 * 
+	 * @param node An IClassNode node.
+	 * @param child The IParserNode internal node.
+	 */
+	public static function computeImplementsList(node:IClassNode, 
+												 child:IParserNode):void
+	{
+		if (!child || child.numChildren == 0)
+			return;
+		
+		var len:int = child.children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			node.addImplementation(NodeFactory.instance.
+				createIdentifier(child.children[i], node));
 		}
 	}
 }

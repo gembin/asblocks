@@ -21,17 +21,18 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IInterfaceNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * An identifier name node.
+ * The interface found in the package node.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class IdentifierNode extends NodeBase implements IIdentifierNode
+public class InterfaceNode extends TypeNode implements IInterfaceNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -42,23 +43,9 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	/**
 	 * Constructor.
 	 */
-	public function IdentifierNode(node:IParserNode, parent:INode)
+	public function InterfaceNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Public :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	public function toString():String
-	{
-		return node.stringValue;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -72,6 +59,7 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	override protected function compute():void
 	{
+		super.compute();
 	}
 }
 }
