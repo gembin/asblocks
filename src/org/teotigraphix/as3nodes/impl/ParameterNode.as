@@ -17,8 +17,11 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
+
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * TODO DOCME
@@ -27,48 +30,20 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
+public class ParameterNode extends NodeBase
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
-	//----------------------------------
-	//  constants
-	//----------------------------------
-	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function get constants():Vector.<IConstantNode>;
-	
-	//----------------------------------
-	//  attributes
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get attributes():Vector.<IAttributeNode>;
-	
-	//----------------------------------
-	//  accessors
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get accessors():Vector.<IAccessorNode>;
-	
-	//----------------------------------
-	//  functions
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get functions():Vector.<IFunctionNode>;
+	public function ParameterNode(node:IParserNode, parent:INode)
+	{
+		super(node, parent);
+	}
 }
 }

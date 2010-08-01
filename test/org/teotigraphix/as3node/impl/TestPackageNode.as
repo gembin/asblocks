@@ -176,5 +176,17 @@ public class TestPackageNode
 		Assert.assertEquals(1, comment.docTags.length);
 		Assert.assertEquals("private", comment.docTags[0].name);
 	}
+	
+	[Test]
+	public function testAccessorNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testFunctionNode():void
+	{
+		
+	}
 }
 }

@@ -20,11 +20,10 @@
 package org.teotigraphix.as3nodes.impl
 {
 
-import flash.utils.Dictionary;
-
+import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
-import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
@@ -34,7 +33,6 @@ import org.teotigraphix.as3nodes.utils.MetaDataUtils;
 import org.teotigraphix.as3nodes.utils.ModifierUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
  * The class|interface found in the package node.
@@ -101,6 +99,56 @@ public class TypeNode extends NodeBase implements ITypeNode
 	public function set attributes(value:Vector.<IAttributeNode>):void
 	{
 		_attributes = value;
+	}
+	
+	//----------------------------------
+	//  accessors
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _accessors:Vector.<IAccessorNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#accessors
+	 */
+	public function get accessors():Vector.<IAccessorNode>
+	{
+		return _accessors;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set accessors(value:Vector.<IAccessorNode>):void
+	{
+		_accessors = value;
+	}
+	
+	//----------------------------------
+	//  functions
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _functions:Vector.<IFunctionNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#functions
+	 */
+	public function get functions():Vector.<IFunctionNode>
+	{
+		return _functions;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set functions(value:Vector.<IFunctionNode>):void
+	{
+		_functions = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -316,6 +364,8 @@ public class TypeNode extends NodeBase implements ITypeNode
 	{
 		constants = new Vector.<IConstantNode>();
 		attributes = new Vector.<IAttributeNode>();
+		accessors = new Vector.<IAccessorNode>();
+		functions = new Vector.<IFunctionNode>();
 		
 		if (typeContent.numChildren == 0)
 			return;
@@ -325,12 +375,9 @@ public class TypeNode extends NodeBase implements ITypeNode
 			detectBlock(child);
 			detectConstant(child);
 			detectAttribute(child);
-			//detectFunction(child);
+			detectAccessor(child);
+			detectFunction(child);
 		}
-		// constants
-		// variables
-		// accessors
-		// methods
 	}
 	
 	private function detectConstant(child:IParserNode):void
@@ -346,6 +393,23 @@ public class TypeNode extends NodeBase implements ITypeNode
 		if (child.isKind(AS3NodeKind.VAR_LIST))
 		{
 			attributes.push(new AttributeNode(child, this));
+		}
+	}
+	
+	private function detectAccessor(child:IParserNode):void
+	{
+		if (child.isKind(AS3NodeKind.GET)
+			|| child.isKind(AS3NodeKind.SET))
+		{
+			accessors.push(new AccessorNode(child, this));
+		}
+	}
+	
+	private function detectFunction(child:IParserNode):void
+	{
+		if (child.isKind(AS3NodeKind.FUNCTION))
+		{
+			functions.push(new FunctionNode(child, this));
 		}
 	}
 	

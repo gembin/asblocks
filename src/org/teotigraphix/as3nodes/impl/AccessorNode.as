@@ -17,8 +17,12 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
+
+import org.teotigraphix.as3nodes.api.IAccessorNode;
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * TODO DOCME
@@ -27,48 +31,77 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends INode, INameAware, IVisible, IMetaDataAware
+public class AccessorNode extends FunctionNode implements IAccessorNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  IAccessorNode API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  constants
+	//  isReadWrite
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
-	function get constants():Vector.<IConstantNode>;
+	private var _isReadWrite:Boolean;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAccessorNode#isReadWrite
+	 */
+	public function get isReadWrite():Boolean
+	{
+		return _isReadWrite;
+	}
 	
 	//----------------------------------
-	//  attributes
+	//  isReadOnly
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
-	function get attributes():Vector.<IAttributeNode>;
+	private var _isReadOnly:Boolean;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAccessorNode#isReadOnly
+	 */
+	public function get isReadOnly():Boolean
+	{
+		return _isReadOnly;
+	}
 	
 	//----------------------------------
-	//  accessors
+	//  isWriteOnly
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
-	function get accessors():Vector.<IAccessorNode>;
-	
-	//----------------------------------
-	//  functions
-	//----------------------------------
+	private var _isWriteOnly:Boolean;
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.as3nodes.api.IAccessorNode#isWriteOnly
 	 */
-	function get functions():Vector.<IFunctionNode>;
+	public function get isWriteOnly():Boolean
+	{
+		return _isWriteOnly;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 */
+	public function AccessorNode(node:IParserNode, parent:INode)
+	{
+		super(node, parent);
+	}
 }
 }
