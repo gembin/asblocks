@@ -44,5 +44,36 @@ public interface IFunctionNode extends IScriptNode, IParameterAware
 	 */
 	function get isConstructor():Boolean;
 	
+	//----------------------------------
+	//  isOverride
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get isOverride():Boolean;
+	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get type():IIdentifierNode;
+	
+	/**
+	 * @private
+	 */
+	function set type(value:IIdentifierNode):void;
+	
+	//----------------------------------
+	//  hasType
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get hasType():Boolean;
 }
 }

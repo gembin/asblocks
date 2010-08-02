@@ -22,9 +22,11 @@ package org.teotigraphix.as3nodes.utils
 
 import org.teotigraphix.as3nodes.api.IClassNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
+import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IParameterAware;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.impl.NodeFactory;
@@ -140,6 +142,39 @@ public class NodeUtil
 			node.addImplementation(NodeFactory.instance.
 				createIdentifier(child.children[i], node));
 		}
+	}
+	
+	/**
+	 * Computes the <code>node.parameters</code>.
+	 * 
+	 * @param node An IParameterAware node.
+	 * @param child The IParserNode internal node.
+	 */
+	public static function computeParameterList(node:IParameterAware, 
+												child:IParserNode):void
+	{
+		if (!child || child.numChildren == 0)
+			return;
+		
+		var len:int = child.children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			node.addParameter(NodeFactory.instance.
+				createParameter(child.children[i], node));
+		}
+	}
+	
+	/**
+	 * Computes the <code>node.type</code>.
+	 * 
+	 * @param node An IFunctionNode node.
+	 * @param child The IParserNode internal node.
+	 */
+	public static function computeReturnType(node:IFunctionNode, 
+											 child:IParserNode):void
+	{
+		if (child && child.stringValue != "")
+			node.type = NodeFactory.instance.createIdentifier(child, node);
 	}
 }
 }

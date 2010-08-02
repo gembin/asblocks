@@ -29,6 +29,7 @@ import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -165,6 +166,18 @@ public class NodeFactory
 								 parent:INode):IMethodNode
 	{
 		return new MethodNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IParameterNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createParameter(node:IParserNode, 
+									parent:INode):IParameterNode
+	{
+		return new ParameterNode(node, parent);
 	}
 }
 }

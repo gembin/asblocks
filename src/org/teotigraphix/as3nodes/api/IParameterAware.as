@@ -27,7 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IParameterAware
+public interface IParameterAware extends INode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -63,6 +63,11 @@ public interface IParameterAware
 	//  Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function addParameter(parameter:IParameterNode):void;
 	
 	/**
 	 * TODO Docme

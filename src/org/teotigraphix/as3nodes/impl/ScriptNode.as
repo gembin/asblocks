@@ -157,15 +157,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		return hasModifier(Modifier.PUBLIC);
 	}
 	
-	//----------------------------------
-	//  isFinal
-	//----------------------------------
-	
-	public function get isFinal():Boolean
-	{
-		return hasModifier(Modifier.FINAL);
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  INameAware API :: Properties
@@ -195,6 +186,67 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	public function set name(value:String):void
 	{
 		_name = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IModifierAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  modifiers
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _modifiers:Vector.<Modifier>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IModifierAware#modifiers
+	 */
+	public function get modifiers():Vector.<Modifier>
+	{
+		return _modifiers;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set modifiers(value:Vector.<Modifier>):void
+	{
+		_modifiers = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IScriptElement API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  isStatic
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IScriptElement#isStatic
+	 */
+	public function get isStatic():Boolean
+	{
+		return hasModifier(Modifier.STATIC);
+	}
+	
+	//----------------------------------
+	//  isFinal
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IScriptElement#isFinal
+	 */
+	public function get isFinal():Boolean
+	{
+		return hasModifier(Modifier.FINAL);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -258,14 +310,9 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IModifierAware API :: Properties
+	//  IModifierAware API :: Methods
 	//
 	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	protected var modifiers:Vector.<Modifier>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IModifierAware#addModifier()

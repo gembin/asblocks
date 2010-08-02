@@ -30,6 +30,28 @@ package org.teotigraphix.as3nodes.api
 public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
 	IVisible, INameAware
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
+	//----------------------------------
+	//  isFinal
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get isFinal():Boolean;
+	
+	//----------------------------------
+	//  isStatic
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get isStatic():Boolean;
 }
 }

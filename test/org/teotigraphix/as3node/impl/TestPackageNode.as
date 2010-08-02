@@ -8,6 +8,7 @@ import org.teotigraphix.as3nodes.api.IClassNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.impl.AttributeNode;
@@ -72,11 +73,28 @@ public class TestPackageNode
 				"        public var variable:String = \"variable\";",
 				"        /** @private */",
 				"        public var variable2:int = 420;",
+				"        /** A property. */",
 				"        public function get property():String{return null;}",
+				"        /** @private */",
 				"        public function set property(value:String):void{}",
-				"        [Test]",
-				"        public function method():void",
+				"        [Test(description=\"Hello World\")]",
+				"        /** ",
+				"         * A method comment.",
+				"         * <p>Long description.</p>",
+				"         * @param arg0 The argument one.",
+				"         * @param rest The rest of the arguments.",
+				"         * @return A Number.",
+				"         */",
+				"        public static function method(arg0:int=1,...rest):Number",
 				"        {",
+				"            return 42;",
+				"        }",
+				"        /** ",
+				"         * Constructor.",
+				"         */",
+				"        public function Test()",
+				"        {",
+				"            super();",
 				"        }",
 				"    }",
 				"}",
@@ -253,15 +271,95 @@ public class TestPackageNode
 		Assert.assertNotNull(setters);
 		
 		Assert.assertEquals(1, getters.length);
-		Assert.assertEquals(1, getters.length);
+		Assert.assertEquals(1, setters.length);
 		
 		Assert.assertEquals("property", getters[0].name);
+		Assert.assertEquals("property", setters[0].name);
+		
+		Assert.assertEquals("get", getters[0].access);
+		Assert.assertEquals("set", setters[0].access);
 	}
 	
 	[Test]
 	public function testFunctionNode():void
 	{
+		var methods:Vector.<IMethodNode> = packageNode.typeNode.methods;
+		Assert.assertNotNull(methods);
+		Assert.assertEquals(2, methods.length);
 		
+		// public function method(arg0:int=1,...rest):Number
+		var method:IMethodNode = methods[0];
+		Assert.assertNotNull(method);
+		
+		// metadata
+		var meta:Vector.<IMetaDataNode>;
+		Assert.assertEquals(1, method.numMetaData);
+		meta = method.getMetaData("Test");
+		Assert.assertStrictlyEquals(method, meta[0].parent);
+		Assert.assertNotNull(meta);
+		Assert.assertEquals("Test", meta[0].name);
+		Assert.assertEquals("description = \"Hello World\"", meta[0].parameter);
+		
+		// comment
+		var comment:ICommentNode = method.comment;
+		Assert.assertNotNull(comment);
+		Assert.assertEquals("A method comment.", comment.shortDescription);
+		Assert.assertEquals("<p>Long description.</p>", comment.longDescription);
+		
+		Assert.assertNotNull(comment.docTags);
+		Assert.assertEquals(3, comment.docTags.length);
+		Assert.assertEquals("param", comment.docTags[0].name);
+		Assert.assertEquals("arg0 The argument one.", comment.docTags[0].body);
+		Assert.assertEquals("param", comment.docTags[1].name);
+		Assert.assertEquals("rest The rest of the arguments.", comment.docTags[1].body);
+		Assert.assertEquals("return", comment.docTags[2].name);
+		Assert.assertEquals("A Number.", comment.docTags[2].body);
+		
+		// modifiers
+		Assert.assertNotNull(method.modifiers);
+		Assert.assertEquals(2, method.modifiers.length);
+		Assert.assertTrue(method.isPublic);
+		Assert.assertTrue(method.isStatic);
+		Assert.assertTrue(method.hasModifier(Modifier.PUBLIC));
+		Assert.assertTrue(method.hasModifier(Modifier.STATIC));
+		
+		// paramters
+		Assert.assertTrue(method.hasParameters);
+		Assert.assertNotNull(method.parameters);
+		Assert.assertEquals(2, method.parameters.length);
+		
+		Assert.assertEquals("arg0", method.parameters[0].name);
+		Assert.assertEquals("int", method.parameters[0].type.name);
+		Assert.assertEquals("1", method.parameters[0].value);
+		Assert.assertTrue(method.parameters[0].hasType);
+		Assert.assertTrue(method.parameters[0].hasValue);
+		
+		Assert.assertEquals("rest", method.parameters[1].name);
+		Assert.assertTrue(method.parameters[1].isRest);
+		Assert.assertFalse(method.parameters[1].hasType);
+		Assert.assertFalse(method.parameters[1].hasValue);
+		
+		// type
+		Assert.assertTrue(method.hasType);
+		Assert.assertEquals("Number", method.type.name);
+		
+		// public function Test()
+		method = methods[1];
+		Assert.assertNotNull(method);
+		Assert.assertTrue(method.isConstructor);
+		
+		// modifiers
+		Assert.assertNotNull(method.modifiers);
+		Assert.assertEquals(1, method.modifiers.length);
+		Assert.assertTrue(method.isPublic);
+		Assert.assertTrue(method.hasModifier(Modifier.PUBLIC));
+		
+		// paramters
+		Assert.assertFalse(method.hasParameters);
+		Assert.assertNull(method.parameters);
+		
+		// type
+		Assert.assertFalse(method.hasType);
 	}
 }
 }

@@ -35,6 +35,37 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 {
 	//--------------------------------------------------------------------------
 	//
+	//  INameAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _name:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.INameAware#name
+	 */
+	public function get name():String
+	{
+		return _name;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set name(value:String):void
+	{
+		_name = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -58,7 +89,7 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	public function toString():String
 	{
-		return node.stringValue;
+		return _name;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -72,6 +103,7 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	override protected function compute():void
 	{
+		_name = node.stringValue;
 	}
 }
 }

@@ -27,7 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IParameterNode extends INode, INameAware
+public interface IParameterNode extends INode, /*ICommentAware,*/ INameAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -70,5 +70,14 @@ public interface IParameterNode extends INode, INameAware
 	 * TODO Docme
 	 */
 	function get hasValue():Boolean;
+	
+	//----------------------------------
+	//  isRest
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get isRest():Boolean;
 }
 }

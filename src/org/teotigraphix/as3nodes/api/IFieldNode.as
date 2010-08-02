@@ -29,19 +29,5 @@ package org.teotigraphix.as3nodes.api
  */
 public interface IFieldNode extends IScriptNode, IVariableNode
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  isStatic
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isStatic():Boolean;
 }
 }

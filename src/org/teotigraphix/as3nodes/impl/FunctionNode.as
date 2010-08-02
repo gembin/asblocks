@@ -21,9 +21,16 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.IFunctionNode;
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
+import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
  * TODO DOCME
@@ -55,6 +62,18 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	public function get isConstructor():Boolean
 	{
 		return _isConstructor;
+	}
+	
+	//----------------------------------
+	//  isOverride
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#isOverride
+	 */
+	public function get isOverride():Boolean
+	{
+		return hasModifier(Modifier.OVERRIDE);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -102,6 +121,49 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  IFunctionNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _type:IIdentifierNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#hasParameters
+	 */
+	public function get type():IIdentifierNode
+	{
+		return _type;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set type(value:IIdentifierNode):void
+	{
+		_type = value;
+	}
+	
+	//----------------------------------
+	//  hasType
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#hasType
+	 */
+	public function get hasType():Boolean
+	{
+		return type != null;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -121,6 +183,17 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#addParameter()
+	 */
+	public function addParameter(parameter:IParameterNode):void
+	{
+		if (!_parameters)
+			_parameters = new Vector.<IParameterNode>();
+		
+		_parameters.push(parameter);
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#getParameter()
 	 */
 	public function getParameter(name:String):IParameterNode
@@ -131,6 +204,64 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 				return element;
 		}
 		return null;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function compute():void
+	{
+		super.compute();
+		
+		if (node.numChildren == 0)
+			return;
+		
+		for each (var child:IParserNode in node.children)
+		{
+			if (child.isKind(AS3NodeKind.PARAMETER_LIST))
+			{
+				computeParameterList(child);
+			}
+			else if (child.isKind(AS3NodeKind.TYPE))
+			{
+				computeType(child);
+			}
+		}
+		
+		var parentType:ITypeNode = parent as ITypeNode;
+		if (parentType)
+		{
+			if (parentType.name == name)
+				_isConstructor = true;
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function computeParameterList(child:IParserNode):void
+	{
+		NodeUtil.computeParameterList(this, child);
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function computeType(child:IParserNode):void
+	{
+		NodeUtil.computeReturnType(this, child);
 	}
 }
 }

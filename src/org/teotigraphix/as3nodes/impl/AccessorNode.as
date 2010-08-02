@@ -40,6 +40,31 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  access
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _access:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAccessorNode#access
+	 */
+	public function get access():String
+	{
+		return _access;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set access(value:String):void
+	{
+		_access = value;
+	}
+	
+	//----------------------------------
 	//  isReadWrite
 	//----------------------------------
 	
@@ -102,6 +127,22 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	public function AccessorNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function compute():void
+	{
+		super.compute();
+		
+		_access = node.kind;
 	}
 }
 }

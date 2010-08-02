@@ -27,7 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IIdentifierNode extends INode
+public interface IIdentifierNode extends INode, INameAware
 {
 	//--------------------------------------------------------------------------
 	//

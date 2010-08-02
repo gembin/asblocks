@@ -38,15 +38,6 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public class FieldNode extends VariableNode implements IFieldNode
 {
-	//----------------------------------
-	//  isStatic
-	//----------------------------------
-	
-	public function get isStatic():Boolean
-	{
-		return hasModifier(Modifier.STATIC);
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

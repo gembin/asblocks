@@ -20,8 +20,15 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+
+// TODO figure out how you want to deal with comments
 
 /**
  * TODO DOCME
@@ -30,8 +37,202 @@ import org.teotigraphix.as3parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ParameterNode extends NodeBase
+public class ParameterNode extends NodeBase implements IParameterNode
 {
+	//----------------------------------
+	//  identifier
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _identifier:IIdentifierNode;
+	
+	/**
+	 * @private
+	 */	
+	protected function get identifier():IIdentifierNode
+	{
+		return _identifier;
+	}
+	
+	/**
+	 * @private
+	 */	
+	protected function set identifier(value:IIdentifierNode):void
+	{
+		_identifier = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  ICommentAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  comment
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _comment:ICommentNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#comment
+	 */
+	public function get comment():ICommentNode
+	{
+		return _comment;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set comment(value:ICommentNode):void
+	{
+		_comment = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  INameAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _name:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.INameAware#name
+	 */
+	public function get name():String
+	{
+		return _name;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set name(value:String):void
+	{
+		_name = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IParameterNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _type:IIdentifierNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterNode#type
+	 */
+	public function get type():IIdentifierNode
+	{
+		return _type;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set type(value:IIdentifierNode):void
+	{
+		_type = value;
+	}
+	
+	//----------------------------------
+	//  hasType
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _hasType:Boolean;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterNode#hasType
+	 */
+	public function get hasType():Boolean
+	{
+		return type != null;
+	}
+	
+	//----------------------------------
+	//  value
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _value:Object;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterNode#value
+	 */
+	public function get value():Object
+	{
+		return _value;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set value(value:Object):void
+	{
+		_value = value;
+	}
+	
+	//----------------------------------
+	//  hasValue
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _hasValue:Boolean;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterNode#hasValue
+	 */
+	public function get hasValue():Boolean
+	{
+		return value != null;
+	}
+	
+	//----------------------------------
+	//  isRest
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _isRest:Boolean;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterNode#isRest
+	 */
+	public function get isRest():Boolean
+	{
+		return _isRest;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -44,6 +245,64 @@ public class ParameterNode extends NodeBase
 	public function ParameterNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function compute():void
+	{
+		comment = NodeFactory.instance.createCommentPlaceholderNode(this);
+		
+		if (node.numChildren == 0)
+			return;
+		
+		for each (var child:IParserNode in node.children)
+		{
+			if (child.isKind(AS3NodeKind.NAME_TYPE_INIT))
+			{
+				computeNameTypeInt(child);
+			}
+			else if (child.isKind(AS3NodeKind.REST))
+			{
+				_isRest = true;
+				_name = child.stringValue;
+			}
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function computeNameTypeInt(child:IParserNode):void
+	{
+		identifier = NodeFactory.instance.createIdentifier(child.getChild(0), this);
+		name = identifier.name;
+		
+		if (child.numChildren > 1)
+			type = NodeFactory.instance.createIdentifier(child.getChild(1), this);
+		
+		if (child.numChildren > 2)
+		{
+			var init:IParserNode = child.getChild(2);
+			var cinit:IParserNode = init.getChild(0);
+			if (cinit && cinit.isKind(AS3NodeKind.PRIMARY))
+			{
+				value = cinit.stringValue;
+			}
+		}
 	}
 }
 }
