@@ -165,11 +165,10 @@ public class TestInterfaceNode
 		// metadata
 		var meta:Vector.<IMetaDataNode>;
 		Assert.assertEquals(1, method.numMetaData);
-		meta = method.getMetaData("Test");
+		meta = method.getMetaData("Inject");
 		Assert.assertStrictlyEquals(method, meta[0].parent);
 		Assert.assertNotNull(meta);
-		Assert.assertEquals("Test", meta[0].name);
-		Assert.assertEquals("description = \"Hello World\"", meta[0].parameter);
+		Assert.assertEquals("Inject", meta[0].name);
 		
 		// comment
 		var comment:ICommentNode = method.comment;
@@ -188,11 +187,7 @@ public class TestInterfaceNode
 		
 		// modifiers
 		Assert.assertNotNull(method.modifiers);
-		Assert.assertEquals(2, method.modifiers.length);
-		Assert.assertTrue(method.isPublic);
-		Assert.assertTrue(method.isStatic);
-		Assert.assertTrue(method.hasModifier(Modifier.PUBLIC));
-		Assert.assertTrue(method.hasModifier(Modifier.STATIC));
+		Assert.assertEquals(0, method.modifiers.length);
 		
 		// paramters
 		Assert.assertTrue(method.hasParameters);
@@ -213,24 +208,6 @@ public class TestInterfaceNode
 		// type
 		Assert.assertTrue(method.hasType);
 		Assert.assertEquals("Number", method.type.name);
-		
-		// public function Test()
-		method = methods[1];
-		Assert.assertNotNull(method);
-		Assert.assertTrue(method.isConstructor);
-		
-		// modifiers
-		Assert.assertNotNull(method.modifiers);
-		Assert.assertEquals(1, method.modifiers.length);
-		Assert.assertTrue(method.isPublic);
-		Assert.assertTrue(method.hasModifier(Modifier.PUBLIC));
-		
-		// paramters
-		Assert.assertFalse(method.hasParameters);
-		Assert.assertNull(method.parameters);
-		
-		// type
-		Assert.assertFalse(method.hasType);
 	}
 }
 }

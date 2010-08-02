@@ -660,27 +660,27 @@ public class AS3Parser extends ParserBase
 		var result:Node = Node.create(AS3NodeKind.CONTENT,
 			token.line,
 			token.column);
+		var meta:Vector.<Node> = new Vector.<Node>();
 		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
 		{
+			if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+			{
+				meta.push(parseMetaData());
+			}
 			if (tokIs(KeyWords.IMPORT))
 			{
 				result.addChild(parseImport());
 			}
 			else if (tokIs(KeyWords.FUNCTION))
 			{
-				result.addChild(parseFunctionSignature());
+				var func:Node = parseFunctionSignature();
+				func.addChild(convertMeta(meta));
+				result.addChild(func);
+				meta.length = 0;
 			}
 			else if (tokIs(KeyWords.INCLUDE))
 			{
 				result.addChild(parseIncludeExpression());
-			}
-			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-			{
-				while (!tokIs( Operators.RIGHT_SQUARE_BRACKET))
-				{
-					nextToken();
-				}
-				nextToken();
 			}
 			else if (tokenStartsWith("/**"))
 			{
