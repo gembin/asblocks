@@ -23,6 +23,8 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -60,6 +62,33 @@ public class InterfaceNode extends TypeNode implements IInterfaceNode
 	override protected function compute():void
 	{
 		super.compute();
+		
+		superTypeList = new Vector.<IIdentifierNode>();
+		
+		if (node.numChildren == 0)
+			return;
+		
+		for each (var child:IParserNode in node.children)
+		{
+			if (child.isKind(AS3NodeKind.EXTENDS))
+			{
+				computeExtends(child);
+			}
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function computeExtends(typeContent:IParserNode):void
+	{
+		NodeUtil.computeExtends(this, typeContent);
 	}
 }
 }

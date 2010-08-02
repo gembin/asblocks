@@ -1,6 +1,7 @@
 package testSuites
 {
 
+import org.teotigraphix.as3node.impl.TestInterfaceNode;
 import org.teotigraphix.as3node.impl.TestPackageNode;
 
 [Suite]
@@ -8,5 +9,6 @@ import org.teotigraphix.as3node.impl.TestPackageNode;
 public class AS3NodeTestSuite
 {
 	public var testPackageNode:TestPackageNode;
+	public var testInterfaceNode:TestInterfaceNode;
 }
 }

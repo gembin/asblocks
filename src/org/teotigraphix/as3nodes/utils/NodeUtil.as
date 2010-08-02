@@ -23,6 +23,7 @@ package org.teotigraphix.as3nodes.utils
 import org.teotigraphix.as3nodes.api.IClassNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
+import org.teotigraphix.as3nodes.api.IInterfaceNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
@@ -118,10 +119,7 @@ public class NodeUtil
 		if (!child)
 			return;
 		
-		if (node is IClassNode)
-		{
-			node.addSuperType(NodeFactory.instance.createIdentifier(child, node));
-		}
+		node.addSuperType(NodeFactory.instance.createIdentifier(child, node));
 	}
 	
 	/**

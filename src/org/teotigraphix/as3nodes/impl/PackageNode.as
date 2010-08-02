@@ -183,7 +183,7 @@ public class PackageNode extends NodeBase implements IPackageNode
 		}
 		else if (type.isKind(AS3NodeKind.INTERFACE))
 		{
-			//_typeNode = new (null, this);
+			_typeNode = new InterfaceNode(type, this);
 		}
 		
 		_imports = ASTUtil.getNodes(AS3NodeKind.IMPORT, node.getLastChild());
