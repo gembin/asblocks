@@ -17,106 +17,67 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3parser.core
+package org.teotigraphix.as3nodes.api
 {
 
 import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
- * A chunk of source code with file name identifier.
+ * TODO DOCME
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class SourceCode implements ISourceCode
+public interface ISourceFile extends INode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Public :: Properties
+	//  Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  code
+	//  compilationNode
 	//----------------------------------
 	
 	/**
-	 * @private
+	 * TODO Docme
 	 */
-	private var _code:String;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#code
-	 */
-	public function get code():String
-	{
-		return _code;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set code(value:String):void
-	{
-		_code = value;
-	}
+	function get compilationNode():ICompilationNode;
 	
 	//----------------------------------
 	//  fileName
 	//----------------------------------
 	
 	/**
+	 * TODO Docme
+	 */
+	function get fileName():String;
+	
+	//----------------------------------
+	//  sourceCode
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get sourceCode():ISourceCode;
+	
+	/**
 	 * @private
 	 */
-	private var _fileName:String;
+	function set sourceCode(value:ISourceCode):void;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#fileName
+	 * TODO Docme
 	 */
-	public function get fileName():String
-	{
-		return _fileName;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set fileName(value:String):void
-	{
-		_fileName = value;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Constructor
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param code The String data.
-	 * @param fileName The String file name identifier.
-	 */
-	public function SourceCode(code:String, fileName:String)
-	{
-		_code = code;
-		_fileName = fileName;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Public :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#getSlice()
-	 */
-	public function getSlice(startLine:int, endLine:int):String
-	{
-		return null;
-	}
+	function buildAst():ICompilationNode;
 }
 }

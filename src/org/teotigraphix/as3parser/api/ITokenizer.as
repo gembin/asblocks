@@ -20,7 +20,6 @@
 package org.teotigraphix.as3parser.api
 {
 
-import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.core.Tokens;
 
 /**
@@ -45,6 +44,6 @@ public interface ITokenizer
 	 * @param tokens The source code to tokenize.
 	 * @param tokenEntries The TokenEntry collection.
 	 */
-	function tokenize(tokens:SourceCode, tokenEntries:Tokens):void;
+	function tokenize(tokens:ISourceCode, tokenEntries:Tokens):void;
 }
 }

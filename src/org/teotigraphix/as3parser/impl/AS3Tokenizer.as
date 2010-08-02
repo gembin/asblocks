@@ -34,10 +34,9 @@ package org.teotigraphix.as3parser.impl
 import flash.utils.Dictionary;
 
 import org.teotigraphix.as3parser.api.IScanner;
+import org.teotigraphix.as3parser.api.ISourceCode;
 import org.teotigraphix.as3parser.api.ITokenizer;
 import org.teotigraphix.as3parser.api.KeyWords;
-import org.teotigraphix.as3parser.api.Operators;
-import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.core.Token;
 import org.teotigraphix.as3parser.core.TokenEntry;
 import org.teotigraphix.as3parser.core.Tokens;
@@ -60,7 +59,7 @@ public class AS3Tokenizer implements ITokenizer
 		//IGNORING_LINE_TOKENS[KeyWords.PACKAGE] = true;
 	}
 	
-	public function tokenize(tokens:SourceCode, tokenEntries:Tokens):void
+	public function tokenize(tokens:ISourceCode, tokenEntries:Tokens):void
 	{
 		var scanner:IScanner = initializeScanner(tokens);
 		var currentToken:Token = scanner.nextToken();
@@ -105,7 +104,7 @@ public class AS3Tokenizer implements ITokenizer
 		}
 	}
 	
-	protected function initializeScanner(tokens:SourceCode):IScanner
+	protected function initializeScanner(tokens:ISourceCode):IScanner
 	{
 		var scanner:AS3Scanner = new AS3Scanner();
 		scanner.setLines(ASTUtil.toVector(tokens.code.split(AS3Parser.NEW_LINE)));

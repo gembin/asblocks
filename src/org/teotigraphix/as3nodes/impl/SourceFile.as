@@ -17,49 +17,54 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3parser.core
+package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.ICompilationNode;
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.ISourceFile;
+import org.teotigraphix.as3parser.api.IParser;
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
- * A chunk of source code with file name identifier.
+ * TODO DOCME
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class SourceCode implements ISourceCode
+public class SourceFile extends NodeBase implements ISourceFile
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Public :: Properties
+	//  ISourceFile API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  code
+	//  compilationNode
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	private var _code:String;
+	private var _compilationNode:ICompilationNode;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#code
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#compilationNode
 	 */
-	public function get code():String
+	public function get compilationNode():ICompilationNode
 	{
-		return _code;
+		return _compilationNode;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set code(value:String):void
+	public function set compilationNode(value:ICompilationNode):void
 	{
-		_code = value;
+		_compilationNode = value;
 	}
 	
 	//----------------------------------
@@ -67,24 +72,38 @@ public class SourceCode implements ISourceCode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _fileName:String;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#fileName
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#fileName
 	 */
 	public function get fileName():String
 	{
-		return _fileName;
+		if (!_sourceCode)
+			return null;
+		return _sourceCode.fileName;
+	}
+	
+	//----------------------------------
+	//  sourceCode
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _sourceCode:ISourceCode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#code
+	 */
+	public function get sourceCode():ISourceCode
+	{
+		return _sourceCode;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set fileName(value:String):void
+	public function set sourceCode(value:ISourceCode):void
 	{
-		_fileName = value;
+		_sourceCode = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -95,28 +114,34 @@ public class SourceCode implements ISourceCode
 	
 	/**
 	 * Constructor.
-	 * 
-	 * @param code The String data.
-	 * @param fileName The String file name identifier.
 	 */
-	public function SourceCode(code:String, fileName:String)
+	public function SourceFile(parent:INode, sourceCode:ISourceCode)
 	{
-		_code = code;
-		_fileName = fileName;
+		super(null, parent);
+		
+		_sourceCode = sourceCode;
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Public :: Methods
+	//  ISourceFile API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#getSlice()
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#buildAst()
 	 */
-	public function getSlice(startLine:int, endLine:int):String
+	public function buildAst():ICompilationNode
 	{
-		return null;
+		var parser:IParser = ParserFactory.instance.as3parser;
+		
+		var unit:IParserNode = parser.buildAst(
+			Vector.<String>(sourceCode.code.split("\n")), 
+			sourceCode.fileName);
+		
+		compilationNode = NodeFactory.instance.createCompilation(unit, this);
+		
+		return compilationNode;
 	}
 }
 }

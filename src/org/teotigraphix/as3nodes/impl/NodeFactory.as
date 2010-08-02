@@ -23,6 +23,7 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -58,9 +59,21 @@ public class NodeFactory
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Public Class Factory :: Methods
+	//  Public Factory :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * Creates an ICompilationNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createCompilation(node:IParserNode, 
+									  parent:INode):ICompilationNode
+	{
+		return new CompilationNode(node, parent);
+	}
 	
 	/**
 	 * Creates an IIdentifierNode.
