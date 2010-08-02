@@ -27,8 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
-	IVisible, INameAware, IDeprecateAware
+public interface IDeprecateAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -37,21 +36,17 @@ public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  isFinal
+	//  isDeprecated
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get isFinal():Boolean;
-	
-	//----------------------------------
-	//  isStatic
-	//----------------------------------
+	function get isDeprecated():Boolean;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
-	function get isStatic():Boolean;
+	function set isDeprecated(value:Boolean):void;
 }
 }

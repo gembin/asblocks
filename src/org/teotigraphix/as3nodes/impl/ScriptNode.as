@@ -251,6 +251,37 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  IDeprecateAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  isDeprecated
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _isDeprecated:Boolean;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IDeprecateAware#isDeprecated
+	 */
+	public function get isDeprecated():Boolean
+	{
+		return _isDeprecated;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set isDeprecated(value:Boolean):void
+	{
+		_isDeprecated = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -391,6 +422,8 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	protected function computeMetaDataList(typeContent:IParserNode):void
 	{
 		NodeUtil.computeMetaDataList(this, typeContent);
+		
+		_isDeprecated = hasMetaData(MetaData.DEPRECATED.name);
 	}
 	
 	/**

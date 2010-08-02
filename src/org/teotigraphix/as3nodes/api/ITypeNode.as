@@ -27,7 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends INode, 
+public interface ITypeNode extends INode, IScriptNode,
 	IMetaDataAware, ICommentAware, IVisible, INameAware
 {
 	//--------------------------------------------------------------------------

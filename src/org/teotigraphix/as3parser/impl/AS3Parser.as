@@ -667,7 +667,7 @@ public class AS3Parser extends ParserBase
 			{
 				meta.push(parseMetaData());
 			}
-			if (tokIs(KeyWords.IMPORT))
+			else if (tokIs(KeyWords.IMPORT))
 			{
 				result.addChild(parseImport());
 			}

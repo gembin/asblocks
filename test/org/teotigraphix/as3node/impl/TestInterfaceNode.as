@@ -32,6 +32,7 @@ public class TestInterfaceNode
 			[
 				"package my.domain {",
 				"    import flash.events.IEventDispatcher",
+				"    [Deprecated]",
 				"    [Bindable]",
 				"    /**",
 				"     * An interface.",
@@ -49,6 +50,7 @@ public class TestInterfaceNode
 				"        function get property():String;",
 				"        /** @private */",
 				"        function set property(value:String):void;",
+				"        [Deprecated]",
 				"        [Inject]",
 				"        /** ",
 				"         * A method comment.",
@@ -109,7 +111,8 @@ public class TestInterfaceNode
 		
 		// metadata
 		var meta:Vector.<IMetaDataNode>;
-		Assert.assertEquals(1, typeNode.numMetaData);
+		Assert.assertEquals(2, typeNode.numMetaData);
+		Assert.assertTrue(typeNode.isDeprecated);
 		meta = typeNode.getMetaData("Bindable");
 		Assert.assertStrictlyEquals(typeNode, meta[0].parent);
 		Assert.assertNotNull(meta);
@@ -164,7 +167,8 @@ public class TestInterfaceNode
 		
 		// metadata
 		var meta:Vector.<IMetaDataNode>;
-		Assert.assertEquals(1, method.numMetaData);
+		Assert.assertEquals(2, method.numMetaData);
+		Assert.assertTrue(method.isDeprecated);
 		meta = method.getMetaData("Inject");
 		Assert.assertStrictlyEquals(method, meta[0].parent);
 		Assert.assertNotNull(meta);
