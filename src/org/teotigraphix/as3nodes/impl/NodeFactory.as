@@ -20,18 +20,23 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
+import org.teotigraphix.as3nodes.api.ISourceFile;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.ISourceCode;
+import org.teotigraphix.as3parser.core.SourceCode;
 
 /**
  * TODO DOCME
@@ -64,6 +69,35 @@ public class NodeFactory
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * Creates an ISourceFile based on the fileName's extension.
+	 * 
+	 * <p>The supported extensions are <strong>.as</strong> and 
+	 * <strong>.mxml</strong>.</p>
+	 * 
+	 * @param data The String source code data.
+	 * @param fileName The data's source fileName.
+	 * @param classPath The files's classPath.
+	 */
+	public function createSourceFile(data:String, 
+									 fileName:String,
+									 classPath:String):ISourceFile
+	{
+		var sourceCode:ISourceCode = new SourceCode(data, fileName, classPath);
+		
+		if (fileName.indexOf(".as") != -1)
+		{
+			return new AS3SourceFile(null, sourceCode);
+		}
+		else if (fileName.indexOf(".mxml") != -1)
+		{
+			return new MXMLSourceFile(null, sourceCode);
+		}
+		
+		// TODO throw Error?
+		return null;
+	}
+	
+	/**
 	 * Creates an ICompilationNode.
 	 * 
 	 * @param node An IParserNode internal node.
@@ -72,7 +106,17 @@ public class NodeFactory
 	public function createCompilation(node:IParserNode, 
 									  parent:INode):ICompilationNode
 	{
-		return new CompilationNode(node, parent);
+		if (parent is IMXMLSourceFile)
+		{
+			return new MXMLCompilationNode(node, parent);
+		}
+		else if (parent is IAS3SourceFile)
+		{
+			return new CompilationNode(node, parent);
+		}
+		
+		// TODO throw Error?
+		return null;
 	}
 	
 	/**

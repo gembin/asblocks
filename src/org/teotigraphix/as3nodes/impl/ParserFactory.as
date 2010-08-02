@@ -21,6 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.impl.AS3Parser;
+import org.teotigraphix.as3parser.impl.MXMLParser;
 
 /**
  * TODO DOCME
@@ -78,6 +79,28 @@ public class ParserFactory
 		return _as3parser;
 	}
 	
+	//----------------------------------
+	//  mxmlparser
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _mxmlparser:IParser;
+	
+	/**
+	 * The factory's mxml parser.
+	 * 
+	 * <p>This property is for shared parser usages, if using a parser
+	 * async such as with batches, a new parser will need to be created.</p>
+	 */
+	public function get mxmlparser():IParser
+	{
+		if (!_mxmlparser)
+			_mxmlparser = createMXMLParser();
+		return _mxmlparser;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public Factory :: Methods
@@ -92,6 +115,16 @@ public class ParserFactory
 	public function createAS3Parser():IParser
 	{
 		return new AS3Parser();
+	}
+	
+	/**
+	 * Creates an mxml IParser.
+	 * 
+	 * @return A new mxml implementation of IParser.
+	 */
+	public function createMXMLParser():IParser
+	{
+		return new MXMLParser();
 	}
 }
 }

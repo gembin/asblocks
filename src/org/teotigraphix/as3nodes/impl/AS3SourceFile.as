@@ -20,9 +20,11 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.INode;
-import org.teotigraphix.as3nodes.api.ISourceFile;
+import org.teotigraphix.as3parser.api.IParser;
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
@@ -32,90 +34,54 @@ import org.teotigraphix.as3parser.api.ISourceCode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class SourceFile extends NodeBase implements ISourceFile
+public class AS3SourceFile extends SourceFile implements IAS3SourceFile
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ISourceFile API :: Properties
+	//  IAS3SourceFile API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  compilationNode
+	//  packageName
 	//----------------------------------
 	
 	/**
-	 * @private
+	 * @copy org.teotigraphix.as3nodes.api.IAS3SourceFile#packageName
 	 */
-	private var _compilationNode:ICompilationNode;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#compilationNode
-	 */
-	public function get compilationNode():ICompilationNode
+	public function get packageName():String
 	{
-		return _compilationNode;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set compilationNode(value:ICompilationNode):void
-	{
-		_compilationNode = value;
-	}
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#name
-	 */
-	public function get name():String
-	{
-		if (!_sourceCode)
+		if (!sourceCode)
 			return null;
-		return _sourceCode.name;
+		return sourceCode.packageName;
 	}
 	
 	//----------------------------------
-	//  fileName
+	//  qualifiedName
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#fileName
+	 * @copy org.teotigraphix.as3nodes.api.IAS3SourceFile#qualifiedName
 	 */
-	public function get fileName():String
+	public function get qualifiedName():String
 	{
-		if (!_sourceCode)
+		if (!sourceCode)
 			return null;
-		return _sourceCode.fileName;
+		return sourceCode.qualifiedName;
 	}
 	
 	//----------------------------------
-	//  sourceCode
+	//  classPath
 	//----------------------------------
 	
 	/**
-	 * @private
+	 * @copy org.teotigraphix.as3nodes.api.IAS3SourceFile#classPath
 	 */
-	private var _sourceCode:ISourceCode;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#code
-	 */
-	public function get sourceCode():ISourceCode
+	public function get classPath():String
 	{
-		return _sourceCode;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set sourceCode(value:ISourceCode):void
-	{
-		_sourceCode = value;
+		if (!sourceCode)
+			return null;
+		return sourceCode.classPath;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -127,25 +93,31 @@ public class SourceFile extends NodeBase implements ISourceFile
 	/**
 	 * Constructor.
 	 */
-	public function SourceFile(parent:INode, sourceCode:ISourceCode)
+	public function AS3SourceFile(parent:INode, sourceCode:ISourceCode)
 	{
-		super(null, parent);
-		
-		_sourceCode = sourceCode;
+		super(parent, sourceCode);
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  ISourceFile API :: Properties
+	//  Overridden Public :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#buildAst()
+	 * @private
 	 */
-	public function buildAst():ICompilationNode
+	override public function buildAst():ICompilationNode
 	{
-		return null;
+		var parser:IParser = ParserFactory.instance.as3parser;
+		
+		var unit:IParserNode = parser.buildAst(
+			Vector.<String>(sourceCode.code.split("\n")), 
+			sourceCode.fileName);
+		
+		compilationNode = NodeFactory.instance.createCompilation(unit, this);
+		
+		return compilationNode;
 	}
 }
 }

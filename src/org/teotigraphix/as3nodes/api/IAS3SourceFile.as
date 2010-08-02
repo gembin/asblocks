@@ -20,8 +20,6 @@
 package org.teotigraphix.as3nodes.api
 {
 
-import org.teotigraphix.as3parser.api.ISourceCode;
-
 /**
  * TODO DOCME
  * 
@@ -29,7 +27,7 @@ import org.teotigraphix.as3parser.api.ISourceCode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ISourceFile extends INode
+public interface IAS3SourceFile extends ISourceFile
 {
 	//--------------------------------------------------------------------------
 	//
@@ -38,55 +36,30 @@ public interface ISourceFile extends INode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  compilationNode
+	//  packageName
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get compilationNode():ICompilationNode;
+	function get packageName():String;
 	
 	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get name():String;
-	
-	//----------------------------------
-	//  fileName
+	//  qualifiedName
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get fileName():String;
+	function get qualifiedName():String;
 	
 	//----------------------------------
-	//  sourceCode
+	//  classPath
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get sourceCode():ISourceCode;
-	
-	/**
-	 * @private
-	 */
-	function set sourceCode(value:ISourceCode):void;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function buildAst():ICompilationNode;
+	function get classPath():String;
 }
 }

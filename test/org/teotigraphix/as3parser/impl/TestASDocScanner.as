@@ -350,7 +350,6 @@ public class TestASDocScanner
 	{
 		var token:Token = null;
 		token = scanner.nextToken();
-		trace(token.text);
 		Assert.assertEquals(text, token.text);
 	}
 }

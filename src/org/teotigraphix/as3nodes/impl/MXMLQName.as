@@ -17,10 +17,10 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
 
-import org.teotigraphix.as3parser.api.ISourceCode;
+import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * TODO DOCME
@@ -29,64 +29,75 @@ import org.teotigraphix.as3parser.api.ISourceCode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ISourceFile extends INode
+public class MXMLQName
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Public :: Variables
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  compilationNode
+	//  uri
 	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get compilationNode():ICompilationNode;
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get name():String;
-	
-	//----------------------------------
-	//  fileName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get fileName():String;
-	
-	//----------------------------------
-	//  sourceCode
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get sourceCode():ISourceCode;
 	
 	/**
 	 * @private
 	 */
-	function set sourceCode(value:ISourceCode):void;
+	private var _uri:String;
+	
+	/**
+	 * The qname uri.
+	 */
+	public function get uri():String
+	{
+		return _uri;
+	}
+	
+	//----------------------------------
+	//  localName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _localName:String;
+	
+	/**
+	 * The qname localName.
+	 */
+	public function get localName():String
+	{
+		return _localName;
+	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function buildAst():ICompilationNode;
+	public function MXMLQName(node:IParserNode)
+	{
+		_localName = node.getChild(0).stringValue;
+		_uri = node.getChild(1).stringValue;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	public function toString():String
+	{
+		return _localName + ":" + _uri;
+	}
 }
 }

@@ -17,10 +17,8 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
-
-import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
  * TODO DOCME
@@ -29,64 +27,59 @@ import org.teotigraphix.as3parser.api.ISourceCode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ISourceFile extends INode
-{
+public class ManifestItem
+{	
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Public :: Variables
 	//
 	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  compilationNode
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get compilationNode():ICompilationNode;
 	
 	//----------------------------------
 	//  name
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The name.
 	 */
-	function get name():String;
+	public var name:String;
 	
 	//----------------------------------
-	//  fileName
+	//  qualifiedName
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The qualified name.
 	 */
-	function get fileName():String;
+	public var qualifiedName:String;
 	
-	//----------------------------------
-	//  sourceCode
-	//----------------------------------
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function get sourceCode():ISourceCode;
+	public function ManifestItem(name:String, qualifiedName:String)
+	{
+		this.name = name;
+		this.qualifiedName = qualifiedName;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
 	 * @private
 	 */
-	function set sourceCode(value:ISourceCode):void;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function buildAst():ICompilationNode;
+	public function toString():String
+	{
+		return "ManifestItem [qualifiedName=" + qualifiedName + "]";
+	}
 }
 }

@@ -66,5 +66,70 @@ public class AsDocUtil
 		
 		return result;
 	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public static function parseMXMLASDocString(string:String):String
+	{
+		var ostring:String = string;
+		
+		string = string.replace(new RegExp("<!---", "g"), "/**");
+		string = string.replace(new RegExp("-->", "g"), "*/");
+		
+		var lines:Array = string.split("\n");
+		var sb:String = "";
+		
+		if (lines.length == 1)
+		{
+			string = ostring;
+			
+			string = string.replace(new RegExp("<!---", "g"), "");
+			string = string.replace(new RegExp("-->", "g"), "");
+			
+			sb += "/**\n";
+			sb += "* " + string;
+			sb += "\n";
+			sb += "*/\n";
+		}
+		else
+		{
+			for (var i:int = 0; i < lines.length; i++)
+			{
+				var line:String = lines[i];
+				var tline:String = StringUtil.trim(line);
+				
+				if (!StringUtil.startsWith(tline, "/*") && !StringUtil.endsWith(tline, "*/"))
+				{
+					if (!StringUtil.startsWith(tline, "*"))
+					{
+						sb += "* " + line + "\n";
+					}
+					else
+					{
+						sb += line + "\n";
+					}
+				}
+				else if (!StringUtil.startsWith(tline, "/*") && StringUtil.endsWith(tline, "*/"))
+				{
+					// the button3       */
+					sb += "* " + line.replace("*/", "") + "\n";
+					sb += "*/";
+				}
+				else if (StringUtil.startsWith(tline, "/*") && !StringUtil.endsWith(tline, "*/"))
+				{
+					// /**      the button4
+					sb += "/**";
+					sb += "* " + line.replace("/**", "") + "\n";
+				}
+				else
+				{
+					sb += tline + "\n";
+				}
+			}
+		}
+		
+		return sb.toString();
+	}
 }
 }

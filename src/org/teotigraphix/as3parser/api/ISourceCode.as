@@ -50,6 +50,33 @@ public interface ISourceCode
 	function set code(value:String):void;
 	
 	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * The String name identifier.
+	 */
+	function get name():String;
+	
+	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
+	/**
+	 * The String packageName identifier.
+	 */
+	function get packageName():String;
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * The String qualifiedName identifier.
+	 */
+	function get qualifiedName():String;
+	
+	//----------------------------------
 	//  fileName
 	//----------------------------------
 	
@@ -62,6 +89,20 @@ public interface ISourceCode
 	 * @private
 	 */
 	function set fileName(value:String):void;
+	
+	//----------------------------------
+	//  classPath
+	//----------------------------------
+	
+	/**
+	 * The String file classPath identifier.
+	 */
+	function get classPath():String;
+	
+	/**
+	 * @private
+	 */
+	function set classPath(value:String):void;
 	
 	//--------------------------------------------------------------------------
 	//

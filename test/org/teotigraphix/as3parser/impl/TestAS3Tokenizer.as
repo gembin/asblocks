@@ -32,7 +32,7 @@ public class TestAS3Tokenizer
 				"}",
 			];
 		
-		sourceCode = new SourceCode(ASTUtil.toSourceCode(lines), "internalFile");
+		sourceCode = new SourceCode(ASTUtil.toSourceCode(lines), "internalFile", null);
 	}
 	
 	[Test]

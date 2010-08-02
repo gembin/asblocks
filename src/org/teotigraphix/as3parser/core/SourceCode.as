@@ -63,6 +63,74 @@ public class SourceCode implements ISourceCode
 	}
 	
 	//----------------------------------
+	//  extension
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _extension:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#extension
+	 */
+	public function get extension():String
+	{
+		return _extension;
+	}
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _name:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#name
+	 */
+	public function get name():String
+	{
+		return _name;
+	}
+	
+	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _packageName:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#packageName
+	 */
+	public function get packageName():String
+	{
+		return _packageName;
+	}
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _qualifiedName:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#qualifiedName
+	 */
+	public function get qualifiedName():String
+	{
+		return _qualifiedName;
+	}
+	
+	//----------------------------------
 	//  fileName
 	//----------------------------------
 	
@@ -87,6 +155,31 @@ public class SourceCode implements ISourceCode
 		_fileName = value;
 	}
 	
+	//----------------------------------
+	//  classPath
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _classPath:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#classPath
+	 */
+	public function get classPath():String
+	{
+		return _classPath;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set classPath(value:String):void
+	{
+		_classPath = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -98,11 +191,36 @@ public class SourceCode implements ISourceCode
 	 * 
 	 * @param code The String data.
 	 * @param fileName The String file name identifier.
+	 * @param classPath The String file classPath identifier.
 	 */
-	public function SourceCode(code:String, fileName:String)
+	public function SourceCode(code:String, fileName:String, classPath:String)
 	{
-		_code = code;
-		_fileName = fileName;
+		// for now this seems like a good place to normalize newlines
+		// FIXME what a mess and stick in as3 file
+		_code = code.replace(/\r\n/g, "\n");
+		_fileName = fileName.replace(/\\/g, "/");
+		_classPath = classPath;
+		
+		var split:Array = _fileName.split(".");
+		_extension = split.pop();
+		
+		_qualifiedName = split[0];
+		if (_qualifiedName)
+		{
+			_qualifiedName = _qualifiedName.replace(_classPath, "").split("/").join(".");
+			if (_qualifiedName.charAt(0) == ".")
+				_qualifiedName = _qualifiedName.substr(1, _qualifiedName.length);
+			_packageName = _qualifiedName;
+			var packageSplit:Array = _qualifiedName.split(".");
+			if (packageSplit.length > 1)
+			{
+				packageSplit.pop();
+				_packageName = packageSplit.join(".");
+			}
+		}
+		
+		if (split.length > 0)
+			_name = split[0].split("/").pop();
 	}
 	
 	//--------------------------------------------------------------------------

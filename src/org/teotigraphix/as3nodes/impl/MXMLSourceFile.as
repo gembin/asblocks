@@ -17,9 +17,14 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.ICompilationNode;
+import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3parser.api.IParser;
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
@@ -29,64 +34,42 @@ import org.teotigraphix.as3parser.api.ISourceCode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ISourceFile extends INode
+public class MXMLSourceFile extends AS3SourceFile implements IMXMLSourceFile
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
-	//----------------------------------
-	//  compilationNode
-	//----------------------------------
-	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function get compilationNode():ICompilationNode;
+	public function MXMLSourceFile(parent:INode, sourceCode:ISourceCode)
+	{
+		super(parent, sourceCode);
+	}
 	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get name():String;
-	
-	//----------------------------------
-	//  fileName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get fileName():String;
-	
-	//----------------------------------
-	//  sourceCode
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get sourceCode():ISourceCode;
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Public :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
 	 * @private
 	 */
-	function set sourceCode(value:ISourceCode):void;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function buildAst():ICompilationNode;
+	override public function buildAst():ICompilationNode
+	{
+		var parser:IParser = ParserFactory.instance.mxmlparser;
+		
+		var unit:IParserNode = parser.buildAst(
+			Vector.<String>(sourceCode.code.split("\n")), 
+			sourceCode.fileName);
+		
+		compilationNode = NodeFactory.instance.createCompilation(unit, this);
+		
+		return compilationNode;
+	}
 }
 }
