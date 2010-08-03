@@ -50,24 +50,50 @@ public class PackageNode extends NodeBase implements IPackageNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _name:String;
-	
-	/**
 	 * @copy org.teotigraphix.as3nodes.api.INameAware#name
 	 */
 	public function get name():String
 	{
-		return _name;
+		if (_uid)
+			return _uid.qualifiedName;
+		return null;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IIdentifierAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  uid
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _uid:IIdentifierNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierAware#uid
+	 */
+	public function get uid():IIdentifierNode
+	{
+		return _uid;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set name(value:String):void
+	public function set uid(value:IIdentifierNode):void
 	{
-		_name = value;
+		_uid = value;
+		if (_uid)
+		{
+			_qualifiedName = _uid.qualifiedName;
+			if (_typeNode && (_uid.qualifiedName != null || _uid.qualifiedName != ""))
+				_qualifiedName = _uid.qualifiedName + "." + _typeNode.uid.localName;
+		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -165,6 +191,12 @@ public class PackageNode extends NodeBase implements IPackageNode
 		super(node, parent);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  IPackageNode API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#addImport()
 	 */
@@ -187,7 +219,6 @@ public class PackageNode extends NodeBase implements IPackageNode
 		_imports = new Vector.<IIdentifierNode>();
 		
 		var type:IParserNode = ASTUtil.getTypeFromPackage(node);
-		//var content:IParserNode = type.getLastChild();
 		
 		// FIXME use NodeFactory
 		if (type.isKind(AS3NodeKind.CLASS))
@@ -205,10 +236,7 @@ public class PackageNode extends NodeBase implements IPackageNode
 		
 		NodeUtil.computeImports(this, node.getLastChild());
 		
-		_name = ASTUtil.getNode(AS3NodeKind.NAME, node).stringValue;
-		_qualifiedName = _name;
-		if (_typeNode && (_name != null || _name != ""))
-			_qualifiedName = _name + "." + _typeNode.name;
+		uid = new IdentifierNode(ASTUtil.getNode(AS3NodeKind.NAME, node), this);
 	}
 }
 }

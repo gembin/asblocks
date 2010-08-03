@@ -101,7 +101,6 @@ public class VariableNode extends ScriptNode implements IVariableNode
 			return;
 		
 		uid = NodeFactory.instance.createIdentifier(nti.getChild(0), this);
-		name = uid.localName;
 		type = NodeFactory.instance.createIdentifier(nti.getChild(1), this);
 	}
 }

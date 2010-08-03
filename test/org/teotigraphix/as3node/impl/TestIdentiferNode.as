@@ -3,7 +3,11 @@ package org.teotigraphix.as3node.impl
 
 import flexunit.framework.Assert;
 
+import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.impl.CompilationNode;
 import org.teotigraphix.as3nodes.impl.IdentifierNode;
 import org.teotigraphix.as3nodes.impl.PackageNode;
@@ -30,11 +34,12 @@ public class TestIdentiferNode
 			[
 				"package my.domain {",
 				"    import flash.events.IEventDispatcher",
+				"    import flash.events.EventDispatcher",
 				"    public final class Test extends my.domain.OtherTest ",
 				"        implements flash.events.IEventDispatcher, my.domain.ITest",
 				"    {",
 				"        public var variable:my.domain.StringBuffer;",
-				"        public static function method(arg0:my.domain.StringBuffer):my.domain.StringBuffer",
+				"        public static function methodA(arg0:my.domain.ParamType):my.domain.ReturnType",
 				"        {",
 				"            return null;",
 				"        }",
@@ -106,6 +111,63 @@ public class TestIdentiferNode
 	public function testPackageElements():void
 	{
 		var imports:Vector.<IIdentifierNode> = packageNode.imports;
+		Assert.assertEquals(2, imports.length);
+		
+		Assert.assertTrue(imports[0].isQualified);
+		Assert.assertEquals("IEventDispatcher", imports[0].localName);
+		Assert.assertEquals("flash.events", imports[0].packageName);
+		Assert.assertEquals("flash.events.IEventDispatcher", imports[0].qualifiedName);
+		
+		Assert.assertTrue(imports[1].isQualified);
+		Assert.assertEquals("EventDispatcher", imports[1].localName);
+		Assert.assertEquals("flash.events", imports[1].packageName);
+		Assert.assertEquals("flash.events.EventDispatcher", imports[1].qualifiedName);
+		
+		var type:IClassTypeNode = packageNode.typeNode as IClassTypeNode;
+		Assert.assertTrue(type.superType.isQualified);
+		Assert.assertEquals("OtherTest", type.superType.localName);
+		Assert.assertEquals("my.domain", type.superType.packageName);
+		Assert.assertEquals("my.domain.OtherTest", type.superType.qualifiedName);
+		
+		var implementations:Vector.<IIdentifierNode> = type.implementList;
+		Assert.assertEquals(2, implementations.length);
+		
+		Assert.assertTrue(implementations[0].isQualified);
+		Assert.assertEquals("IEventDispatcher", implementations[0].localName);
+		Assert.assertEquals("flash.events", implementations[0].packageName);
+		Assert.assertEquals("flash.events.IEventDispatcher", implementations[0].qualifiedName);
+		
+		Assert.assertTrue(implementations[1].isQualified);
+		Assert.assertEquals("ITest", implementations[1].localName);
+		Assert.assertEquals("my.domain", implementations[1].packageName);
+		Assert.assertEquals("my.domain.ITest", implementations[1].qualifiedName);
+		
+		var attributes:Vector.<IAttributeNode> = type.attributes;
+		Assert.assertEquals(1, attributes.length);
+		
+		Assert.assertNotNull(attributes[0].uid);
+		Assert.assertNotNull(attributes[0].type);
+		Assert.assertEquals("variable", attributes[0].uid.localName);
+		Assert.assertEquals("StringBuffer", attributes[0].type.localName);
+		Assert.assertEquals("my.domain", attributes[0].type.packageName);
+		Assert.assertEquals("my.domain.StringBuffer", attributes[0].type.qualifiedName);
+		
+		var methods:Vector.<IMethodNode> = type.methods;
+		Assert.assertEquals(1, methods.length);
+		Assert.assertNotNull(methods[0].uid);
+		Assert.assertNotNull(methods[0].type);
+		Assert.assertEquals("methodA", methods[0].uid.localName);
+		Assert.assertEquals("ReturnType", methods[0].type.localName);
+		Assert.assertEquals("my.domain", methods[0].type.packageName);
+		Assert.assertEquals("my.domain.ReturnType", methods[0].type.qualifiedName);
+		
+		var parameters:Vector.<IParameterNode> = methods[0].parameters;
+		Assert.assertEquals(1, parameters.length);
+		Assert.assertNotNull(parameters[0].name);
+		Assert.assertEquals("arg0", parameters[0].name);
+		Assert.assertEquals("ParamType", parameters[0].type.localName);
+		Assert.assertEquals("my.domain", parameters[0].type.packageName);
+		Assert.assertEquals("my.domain.ParamType", parameters[0].type.qualifiedName);
 	}
 }
 }
