@@ -187,13 +187,13 @@ public class TestPackageNode
 		
 		// extends
 		Assert.assertNotNull(typeNode.superType);
-		Assert.assertEquals("OtherTest", typeNode.superType.toString());
+		Assert.assertEquals("OtherTest", typeNode.superType.localName);
 		
 		// implements
 		Assert.assertNotNull(typeNode.implementList);
 		Assert.assertEquals(2, typeNode.implementList.length);
-		Assert.assertEquals("IEventDispatcher", typeNode.implementList[0].toString());
-		Assert.assertEquals("my.domain.ITest", typeNode.implementList[1].toString());
+		Assert.assertEquals("IEventDispatcher", typeNode.implementList[0].localName);
+		Assert.assertEquals("my.domain.ITest", typeNode.implementList[1].localName);
 	}
 	
 	[Test]
@@ -212,7 +212,7 @@ public class TestPackageNode
 		Assert.assertTrue(ConstantNode(constants[0]).isBindable);
 		
 		Assert.assertEquals("NAME", constants[0].name);
-		Assert.assertEquals("String", constants[0].type.toString());
+		Assert.assertEquals("String", constants[0].type.localName);
 		
 		var comment:ICommentNode = constants[0].comment;
 		Assert.assertNotNull(comment);
@@ -243,10 +243,10 @@ public class TestPackageNode
 		Assert.assertFalse(AttributeNode(attributes[0]).isBindable);
 		
 		Assert.assertEquals("variable", attributes[0].name);
-		Assert.assertEquals("String", attributes[0].type.toString());
+		Assert.assertEquals("String", attributes[0].type.localName);
 		
 		Assert.assertEquals("variable2", attributes[1].name);
-		Assert.assertEquals("int", attributes[1].type.toString());
+		Assert.assertEquals("int", attributes[1].type.localName);
 		
 		var comment:ICommentNode = attributes[0].comment;
 		Assert.assertNotNull(comment);
@@ -329,7 +329,7 @@ public class TestPackageNode
 		Assert.assertEquals(2, method.parameters.length);
 		
 		Assert.assertEquals("arg0", method.parameters[0].name);
-		Assert.assertEquals("int", method.parameters[0].type.name);
+		Assert.assertEquals("int", method.parameters[0].type.localName);
 		Assert.assertEquals("1", method.parameters[0].value);
 		Assert.assertTrue(method.parameters[0].hasType);
 		Assert.assertTrue(method.parameters[0].hasValue);
@@ -341,7 +341,7 @@ public class TestPackageNode
 		
 		// type
 		Assert.assertTrue(method.hasType);
-		Assert.assertEquals("Number", method.type.name);
+		Assert.assertEquals("Number", method.type.localName);
 		
 		// public function Test()
 		method = methods[1];

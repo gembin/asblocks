@@ -127,8 +127,8 @@ public class TestInterfaceNode
 		// extends
 		Assert.assertNotNull(typeNode.superTypeList);
 		Assert.assertEquals(2, typeNode.superTypeList.length);
-		Assert.assertEquals("IOtherTest", typeNode.superTypeList[0].name);
-		Assert.assertEquals("IEventDispatcher", typeNode.superTypeList[1].name);
+		Assert.assertEquals("IOtherTest", typeNode.superTypeList[0].localName);
+		Assert.assertEquals("IEventDispatcher", typeNode.superTypeList[1].localName);
 	}
 	
 	[Test]
@@ -199,7 +199,7 @@ public class TestInterfaceNode
 		Assert.assertEquals(2, method.parameters.length);
 		
 		Assert.assertEquals("arg0", method.parameters[0].name);
-		Assert.assertEquals("int", method.parameters[0].type.name);
+		Assert.assertEquals("int", method.parameters[0].type.localName);
 		Assert.assertEquals("1", method.parameters[0].value);
 		Assert.assertTrue(method.parameters[0].hasType);
 		Assert.assertTrue(method.parameters[0].hasValue);
@@ -211,7 +211,7 @@ public class TestInterfaceNode
 		
 		// type
 		Assert.assertTrue(method.hasType);
-		Assert.assertEquals("Number", method.type.name);
+		Assert.assertEquals("Number", method.type.localName);
 	}
 }
 }

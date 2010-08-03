@@ -27,7 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IIdentifierNode extends INode
+public interface IIdentifierAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -36,41 +36,12 @@ public interface IIdentifierNode extends INode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  localName
+	//  uid
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get localName():String;
-	
-	//----------------------------------
-	//  packageName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get packageName():String;
-	
-	//----------------------------------
-	//  qualifiedName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get qualifiedName():String;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	//function toString():String;
+	function get uid():IIdentifierNode;
 }
 }

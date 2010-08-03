@@ -47,30 +47,30 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  identifier
+	//  uid
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	private var _identifier:IIdentifierNode;
+	private var _uid:IIdentifierNode;
 	
 	/**
 	 * The type identifier node.
 	 */
-	protected function get identifier():IIdentifierNode
+	public function get uid():IIdentifierNode
 	{
-		return _identifier;
+		return _uid;
 	}
 	
 	/**
 	 * @private
 	 */	
-	protected function set identifier(value:IIdentifierNode):void
+	public function set uid(value:IIdentifierNode):void
 	{
-		_identifier = value;
-		if (_identifier)
-			_name = _identifier.toString();
+		_uid = value;
+		if (_uid)
+			_name = _uid.localName;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -461,7 +461,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	protected function computeName(typeContent:IParserNode):void
 	{
-		identifier = NodeFactory.instance.createIdentifier(typeContent, this);
+		uid = NodeFactory.instance.createIdentifier(typeContent, this);
 	}
 	
 	/**
