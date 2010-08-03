@@ -22,7 +22,9 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.Node;
 
 /**
  * An identifier name node.
@@ -103,7 +105,50 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	public function get qualifiedName():String
 	{
-		return _qualifiedName;
+		if (isQualified)
+		{
+			if (hasFragment)
+			{
+				if (hasFragmentType)
+				{
+					return _packageName + "." + _localName + "#" + _fragmentType + ":"
+						+ _fragmentName;
+				}
+				else
+				{
+					return _packageName + "." + _localName + "#" + _fragmentName;
+				}
+			}
+			else
+			{
+				if (_packageName == "")
+				{
+					return _localName;
+				}
+				else
+				{
+					return _packageName + "." + _localName;
+				}
+			}
+		}
+		else
+		{
+			if (hasFragment)
+			{
+				if (hasFragmentType)
+				{
+					return _localName + "#" + _fragmentType + ":" + _fragmentName;
+				}
+				else
+				{
+					return _localName + "#" + _fragmentName;
+				}
+			}
+			else
+			{
+				return _localName;
+			}
+		}
 	}
 	
 	/**
@@ -111,7 +156,105 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */	
 	public function set qualifiedName(value:String):void
 	{
-		_qualifiedName = value;
+		var string:String = value;
+		
+		var pos:int = string.lastIndexOf('.');
+		if (pos != -1)
+		{
+			_packageName = string.substring(0, pos);
+			parse(string.substring(pos + 1));
+		}
+		else
+		{
+			_packageName = null;
+			parse(string);
+		}
+	}
+	
+	//----------------------------------
+	//  fragmentName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _fragmentName:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#fragmentName
+	 */
+	public function get fragmentName():String
+	{
+		return _fragmentName;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set fragmentName(value:String):void
+	{
+		_fragmentName = value;
+	}
+	
+	//----------------------------------
+	//  fragmentType
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _fragmentType:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#fragmentType
+	 */
+	public function get fragmentType():String
+	{
+		return _fragmentType;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set fragmentType(value:String):void
+	{
+		_fragmentType = value;
+	}
+	
+	//----------------------------------
+	//  fragmentType
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#isQualified
+	 */
+	public function get isQualified():Boolean
+	{
+		return _packageName != null;
+	}
+	
+	//----------------------------------
+	//  fragmentType
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#hasFragment
+	 */
+	public function get hasFragment():Boolean
+	{
+		return _fragmentName != null;
+	}
+	
+	//----------------------------------
+	//  fragmentType
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#hasFragmentType
+	 */
+	public function get hasFragmentType():Boolean
+	{
+		return _fragmentType != null;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -153,8 +296,43 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	override protected function compute():void
 	{
-		// FIXME !!!!!!!!!!!
-		_localName = node.stringValue;
+		qualifiedName = node.stringValue;
+	}
+	
+	private function parse(data:String):void
+	{
+		var pos:int = data.indexOf('#');
+		if (pos != -1)
+		{
+			// next :: MyClass#myVariable
+			_localName = data.substring(0, pos);
+			_fragmentName = data.substring(pos + 1);
+			
+			pos = _fragmentName.indexOf(':');
+			if (pos != -1)
+			{
+				_fragmentType = _fragmentName.substring(0, pos);
+				_fragmentName = _fragmentName.substring(pos + 1);
+			}
+		}
+		else
+		{
+			_localName = data;
+		}
+	}
+	
+	public static function createName(qualifiedName:String, 
+									  parent:INode = null):IIdentifierNode
+	{
+		var node:IParserNode = Node.create(AS3NodeKind.NAME, -1, -1, qualifiedName);
+		return new IdentifierNode(node, parent);
+	}
+	
+	public static function createType(qualifiedName:String, 
+									  parent:INode = null):IIdentifierNode
+	{
+		var node:IParserNode = Node.create(AS3NodeKind.TYPE, -1, -1, qualifiedName);
+		return new IdentifierNode(node, parent);
 	}
 }
 }

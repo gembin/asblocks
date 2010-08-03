@@ -193,7 +193,9 @@ public class TestPackageNode
 		Assert.assertNotNull(typeNode.implementList);
 		Assert.assertEquals(2, typeNode.implementList.length);
 		Assert.assertEquals("IEventDispatcher", typeNode.implementList[0].localName);
-		Assert.assertEquals("my.domain.ITest", typeNode.implementList[1].localName);
+		Assert.assertEquals("ITest", typeNode.implementList[1].localName);
+		Assert.assertEquals("my.domain", typeNode.implementList[1].packageName);
+		Assert.assertEquals("my.domain.ITest", typeNode.implementList[1].qualifiedName);
 	}
 	
 	[Test]

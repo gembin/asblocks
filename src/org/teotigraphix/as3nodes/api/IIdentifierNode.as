@@ -62,15 +62,49 @@ public interface IIdentifierNode extends INode
 	 */
 	function get qualifiedName():String;
 	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
+	//----------------------------------
+	//  fragmentName
+	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	//function toString():String;
+	function get fragmentName():String;
+	
+	//----------------------------------
+	//  fragmentType
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get fragmentType():String;
+	
+	//----------------------------------
+	//  fragmentType
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get isQualified():Boolean;
+	
+	//----------------------------------
+	//  fragmentType
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get hasFragment():Boolean;
+	
+	//----------------------------------
+	//  fragmentType
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get hasFragmentType():Boolean;
 }
 }
