@@ -40,28 +40,78 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  name
+	//  localName
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	private var _name:String;
+	private var _localName:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.INameAware#name
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#name
 	 */
-	public function get name():String
+	public function get localName():String
 	{
-		return _name;
+		return _localName;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set name(value:String):void
+	public function set localName(value:String):void
 	{
-		_name = value;
+		_localName = value;
+	}
+	
+	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _packageName:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#packageName
+	 */
+	public function get packageName():String
+	{
+		return _packageName;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set packageName(value:String):void
+	{
+		_packageName = value;
+	}
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _qualifiedName:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#qualifiedName
+	 */
+	public function get qualifiedName():String
+	{
+		return _qualifiedName;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set qualifiedName(value:String):void
+	{
+		_qualifiedName = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -89,7 +139,7 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	public function toString():String
 	{
-		return _name;
+		return _qualifiedName;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -103,7 +153,8 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	override protected function compute():void
 	{
-		_name = node.stringValue;
+		// FIXME !!!!!!!!!!!
+		_localName = node.stringValue;
 	}
 }
 }

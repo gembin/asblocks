@@ -289,7 +289,7 @@ public class ParameterNode extends NodeBase implements IParameterNode
 	protected function computeNameTypeInt(child:IParserNode):void
 	{
 		identifier = NodeFactory.instance.createIdentifier(child.getChild(0), this);
-		name = identifier.name;
+		name = identifier.localName;
 		
 		if (child.numChildren > 1)
 			type = NodeFactory.instance.createIdentifier(child.getChild(1), this);
