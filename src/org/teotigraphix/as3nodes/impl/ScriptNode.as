@@ -368,6 +368,20 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  ISeeLinkAware API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISeeLinkAware#toLink()
+	 */
+	public function toLink():String
+	{
+		return null;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Overridden Protected :: Methods
 	//
 	//--------------------------------------------------------------------------

@@ -21,37 +21,24 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * The <strong>ISeeLinkAware</strong> interface creates a contract that allows nodes
+ * to specify a String link that uniquely identify them from other nodes.
+ * 
+ * <p>This interface <strong>requires</strong> the action script @see link 
+ * protocol to be returned.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
-	IVisible, INameAware, IDeprecateAware, ISeeLinkAware
+public interface ISeeLinkAware
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  isFinal
-	//----------------------------------
-	
 	/**
-	 * TODO Docme
+	 * Returns a String link that is used in Maps and mirrors the link when using
+	 * a see tag in actual <code>ICommentNode</code>s.
+	 * 
+	 * @return A String locating the node in the session.
 	 */
-	function get isFinal():Boolean;
-	
-	//----------------------------------
-	//  isStatic
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isStatic():Boolean;
+	function toLink():String;
 }
 }
