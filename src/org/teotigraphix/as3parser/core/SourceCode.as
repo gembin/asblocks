@@ -201,9 +201,11 @@ public class SourceCode implements ISourceCode
 			_code = code.replace(/\r\n/g, "\n");
 		
 		_fileName = fileName.replace(/\\/g, "/");
-		_classPath = classPath;
+		_classPath = classPath.replace(/\\/g, "/");
 		
-		var split:Array = _fileName.split(".");
+		var base:String = _fileName.replace(_classPath, "");
+		
+		var split:Array = base.split(".");
 		_extension = split.pop();
 		
 		_qualifiedName = split[0];
@@ -218,6 +220,10 @@ public class SourceCode implements ISourceCode
 			{
 				packageSplit.pop();
 				_packageName = packageSplit.join(".");
+			}
+			else
+			{
+				_packageName = "toplevel"; // toplevel
 			}
 		}
 		

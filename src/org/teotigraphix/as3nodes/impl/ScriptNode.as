@@ -396,7 +396,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		modifiers = new Vector.<Modifier>();
 		metadata = new Vector.<IMetaDataNode>();
 		
-		if (node.numChildren == 0)
+		if (!node || node.numChildren == 0)
 			return;
 		
 		for each (var child:IParserNode in node.children)

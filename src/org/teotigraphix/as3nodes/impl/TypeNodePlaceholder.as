@@ -17,94 +17,102 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.ITypeNodePlaceholder;
+import org.teotigraphix.as3parser.api.IParserNode;
+
 /**
- * The ITypeNode represents a class or interface node.
+ * The concrete implementation of the <code>ITypeElementPlaceholder</code> API.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends INode, IScriptNode,
-	IMetaDataAware, ICommentAware, IVisible, INameAware
+public class TypeNodePlaceholder extends TypeNode implements ITypeNodePlaceholder
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Overridden Public :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _name:String;
+	
+	/**
+	 * @private
+	 */
+	override public function get name():String
+	{
+		return _name;
+	}
 	
 	//----------------------------------
 	//  packageName
 	//----------------------------------
 	
 	/**
-	 * The type's containing IPackageNode.name.
+	 * @private
 	 */
-	function get packageName():String;
+	private var _packageName:String;
+	
+	/**
+	 * @private
+	 */
+	override public function get packageName():String
+	{
+		return _packageName;
+	}
 	
 	//----------------------------------
-	//  packageName
+	//  qualifiedName
 	//----------------------------------
 	
 	/**
-	 * The type's containing IPackageNode.name + name.
+	 * @private
 	 */
-	function get qualifiedName():String;
-	
-	//----------------------------------
-	//  isSubType
-	//----------------------------------
+	private var _qualifiedName:String;
 	
 	/**
-	 * Whether the type is a sub class or interface.
+	 * @private
 	 */
-	function get isSubType():Boolean;
-	
-	//----------------------------------
-	//  accessors
-	//----------------------------------
-	
-	/**
-	 * The type's IAccessorNode children.
-	 */
-	function get accessors():Vector.<IAccessorNode>;
-	
-	//----------------------------------
-	//  accessors
-	//----------------------------------
-	
-	/**
-	 * The type's get IAccessorNode children.
-	 */
-	function get getters():Vector.<IAccessorNode>;
-	
-	//----------------------------------
-	//  accessors
-	//----------------------------------
-	
-	/**
-	 * The type's set IAccessorNode children.
-	 */
-	function get setters():Vector.<IAccessorNode>;	
-	
-	//----------------------------------
-	//  functions
-	//----------------------------------
-	
-	/**
-	 * The type's IMethodNode children.
-	 */
-	function get methods():Vector.<IMethodNode>;
+	override public function get qualifiedName():String
+	{
+		return _qualifiedName;
+	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
-	function addSuperType(type:IIdentifierNode):void;
+	/**
+	 * Constructor.
+	 */
+	public function TypeNodePlaceholder(qualifiedName:String)
+	{
+		super(null, null);
+		
+		_name = qualifiedName;
+		_packageName = qualifiedName;
+		_qualifiedName = qualifiedName;
+		
+		if (_qualifiedName.indexOf(".") != -1)
+		{
+			var split:Array = _qualifiedName.split(".");
+			_name = split.pop();
+			_packageName = split.join(".");
+		}
+	}
 }
 }

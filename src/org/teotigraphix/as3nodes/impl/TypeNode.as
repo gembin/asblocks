@@ -20,10 +20,13 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
+import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -42,6 +45,42 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	//  ITypeNode API :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#packageName
+	 */
+	public function get packageName():String
+	{
+		return IPackageNode(parent).name;
+	}
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#qualifiedName
+	 */
+	public function get qualifiedName():String
+	{
+		return IPackageNode(parent).qualifiedName;
+	}
+	
+	//----------------------------------
+	//  isSubType
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#isSubType
+	 */
+	public function get isSubType():Boolean
+	{
+		return superTypeList != null && superTypeList.length > 0;
+	}
 	
 	//----------------------------------
 	//  accessors
@@ -184,6 +223,20 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  Overridden Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function toLink():String
+	{
+		return qualifiedName;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  ITypeNode API :: Methods
 	//
 	//--------------------------------------------------------------------------
@@ -232,7 +285,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		
 		methods = new Vector.<IMethodNode>();
 		
-		if (typeContent.numChildren == 0)
+		if (!typeContent || typeContent.numChildren == 0)
 			return;
 		
 		for each (var child:IParserNode in typeContent.children)
