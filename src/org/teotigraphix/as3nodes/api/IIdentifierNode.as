@@ -62,6 +62,11 @@ public interface IIdentifierNode extends INode
 	 */
 	function get qualifiedName():String;
 	
+	/**
+	 * @private
+	 */
+	function set qualifiedName(value:String):void;
+	
 	//----------------------------------
 	//  fragmentName
 	//----------------------------------

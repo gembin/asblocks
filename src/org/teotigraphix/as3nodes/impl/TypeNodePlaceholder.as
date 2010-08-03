@@ -113,6 +113,8 @@ public class TypeNodePlaceholder extends TypeNode implements ITypeNodePlaceholde
 			_name = split.pop();
 			_packageName = split.join(".");
 		}
+		
+		uid = IdentifierNode.createType(_qualifiedName, this);
 	}
 }
 }

@@ -90,5 +90,15 @@ public interface IAS3BookAccessor
 	//
 	
 	function getSuperClasses(node:ITypeNode):Vector.<ITypeNode>;
+	
+	function getSubClasses(node:ITypeNode):Vector.<ITypeNode>;
+	
+	function getImplementedInterfaces(node:ITypeNode):Vector.<ITypeNode>;
+	
+	function getInterfaceImplementors(node:ITypeNode):Vector.<ITypeNode>;
+	
+	function getSuperInterfaces(node:ITypeNode):Vector.<ITypeNode>;
+	
+	function getSubInterfaces(node:ITypeNode):Vector.<ITypeNode>;
 }
 }

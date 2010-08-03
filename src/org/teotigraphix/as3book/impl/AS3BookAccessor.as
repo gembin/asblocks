@@ -241,6 +241,32 @@ public class AS3BookAccessor implements IAS3BookAccessor
 		return _book.superclasses.getValue(node.toLink());
 	}
 	
+	public function getSubClasses(node:ITypeNode):Vector.<ITypeNode>
+	{
+		return _book.subclasses.getValue(node.toLink());
+	}
+	
+	public function getImplementedInterfaces(node:ITypeNode):Vector.<ITypeNode>
+	{
+		return _book.implementedinterfaces.getValue(node.toLink());
+	}
+	
+	public function getInterfaceImplementors(node:ITypeNode):Vector.<ITypeNode>
+	{
+		return _book.interfaceImplementors.getValue(node.toLink());
+	}
+	
+	public function getSuperInterfaces(node:ITypeNode):Vector.<ITypeNode>
+	{
+		return _book.superInterfaces.getValue(node.toLink());
+	}
+	
+	public function getSubInterfaces(node:ITypeNode):Vector.<ITypeNode>
+	{
+		return _book.subInterfaces.getValue(node.toLink());
+	}
+	
+	
 	public function getSourceFileCollection(packageName:String):ISourceFileCollection
 	{
 		for each (var element:ISourceFileCollection in _book.sourceFileCollections)

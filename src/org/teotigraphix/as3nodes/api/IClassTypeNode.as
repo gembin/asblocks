@@ -20,6 +20,7 @@
 package org.teotigraphix.as3nodes.api
 {
 
+
 /**
  * TODO DOCME
  * 
@@ -57,6 +58,15 @@ public interface IClassTypeNode extends ITypeNode
 	 * @private
 	 */
 	function set implementList(value:Vector.<IIdentifierNode>):void;
+	
+	//----------------------------------
+	//  hasImplementations
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get hasImplementations():Boolean;
 	
 	//----------------------------------
 	//  constants

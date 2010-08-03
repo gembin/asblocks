@@ -89,6 +89,18 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 	}
 	
 	//----------------------------------
+	//  hasImplementations
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#hasImplementations
+	 */
+	public function get hasImplementations():Boolean
+	{
+		return _implementList && _implementList.length > 0;
+	}
+	
+	//----------------------------------
 	//  constants
 	//----------------------------------
 	

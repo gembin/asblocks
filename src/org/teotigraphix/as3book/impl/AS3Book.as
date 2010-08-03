@@ -24,7 +24,6 @@ import com.ericfeminella.collections.HashMap;
 import com.ericfeminella.collections.IMap;
 
 import flash.events.EventDispatcher;
-import flash.events.IEventDispatcher;
 
 import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookAccessor;
@@ -32,7 +31,6 @@ import org.teotigraphix.as3book.api.IAS3BookProcessor;
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
-import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
@@ -60,10 +58,6 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	 * @private
 	 */
 	private var sourceFiles:IMap = new HashMap();
-	
-	//----------------------------------
-	//  sourceFileCollections
-	//----------------------------------
 	
 	/**
 	 * @private
@@ -107,6 +101,30 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	 * of [toLink() => Vector.<ITypeNode>]
 	 */
 	internal var subclasses:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<ITypeNode>]
+	 */
+	internal var implementedinterfaces:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<ITypeNode>]
+	 */
+	internal var interfaceImplementors:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<ITypeNode>]
+	 */
+	internal var superInterfaces:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<ITypeNode>]
+	 */
+	internal var subInterfaces:IMap = new HashMap();
 	
 	//--------------------------------------------------------------------------
 	//
@@ -183,6 +201,9 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		addCompilationNode(sourceFile.compilationNode);
 	}
 	
+	/**
+	 * @private
+	 */
 	private function addSourceFileCollection(sourceFile:IAS3SourceFile):void
 	{
 		// this creates a new package that is unique to 'my.domain' or 'my.other.domain'
@@ -200,6 +221,9 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		sourceFileCollections.push(newCollection);
 	}
 	
+	/**
+	 * @private
+	 */
 	private function addCompilationNode(node:ICompilationNode):void
 	{
 		var packageNode:IPackageNode = node.packageNode;
@@ -225,16 +249,25 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		}
 	}
 	
+	/**
+	 * @private
+	 */
 	private function addClassNode(node:IClassTypeNode):void
 	{
 		classes.put(node.toLink(), node);
 	}
 	
+	/**
+	 * @private
+	 */
 	private function addInterfaceNode(node:IInterfaceTypeNode):void
 	{
 		interfaces.put(node.toLink(), node);
 	}
 	
+	/**
+	 * @private
+	 */
 	private function addFunctionNode(node:IFunctionTypeNode):void
 	{
 		functions.put(node.toLink(), node);
