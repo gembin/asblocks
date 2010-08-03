@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
-import org.teotigraphix.as3nodes.api.IInterfaceNode;
+import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
@@ -34,7 +34,7 @@ import org.teotigraphix.as3parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class InterfaceNode extends TypeNode implements IInterfaceNode
+public class InterfaceTypeNode extends TypeNode implements IInterfaceTypeNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -45,7 +45,7 @@ public class InterfaceNode extends TypeNode implements IInterfaceNode
 	/**
 	 * Constructor.
 	 */
-	public function InterfaceNode(node:IParserNode, parent:INode)
+	public function InterfaceTypeNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
 	}

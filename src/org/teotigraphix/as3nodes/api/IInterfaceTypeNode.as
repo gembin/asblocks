@@ -27,7 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IClassNode extends ITypeNode
+public interface IInterfaceTypeNode extends ITypeNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -36,56 +36,12 @@ public interface IClassNode extends ITypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  superType
+	//  superTypeList
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get superType():IIdentifierNode;
-	
-	//----------------------------------
-	//  implements
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get implementList():Vector.<IIdentifierNode>;
-	
-	/**
-	 * @private
-	 */
-	function set implementList(value:Vector.<IIdentifierNode>):void;
-	
-	//----------------------------------
-	//  constants
-	//----------------------------------
-	
-	/**
-	 * The type's IConstantNode children.
-	 */
-	function get constants():Vector.<IConstantNode>;
-	
-	//----------------------------------
-	//  attributes
-	//----------------------------------
-	
-	/**
-	 * The type's IAttributeNode children.
-	 */
-	function get attributes():Vector.<IAttributeNode>;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function addImplementation(implementation:IIdentifierNode):void;
-	
+	function get superTypeList():Vector.<IIdentifierNode>;
 }
 }

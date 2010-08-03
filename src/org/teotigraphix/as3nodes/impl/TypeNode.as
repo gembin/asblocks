@@ -29,7 +29,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The class|interface found in the package node.
+ * The class|interface|function found in the package node.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

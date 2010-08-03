@@ -6,7 +6,7 @@ import flexunit.framework.Assert;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
-import org.teotigraphix.as3nodes.api.IInterfaceNode;
+import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
@@ -86,7 +86,7 @@ public class TestInterfaceNode
 	public function testTypeNode():void
 	{
 		var packageNode:IPackageNode = compilationNode.packageNode;
-		var typeNode:IInterfaceNode = packageNode.typeNode as IInterfaceNode;
+		var typeNode:IInterfaceTypeNode = packageNode.typeNode as IInterfaceTypeNode;
 		
 		Assert.assertNotNull(typeNode);
 		Assert.assertStrictlyEquals(packageNode, typeNode.parent);

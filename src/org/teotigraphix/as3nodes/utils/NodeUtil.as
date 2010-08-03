@@ -20,10 +20,10 @@
 package org.teotigraphix.as3nodes.utils
 {
 
-import org.teotigraphix.as3nodes.api.IClassNode;
+import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
-import org.teotigraphix.as3nodes.api.IInterfaceNode;
+import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
@@ -128,7 +128,7 @@ public class NodeUtil
 	 * @param node An IClassNode node.
 	 * @param child The IParserNode internal node.
 	 */
-	public static function computeImplementsList(node:IClassNode, 
+	public static function computeImplementsList(node:IClassTypeNode, 
 												 child:IParserNode):void
 	{
 		if (!child || child.numChildren == 0)

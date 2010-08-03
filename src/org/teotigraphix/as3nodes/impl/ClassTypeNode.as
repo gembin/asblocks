@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.IAttributeNode;
-import org.teotigraphix.as3nodes.api.IClassNode;
+import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
@@ -36,11 +36,11 @@ import org.teotigraphix.as3parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ClassNode extends TypeNode implements IClassNode
+public class ClassTypeNode extends TypeNode implements IClassTypeNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IClassNode API :: Properties
+	//  IClassTypeNode API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -54,7 +54,7 @@ public class ClassNode extends TypeNode implements IClassNode
 	private var _superType:IIdentifierNode;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IClassNode#superType
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#superType
 	 */
 	public function get superType():IIdentifierNode
 	{
@@ -73,7 +73,7 @@ public class ClassNode extends TypeNode implements IClassNode
 	private var _implementList:Vector.<IIdentifierNode>;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IClassNode#implementList
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#implementList
 	 */
 	public function get implementList():Vector.<IIdentifierNode>
 	{
@@ -98,7 +98,7 @@ public class ClassNode extends TypeNode implements IClassNode
 	private var _constants:Vector.<IConstantNode>;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IClassNode#constants
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#constants
 	 */
 	public function get constants():Vector.<IConstantNode>
 	{
@@ -123,7 +123,7 @@ public class ClassNode extends TypeNode implements IClassNode
 	private var _attributes:Vector.<IAttributeNode>;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IClassNode#attributes
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#attributes
 	 */
 	public function get attributes():Vector.<IAttributeNode>
 	{
@@ -147,7 +147,7 @@ public class ClassNode extends TypeNode implements IClassNode
 	/**
 	 * Constructor.
 	 */
-	public function ClassNode(node:IParserNode, parent:INode)
+	public function ClassTypeNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
 	}
@@ -159,7 +159,7 @@ public class ClassNode extends TypeNode implements IClassNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IClassNode#addImplementation()
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#addImplementation()
 	 */
 	public function addImplementation(implementation:IIdentifierNode):void
 	{

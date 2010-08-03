@@ -4,7 +4,7 @@ package org.teotigraphix.as3node.impl
 import org.flexunit.Assert;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
-import org.teotigraphix.as3nodes.api.IClassNode;
+import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -120,7 +120,7 @@ public class TestPackageNode
 	[Test]
 	public function testTypeNode():void
 	{
-		var typeNode:IClassNode = packageNode.typeNode as IClassNode;
+		var typeNode:IClassTypeNode = packageNode.typeNode as IClassTypeNode;
 		Assert.assertNotNull(typeNode);
 		Assert.assertStrictlyEquals(packageNode, typeNode.parent);
 		
@@ -199,7 +199,7 @@ public class TestPackageNode
 	[Test]
 	public function testConstantNode():void
 	{
-		var constants:Vector.<IConstantNode> = IClassNode(packageNode.typeNode).constants;
+		var constants:Vector.<IConstantNode> = IClassTypeNode(packageNode.typeNode).constants;
 		Assert.assertNotNull(constants);
 		Assert.assertEquals(1, constants.length);
 		
@@ -230,7 +230,7 @@ public class TestPackageNode
 	[Test]
 	public function testAttributeNode():void
 	{
-		var attributes:Vector.<IAttributeNode> = IClassNode(packageNode.typeNode).attributes;
+		var attributes:Vector.<IAttributeNode> = IClassTypeNode(packageNode.typeNode).attributes;
 		Assert.assertNotNull(attributes);
 		Assert.assertEquals(2, attributes.length);
 		

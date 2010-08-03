@@ -176,14 +176,18 @@ public class PackageNode extends NodeBase implements IPackageNode
 	{
 		var type:IParserNode = ASTUtil.getTypeFromPackage(node);
 		//var content:IParserNode = type.getLastChild();
-		
+		// FIXME use NodeFactory
 		if (type.isKind(AS3NodeKind.CLASS))
 		{
-			_typeNode = new ClassNode(type, this);
+			_typeNode = new ClassTypeNode(type, this);
 		}
 		else if (type.isKind(AS3NodeKind.INTERFACE))
 		{
-			_typeNode = new InterfaceNode(type, this);
+			_typeNode = new InterfaceTypeNode(type, this);
+		}
+		else if (type.isKind(AS3NodeKind.FUNCTION))
+		{
+			_typeNode = new FunctionTypeNode(type, this);
 		}
 		
 		_imports = ASTUtil.getNodes(AS3NodeKind.IMPORT, node.getLastChild());
