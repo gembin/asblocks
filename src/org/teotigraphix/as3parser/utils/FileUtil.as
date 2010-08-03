@@ -20,6 +20,8 @@
 package org.teotigraphix.as3parser.utils
 {
 
+import flash.system.Capabilities;
+import flash.system.System;
 import flash.utils.getDefinitionByName;
 
 /**
@@ -50,6 +52,24 @@ public class FileUtil
 	 */
 	public static function readLines(filePath:String):Vector.<String>
 	{
+		var data:String;
+		
+		try
+		{
+			data = readFile(filePath);
+		}
+		catch (e:Error)
+		{
+			throw e;
+		}
+		
+		data = data.replace(/\r\n/g, "\n");
+		
+		return Vector.<String>(data.split("\n"));
+	}
+	
+	public static function readFile(filePath:String):String
+	{
 		var fileClass:Class = getDefinitionByName("flash.filesystem.File") as Class;
 		var fileStreamClass:Class = getDefinitionByName("flash.filesystem.FileStream") as Class;
 		
@@ -68,9 +88,13 @@ public class FileUtil
 		stream.open(file, "read");
 		
 		var data:String = stream.readUTFBytes(stream.bytesAvailable);
-		data = data.replace(/\r\n/g, "\n");
 		
-		return Vector.<String>(data.split("\n"));
+		return data;
+	}
+	
+	public static function get isDesktop():Boolean
+	{
+		return Capabilities.playerType == "Desktop";
 	}
 }
 }

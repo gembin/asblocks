@@ -19,6 +19,28 @@ public class TestCompilationUnit
 	}
 	
 	[Test]
+	public function testVector_bug1():void
+	{
+		var lines:Array =
+			[
+				"package my.domain {",
+				"    public class Test {",
+				"        public function getMetaData(name:String):Vector.<IMetaDataNode> {",
+				"            var result:Vector.<IMetaDataNode> = new Vector.<IMetaDataNode>();",
+				"            return result;",
+				"      }",
+				"}",
+				"}",
+				"__END__"
+			];
+		
+		// FIXME fix Vector bug
+		//scanner.setLines(ASTUtil.toVector(lines));
+		
+		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
+	}
+	
+	[Test]
 	public function testGarbageCommentsPackage():void
 	{
 		var lines:Array =
