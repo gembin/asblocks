@@ -20,9 +20,11 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -48,24 +50,50 @@ public class PackageNode extends NodeBase implements IPackageNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _name:String;
-	
-	/**
 	 * @copy org.teotigraphix.as3nodes.api.INameAware#name
 	 */
 	public function get name():String
 	{
-		return _name;
+		if (_uid)
+			return _uid.qualifiedName;
+		return null;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IIdentifierAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  uid
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _uid:IIdentifierNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierAware#uid
+	 */
+	public function get uid():IIdentifierNode
+	{
+		return _uid;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set name(value:String):void
+	public function set uid(value:IIdentifierNode):void
 	{
-		_name = value;
+		_uid = value;
+		if (_uid)
+		{
+			_qualifiedName = _uid.qualifiedName;
+			if (_typeNode && (_uid.qualifiedName != null || _uid.qualifiedName != ""))
+				_qualifiedName = _uid.qualifiedName + "." + _typeNode.uid.localName;
+		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -131,12 +159,12 @@ public class PackageNode extends NodeBase implements IPackageNode
 	/**
 	 * @private
 	 */
-	private var _imports:Vector.<IParserNode>;
+	private var _imports:Vector.<IIdentifierNode>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#imports
 	 */
-	public function get imports():Vector.<IParserNode>
+	public function get imports():Vector.<IIdentifierNode>
 	{
 		return _imports;
 	}
@@ -144,7 +172,7 @@ public class PackageNode extends NodeBase implements IPackageNode
 	/**
 	 * @private
 	 */	
-	public function set imports(value:Vector.<IParserNode>):void
+	public function set imports(value:Vector.<IIdentifierNode>):void
 	{
 		_imports = value;
 	}
@@ -165,6 +193,20 @@ public class PackageNode extends NodeBase implements IPackageNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  IPackageNode API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#addImport()
+	 */
+	public function addImport(node:IIdentifierNode):void
+	{
+		_imports.push(node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Overridden Protected :: Methods
 	//
 	//--------------------------------------------------------------------------
@@ -174,8 +216,10 @@ public class PackageNode extends NodeBase implements IPackageNode
 	 */
 	override protected function compute():void
 	{
+		_imports = new Vector.<IIdentifierNode>();
+		
 		var type:IParserNode = ASTUtil.getTypeFromPackage(node);
-		//var content:IParserNode = type.getLastChild();
+		
 		// FIXME use NodeFactory
 		if (type.isKind(AS3NodeKind.CLASS))
 		{
@@ -190,11 +234,9 @@ public class PackageNode extends NodeBase implements IPackageNode
 			_typeNode = new FunctionTypeNode(type, this);
 		}
 		
-		_imports = ASTUtil.getNodes(AS3NodeKind.IMPORT, node.getLastChild());
-		_name = ASTUtil.getNode(AS3NodeKind.NAME, node).stringValue;
-		_qualifiedName = _name;
-		if (_typeNode && (_name != null || _name != ""))
-			_qualifiedName = _name + "." + _typeNode.name;
+		NodeUtil.computeImports(this, node.getLastChild());
+		
+		uid = new IdentifierNode(ASTUtil.getNode(AS3NodeKind.NAME, node), this);
 	}
 }
 }

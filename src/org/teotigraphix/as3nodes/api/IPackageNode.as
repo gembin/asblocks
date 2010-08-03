@@ -20,8 +20,6 @@
 package org.teotigraphix.as3nodes.api
 {
 
-import org.teotigraphix.as3parser.api.IParserNode;
-
 /**
  * TODO DOCME
  * 
@@ -29,7 +27,7 @@ import org.teotigraphix.as3parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IPackageNode extends INode, INameAware
+public interface IPackageNode extends INode, INameAware, IIdentifierAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -62,6 +60,19 @@ public interface IPackageNode extends INode, INameAware
 	/**
 	 * TODO Docme
 	 */
-	function get imports():Vector.<IParserNode>;
+	function get imports():Vector.<IIdentifierNode>;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Adds an import node to the package node.
+	 * 
+	 * @param node The IIdentifierNode node.
+	 */
+	function addImport(node:IIdentifierNode):void;
 }
 }

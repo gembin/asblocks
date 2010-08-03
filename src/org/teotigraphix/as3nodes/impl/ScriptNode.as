@@ -42,7 +42,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Protected :: Properties
+	//  IIdentifierAware API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -56,7 +56,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	private var _uid:IIdentifierNode;
 	
 	/**
-	 * The type identifier node.
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierAware#uid
 	 */
 	public function get uid():IIdentifierNode
 	{
@@ -69,8 +69,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	public function set uid(value:IIdentifierNode):void
 	{
 		_uid = value;
-		if (_uid)
-			_name = _uid.localName;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -168,24 +166,13 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _name:String;
-	
-	/**
 	 * @copy org.teotigraphix.as3nodes.api.INameAware#name
 	 */
 	public function get name():String
 	{
-		return _name;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set name(value:String):void
-	{
-		_name = value;
+		if (_uid)
+			return _uid.localName;
+		return null;
 	}
 	
 	//--------------------------------------------------------------------------

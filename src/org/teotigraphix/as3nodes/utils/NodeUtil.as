@@ -27,10 +27,13 @@ import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IParameterAware;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.impl.IdentifierNode;
 import org.teotigraphix.as3nodes.impl.NodeFactory;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -47,6 +50,27 @@ public class NodeUtil
 	//  Public Class :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * Computes the <code>node.imports</code>.
+	 * 
+	 * @param node An IPackageNode node.
+	 * @param child The IParserNode internal node.
+	 */
+	public static function computeImports(node:IPackageNode, 
+										  child:IParserNode):void
+	{
+		if (child.numChildren == 0)
+			return;
+		
+		for each (var element:IParserNode in child.children)
+		{
+			if (element.isKind(AS3NodeKind.IMPORT))
+			{
+				node.addImport(new IdentifierNode(element, node));
+			}
+		}
+	}
 	
 	/**
 	 * Computes the <code>node.metaData</code>.
