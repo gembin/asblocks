@@ -197,7 +197,9 @@ public class SourceCode implements ISourceCode
 	{
 		// for now this seems like a good place to normalize newlines
 		// FIXME what a mess and stick in as3 file
-		_code = code.replace(/\r\n/g, "\n");
+		if (code)
+			_code = code.replace(/\r\n/g, "\n");
+		
 		_fileName = fileName.replace(/\\/g, "/");
 		_classPath = classPath;
 		

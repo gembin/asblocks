@@ -29,7 +29,7 @@ import org.teotigraphix.as3parser.api.ISourceCode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ISourceFile extends INode
+public interface ISourceFile extends INode, ISeeLinkAware
 {
 	//--------------------------------------------------------------------------
 	//

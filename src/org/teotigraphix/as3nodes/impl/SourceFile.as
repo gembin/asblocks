@@ -136,6 +136,20 @@ public class SourceFile extends NodeBase implements ISourceFile
 	
 	//--------------------------------------------------------------------------
 	//
+	//  ISeeLinkAware API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISeeLinkAware#toLink()
+	 */
+	public function toLink():String
+	{
+		return fileName;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  ISourceFile API :: Properties
 	//
 	//--------------------------------------------------------------------------
