@@ -101,5 +101,11 @@ public class TestIdentiferNode
 		Assert.assertEquals("myStyle", uid.fragmentName);
 		Assert.assertEquals("MyClass#style:myStyle", uid.qualifiedName);
 	}
+	
+	[Test]
+	public function testPackageElements():void
+	{
+		var imports:Vector.<IIdentifierNode> = packageNode.imports;
+	}
 }
 }

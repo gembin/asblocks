@@ -114,7 +114,7 @@ public class TestPackageNode
 		Assert.assertEquals("my.domain.Test", packageNode.qualifiedName);
 		Assert.assertNotNull(packageNode.typeNode);
 		Assert.assertNotNull(packageNode.imports);
-		Assert.assertEquals("flash.events.IEventDispatcher", packageNode.imports[0].stringValue);
+		Assert.assertEquals("flash.events.IEventDispatcher", packageNode.imports[0].qualifiedName);
 	}
 	
 	[Test]

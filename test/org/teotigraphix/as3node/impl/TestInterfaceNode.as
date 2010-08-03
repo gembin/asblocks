@@ -79,7 +79,7 @@ public class TestInterfaceNode
 		Assert.assertEquals("my.domain.ITest", packageNode.qualifiedName);
 		Assert.assertNotNull(packageNode.typeNode);
 		Assert.assertNotNull(packageNode.imports);
-		Assert.assertEquals("flash.events.IEventDispatcher", packageNode.imports[0].stringValue);
+		Assert.assertEquals("flash.events.IEventDispatcher", packageNode.imports[0].qualifiedName);
 	}
 	
 	[Test]
