@@ -27,6 +27,7 @@ import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.utils.AsDocUtil;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
+import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASDocParser;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -239,7 +240,8 @@ public class CommentNode extends NodeBase implements ICommentNode
 		if (!node)
 			return;
 		
-		var parser:ASDocParser = new ASDocParser();
+		var parser:IParser = ParserFactory.instance.asdocParser;
+		
 		var lines:Array = toString().split("\n");
 		
 		asdocNode = parser.buildAst(ASTUtil.toVector(lines), "asdoc");

@@ -465,9 +465,25 @@ public class ASDocParser extends ParserBase
 		
 		consume(">");
 		
+		var skip:Boolean = false;
+		
 		// token : <pre
-		while (!tokIs("</") && !tokIs(ML_COMMENT_END))
+		while (!tokIs(ML_COMMENT_END))
 		{
+			if (tokIs("</"))
+			{
+				consume("</");
+				if (tokIs(name))
+				{
+					skip = true;
+					break;
+				}
+				else
+				{
+					text += token.text;
+				}
+			}
+			
 			if (_rightSideOfAtrix || tokIs(NL))
 			{
 				text += token.text;
@@ -476,7 +492,11 @@ public class ASDocParser extends ParserBase
 			nextTokenEatRightPre();
 		}
 		
-		consume("</");
+		if (!skip)
+		{
+			consume("</");
+		}
+		
 		consume(name);
 		consume(">");
 		
@@ -587,6 +607,10 @@ public class ASDocParser extends ParserBase
 			if (token.text == "<code")
 			{
 				result.addChild(parseCodeText());
+			}
+			else if (token.text == "<pre")
+			{
+				result.addChild(parsePreText("pre"));
 			}
 			else if (token.text == "<listing")
 			{
