@@ -78,7 +78,7 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	 */
 	public function get isReadWrite():Boolean
 	{
-		return _isReadWrite;
+		return _access == "read-write";
 	}
 	
 	//----------------------------------
@@ -95,7 +95,7 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	 */
 	public function get isReadOnly():Boolean
 	{
-		return _isReadOnly;
+		return _access == "read";
 	}
 	
 	//----------------------------------
@@ -112,7 +112,7 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	 */
 	public function get isWriteOnly():Boolean
 	{
-		return _isWriteOnly;
+		return _access == "write";
 	}
 	
 	//--------------------------------------------------------------------------

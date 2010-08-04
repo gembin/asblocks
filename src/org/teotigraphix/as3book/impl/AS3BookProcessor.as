@@ -25,12 +25,15 @@ import com.ericfeminella.collections.IHashMapEntry;
 import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookProcessor;
 import org.teotigraphix.as3book.utils.TopLevelUtil;
+import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.ITypeNodePlaceholder;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
@@ -135,10 +138,13 @@ public class AS3BookProcessor implements IAS3BookProcessor
 				typeNode = constant.parent as ITypeNode;
 				packageNode = IPackageNode(typeNode.parent);
 				
-				resolveQNameFromImports(
-					packageNode.imports, 
-					constant.type, 
-					packageNode.uid);
+				if (constant.type)
+				{
+					resolveQNameFromImports(
+						packageNode.imports, 
+						constant.type, 
+						packageNode.uid);
+				}
 				
 				//if (constant.getComment().hasDocTag("copy"))
 				//{
@@ -152,15 +158,78 @@ public class AS3BookProcessor implements IAS3BookProcessor
 		{
 			for each (var attribute:IAttributeNode in entry.value)
 			{
-				typeNode = constant.parent as ITypeNode;
+				typeNode = attribute.parent as ITypeNode;
 				packageNode = IPackageNode(typeNode.parent);
 				
-				resolveQNameFromImports(
-					packageNode.imports, 
-					attribute.type, 
-					packageNode.uid);
+				if (attribute.type)
+				{
+					resolveQNameFromImports(
+						packageNode.imports, 
+						attribute.type, 
+						packageNode.uid);
+				}
+
+				//if (attribute.getComment().hasDocTag("copy"))
+				//{
+				//	copyDoc(attribute);
+				//}
+			}
+		}
+		
+		entries = _book.accessors.getEntries();
+		for each (entry in entries)
+		{
+			for each (var accessor:IAccessorNode in entry.value)
+			{
+				typeNode = accessor.parent as ITypeNode;
+				packageNode = IPackageNode(typeNode.parent);
 				
-				//if (constant.getComment().hasDocTag("copy"))
+				if (accessor.type)
+				{
+					resolveQNameFromImports(
+						packageNode.imports, 
+						accessor.type, 
+						packageNode.uid);
+				}
+				
+				//if (accessor.getComment().hasDocTag("copy"))
+				//{
+				//	copyDoc(attribute);
+				//}
+			}
+		}
+		
+		entries = _book.methods.getEntries();
+		for each (entry in entries)
+		{
+			for each (var method:IMethodNode in entry.value)
+			{
+				typeNode = method.parent as ITypeNode;
+				packageNode = IPackageNode(typeNode.parent);
+				
+				if (method.type)
+				{
+					resolveQNameFromImports(
+						packageNode.imports, 
+						method.type, 
+						packageNode.uid);
+				}
+				
+				if (method.hasParameters)
+				{
+					for each (var parameter:IParameterNode in method.parameters)
+					{
+						if (parameter.type)
+						{
+							resolveQNameFromImports(
+								packageNode.imports, 
+								parameter.type, 
+								packageNode.uid);
+						}
+					}
+				}
+				
+				//if (accessor.getComment().hasDocTag("copy"))
 				//{
 				//	copyDoc(attribute);
 				//}

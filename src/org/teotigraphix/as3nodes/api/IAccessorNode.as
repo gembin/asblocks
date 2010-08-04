@@ -44,6 +44,8 @@ public interface IAccessorNode extends IFunctionNode
 	 */
 	function get access():String;
 	
+	function set access(value:String):void;
+	
 	//----------------------------------
 	//  isReadWrite
 	//----------------------------------

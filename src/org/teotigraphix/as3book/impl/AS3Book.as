@@ -29,20 +29,24 @@ import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookAccessor;
 import org.teotigraphix.as3book.api.IAS3BookProcessor;
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
+import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.ISeeLinkAware;
 import org.teotigraphix.as3nodes.api.ISourceFile;
 import org.teotigraphix.as3nodes.api.ISourceFileCollection;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.impl.SeeLink;
 import org.teotigraphix.as3nodes.impl.SourceFileCollection;
+import org.teotigraphix.as3nodes.impl.TypeNode;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 
 /**
@@ -273,12 +277,18 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		if (typeNode.node.isKind(AS3NodeKind.CLASS))
 		{
 			addClassNode(IClassTypeNode(typeNode));
+			
 			addConstants(IClassTypeNode(typeNode).constants);
 			addAttributes(IClassTypeNode(typeNode).attributes);
+			addAccessors(typeNode.getters, typeNode.setters);
+			addMethods(typeNode.methods);
 		}
 		else if (typeNode.node.isKind(AS3NodeKind.INTERFACE))
 		{
 			addInterfaceNode(IInterfaceTypeNode(typeNode));
+			
+			addAccessors(typeNode.getters, typeNode.setters);
+			addMethods(typeNode.methods);
 		}
 		else if (typeNode.node.isKind(AS3NodeKind.FUNCTION))
 		{
@@ -347,6 +357,77 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	/**
 	 * @private
 	 */
+	private function addAccessors(getters:Vector.<IAccessorNode>,
+								  setters:Vector.<IAccessorNode>):void
+	{
+		var getter:IAccessorNode;
+		var setter:IAccessorNode;
+		// FIXME this will need to search superclasses as well
+		// this is probably not the place to do this
+		
+		// need to merge the accessors into ONE element, the content
+		// will still hold all the original information
+		if (getters != null)
+		{
+			for each (getter in getters)
+			{
+				// find the setter
+				setter = findMirrorAccessor(getter, setters);
+				
+				if (setter != null)
+				{
+					getter.access = "read-write";
+					setter.access = "read-write";
+				}
+				else
+				{
+					getter.access = "read";
+				}
+				
+				addAccessor(getter);
+				ITypeNode(getter.parent).addAccessor(getter);
+			}
+		}
+		
+		if (setters != null)
+		{
+			for each (setter in setters)
+			{
+				if (!setter.isReadWrite)
+				{
+					setter.access = "write";
+					
+					// need to take the param type and put it into setType()
+					var parameter:IParameterNode = setter.parameters[0];
+					setter.type = parameter.type;
+					
+					addAccessor(setter);
+					ITypeNode(setter.parent).addAccessor(setter);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * @private
+	 */
+	private function addMethods(nodes:Vector.<IMethodNode>):void
+	{
+		if (nodes == null)
+			return;
+		
+		for each (var node:IMethodNode in nodes)
+		{
+			if (node.comment.hasDocTag("private"))
+				continue;
+			
+			addMethod(node);
+		}
+	}
+	
+	/**
+	 * @private
+	 */
 	private function addConstant(node:IConstantNode):void
 	{
 		var link:String = ISeeLinkAware(node.parent).toLink();
@@ -382,6 +463,44 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		addLink(node);
 	}
 	
+	/**
+	 * @private
+	 */
+	private function addAccessor(node:IAccessorNode):void
+	{
+		var link:String = ISeeLinkAware(node.parent).toLink();
+		var list:Vector.<IAccessorNode> = accessors.getValue(link);
+		
+		if (list == null)
+		{
+			list = new Vector.<IAccessorNode>();
+			accessors.put(link, list);
+		}
+		
+		list.push(node);
+		
+		addLink(node);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function addMethod(node:IMethodNode):void
+	{
+		var link:String = ISeeLinkAware(node.parent).toLink();
+		var list:Vector.<IMethodNode> = methods.getValue(link);
+		
+		if (list == null)
+		{
+			list = new Vector.<IMethodNode>();
+			methods.put(link, list);
+		}
+		
+		list.push(node);
+		
+		addLink(node);
+	}
+	
 	public function addLink(node:ISeeLinkAware):void
 	{
 		var link:String = node.toLink();
@@ -401,6 +520,18 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	public function process():void
 	{
 		_processor.process();
+	}
+	
+	private static function findMirrorAccessor(node:IAccessorNode,
+											   list:Vector.<IAccessorNode>):IAccessorNode
+	{
+		for each (var accessor:IAccessorNode in list)
+		{
+			if (node.name == accessor.name)
+				return accessor;
+		}
+		
+		return null;
 	}
 }
 }

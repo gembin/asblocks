@@ -22,6 +22,7 @@ package org.teotigraphix.as3book.impl
 
 import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookAccessor;
+import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
@@ -348,8 +349,63 @@ public class AS3BookAccessor implements IAS3BookAccessor
 		return result;
 	}
 	
+	public function getAccessors(node:ITypeNode,
+								 visibility:Modifier, 
+								 inherit:Boolean):Vector.<IAccessorNode>
+	{
+		var members:Vector.<IAccessorNode> = 
+			findAccessors(node, visibility, false);
+		
+		if (!inherit)
+		{
+			return members;
+		}
+		
+		//------------------------------
+		var result:Vector.<IAccessorNode> = new Vector.<IAccessorNode>();
+		
+		result = result.concat(members);
+		
+		var supers:Vector.<ITypeNode> = findSuperClasses(node);
+		if (supers == null) // FIXME HACK
+			return result;
+		
+		for each (var type:ITypeNode in supers)
+		{
+			result = result.concat(findAccessors(type, visibility, true));
+		}
+		
+		return result;
+	}
 	
-	
+	public function getMethods(node:ITypeNode,
+							   visibility:Modifier, 
+							   inherit:Boolean):Vector.<IMethodNode>
+	{
+		var members:Vector.<IMethodNode> = 
+			findMethods(node, visibility, false);
+		
+		if (!inherit)
+		{
+			return members;
+		}
+		
+		//------------------------------
+		var result:Vector.<IMethodNode> = new Vector.<IMethodNode>();
+		
+		result = result.concat(members);
+		
+		var supers:Vector.<ITypeNode> = findSuperClasses(node);
+		if (supers == null) // FIXME HACK
+			return result;
+		
+		for each (var type:ITypeNode in supers)
+		{
+			result = result.concat(findMethods(type, visibility, true));
+		}
+		
+		return result;
+	}
 	
 	
 	
@@ -413,11 +469,65 @@ public class AS3BookAccessor implements IAS3BookAccessor
 		if (node is ITypeNodePlaceholder)
 			return result;
 		
-		if (!_book.constants.containsKey(node.toLink()))
+		if (!_book.attributes.containsKey(node.toLink()))
 			return result;
 		
 		var members:Vector.<IAttributeNode> = _book.attributes.getValue(node.toLink());
 		for each (var member:IAttributeNode in members)
+		{
+			if (isIncluded(member, inherited))
+			{
+				if (visibility == null || member.hasModifier(visibility))
+				{
+					result.push(member);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public function findAccessors(node:ITypeNode,
+								  visibility:Modifier, 
+								  inherited:Boolean):Vector.<IAccessorNode>
+	{
+		var result:Vector.<IAccessorNode> = new Vector.<IAccessorNode>();
+		
+		if (node is ITypeNodePlaceholder)
+			return result;
+		
+		if (!_book.accessors.containsKey(node.toLink()))
+			return result;
+		
+		var members:Vector.<IAccessorNode> = _book.accessors.getValue(node.toLink());
+		for each (var member:IAccessorNode in members)
+		{
+			if (isIncluded(member, inherited))
+			{
+				if (visibility == null || member.hasModifier(visibility))
+				{
+					result.push(member);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public function findMethods(node:ITypeNode,
+								visibility:Modifier, 
+								inherited:Boolean):Vector.<IMethodNode>
+	{
+		var result:Vector.<IMethodNode> = new Vector.<IMethodNode>();
+		
+		if (node is ITypeNodePlaceholder)
+			return result;
+		
+		if (!_book.methods.containsKey(node.toLink()))
+			return result;
+		
+		var members:Vector.<IMethodNode> = _book.methods.getValue(node.toLink());
+		for each (var member:IMethodNode in members)
 		{
 			if (isIncluded(member, inherited))
 			{

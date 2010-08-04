@@ -20,17 +20,21 @@
 package org.teotigraphix.as3book.api
 {
 
+import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.ISourceFileCollection;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 
 /**
- * TODO DOCME
+ * The <strong>IAS3BookAccessor</strong> interface is used to access the
+ * <code>IAS3Book</code> implementation with detailed knowledge
+ * of modifiers, doctags etc that can affect collections.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -49,7 +53,7 @@ public interface IAS3BookAccessor
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The <code>IAS3Book</code> implementation model.
 	 */
 	function get book():IAS3Book;
 	
@@ -58,14 +62,51 @@ public interface IAS3BookAccessor
 	 */
 	function set book(value:IAS3Book):void;
 	
+	//----------------------------------
+	//  sourceFileCollections
+	//----------------------------------
+	
+	/**
+	 * A <code>Vector</code> of <code>ISourceFileCollection</code> or 
+	 * <code>null</code>.
+	 */
 	function get sourceFileCollections():Vector.<ISourceFileCollection>;
 	
+	//----------------------------------
+	//  types
+	//----------------------------------
+	
+	/**
+	 * All <code>AS3NodeKind.CLASS</code>, <code>AS3NodeKind.INTERFACE</code>
+	 * or <code>AS3NodeKind.FUNCTION</code> type elements.
+	 */
 	function get types():Vector.<ITypeNode>;
 	
+	//----------------------------------
+	//  classTypes
+	//----------------------------------
+	
+	/**
+	 * All <code>AS3NodeKind.CLASS</code> type elements.
+	 */
 	function get classTypes():Vector.<IClassTypeNode>;
 	
+	//----------------------------------
+	//  interfaceTypes
+	//----------------------------------
+	
+	/**
+	 * All <code>AS3NodeKind.INTERFACE</code> type elements.
+	 */
 	function get interfaceTypes():Vector.<IInterfaceTypeNode>;
 	
+	//----------------------------------
+	//  functionTypes
+	//----------------------------------
+	
+	/**
+	 * All <code>AS3NodeKind.FUNCTION</code> type elements.
+	 */
 	function get functionTypes():Vector.<IFunctionTypeNode>;
 	
 	//--------------------------------------------------------------------------
@@ -74,36 +115,136 @@ public interface IAS3BookAccessor
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * Returns all collections found.
+	 * 
+	 * <p>The <code>ISourceFileCollection</code> is a container for
+	 * <code>ISourceFile</code>s.</p>
+	 * 
+	 * @param name The String name like <code>my.domain.core</code>.
+	 * @return A <code>ISourceFileCollection</code> or <code>null</code>.
+	 */
 	function getSourceFileCollection(packageName:String):ISourceFileCollection;
 	
+	/**
+	 * Returns all <code>ITypeNode</code>s for the packageName, 
+	 * if the qname does not exists, the method returns <code>null</code>.
+	 * 
+	 * @param qualifiedName The String qualifiedName.
+	 * @return <code>ITypeNode</code> or <code>null</code>.
+	 */
 	function getTypes(packageName:String):Vector.<ITypeNode>;
 	
+	/**
+	 * Returns an <code>ITypeNode</code> for the qualifiedName, 
+	 * if the qname does not exists, the method returns <code>null</code>.
+	 * 
+	 * @param qualifiedName The String qualifiedName.
+	 * @return <code>ITypeNode</code> or <code>null</code>.
+	 */
 	function findType(qualifiedName:String):ITypeNode;
 	
+	/**
+	 * Uses <code>findType()</code>, if the method returns null, this method will
+	 * create an <code>TypeNodePlaceholder</code> and return it.
+	 * 
+	 * @param qualifiedName The String qualifiedName.
+	 * @return <code>ITypeNode</code> or <code>TypeNodePlaceholder</code>.
+	 */
 	function getType(qualifiedName:String):ITypeNode;
 	
+	/**
+	 * Returns whether the book contains an <code>ITypeNode</code> instance
+	 * matching the qualifiedName.
+	 * 
+	 * @param qualifiedName The String qualifiedName.
+	 * @return A Boolean indicating whether the <code>ITypeNode</code> exists.
+	 */
 	function hasType(qualifiedName:String):Boolean;
 	
+	/**
+	 * Returns an <code>IClassTypeNode</code> for the qualifiedName, 
+	 * if the qualifiedName does not exist, the method returns <code>null</code>.
+	 * 
+	 * @param qualifiedName The String qualifiedName.
+	 * @return <code>IClassTypeNode</code> or <code>null</code>.
+	 */
 	function findClassType(qualifiedName:String):IClassTypeNode;
 	
+	/**
+	 * Returns an <code>IInterfaceTypeNode</code> for the qualifiedName, 
+	 * if the qualifiedName does not exist, the method returns <code>null</code>.
+	 * 
+	 * @param qualifiedName The String qualifiedName.
+	 * @return <code>IInterfaceTypeNode</code> or <code>null</code>.
+	 */
 	function findInterfaceType(qualifiedName:String):IInterfaceTypeNode;
 	
+	/**
+	 * Returns an <code>IFunctionTypeNode</code> for the qualifiedName, 
+	 * if the qualifiedName does not exist, the method returns <code>null</code>.
+	 * 
+	 * @param qualifiedName The String qualifiedName.
+	 * @return <code>IFunctionTypeNode</code> or <code>null</code>.
+	 */
 	function findFunctionType(qualifiedName:String):IFunctionTypeNode;
+	
+	// function getInnerTypes(element:ICompilationNode):Vector.<ITypeNode>;
 	
 	//----------------------------------
 	//  Class
 	//----------------------------------
 	
+	/**
+	 * Returns all superclasses of an <code>ITypeNode</code>.
+	 * 
+	 * @param node An <code>ITypeNode</code>.
+	 * @return Vector of <code>ITypeNode</code> superclasses.
+	 */
 	function getSuperClasses(node:ITypeNode):Vector.<ITypeNode>;
 	
+	/**
+	 * Returns all subclasses of an <code>ITypeNode</code>.
+	 * 
+	 * @param node An <code>ITypeNode</code>.
+	 * @return Vector of <code>ITypeNode</code> subclasses.
+	 */
 	function getSubClasses(node:ITypeNode):Vector.<ITypeNode>;
 	
+	/**
+	 * Returns all <code>ITypeNode</code> interface implementations.
+	 * 
+	 * @param node An <code>ITypeNode</code>.
+	 * @return Vector of <code>ITypeNode</code> implementations.
+	 */
 	function getImplementedInterfaces(node:ITypeNode):Vector.<ITypeNode>;
 	
+	//----------------------------------
+	//  Interface
+	//----------------------------------
+	
+	/**
+	 * Returns all <code>ITypeNode</code> interface implementations.
+	 * 
+	 * @param node An <code>ITypeNode</code>.
+	 * @return Vector of <code>ITypeNode</code> implementations.
+	 */
 	function getInterfaceImplementors(node:ITypeNode):Vector.<ITypeNode>;
 	
+	/**
+	 * Returns all <code>ITypeNode</code> superinterfaces.
+	 * 
+	 * @param node An <code>ITypeNode</code>.
+	 * @return Vector of <code>ITypeNode</code> superinterfaces.
+	 */
 	function getSuperInterfaces(node:ITypeNode):Vector.<ITypeNode>;
 	
+	/**
+	 * Returns all <code>ITypeNode</code> subinterfaces.
+	 * 
+	 * @param node An <code>ITypeNode</code>.
+	 * @return Vector of <code>ITypeNode</code> subinterfaces.
+	 */
 	function getSubInterfaces(node:ITypeNode):Vector.<ITypeNode>;
 	
 	//----------------------------------
@@ -143,6 +284,40 @@ public interface IAS3BookAccessor
 	function getAttributes(node:IClassTypeNode, 
 						   modifier:Modifier, 
 						   inherit:Boolean):Vector.<IAttributeNode>;
+	
+	/**
+	 * Returns all <code>IAccessorNode</code> for the given
+	 * <code>ITypeNode</code>.
+	 * 
+	 * @param node The <code>ITypeNode</code> parent.
+	 * @param visibility The visibility of the member; <code>public</code>,
+	 * <code>protected</code>, <code>private</code>, <code>internal</code>
+	 * , or a custom name space.
+	 * @param inherit A boolean indicating whether to return the full super list
+	 * of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IAccessorNode</code> elements or
+	 * an empty <code>Vector</code>.
+	 */
+	function getAccessors(node:ITypeNode, 
+						  modifier:Modifier, 
+						  inherit:Boolean):Vector.<IAccessorNode>;
+	
+	/**
+	 * Returns all <code>IMethodNode</code> for the given
+	 * <code>ITypeNode</code>.
+	 * 
+	 * @param node The <code>ITypeNode</code> parent.
+	 * @param visibility The visibility of the member; <code>public</code>,
+	 * <code>protected</code>, <code>private</code>, <code>internal</code>
+	 * , or a custom name space.
+	 * @param inherit A boolean indicating whether to return the full super list
+	 * of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IMethodNode</code> elements or
+	 * an empty <code>Vector</code>.
+	 */
+	function getMethods(node:ITypeNode, 
+						modifier:Modifier, 
+						inherit:Boolean):Vector.<IMethodNode>;
 	
 }
 }

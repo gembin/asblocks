@@ -225,6 +225,14 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		_superTypeList.push(type);
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#addAccessor()
+	 */
+	public function addAccessor(node:IAccessorNode):void
+	{
+		accessors.push(node);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Overridden Protected :: Methods
