@@ -403,6 +403,9 @@ public class AS3BookProcessor implements IAS3BookProcessor
 		if (element is ITypeNodePlaceholder)
 			return result;
 		
+		if (IClassTypeNode(element).superType == null)
+			return result;
+		
 		var selement:ITypeNode = getType(IClassTypeNode(element).superType);
 		if (selement != null)
 		{

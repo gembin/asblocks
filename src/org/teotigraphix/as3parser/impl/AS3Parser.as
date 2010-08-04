@@ -467,7 +467,7 @@ public class AS3Parser extends ParserBase
 		}
 		while (tokIs(Operators.COMMA))
 		{
-			nextToken(); // comma
+			nextTokenIgnoringAsDoc(); // comma
 			result.addRawChild(AS3NodeKind.EXTENDS,
 				token.line,
 				token.column,

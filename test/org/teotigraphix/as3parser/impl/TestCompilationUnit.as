@@ -64,6 +64,34 @@ public class TestCompilationUnit
 	}
 	
 	[Test]
+	public function testGarbageCommentsExtendsList():void
+	{
+		var lines:Array =
+			[
+				"package org.teotigraphix.as3nodes.api {",
+				"    public interface IParameterNode extends INode, /*ICommentAware,*/ INameAware {",
+				"    }", 
+				"}",
+				"__END__"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
+		
+		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
+			"<package line=\"1\" column=\"1\"><name line=\"1\" column=\"9\">" +
+			"org.teotigraphix.as3nodes.api</name><content line=\"2\" column=\"5\">" +
+			"<interface line=\"2\" column=\"22\"><name line=\"2\" column=\"22\">" +
+			"IParameterNode</name><mod-list line=\"2\" column=\"5\"><mod line=\"2\" " +
+			"column=\"5\">public</mod></mod-list><extends line=\"2\" column=\"45\">" +
+			"INode</extends><extends line=\"2\" column=\"71\">INameAware</extends>" +
+			"<content line=\"3\" column=\"5\"></content></interface></content>" +
+			"</package><content line=\"5\" column=\"1\"></content></compilation-unit>",
+			result);
+	}
+	
+	[Test]
 	public function testGarbageCommentsPackage():void
 	{
 		var lines:Array =
