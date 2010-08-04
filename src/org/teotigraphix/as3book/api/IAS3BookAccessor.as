@@ -20,6 +20,7 @@
 package org.teotigraphix.as3book.api
 {
 
+import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
@@ -113,7 +114,7 @@ public interface IAS3BookAccessor
 	 * Returns all <code>IConstantNode</code> for the given
 	 * <code>IClassTypeNode</code>.
 	 * 
-	 * @param node The <code>ITypeElement</code> parent.
+	 * @param node The <code>IClassTypeNode</code> parent.
 	 * @param visibility The visibility of the member; <code>public</code>,
 	 * <code>protected</code>, <code>private</code>, <code>internal</code>
 	 * , or a custom name space.
@@ -126,7 +127,22 @@ public interface IAS3BookAccessor
 						  modifier:Modifier, 
 						  inherit:Boolean):Vector.<IConstantNode>;
 	
-	
+	/**
+	 * Returns all <code>IAttributeNode</code> for the given
+	 * <code>IClassTypeNode</code>.
+	 * 
+	 * @param node The <code>IClassTypeNode</code> parent.
+	 * @param visibility The visibility of the member; <code>public</code>,
+	 * <code>protected</code>, <code>private</code>, <code>internal</code>
+	 * , or a custom name space.
+	 * @param inherit A boolean indicating whether to return the full super list
+	 * of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IAttributeNode</code> elements or
+	 * an empty <code>Vector</code>.
+	 */
+	function getAttributes(node:IClassTypeNode, 
+						   modifier:Modifier, 
+						   inherit:Boolean):Vector.<IAttributeNode>;
 	
 }
 }

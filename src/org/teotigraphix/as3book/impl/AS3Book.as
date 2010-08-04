@@ -29,6 +29,7 @@ import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookAccessor;
 import org.teotigraphix.as3book.api.IAS3BookProcessor;
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
+import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
@@ -273,6 +274,7 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		{
 			addClassNode(IClassTypeNode(typeNode));
 			addConstants(IClassTypeNode(typeNode).constants);
+			addAttributes(IClassTypeNode(typeNode).attributes);
 		}
 		else if (typeNode.node.isKind(AS3NodeKind.INTERFACE))
 		{
@@ -328,6 +330,23 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	/**
 	 * @private
 	 */
+	private function addAttributes(nodes:Vector.<IAttributeNode>):void
+	{
+		if (nodes == null)
+			return;
+		
+		for each (var node:IAttributeNode in nodes)
+		{
+			if (node.comment.hasDocTag("private"))
+				continue;
+			
+			addAttribute(node);
+		}
+	}
+	
+	/**
+	 * @private
+	 */
 	private function addConstant(node:IConstantNode):void
 	{
 		var link:String = ISeeLinkAware(node.parent).toLink();
@@ -337,6 +356,25 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		{
 			list = new Vector.<IConstantNode>();
 			constants.put(link, list);
+		}
+		
+		list.push(node);
+		
+		addLink(node);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function addAttribute(node:IAttributeNode):void
+	{
+		var link:String = ISeeLinkAware(node.parent).toLink();
+		var list:Vector.<IAttributeNode> = attributes.getValue(link);
+		
+		if (list == null)
+		{
+			list = new Vector.<IAttributeNode>();
+			attributes.put(link, list);
 		}
 		
 		list.push(node);

@@ -25,6 +25,7 @@ import com.ericfeminella.collections.IHashMapEntry;
 import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookProcessor;
 import org.teotigraphix.as3book.utils.TopLevelUtil;
+import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
@@ -123,11 +124,13 @@ public class AS3BookProcessor implements IAS3BookProcessor
 		var packageNode:IPackageNode;
 		
 		// Process IConstantNode
-		var entries:Array = _book.constants.getEntries();
-		for each (var entry:IHashMapEntry in entries)
+		var entries:Array;
+		var entry:IHashMapEntry;
+		
+		entries = _book.constants.getEntries();
+		for each (entry in entries)
 		{
-			var list:Vector.<IConstantNode> = entry.value;
-			for each (var constant:IConstantNode in list)
+			for each (var constant:IConstantNode in entry.value)
 			{
 				typeNode = constant.parent as ITypeNode;
 				packageNode = IPackageNode(typeNode.parent);
@@ -140,6 +143,26 @@ public class AS3BookProcessor implements IAS3BookProcessor
 				//if (constant.getComment().hasDocTag("copy"))
 				//{
 				//	copyDoc(constant);
+				//}
+			}
+		}
+		
+		entries = _book.attributes.getEntries();
+		for each (entry in entries)
+		{
+			for each (var attribute:IAttributeNode in entry.value)
+			{
+				typeNode = constant.parent as ITypeNode;
+				packageNode = IPackageNode(typeNode.parent);
+				
+				resolveQNameFromImports(
+					packageNode.imports, 
+					attribute.type, 
+					packageNode.uid);
+				
+				//if (constant.getComment().hasDocTag("copy"))
+				//{
+				//	copyDoc(attribute);
 				//}
 			}
 		}

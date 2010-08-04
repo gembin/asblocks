@@ -22,6 +22,7 @@ package org.teotigraphix.as3book.impl
 
 import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookAccessor;
+import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
@@ -318,7 +319,34 @@ public class AS3BookAccessor implements IAS3BookAccessor
 		return result;
 	}
 	
-
+	public function getAttributes(node:IClassTypeNode,
+								  visibility:Modifier, 
+								  inherit:Boolean):Vector.<IAttributeNode>
+	{
+		var members:Vector.<IAttributeNode> = 
+			findAttributes(node, visibility, false);
+		
+		if (!inherit)
+		{
+			return members;
+		}
+		
+		//------------------------------
+		var result:Vector.<IAttributeNode> = new Vector.<IAttributeNode>();
+		
+		result = result.concat(members);
+		
+		var supers:Vector.<ITypeNode> = findSuperClasses(node);
+		if (supers == null) // FIXME HACK
+			return result;
+		
+		for each (var type:ITypeNode in supers)
+		{
+			result = result.concat(findAttributes(type, visibility, true));
+		}
+		
+		return result;
+	}
 	
 	
 	
@@ -363,6 +391,33 @@ public class AS3BookAccessor implements IAS3BookAccessor
 		
 		var members:Vector.<IConstantNode> = _book.constants.getValue(node.toLink());
 		for each (var member:IConstantNode in members)
+		{
+			if (isIncluded(member, inherited))
+			{
+				if (visibility == null || member.hasModifier(visibility))
+				{
+					result.push(member);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public function findAttributes(node:ITypeNode,
+								   visibility:Modifier, 
+								   inherited:Boolean):Vector.<IAttributeNode>
+	{
+		var result:Vector.<IAttributeNode> = new Vector.<IAttributeNode>();
+		
+		if (node is ITypeNodePlaceholder)
+			return result;
+		
+		if (!_book.constants.containsKey(node.toLink()))
+			return result;
+		
+		var members:Vector.<IAttributeNode> = _book.attributes.getValue(node.toLink());
+		for each (var member:IAttributeNode in members)
 		{
 			if (isIncluded(member, inherited))
 			{
