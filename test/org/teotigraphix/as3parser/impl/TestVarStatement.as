@@ -72,12 +72,13 @@ public class TestVarStatement extends AbstractStatementTest
 	{
 		assertStatement( "vector",
 			"var v:Vector.<DisplayObject> = new Vector.<Sprite>();",
-			"<var-list line=\"1\" column=\"5\"><name-type-init line=\"1\" column=\"5\"><name line=\"1\" "
-			+ "column=\"5\">v</name><vector line=\"1\" column=\"7\"><type line=\"1\" column=\"15\">"
-			+ "DisplayObject</type></vector><init line=\"1\" column=\"32\"><new line=\"1\" "
-			+ "column=\"36\">"
-			+ "<primary line=\"1\" column=\"36\">Vector</primary></new></init>"
-			+ "</name-type-init></var-list>" );
+			"<var-list line=\"1\" column=\"5\"><name-type-init line=\"1\" " +
+			"column=\"5\"><name line=\"1\" column=\"5\">v</name><vector " +
+			"line=\"1\" column=\"7\"><type line=\"1\" column=\"15\">" +
+			"DisplayObject</type></vector><init line=\"1\" column=\"32\">" +
+			"<new line=\"1\" column=\"36\"><primary line=\"1\" column=\"36\">" +
+			"Vector</primary><arguments line=\"1\" column=\"52\"></arguments>" +
+			"</new></init></name-type-init></var-list>" );
 		
 		assertStatement( "vector",
 			"var v:Vector.< Vector.< String > >",
@@ -96,12 +97,14 @@ public class TestVarStatement extends AbstractStatementTest
 		
 		assertStatement( "",
 			"var HT:Vector.<BitString> = new Vector.<BitString>(251, true);",
-			"<var-list line=\"1\" column=\"5\"><name-type-init line=\"1\" column=\"5\">"
-			+ "<name line=\"1\" "
-			+ "column=\"5\">HT</name><vector line=\"1\" column=\"8\"><type line=\"1\" "
-			+ "column=\"16\">BitString</type></vector><init line=\"1\" column=\"29\"><new "
-			+ "line=\"1\" column=\"33\"><primary line=\"1\" column=\"33\">Vector</primary>"
-			+ "</new></init></name-type-init></var-list>" );
+			"<var-list line=\"1\" column=\"5\"><name-type-init line=\"1\" " +
+			"column=\"5\"><name line=\"1\" column=\"5\">HT</name><vector " +
+			"line=\"1\" column=\"8\"><type line=\"1\" column=\"16\">BitString" +
+			"</type></vector><init line=\"1\" column=\"29\"><new line=\"1\" " +
+			"column=\"33\"><primary line=\"1\" column=\"33\">Vector</primary>" +
+			"<arguments line=\"1\" column=\"52\"><primary line=\"1\" column=\"52\">" +
+			"251</primary><primary line=\"1\" column=\"57\">true</primary>" +
+			"</arguments></new></init></name-type-init></var-list>" );
 	}
 }
 }

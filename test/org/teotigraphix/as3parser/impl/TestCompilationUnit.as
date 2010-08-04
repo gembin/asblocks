@@ -34,10 +34,33 @@ public class TestCompilationUnit
 				"__END__"
 			];
 		
-		// FIXME fix Vector bug
-		//scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(ASTUtil.toVector(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
+		
+		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
+			"<package line=\"1\" column=\"1\"><name line=\"1\" column=\"9\">" +
+			"my.domain</name><content line=\"2\" column=\"5\"><class line=\"2\" " +
+			"column=\"18\"><name line=\"2\" column=\"18\">Test</name><mod-list line=\"2\" " +
+			"column=\"5\"><mod line=\"2\" column=\"5\">public</mod></mod-list>" +
+			"<content line=\"3\" column=\"9\"><function line=\"3\" column=\"73\">" +
+			"<mod-list line=\"3\" column=\"9\"><mod line=\"3\" column=\"9\">public</mod>" +
+			"</mod-list><name line=\"3\" column=\"25\">getMetaData</name>" +
+			"<parameter-list line=\"3\" column=\"37\"><parameter line=\"3\" " +
+			"column=\"37\"><name-type-init line=\"3\" column=\"37\"><name line=\"3\" " +
+			"column=\"37\">name</name><type line=\"3\" column=\"42\">String</type>" +
+			"</name-type-init></parameter></parameter-list><vector line=\"3\" column=\"50\">" +
+			"<type line=\"3\" column=\"58\">IMetaDataNode</type></vector><block line=\"4\" " +
+			"column=\"13\"><var-list line=\"4\" column=\"17\"><name-type-init line=\"4\"" +
+			" column=\"17\"><name line=\"4\" column=\"17\">result</name><vector line=\"4\" " +
+			"column=\"24\"><type line=\"4\" column=\"32\">IMetaDataNode</type></vector>" +
+			"<init line=\"4\" column=\"49\"><new line=\"4\" column=\"53\"><primary " +
+			"line=\"4\" column=\"53\">Vector</primary><arguments line=\"4\" column=\"76\">" +
+			"</arguments></new></init></name-type-init></var-list><return line=\"5\" " +
+			"column=\"20\"><primary line=\"5\" column=\"20\">result</primary></return>" +
+			"</block></function></content></class></content></package><content line=\"9\" " +
+			"column=\"1\"></content></compilation-unit>",
+			result);
 	}
 	
 	[Test]

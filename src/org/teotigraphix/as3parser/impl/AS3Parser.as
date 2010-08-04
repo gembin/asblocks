@@ -1441,6 +1441,16 @@ public class AS3Parser extends ParserBase
 			token.line,
 			token.column);
 		result.addChild(parseExpression()); // name
+		
+		// TODO this should go into the AST, what should it be?
+		// take care of vector int
+		if (tokIs(".<"))
+		{
+			consume(".<");
+			nextToken(); // Vector type declaration on new
+			consume(">");
+		}
+		
 		if (tokIs(Operators.LEFT_PARENTHESIS))
 		{
 			result.addChild(parseArgumentList());
@@ -1457,6 +1467,7 @@ public class AS3Parser extends ParserBase
 		result.addChild(parseExpressionList());
 		
 		consume(Operators.RIGHT_PARENTHESIS);
+		
 		return result;
 	}
 	
