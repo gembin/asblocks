@@ -21,6 +21,7 @@ package org.teotigraphix.as3book.api
 {
 
 import org.teotigraphix.as3nodes.api.ICompilationNode;
+import org.teotigraphix.as3nodes.api.ISeeLinkAware;
 import org.teotigraphix.as3nodes.api.ISourceFile;
 
 /**
@@ -62,6 +63,11 @@ public interface IAS3Book
 	 * @param element The ISourceFile element.
 	 */
 	function addSourceFile(sourceFile:ISourceFile):void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function addLink(node:ISeeLinkAware):void;
 	
 	/**
 	 * Processes the <code>ICompilationNode</code> instances placed in the

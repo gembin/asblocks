@@ -39,7 +39,7 @@ import org.teotigraphix.as3nodes.api.ITypeNodePlaceholder;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 
 /**
- * TODO DOCME
+ * Processes nodes in the book.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

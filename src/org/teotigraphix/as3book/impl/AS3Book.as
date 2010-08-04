@@ -46,7 +46,6 @@ import org.teotigraphix.as3nodes.api.ISourceFileCollection;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.impl.SeeLink;
 import org.teotigraphix.as3nodes.impl.SourceFileCollection;
-import org.teotigraphix.as3nodes.impl.TypeNode;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 
 /**
@@ -137,7 +136,7 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	
 	/**
 	 * @private
-	 * of [toLink() => Vector.<ISeeLink>]
+	 * of [toLink() => ISeeLink]
 	 */
 	internal var links:IMap = new HashMap();
 	
@@ -181,7 +180,7 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	private var _access:IAS3BookAccessor;
 	
 	/**
-	 * @copy org.teotigraphix.as3book.api.IAS3BookAccessor#access
+	 * @copy org.teotigraphix.as3book.api.IAS3Book#access
 	 */
 	public function get access():IAS3BookAccessor
 	{
@@ -224,7 +223,7 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3book.api.IAS3BookAccessor#addSourceFile()
+	 * @copy org.teotigraphix.as3book.api.IAS3Book#addSourceFile()
 	 */
 	public function addSourceFile(sourceFile:ISourceFile):void
 	{
@@ -238,6 +237,30 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		addSourceFileCollection(IAS3SourceFile(sourceFile));
 		
 		addCompilationNode(sourceFile.compilationNode);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3book.api.IAS3Book#addLink()
+	 */
+	public function addLink(node:ISeeLinkAware):void
+	{
+		var link:String = node.toLink();
+		
+		if (links.containsKey(link))
+		{
+			trace("ERROR addLink(); key exists [" + link + "]");
+			return;
+		}
+		
+		links.put(link, new SeeLink(INode(node)));
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3book.api.IAS3Book#process()
+	 */
+	public function process():void
+	{
+		_processor.process();
 	}
 	
 	/**
@@ -499,27 +522,6 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		list.push(node);
 		
 		addLink(node);
-	}
-	
-	public function addLink(node:ISeeLinkAware):void
-	{
-		var link:String = node.toLink();
-		
-		if (links.containsKey(link))
-		{
-			trace("ERROR addLink(); key exists [" + link + "]");
-			return;
-		}
-		
-		links.put(link, new SeeLink(INode(node)));
-	}
-	
-	/**
-	 * @copy org.teotigraphix.as3book.api.IAS3BookAccessor#process()
-	 */
-	public function process():void
-	{
-		_processor.process();
 	}
 	
 	private static function findMirrorAccessor(node:IAccessorNode,

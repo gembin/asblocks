@@ -26,9 +26,14 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
+import org.teotigraphix.as3nodes.api.IMetaDataAware;
+import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
+import org.teotigraphix.as3nodes.api.ISeeLink;
+import org.teotigraphix.as3nodes.api.ISeeLinkAware;
 import org.teotigraphix.as3nodes.api.ISourceFileCollection;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
 
 /**
@@ -115,6 +120,22 @@ public interface IAS3BookAccessor
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * Returns an <code>ISeeLink</code> for the <code>ISeeLinkAware</code>.
+	 * 
+	 * @param node An <code>ISeeLinkAware</code>.
+	 * @return A <code>ISeeLink</code> or <code>null</code>.
+	 */
+	function getLink(node:ISeeLinkAware):ISeeLink;
+	
+	/**
+	 * Returns an <code>ISeeLink</code> for the String see link format.
+	 * 
+	 * @param linkID A String see link format.
+	 * @return A <code>ISeeLink</code> or <code>null</code>.
+	 */
+	function getLinkByID(linkID:String):ISeeLink;
+		
 	/**
 	 * Returns all collections found.
 	 * 
@@ -319,5 +340,87 @@ public interface IAS3BookAccessor
 						modifier:Modifier, 
 						inherit:Boolean):Vector.<IMethodNode>;
 	
+	//----------------------------------
+	//  Metadata
+	//----------------------------------
+	
+	/**
+	 * Returns all the metaData for the node by name.
+	 * 
+	 * @param node An <code>IMetaDataAware</code> to retrieve the metaData for.
+	 * @param name A <code>MetaData</code> name.
+	 * @return A Vector of <code>IMetaDataNode</code>.
+	 */
+	function getMetaData(node:IMetaDataAware, 
+						 name:MetaData, 
+						 inherit:Boolean):Vector.<IMetaDataNode>;
+	
+	/**
+	 * Returns all the metaData in the book name.
+	 * 
+	 * @param name A <code>MetaData</code> name.
+	 * @return A Vector of <code>IMetaDataNode</code>.
+	 */
+	function getAllMetaData(name:MetaData):Vector.<IMetaDataNode>;
+	
+	/**
+	 * Returns all <strong>Style</strong> <code>IMetaDataNode</code> elements
+	 * for the given <code>ITypeNode</code> parent.
+	 * 
+	 * @param node The parent <code>ITypeNode</code>.
+	 * @param inherit A Boolean indicating whether to return the full super list
+	 *        of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IMetaDataNode</code> elements or
+	 *         an empty <code>Vector</code>.
+	 */
+	function getStyles(node:ITypeNode, inherit:Boolean):Vector.<IMetaDataNode>;
+	
+	/**
+	 * Returns all <strong>Event</strong> <code>IMetaDataNode</code> elements
+	 * for the given <code>ITypeNode</code> parent.
+	 * 
+	 * @param node The parent <code>ITypeNode</code>.
+	 * @param inherit A Boolean indicating whether to return the full super list
+	 *        of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IMetaDataNode</code> elements or
+	 *         an empty <code>Vector</code>.
+	 */
+	function getEvents(node:ITypeNode, inherit:Boolean):Vector.<IMetaDataNode>;
+	
+	/**
+	 * Returns all <strong>Effect</strong> <code>IMetaDataNode</code> elements
+	 * for the given <code>ITypeNode</code> parent.
+	 * 
+	 * @param node The parent <code>ITypeNode</code>.
+	 * @param inherit A Boolean indicating whether to return the full super list
+	 *        of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IMetaDataNode</code> elements or
+	 *         an empty <code>Vector</code>.
+	 */
+	function getEffects(node:ITypeNode, inherit:Boolean):Vector.<IMetaDataNode>;
+	
+	/**
+	 * Returns all <strong>SkinState</strong> <code>IMetaDataNode</code> elements
+	 * for the given <code>ITypeNode</code> parent.
+	 * 
+	 * @param node The parent <code>ITypeNode</code>.
+	 * @param inherit A Boolean indicating whether to return the full super list
+	 *        of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IMetaDataNode</code> elements or
+	 *         an empty <code>Vector</code>.
+	 */
+	function getSkinStates(node:ITypeNode, inherit:Boolean):Vector.<IMetaDataNode>;
+	
+	/**
+	 * Returns all <strong>SkinPart</strong> <code>IMetaDataNode</code> elements
+	 * for the given <code>ITypeNode</code> parent.
+	 * 
+	 * @param node The parent <code>ITypeNode</code>.
+	 * @param inherit A Boolean indicating whether to return the full super list
+	 *        of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IMetaDataNode</code> elements or
+	 *         an empty <code>Vector</code>.
+	 */
+	function getSkinParts(node:ITypeNode, inherit:Boolean):Vector.<IMetaDataNode>;
 }
 }
