@@ -37,11 +37,42 @@ public class TopLevelUtil
 	
 	/**
 	 * @private
-	 * FIXME get all toplevel types in object
 	 */
 	private static var toplevel:Object =
 		{
-			String:true
+			ArgumentError:true,
+			arguments:true,
+			Array:true,
+			Boolean:true,
+			Class:true,
+			Date:true,
+			DefinitionError:true,
+			Error:true,
+			EvalError:true,
+			Function:true,
+			int:true,
+			Math:true,
+			Namespace:true,
+			Number:true,
+			Object:true,
+			QName:true,
+			RangeError:true,
+			ReferenceError:true,
+			RegExp:true,
+			SecurityError:true,
+			String:true,
+			SyntaxError:true,
+			TypeError:true,
+			uint:true,
+			URIError:true,
+			Vector:true,
+			VerifyError:true,
+			XML:true,
+			XMLList:true
+			// specail
+			// *:true,
+			// void:true,
+			// Null:true
 		}
 	
 	//--------------------------------------------------------------------------
@@ -59,6 +90,9 @@ public class TopLevelUtil
 	 */
 	public static function isTopLevel(type:String):Boolean
 	{
+		if (type == "*" || type == "void" || type == "Null")
+			return true;
+		
 		return toplevel[type];
 	}
 }
