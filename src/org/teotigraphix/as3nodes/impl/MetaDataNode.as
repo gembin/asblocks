@@ -80,7 +80,7 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	private var _parameter:String;
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#parameter
 	 */
 	public function get parameter():String
 	{
@@ -93,6 +93,24 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	public function set parameter(value:String):void
 	{
 		_parameter = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Public :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	public function get qualifiedName():String
+	{
+		return ""; //super.qualifiedName + "#attribute:" + name;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -129,6 +147,20 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 		_parameter = data.indexOf("( ") > -1 ? 
 			data.substring(data.indexOf("( ") + 2, data.lastIndexOf(" )")) : 
 			"";
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  ISeeLinkAware API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISeeLinkAware#toLink()
+	 */
+	public function toLink():String
+	{
+		return qualifiedName;
 	}
 }
 }

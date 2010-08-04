@@ -20,9 +20,13 @@
 package org.teotigraphix.as3book.impl
 {
 
+import com.ericfeminella.collections.IHashMapEntry;
+
 import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookProcessor;
+import org.teotigraphix.as3book.utils.TopLevelUtil;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
+import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
@@ -96,6 +100,7 @@ public class AS3BookProcessor implements IAS3BookProcessor
 	{
 		proccessImports();
 		
+		// Process ITypeNode
 		for each (var type:ITypeNode in _book.types)
 		{
 			if (type.node.isKind(AS3NodeKind.CLASS))
@@ -112,6 +117,31 @@ public class AS3BookProcessor implements IAS3BookProcessor
 			//{
 			//	copyTypeDoc(type);
 			//}
+		}
+		
+		var typeNode:ITypeNode;
+		var packageNode:IPackageNode;
+		
+		// Process IConstantNode
+		var entries:Array = _book.constants.getEntries();
+		for each (var entry:IHashMapEntry in entries)
+		{
+			var list:Vector.<IConstantNode> = entry.value;
+			for each (var constant:IConstantNode in list)
+			{
+				typeNode = constant.parent as ITypeNode;
+				packageNode = IPackageNode(typeNode.parent);
+				
+				resolveQNameFromImports(
+					packageNode.imports, 
+					constant.type, 
+					packageNode.uid);
+				
+				//if (constant.getComment().hasDocTag("copy"))
+				//{
+				//	copyDoc(constant);
+				//}
+			}
 		}
 	}
 	
@@ -369,6 +399,9 @@ public class AS3BookProcessor implements IAS3BookProcessor
 		if (name.isQualified)
 			return;
 		
+		if (!name.isQualified && TopLevelUtil.isTopLevel(name.localName))
+			return;
+		
 		var found:Boolean = false;
 		
 		for each (var imp:IIdentifierNode in imports)
@@ -383,12 +416,12 @@ public class AS3BookProcessor implements IAS3BookProcessor
 		
 		if (!found)
 		{
-			var qname:String = packageName.qualifiedName;
+			var qname:String = packageName.qualifiedName + ".";
+			
 			if (qname == "toplevel")
-			{
 				qname = "";
-			}
-			name.qualifiedName = qname + "." + name.localName;
+			
+			name.qualifiedName = qname + name.localName;
 		}
 	}
 }

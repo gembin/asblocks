@@ -17,68 +17,49 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3book.utils
 {
 
 /**
- * TODO DOCME
+ * Toplevel types in the Flash Player.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
-	IVisible, INameAware, IIdentifierAware, IDeprecateAware, ISeeLinkAware
+public class TopLevelUtil
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Private Class :: Variables
 	//
 	//--------------------------------------------------------------------------
 	
-	//----------------------------------
-	//  packageName
-	//----------------------------------
+	/**
+	 * @private
+	 * FIXME get all toplevel types in object
+	 */
+	private static var toplevel:Object =
+		{
+			String:true
+		}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Public Class :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * The type's containing IPackageNode.name.
+	 * Returns whether the type is a toplevel type in the Flash Player.
+	 * 
+	 * @param type A String type name.
+	 * @return A Boolean indicating whether the type is a Flash Player 
+	 * toplevel type.
 	 */
-	function get packageName():String;
-	
-	//----------------------------------
-	//  packageName
-	//----------------------------------
-	
-	/**
-	 * The type's containing IPackageNode.name + name.
-	 */
-	function get qualifiedName():String;
-	
-	//----------------------------------
-	//  parentQualifiedName
-	//----------------------------------
-	
-	/**
-	 * The type's containing IPackageNode.name + name.
-	 */
-	function get parentQualifiedName():String;
-	
-	//----------------------------------
-	//  isFinal
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isFinal():Boolean;
-	
-	//----------------------------------
-	//  isStatic
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isStatic():Boolean;
+	public static function isTopLevel(type:String):Boolean
+	{
+		return toplevel[type];
+	}
 }
 }

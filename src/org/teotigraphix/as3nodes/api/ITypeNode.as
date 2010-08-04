@@ -37,24 +37,6 @@ public interface ITypeNode extends INode, IScriptNode,
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  packageName
-	//----------------------------------
-	
-	/**
-	 * The type's containing IPackageNode.name.
-	 */
-	function get packageName():String;
-	
-	//----------------------------------
-	//  packageName
-	//----------------------------------
-	
-	/**
-	 * The type's containing IPackageNode.name + name.
-	 */
-	function get qualifiedName():String;
-	
-	//----------------------------------
 	//  isSubType
 	//----------------------------------
 	

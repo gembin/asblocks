@@ -201,6 +201,10 @@ public class SourceCode implements ISourceCode
 			_code = code.replace(/\r\n/g, "\n");
 		
 		_fileName = fileName.replace(/\\/g, "/");
+		
+		if (!classPath)
+			classPath = "";
+		
 		_classPath = classPath.replace(/\\/g, "/");
 		
 		var base:String = _fileName.replace(_classPath, "");

@@ -23,10 +23,16 @@ package org.teotigraphix.as3book.impl
 import org.teotigraphix.as3book.api.IAS3Book;
 import org.teotigraphix.as3book.api.IAS3BookAccessor;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
+import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IScriptNode;
 import org.teotigraphix.as3nodes.api.ISourceFileCollection;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.ITypeNodePlaceholder;
+import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.impl.TypeNodePlaceholder;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 
@@ -174,6 +180,17 @@ public class AS3BookAccessor implements IAS3BookAccessor
 	{
 	}
 	
+	public function getSourceFileCollection(packageName:String):ISourceFileCollection
+	{
+		for each (var element:ISourceFileCollection in _book.sourceFileCollections)
+		{
+			if (element.name == packageName)
+				return element;
+		}
+		
+		return null;
+	}
+	
 	public function findType(qualifiedName:String):ITypeNode
 	{
 		for each (var element:ITypeNode in _book.types)
@@ -234,7 +251,9 @@ public class AS3BookAccessor implements IAS3BookAccessor
 		return findType(qualifiedName) as IFunctionTypeNode;
 	}
 	
-	// ------------
+	//----------------------------------
+	//  Class
+	//----------------------------------
 	
 	public function getSuperClasses(node:ITypeNode):Vector.<ITypeNode>
 	{
@@ -266,16 +285,117 @@ public class AS3BookAccessor implements IAS3BookAccessor
 		return _book.subInterfaces.getValue(node.toLink());
 	}
 	
+	//----------------------------------
+	//  Class members
+	//----------------------------------
 	
-	public function getSourceFileCollection(packageName:String):ISourceFileCollection
+	public function getConstants(node:IClassTypeNode,
+								 visibility:Modifier, 
+								 inherit:Boolean):Vector.<IConstantNode>
 	{
-		for each (var element:ISourceFileCollection in _book.sourceFileCollections)
+		var members:Vector.<IConstantNode> =
+			findConstants(node, visibility, false);
+		
+		if (!inherit)
 		{
-			if (element.name == packageName)
-				return element;
+			return members;
 		}
 		
-		return null;
+		//------------------------------
+		var result:Vector.<IConstantNode> = new Vector.<IConstantNode>();
+		
+		result = result.concat(members);
+		
+		var supers:Vector.<ITypeNode> = findSuperClasses(node);
+		if (supers == null) // FIXME HACK
+			return result;
+		
+		for each (var type:ITypeNode in supers)
+		{
+			result = result.concat(findConstants(type, visibility, true));
+		}
+		
+		return result;
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	////////////////////////////////////////////////////////////
+	
+	private function findSuperClasses(node:ITypeNode):Vector.<ITypeNode>
+	{
+		var result:Vector.<ITypeNode> = null;
+		if (node is IInterfaceTypeNode)
+		{
+			result = book.access.getSuperInterfaces(node);
+		}
+		else
+		{
+			result = book.access.getSuperClasses(node);
+		}
+		
+		return result;
+	}
+	
+	public function findConstants(node:ITypeNode,
+								  visibility:Modifier, 
+								  inherited:Boolean):Vector.<IConstantNode>
+	{
+		var result:Vector.<IConstantNode> = new Vector.<IConstantNode>();
+		
+		if (node is ITypeNodePlaceholder)
+			return result;
+		
+		if (!_book.constants.containsKey(node.toLink()))
+			return result;
+		
+		var members:Vector.<IConstantNode> = _book.constants.getValue(node.toLink());
+		for each (var member:IConstantNode in members)
+		{
+			if (isIncluded(member, inherited))
+			{
+				if (visibility == null || member.hasModifier(visibility))
+				{
+					result.push(member);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	private function isIncluded(node:IScriptNode, inherited:Boolean):Boolean
+	{
+		// FIXME TEMP this has to be implemented correctly
+		if (inherited && node.hasModifier(Modifier.PRIVATE))
+		{
+			return false;
+		}
+		
+		if (node.comment.hasDocTag("private")) // needs configuration setting to
+		{
+			return false;
+		}
+		
+		if (node is IMethodNode)
+		{
+			if (inherited && IMethodNode(node).isConstructor)
+				return false;
+		}
+		
+		return true; // FIXME IMPLEMENT isIncluded()
 	}
 }
 }

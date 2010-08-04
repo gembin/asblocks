@@ -47,30 +47,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  packageName
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#packageName
-	 */
-	public function get packageName():String
-	{
-		return IPackageNode(parent).name;
-	}
-	
-	//----------------------------------
-	//  qualifiedName
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#qualifiedName
-	 */
-	public function get qualifiedName():String
-	{
-		return IPackageNode(parent).qualifiedName;
-	}
-	
-	//----------------------------------
 	//  isSubType
 	//----------------------------------
 	

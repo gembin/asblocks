@@ -17,108 +17,130 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3nodes.api
+package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.ISeeLink;
+
+// FIXME Unit Test SeeLink
+
 /**
- * TODO DOCME
+ * The concrete implementation of the <code>ISeeLink</code> API.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IIdentifierNode extends INode
+public class SeeLink implements ISeeLink
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  ISeeLink API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  localName
+	//  node
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
-	function get localName():String;
+	private var _node:INode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISeeLink#node
+	 */
+	public function get node():INode
+	{
+		return _node;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set node(value:INode):void
+	{
+		_node = value;
+	}
+	
+	//----------------------------------
+	//  uid
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _uid:IIdentifierNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISeeLink#uid
+	 */
+	public function get uid():IIdentifierNode
+	{
+		return _uid;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set uid(value:IIdentifierNode):void
+	{
+		_uid = value;
+	}
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISeeLink#name
+	 */
+	public function get name():String
+	{
+		if(_uid.hasFragment)
+			return _uid.fragmentName;
+		return _uid.localName;
+	}
 	
 	//----------------------------------
 	//  packageName
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.as3nodes.api.ISeeLink#packageName
 	 */
-	function get packageName():String;
+	public function get packageName():String
+	{
+		return _uid.packageName;
+	}
 	
 	//----------------------------------
 	//  qualifiedName
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.as3nodes.api.ISeeLink#qualifiedName
 	 */
-	function get qualifiedName():String;
+	public function get qualifiedName():String
+	{
+		return _uid.qualifiedName;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * @private
+	 * Constructor.
 	 */
-	function set qualifiedName(value:String):void;
-	
-	//----------------------------------
-	//  parentQualifiedName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get parentQualifiedName():String;
-	
-	//----------------------------------
-	//  fragmentName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get fragmentName():String;
-	
-	//----------------------------------
-	//  fragmentType
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get fragmentType():String;
-	
-	//----------------------------------
-	//  fragmentType
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isQualified():Boolean;
-	
-	//----------------------------------
-	//  fragmentType
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get hasFragment():Boolean;
-	
-	//----------------------------------
-	//  fragmentType
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get hasFragmentType():Boolean;
+	public function SeeLink(node:INode)
+	{
+		_node = node;
+	}
 }
 }

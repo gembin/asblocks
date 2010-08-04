@@ -21,14 +21,14 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * The <code>ISeeLink</code> allows a light handle to an actual
+ * <code>INode</code> that was parsed in the current session.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
-	IVisible, INameAware, IIdentifierAware, IDeprecateAware, ISeeLinkAware
+public interface ISeeLink
 {
 	//--------------------------------------------------------------------------
 	//
@@ -37,48 +37,48 @@ public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  packageName
+	//  node
 	//----------------------------------
 	
 	/**
-	 * The type's containing IPackageNode.name.
+	 * The <code>INode</code> owner.
+	 */
+	function get node():INode;
+	
+	//----------------------------------
+	//  node
+	//----------------------------------
+	
+	/**
+	 * The <code>IIdentifierNode</code> of the owner.
+	 */
+	function get uid():IIdentifierNode;
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * The simple display name of the element.
+	 */
+	function get name():String;
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * The package display name of the element.
 	 */
 	function get packageName():String;
 	
 	//----------------------------------
-	//  packageName
+	//  name
 	//----------------------------------
 	
 	/**
-	 * The type's containing IPackageNode.name + name.
+	 * The qualified display name of the element.
 	 */
 	function get qualifiedName():String;
-	
-	//----------------------------------
-	//  parentQualifiedName
-	//----------------------------------
-	
-	/**
-	 * The type's containing IPackageNode.name + name.
-	 */
-	function get parentQualifiedName():String;
-	
-	//----------------------------------
-	//  isFinal
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isFinal():Boolean;
-	
-	//----------------------------------
-	//  isStatic
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isStatic():Boolean;
 }
 }

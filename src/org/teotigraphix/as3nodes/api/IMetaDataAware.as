@@ -36,6 +36,15 @@ public interface IMetaDataAware
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  metaDatas
+	//----------------------------------
+	
+	/**
+	 * The metadata nodes found on the host.
+	 */
+	function get metaDatas():Vector.<IMetaDataNode>;
+	
+	//----------------------------------
 	//  numMetaData
 	//----------------------------------
 	

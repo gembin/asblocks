@@ -21,10 +21,12 @@ package org.teotigraphix.as3book.api
 {
 
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
+import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.ISourceFileCollection;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.Modifier;
 
 /**
  * TODO DOCME
@@ -87,7 +89,9 @@ public interface IAS3BookAccessor
 	
 	function findFunctionType(qualifiedName:String):IFunctionTypeNode;
 	
-	//
+	//----------------------------------
+	//  Class
+	//----------------------------------
 	
 	function getSuperClasses(node:ITypeNode):Vector.<ITypeNode>;
 	
@@ -100,5 +104,29 @@ public interface IAS3BookAccessor
 	function getSuperInterfaces(node:ITypeNode):Vector.<ITypeNode>;
 	
 	function getSubInterfaces(node:ITypeNode):Vector.<ITypeNode>;
+	
+	//----------------------------------
+	//  Class members
+	//----------------------------------
+	
+	/**
+	 * Returns all <code>IConstantNode</code> for the given
+	 * <code>IClassTypeNode</code>.
+	 * 
+	 * @param node The <code>ITypeElement</code> parent.
+	 * @param visibility The visibility of the member; <code>public</code>,
+	 * <code>protected</code>, <code>private</code>, <code>internal</code>
+	 * , or a custom name space.
+	 * @param inherit A boolean indicating whether to return the full super list
+	 * of members with no duplication.
+	 * @return A <code>Vector</code> of <code>IConstantNode</code> elements or
+	 * an empty <code>Vector</code>.
+	 */
+	function getConstants(node:IClassTypeNode, 
+						  modifier:Modifier, 
+						  inherit:Boolean):Vector.<IConstantNode>;
+	
+	
+	
 }
 }

@@ -38,7 +38,7 @@ public class TestIdentiferNode
 				"    public final class Test extends my.domain.OtherTest ",
 				"        implements flash.events.IEventDispatcher, my.domain.ITest",
 				"    {",
-				"        public var variable:my.domain.StringBuffer;",
+				"        public var myVar:my.domain.StringBuffer;",
 				"        public static function methodA(arg0:my.domain.ParamType):my.domain.ReturnType",
 				"        {",
 				"            return null;",
@@ -66,6 +66,7 @@ public class TestIdentiferNode
 		
 		Assert.assertEquals("MyClass", uid.localName);
 		Assert.assertEquals("my.domain.core", uid.packageName);
+		Assert.assertEquals("my.domain.core", uid.parentQualifiedName);
 		Assert.assertEquals("my.domain.core.MyClass", uid.qualifiedName);
 		
 		uid = IdentifierNode.createName("my.domain.core.MyClass#myVariable");
@@ -74,6 +75,7 @@ public class TestIdentiferNode
 		Assert.assertEquals("my.domain.core", uid.packageName);
 		Assert.assertNull(uid.fragmentType);
 		Assert.assertEquals("myVariable", uid.fragmentName);
+		Assert.assertEquals("my.domain.core.MyClass", uid.parentQualifiedName);
 		Assert.assertEquals("my.domain.core.MyClass#myVariable", uid.qualifiedName);
 		
 		uid = IdentifierNode.createName("my.domain.core.MyClass#style:myStyle");
@@ -82,6 +84,7 @@ public class TestIdentiferNode
 		Assert.assertEquals("my.domain.core", uid.packageName);
 		Assert.assertEquals("style", uid.fragmentType);
 		Assert.assertEquals("myStyle", uid.fragmentName);
+		Assert.assertEquals("my.domain.core.MyClass", uid.parentQualifiedName);
 		Assert.assertEquals("my.domain.core.MyClass#style:myStyle", uid.qualifiedName);
 		
 		uid = IdentifierNode.createName("toplevel");
@@ -96,6 +99,7 @@ public class TestIdentiferNode
 		Assert.assertEquals("MyClass", uid.localName);
 		Assert.assertNull(uid.fragmentType);
 		Assert.assertEquals("myVariable", uid.fragmentName);
+		Assert.assertEquals("MyClass", uid.parentQualifiedName);
 		Assert.assertEquals("MyClass#myVariable", uid.qualifiedName);
 		
 		uid = IdentifierNode.createName("MyClass#style:myStyle");
@@ -104,7 +108,23 @@ public class TestIdentiferNode
 		Assert.assertEquals("MyClass", uid.localName);
 		Assert.assertEquals("style", uid.fragmentType);
 		Assert.assertEquals("myStyle", uid.fragmentName);
+		Assert.assertEquals("MyClass", uid.parentQualifiedName);
 		Assert.assertEquals("MyClass#style:myStyle", uid.qualifiedName);
+	}
+	
+	[Test]
+	public function testBasicConstant():void
+	{
+		var uid:IIdentifierNode = IdentifierNode.
+			createName("org.example.core.ClassA#constant:aPublicStaticConst");
+		
+		Assert.assertEquals("ClassA", uid.localName);
+		Assert.assertEquals("org.example.core", uid.packageName);
+		Assert.assertEquals("org.example.core.ClassA", uid.parentQualifiedName);
+		
+		Assert.assertEquals("constant", uid.fragmentType);
+		Assert.assertEquals("aPublicStaticConst", uid.fragmentName);
+		Assert.assertEquals("org.example.core.ClassA#constant:aPublicStaticConst", uid.qualifiedName);
 	}
 	
 	[Test]
@@ -145,9 +165,17 @@ public class TestIdentiferNode
 		var attributes:Vector.<IAttributeNode> = type.attributes;
 		Assert.assertEquals(1, attributes.length);
 		
+		// test the IAttribute.uid
 		Assert.assertNotNull(attributes[0].uid);
-		Assert.assertNotNull(attributes[0].type);
-		Assert.assertEquals("variable", attributes[0].uid.localName);
+		//Assert.assertTrue(attributes[0].uid.isQualified);
+		//Assert.assertTrue(attributes[0].uid.hasFragment);
+		//Assert.assertTrue(attributes[0].uid.hasFragmentType);
+		
+		//Assert.assertEquals("myVar", attributes[0].uid.fragmentName);
+		//Assert.assertEquals("variable", attributes[0].uid.fragmentType);
+		//Assert.assertEquals("my.domain", attributes[0].uid.packageName);
+		//Assert.assertEquals("my.domain.Test", attributes[0].uid.parentQualifiedName);
+		//Assert.assertEquals("my.domain.Test#attribute:myVar", attributes[0].uid.qualifiedName);
 		Assert.assertEquals("StringBuffer", attributes[0].type.localName);
 		Assert.assertEquals("my.domain", attributes[0].type.packageName);
 		Assert.assertEquals("my.domain.StringBuffer", attributes[0].type.qualifiedName);

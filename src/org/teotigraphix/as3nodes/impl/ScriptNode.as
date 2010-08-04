@@ -24,7 +24,9 @@ import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IScriptNode;
+import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
@@ -78,20 +80,40 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  numMetaData
+	//  metaDatas
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	protected var metadata:Vector.<IMetaDataNode>;
+	private var _metaDatas:Vector.<IMetaDataNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#metaDatas
+	 */
+	public function get metaDatas():Vector.<IMetaDataNode>
+	{
+		return _metaDatas;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set metaDatas(value:Vector.<IMetaDataNode>):void
+	{
+		_metaDatas = value;
+	}
+	
+	//----------------------------------
+	//  numMetaData
+	//----------------------------------
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#numMetaData
 	 */
 	public function get numMetaData():int
 	{
-		return metadata.length;
+		return _metaDatas.length;
 	}
 	
 	//----------------------------------
@@ -213,6 +235,48 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IScriptElement#packageName
+	 */
+	public function get packageName():String
+	{
+		if (parent is IPackageNode)
+			return IPackageNode(parent).name;
+		return ITypeNode(parent).packageName;
+	}
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IScriptElement#qualifiedName
+	 */
+	public function get qualifiedName():String
+	{
+		if (parent is IPackageNode)
+			return IPackageNode(parent).qualifiedName;
+		return ITypeNode(parent).qualifiedName;
+	}
+	
+	//----------------------------------
+	//  parentQualifiedName
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IScriptElement#parentQualifiedName
+	 */
+	public function get parentQualifiedName():String
+	{
+		if (parent is IPackageNode)
+			return IPackageNode(parent).name;
+		return ITypeNode(parent).qualifiedName;
+	}
+	
+	//----------------------------------
 	//  isStatic
 	//----------------------------------
 	
@@ -292,7 +356,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	public function addMetaData(node:IMetaDataNode):void
 	{
-		metadata.push(node);
+		_metaDatas.push(node);
 	}
 	
 	/**
@@ -302,10 +366,10 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	{
 		var result:Vector.<IMetaDataNode> = new Vector.<IMetaDataNode>();
 		
-		var len:int = metadata.length;
+		var len:int = _metaDatas.length;
 		for (var i:int = 0; i < len; i++)
 		{
-			var element:IMetaDataNode = metadata[i] as IMetaDataNode;
+			var element:IMetaDataNode = _metaDatas[i] as IMetaDataNode;
 			if (element.name == name)
 				result.push(element);
 		}
@@ -318,7 +382,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	public function hasMetaData(name:String):Boolean
 	{
-		for each (var element:IMetaDataNode in metadata)
+		for each (var element:IMetaDataNode in _metaDatas)
 		{
 			if (element.name == name)
 				return true;
@@ -381,7 +445,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		comment = NodeFactory.instance.createCommentPlaceholderNode(this);
 		
 		modifiers = new Vector.<Modifier>();
-		metadata = new Vector.<IMetaDataNode>();
+		_metaDatas = new Vector.<IMetaDataNode>();
 		
 		if (!node || node.numChildren == 0)
 			return;

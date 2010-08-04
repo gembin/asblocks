@@ -22,6 +22,8 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IPackageNode;
+import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -35,6 +37,24 @@ public class ConstantNode extends FieldNode implements IConstantNode
 {
 	//--------------------------------------------------------------------------
 	//
+	//  Overridden Public :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function get qualifiedName():String
+	{
+		return super.qualifiedName + "#constant:" + name;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -45,6 +65,20 @@ public class ConstantNode extends FieldNode implements IConstantNode
 	public function ConstantNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function toLink():String
+	{
+		return qualifiedName;
 	}
 }
 }

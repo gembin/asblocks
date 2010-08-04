@@ -35,6 +35,24 @@ public class AttributeNode extends FieldNode implements IAttributeNode
 {
 	//--------------------------------------------------------------------------
 	//
+	//  Overridden Public :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function get qualifiedName():String
+	{
+		return super.qualifiedName + "#attribute:" + name;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -45,6 +63,20 @@ public class AttributeNode extends FieldNode implements IAttributeNode
 	public function AttributeNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function toLink():String
+	{
+		return qualifiedName;
 	}
 }
 }

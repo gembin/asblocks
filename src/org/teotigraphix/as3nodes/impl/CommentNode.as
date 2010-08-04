@@ -105,7 +105,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @private
 	 */
-	private var _docTags:Vector.<IDocTag>;
+	private var _docTags:Vector.<IDocTag> = new Vector.<IDocTag>();
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#docTags
@@ -246,9 +246,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 		
 		// compilation-unit/content
 		var contentNode:IParserNode = asdocNode.getLastChild();
-		shortDescription = parseShortDescription(contentNode); 
-		longDescription = parseLongDescription(contentNode);
-		docTags = parseDocTagList(contentNode);
+		shortDescription = computeShortDescription(contentNode); 
+		longDescription = computeLongDescription(contentNode);
+		docTags = computeDocTagList(contentNode);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -260,7 +260,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @private
 	 */
-	protected function parseShortDescription(child:IParserNode):String
+	protected function computeShortDescription(child:IParserNode):String
 	{
 		var result:String = "";
 		var list:IParserNode = ASTUtil.getNode(ASDocNodeKind.SHORT_LIST, child);
@@ -280,7 +280,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @private
 	 */
-	protected function parseLongDescription(child:IParserNode):String
+	protected function computeLongDescription(child:IParserNode):String
 	{
 		var result:String = "";
 		var list:IParserNode = ASTUtil.getNode(ASDocNodeKind.LONG_LIST, child);
@@ -300,13 +300,13 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @private
 	 */
-	protected function parseDocTagList(child:IParserNode):Vector.<IDocTag>
+	protected function computeDocTagList(child:IParserNode):Vector.<IDocTag>
 	{
-		var list:IParserNode = ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, child);
-		if (!list)
-			return null;
-		
 		var result:Vector.<IDocTag> = new Vector.<IDocTag>();
+		var list:IParserNode = ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, child);
+		
+		if (!list)
+			return result;
 		
 		for each (var element:IParserNode in list.children)
 		{

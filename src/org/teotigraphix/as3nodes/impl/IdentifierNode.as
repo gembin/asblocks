@@ -172,6 +172,24 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	}
 	
 	//----------------------------------
+	//  parentQualifiedName
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#parentQualifiedName
+	 */
+	public function get parentQualifiedName():String
+	{
+		if (!isQualified)
+			return _localName;
+		
+		if (!hasFragment)
+			return _packageName;
+		
+		return _packageName + "." + _localName;
+	}
+	
+	//----------------------------------
 	//  fragmentName
 	//----------------------------------
 	

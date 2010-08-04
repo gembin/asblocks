@@ -31,12 +31,16 @@ import org.teotigraphix.as3book.api.IAS3BookProcessor;
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
+import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
+import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
+import org.teotigraphix.as3nodes.api.ISeeLinkAware;
 import org.teotigraphix.as3nodes.api.ISourceFile;
 import org.teotigraphix.as3nodes.api.ISourceFileCollection;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.impl.SeeLink;
 import org.teotigraphix.as3nodes.impl.SourceFileCollection;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 
@@ -125,6 +129,36 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	 * of [toLink() => Vector.<ITypeNode>]
 	 */
 	internal var subInterfaces:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<ISeeLink>]
+	 */
+	internal var links:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<IConstantNode>]
+	 */
+	internal var constants:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<IAttributeNode>]
+	 */
+	internal var attributes:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<IAccessorNode>]
+	 */
+	internal var accessors:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 * of [toLink() => Vector.<IMethodNode>]
+	 */
+	internal var methods:IMap = new HashMap();
 	
 	//--------------------------------------------------------------------------
 	//
@@ -238,6 +272,7 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		if (typeNode.node.isKind(AS3NodeKind.CLASS))
 		{
 			addClassNode(IClassTypeNode(typeNode));
+			addConstants(IClassTypeNode(typeNode).constants);
 		}
 		else if (typeNode.node.isKind(AS3NodeKind.INTERFACE))
 		{
@@ -271,6 +306,55 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	private function addFunctionNode(node:IFunctionTypeNode):void
 	{
 		functions.put(node.toLink(), node);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function addConstants(nodes:Vector.<IConstantNode>):void
+	{
+		if (nodes == null)
+			return;
+		
+		for each (var node:IConstantNode in nodes)
+		{
+			if (node.comment.hasDocTag("private"))
+				continue;
+			
+			addConstant(node);
+		}
+	}
+	
+	/**
+	 * @private
+	 */
+	private function addConstant(node:IConstantNode):void
+	{
+		var link:String = ISeeLinkAware(node.parent).toLink();
+		var list:Vector.<IConstantNode> = constants.getValue(link);
+		
+		if (list == null)
+		{
+			list = new Vector.<IConstantNode>();
+			constants.put(link, list);
+		}
+		
+		list.push(node);
+		
+		addLink(node);
+	}
+	
+	public function addLink(node:ISeeLinkAware):void
+	{
+		var link:String = node.toLink();
+		
+		if (links.containsKey(link))
+		{
+			trace("ERROR addLink(); key exists [" + link + "]");
+			return;
+		}
+		
+		links.put(link, new SeeLink(INode(node)));
 	}
 	
 	/**

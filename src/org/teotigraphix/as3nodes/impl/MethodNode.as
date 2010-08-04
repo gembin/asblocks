@@ -35,6 +35,24 @@ public class MethodNode extends FunctionNode implements IMethodNode
 {
 	//--------------------------------------------------------------------------
 	//
+	//  Overridden Public :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function get qualifiedName():String
+	{
+		return super.qualifiedName + "#methods:" + name;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -45,6 +63,20 @@ public class MethodNode extends FunctionNode implements IMethodNode
 	public function MethodNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function toLink():String
+	{
+		return qualifiedName;
 	}
 }
 }
