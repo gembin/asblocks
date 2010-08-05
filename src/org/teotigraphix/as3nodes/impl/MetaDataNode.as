@@ -20,9 +20,14 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
+import org.teotigraphix.as3nodes.api.IMetaDataParameterNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.Node;
 
 /**
  * TODO DOCME
@@ -33,6 +38,37 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public class MetaDataNode extends NodeBase implements IMetaDataNode
 {
+	//--------------------------------------------------------------------------
+	//
+	//  ICommentAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  comment
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _comment:ICommentNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#comment
+	 */
+	public function get comment():ICommentNode
+	{
+		return _comment;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set comment(value:ICommentNode):void
+	{
+		_comment = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  INameAware API :: Properties
@@ -95,6 +131,31 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 		_parameter = value;
 	}
 	
+	//----------------------------------
+	//  parameters
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _parameters:Vector.<IMetaDataParameterNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#parameters
+	 */
+	public function get parameters():Vector.<IMetaDataParameterNode>
+	{
+		return _parameters;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set parameters(value:Vector.<IMetaDataParameterNode>):void
+	{
+		_parameters = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Overridden Public :: Properties
@@ -129,24 +190,68 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Overridden Protected :: Methods
+	//  IMetaDataNode API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @private
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#getParameter()
 	 */
-	override protected function compute():void
+	public function getParameter(name:String):IMetaDataParameterNode
 	{
-		var data:String = node.stringValue;
+		if (_parameters == null || _parameters.length == 0)
+			return null;
 		
-		_name = data.indexOf(" ( ") > -1 ? 
-			data.substring( 0, data.indexOf(" ( "))	: 
-			data;
+		for each (var param:IMetaDataParameterNode in _parameters)
+		{
+			if (param.hasName && param.name == name)
+				return param;
+		}
 		
-		_parameter = data.indexOf("( ") > -1 ? 
-			data.substring(data.indexOf("( ") + 2, data.lastIndexOf(" )")) : 
-			"";
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#getParameterAt()
+	 */
+	public function getParameterAt(index:int):IMetaDataParameterNode
+	{
+		if (_parameters == null || _parameters.length == 0)
+			return null;
+		return _parameters[index];
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#getParameterValue()
+	 */
+	public function getParameterValue(name:String):String
+	{
+		if (_parameters == null || _parameters.length == 0)
+			return null;
+		
+		for each (var param:IMetaDataParameterNode in _parameters)
+		{
+			if (param.hasName && param.name == name)
+				return param.value;
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#hasParameter()
+	 */
+	public function hasParameter(name:String):Boolean
+	{
+		if (_parameters == null || _parameters.length == 0)
+			return false;
+		
+		for each (var param:IMetaDataParameterNode in _parameters)
+		{
+			if (param.hasName && param.name == name)
+				return true;
+		}
+		
+		return false;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -161,6 +266,69 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	public function toLink():String
 	{
 		return qualifiedName;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function compute():void
+	{
+		for each (var child:IParserNode in node.children) 
+		{
+			if (child.isKind(AS3NodeKind.AS_DOC))
+			{
+				computeAsdoc(child);
+			}
+		}
+		
+		var data:String = node.stringValue;
+		
+		_name = data.indexOf(" ( ") > -1 ? 
+			data.substring( 0, data.indexOf(" ( "))	: 
+			data;
+		
+		_parameter = data.indexOf("( ") > -1 ? 
+			data.substring(data.indexOf("( ") + 2, data.lastIndexOf(" )")) : 
+			"";
+		
+		if (_parameter && _parameter != "")
+			computeParameters();
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function computeAsdoc(child:IParserNode):void
+	{
+		NodeUtil.computeAsDoc(this, child);
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function computeParameters():void
+	{
+		_parameters = new Vector.<IMetaDataParameterNode>();
+		
+		var split:Array = _parameter.split(" , ");
+		
+		for each (var element:String in split)
+		{
+			var pnode:IParserNode = Node.create(AS3NodeKind.PARAMETER, -1, -1, element);
+			_parameters.push(new MetaDataParameterNode(pnode, this));
+		}
 	}
 }
 }

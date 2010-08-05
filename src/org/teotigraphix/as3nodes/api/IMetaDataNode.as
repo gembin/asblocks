@@ -21,13 +21,15 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * The <strong>IMetaDataNode</strong> node allows <code>IMetaDataNodeAware</code>
+ * nodes to hold special metadata.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IMetaDataNode extends INode, INameAware, ISeeLinkAware
+public interface IMetaDataNode extends INode, ICommentAware, 
+	INameAware, ISeeLinkAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -40,8 +42,62 @@ public interface IMetaDataNode extends INode, INameAware, ISeeLinkAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The original String found between the ( and ) with space between the
+	 * parameters and equals to make it easier to split and parse.
+	 * 
+	 * <p>If there was no parenthesis, this property value is null.</p>
 	 */
 	function get parameter():String;
+	
+	//----------------------------------
+	//  parameters
+	//----------------------------------
+	
+	/**
+	 * The list of paramter nodes.
+	 */
+	function get parameters():Vector.<IMetaDataParameterNode>;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Returns a <code>IMetaDataParameterNode</code> by the specified name
+	 * or <code>null</code> if the named parameter does not exist.
+	 * 
+	 * @param name A String parameter name.
+	 * @return A <code>IMetaDataParameterNode</code> or <code>null</code>.
+	 */
+	function getParameter(name:String):IMetaDataParameterNode;
+	
+	/**
+	 * Returns a <code>IMetaDataParameterNode</code> at the specified index
+	 * or <code>null</code> if the index is out of range.
+	 * 
+	 * @param index An int specifying the parameter to return.
+	 * @return A <code>IMetaDataParameterNode</code> or <code>null</code>.
+	 */
+	function getParameterAt(index:int):IMetaDataParameterNode;
+	
+	/**
+	 * Returns a <code>IMetaDataParameterNode.value</code> with the specified name
+	 * or <code>null</code> if the paramater dosn't exist.
+	 * 
+	 * @param name A String parameter name.
+	 * @return A String parameter value or <code>null</code>.
+	 */
+	function getParameterValue(name:String):String;
+	
+	/**
+	 * Returns whether the metadata contains a parameter by the name, 
+	 * <code>name</code>.
+	 * 
+	 * @param name A String parameter name.
+	 * @return A Boolean indicating whether the name exists in a paramter.
+	 */
+	function hasParameter(name:String):Boolean;
 }
 }
