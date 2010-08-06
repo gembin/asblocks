@@ -1,11 +1,10 @@
-package org.teotigraphix.as3node.impl
+package org.teotigraphix.as3nodes.impl
 {
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
-import org.teotigraphix.as3nodes.impl.NodeFactory;
 
 public class TestSourceFile
 {

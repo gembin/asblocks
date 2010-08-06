@@ -1,4 +1,4 @@
-package org.teotigraphix.as3node.impl
+package org.teotigraphix.as3nodes.impl
 {
 
 import flexunit.framework.Assert;
@@ -8,9 +8,6 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
-import org.teotigraphix.as3nodes.impl.CompilationNode;
-import org.teotigraphix.as3nodes.impl.IdentifierNode;
-import org.teotigraphix.as3nodes.impl.PackageNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.utils.ASTUtil;

@@ -1,11 +1,10 @@
-package org.teotigraphix.as3book.impl
+package org.teotigraphix.as3nodes.impl
 {
 
 import flexunit.framework.Assert;
 
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMetaDataParameterNode;
-import org.teotigraphix.as3nodes.impl.NodeFactory;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.Node;

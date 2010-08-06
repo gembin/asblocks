@@ -1,4 +1,4 @@
-package org.teotigraphix.as3node.impl
+package org.teotigraphix.as3nodes.impl
 {
 
 import org.flexunit.Assert;
@@ -11,11 +11,6 @@ import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.Modifier;
-import org.teotigraphix.as3nodes.impl.AttributeNode;
-import org.teotigraphix.as3nodes.impl.CompilationNode;
-import org.teotigraphix.as3nodes.impl.ConstantNode;
-import org.teotigraphix.as3nodes.impl.PackageNode;
-import org.teotigraphix.as3nodes.impl.TypeNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.utils.ASTUtil;

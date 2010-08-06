@@ -1,10 +1,10 @@
 package testSuites
 {
 
-import org.teotigraphix.as3node.impl.TestIdentiferNode;
-import org.teotigraphix.as3node.impl.TestInterfaceNode;
-import org.teotigraphix.as3node.impl.TestPackageNode;
-import org.teotigraphix.as3node.impl.TestSourceFile;
+import org.teotigraphix.as3nodes.impl.TestIdentiferNode;
+import org.teotigraphix.as3nodes.impl.TestInterfaceNode;
+import org.teotigraphix.as3nodes.impl.TestPackageNode;
+import org.teotigraphix.as3nodes.impl.TestSourceFile;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
