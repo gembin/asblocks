@@ -34,7 +34,7 @@ import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IScriptNode;
 import org.teotigraphix.as3nodes.api.ISeeLink;
 import org.teotigraphix.as3nodes.api.ISeeLinkAware;
-import org.teotigraphix.as3nodes.api.ISourceFileCollection;
+import org.teotigraphix.as3nodes.api.ISourceFilePackage;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.ITypeNodePlaceholder;
 import org.teotigraphix.as3nodes.api.MetaData;
@@ -83,15 +83,15 @@ public class AS3BookAccessor implements IAS3BookAccessor
 	}
 	
 	//----------------------------------
-	//  sourceFileCollections
+	//  sourceFilePackages
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3book.api.IAS3BookAccessor#sourceFileCollections
+	 * @copy org.teotigraphix.as3book.api.IAS3BookAccessor#sourceFilePackages
 	 */
-	public function get sourceFileCollections():Vector.<ISourceFileCollection>
+	public function get sourceFilePackages():Vector.<ISourceFilePackage>
 	{
-		return _book.sourceFileCollections;
+		return _book.sourceFilePackages;
 	}
 	
 	//----------------------------------
@@ -209,17 +209,30 @@ public class AS3BookAccessor implements IAS3BookAccessor
 	}
 	
 	/**
-	 * @copy org.teotigraphix.as3book.api.IAS3BookAccessor#getSourceFileCollection()
+	 * @copy org.teotigraphix.as3book.api.IAS3BookAccessor#getSourceFilePackage()
 	 */
-	public function getSourceFileCollection(packageName:String):ISourceFileCollection
+	public function getSourceFilePackage(packageName:String):ISourceFilePackage
 	{
-		for each (var element:ISourceFileCollection in _book.sourceFileCollections)
+		for each (var element:ISourceFilePackage in _book.sourceFilePackages)
 		{
 			if (element.name == packageName)
 				return element;
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3book.api.IAS3BookAccessor#hasSourceFilePackage()
+	 */
+	public function hasSourceFilePackage(packageName:String):Boolean
+	{
+		for each (var element:ISourceFilePackage in _book.sourceFilePackages) 
+		{
+			if (element.name == packageName)
+				return true;
+		}
+		return false;
 	}
 	
 	/**

@@ -42,10 +42,10 @@ import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.ISeeLinkAware;
 import org.teotigraphix.as3nodes.api.ISourceFile;
-import org.teotigraphix.as3nodes.api.ISourceFileCollection;
+import org.teotigraphix.as3nodes.api.ISourceFilePackage;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.impl.SeeLink;
-import org.teotigraphix.as3nodes.impl.SourceFileCollection;
+import org.teotigraphix.as3nodes.impl.SourceFilePackage;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 
 /**
@@ -70,8 +70,8 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	/**
 	 * @private
 	 */
-	internal var sourceFileCollections:Vector.<ISourceFileCollection> =
-		new Vector.<ISourceFileCollection>();
+	internal var sourceFilePackages:Vector.<ISourceFilePackage> =
+		new Vector.<ISourceFilePackage>();
 	
 	/**
 	 * @private
@@ -231,10 +231,12 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 		//   - ICompilationNode
 		//     - IPackageNode
 		
+		// TODO Check for duplicates
+		
 		// add the SourceFile to the map
 		sourceFiles.put(sourceFile.toLink(), sourceFile);
 		
-		addSourceFileCollection(IAS3SourceFile(sourceFile));
+		addSourceFilePackage(IAS3SourceFile(sourceFile));
 		
 		addCompilationNode(sourceFile.compilationNode);
 	}
@@ -266,21 +268,22 @@ public class AS3Book extends EventDispatcher implements IAS3Book
 	/**
 	 * @private
 	 */
-	private function addSourceFileCollection(sourceFile:IAS3SourceFile):void
+	private function addSourceFilePackage(sourceFile:IAS3SourceFile):void
 	{
-		// this creates a new package that is unique to 'my.domain' or 'my.other.domain'
-		var path:String = sourceFile.fileName;
+		var sourceFilePackage:ISourceFilePackage;
 		
-		for each (var collection:ISourceFileCollection in sourceFileCollections)
+		// this creates a new package that is unique to 'my.domain' or 'my.other.domain'
+		if (access.hasSourceFilePackage(sourceFile.packageName))
+			sourceFilePackage = access.getSourceFilePackage(sourceFile.packageName);
+		
+		if (!sourceFilePackage)
 		{
-			if (collection.name == sourceFile.packageName)
-				return;
+			sourceFilePackage = new SourceFilePackage(
+				sourceFile.fileName, sourceFile.packageName);
 		}
 		
-		var newCollection:ISourceFileCollection = 
-			new SourceFileCollection(path, sourceFile.packageName);
-		
-		sourceFileCollections.push(newCollection);
+		sourceFilePackages.push(sourceFilePackage);
+		sourceFilePackage.addSourceFile(sourceFile);
 	}
 	
 	/**

@@ -31,7 +31,7 @@ import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.ISeeLink;
 import org.teotigraphix.as3nodes.api.ISeeLinkAware;
-import org.teotigraphix.as3nodes.api.ISourceFileCollection;
+import org.teotigraphix.as3nodes.api.ISourceFilePackage;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
@@ -68,14 +68,14 @@ public interface IAS3BookAccessor
 	function set book(value:IAS3Book):void;
 	
 	//----------------------------------
-	//  sourceFileCollections
+	//  sourceFilePackages
 	//----------------------------------
 	
 	/**
-	 * A <code>Vector</code> of <code>ISourceFileCollection</code> or 
+	 * A <code>Vector</code> of <code>ISourceFilePackage</code> or 
 	 * <code>null</code>.
 	 */
-	function get sourceFileCollections():Vector.<ISourceFileCollection>;
+	function get sourceFilePackages():Vector.<ISourceFilePackage>;
 	
 	//----------------------------------
 	//  types
@@ -145,7 +145,16 @@ public interface IAS3BookAccessor
 	 * @param name The String name like <code>my.domain.core</code>.
 	 * @return A <code>ISourceFileCollection</code> or <code>null</code>.
 	 */
-	function getSourceFileCollection(packageName:String):ISourceFileCollection;
+	function getSourceFilePackage(packageName:String):ISourceFilePackage;
+	
+	/**
+	 * Returns whether the book contains a source file package by the name
+	 * packageName.
+	 * 
+	 * @param packageName The String package name IE <code>my.domain.core</code>.
+	 * @return A Boolean indicating whether to book contains the package name.
+	 */
+	function hasSourceFilePackage(packageName:String):Boolean;
 	
 	/**
 	 * Returns all <code>ITypeNode</code>s for the packageName, 

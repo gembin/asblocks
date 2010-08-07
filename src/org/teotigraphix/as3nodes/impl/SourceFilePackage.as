@@ -20,21 +20,22 @@
 package org.teotigraphix.as3nodes.impl
 {
 
-import org.teotigraphix.as3nodes.api.INode;
-import org.teotigraphix.as3nodes.api.ISourceFileCollection;
-import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3nodes.api.ISourceFile;
+import org.teotigraphix.as3nodes.api.ISourceFilePackage;
+import org.teotigraphix.as3parser.utils.FileUtil;
 
 /**
- * Returns the packages file path.
+ * The <strong>SourceFileCollection</strong> class holds a list of
+ * <code>ISourceFile</code> contained in it's source path.
  * 
- * <p>The file path is the base directory of the package not including the
- * package's actual structure IE <code>my.domain.core</code>.</p>
+ * <p>The <code>classPath</code> is the base directory of the package not 
+ * including the package's actual structure IE <code>my.domain.core</code>.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class SourceFileCollection extends NodeBase implements ISourceFileCollection
+public class SourceFilePackage extends NodeBase implements ISourceFilePackage
 {
 	//--------------------------------------------------------------------------
 	//
@@ -65,37 +66,88 @@ public class SourceFileCollection extends NodeBase implements ISourceFileCollect
 	public function set name(value:String):void
 	{
 		_name = value;
+		
+		if (_name == "")
+			_name = "toplevel";
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  ISourceFileCollection API :: Properties
+	//  ISourceFilePackage API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  filePath
+	//  classPath
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	private var _filePath:String;
+	private var _classPath:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceFileCollection#filePath
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFilePackage#classPath
 	 */
-	public function get filePath():String
+	public function get classPath():String
 	{
-		return _filePath;
+		return _classPath;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set filePath(value:String):void
+	public function set classPath(value:String):void
 	{
-		_filePath = value;
+		if(value == null)
+			return;
+		
+		_classPath = FileUtil.normalizePath(value);
+	}
+	
+	//----------------------------------
+	//  directoryPath
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFilePackage#directoryPath
+	 */
+	public function get directoryPath():String
+	{
+		if (!name)
+			return classPath;
+		
+		if (name.indexOf(".") != -1)
+		{
+			return classPath + "/" + name.replace(/\./g, "/");
+		}
+		
+		return classPath;
+	}
+	
+	//----------------------------------
+	//  sourceFiles
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _sourceFiles:Vector.<ISourceFile> = new Vector.<ISourceFile>();
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFilePackage#sourceFiles
+	 */
+	public function get sourceFiles():Vector.<ISourceFile>
+	{
+		return _sourceFiles;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set sourceFiles(value:Vector.<ISourceFile>):void
+	{
+		_sourceFiles = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -107,17 +159,26 @@ public class SourceFileCollection extends NodeBase implements ISourceFileCollect
 	/**
 	 * Constructor.
 	 */
-	public function SourceFileCollection(filePath:String, name:String)
+	public function SourceFilePackage(classPath:String, name:String)
 	{
 		super(null, null);
 		
-		_filePath = filePath;
-		_name = name;
-		
-		if (name == "")
-		{
-			name = "toplevel";
-		}
+		this.classPath = FileUtil.normalizePath(classPath);
+		this.name = name;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  ISourceFilePackage API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFilePackage#addSourceFile()
+	 */
+	public function addSourceFile(sourceFile:ISourceFile):void
+	{
+		sourceFiles.push(sourceFile);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -131,7 +192,7 @@ public class SourceFileCollection extends NodeBase implements ISourceFileCollect
 	 */
 	public function toLink():String
 	{
-		return _filePath;
+		return directoryPath;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -145,7 +206,7 @@ public class SourceFileCollection extends NodeBase implements ISourceFileCollect
 	 */
 	public function toString():String
 	{
-		return _filePath;
+		return directoryPath;
 	}
 }
 }

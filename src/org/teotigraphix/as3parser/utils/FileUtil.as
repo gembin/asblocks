@@ -92,6 +92,15 @@ public class FileUtil
 		return data;
 	}
 	
+	public static function normalizePath(path:String):String
+	{
+		if (path.indexOf("\\") != -1)
+		{
+			path = path.replace(/\\/g, "/");
+		}
+		return path;
+	}
+	
 	public static function get isDesktop():Boolean
 	{
 		return Capabilities.playerType == "Desktop";
