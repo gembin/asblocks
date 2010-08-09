@@ -21,9 +21,11 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMetaDataParameterNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -54,7 +56,7 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	private var _comment:ICommentNode;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#comment
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#comment
 	 */
 	public function get comment():ICommentNode
 	{
@@ -67,6 +69,39 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	public function set comment(value:ICommentNode):void
 	{
 		_comment = value;
+	}
+	
+	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _description:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#description
+	 */
+	public function get description():String
+	{
+		return _description;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set description(value:String):void
+	{
+		_description = value;
+		
+		var asdoc:IParserNode = ASTNodeUtil.createAsDoc(this, _description);
+		comment = new CommentNode(asdoc.getLastChild(), this);
+	}
+	
+	public function addDocTag(name:String, body:String):IDocTag
+	{
+		return comment.addDocTag(name, body);
 	}
 	
 	//--------------------------------------------------------------------------

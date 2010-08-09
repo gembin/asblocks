@@ -21,6 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
@@ -93,6 +94,34 @@ public class ParameterNode extends NodeBase implements IParameterNode
 	public function set comment(value:ICommentNode):void
 	{
 		_comment = value;
+	}
+	
+	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _description:String;
+	
+	/**
+	 * doc
+	 */
+	public function get description():String
+	{
+		return _description;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set description(value:String):void
+	{
+		_description = value;
+		
+		var func:IFunctionNode = parent as IFunctionNode;
+		func.addDocTag("param", name + " " + _description);
 	}
 	
 	//--------------------------------------------------------------------------

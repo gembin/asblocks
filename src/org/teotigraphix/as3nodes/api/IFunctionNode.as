@@ -89,5 +89,16 @@ public interface IFunctionNode extends IScriptNode, IParameterAware
 	 * TODO Docme
 	 */
 	function get hasType():Boolean;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function addReturnDescription(description:String):void;
 }
 }

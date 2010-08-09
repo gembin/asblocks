@@ -46,49 +46,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  description
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _description:String;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#description
-	 */
-	public function get description():String
-	{
-		return _description;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set description(value:String):void
-	{
-		_description = value;
-		
-		/*
-		compilation-unit
-		compilation-unit/content/short-list
-		compilation-unit/content/short-list/text
-		compilation-unit/content/long-list
-		compilation-unit/content/long-list/text
-		compilation-unit/content/tag-list
-		compilation-unit/content/tag-list/doc-tag
-		compilation-unit/content/tag-list/doc-tag/name
-		compilation-unit/content/tag-list/doc-tag/body
-		compilation-unit/content/tag-list/doc-tag/body/text
-		*/
-		
-		var asdoc:IParserNode = ASTNodeUtil.createAsDoc(this, _description);
-		
-		comment = new CommentNode(asdoc.getLastChild(), this);
-		//node.addChildAt(asdoc, 1);
-	}
-	
-	//----------------------------------
 	//  isSubType
 	//----------------------------------
 	

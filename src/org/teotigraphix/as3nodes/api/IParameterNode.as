@@ -36,6 +36,20 @@ public interface IParameterNode extends INode, /*ICommentAware,*/ INameAware
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get description():String;
+	
+	/**
+	 * @private
+	 */
+	function set description(value:String):void;
+	
+	//----------------------------------
 	//  type
 	//----------------------------------
 	

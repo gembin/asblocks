@@ -37,20 +37,6 @@ public interface ITypeNode extends INode, IScriptNode,
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  description
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get description():String;
-	
-	/**
-	 * @private
-	 */
-	function set description(value:String):void;
-	
-	//----------------------------------
 	//  isSubType
 	//----------------------------------
 	

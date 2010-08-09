@@ -60,6 +60,9 @@ public class ASTNodeUtil
 	 */
 	public static function createAsDoc(aware:ICommentAware, description:String):Node
 	{
+		if (description == null)
+			description = "";
+		
 		description = "/** " + description + " */";
 		
 		// need to append asdoc or create node, asdoc compilation-unit
@@ -70,7 +73,24 @@ public class ASTNodeUtil
 		aware.node.addChildAt(asdocNode, 1);
 		asdocNode.addChild(compilationUnit);
 		
-		//var asdocNode:Node = createText(AS3NodeKind.AS_DOC, "/** " + description + " */");
+		return asdocNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createEmptyAsDoc(aware:ICommentAware):Node
+	{
+		// need to append asdoc or create node, asdoc compilation-unit
+		var asdocNode:Node = create(AS3NodeKind.AS_DOC);
+		var compilationUnit:IParserNode = asdocNode.addChild(create(ASDocNodeKind.COMPILATION_UNIT));
+		var content:IParserNode = compilationUnit.addChild(create(ASDocNodeKind.CONTENT));
+		content.addChild(create(ASDocNodeKind.SHORT_LIST));
+		content.addChild(create(ASDocNodeKind.LONG_LIST));
+		content.addChild(create(ASDocNodeKind.DOCTAG_LIST));
+		
+		aware.node.addChildAt(asdocNode, 1);
+		
 		return asdocNode;
 	}
 	

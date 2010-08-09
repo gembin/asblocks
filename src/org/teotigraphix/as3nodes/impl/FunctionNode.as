@@ -210,6 +210,23 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#addReturnDescription()
+	 */
+	public function addReturnDescription(description:String):void
+	{
+		if (!comment || comment is CommentPlaceholderNode)
+			initComment();
+		
+		comment.addDocTag("return", description);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IParameterAware API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#addParameter()
 	 */
 	public function addParameter(name:String, type:IIdentifierNode):IParameterNode

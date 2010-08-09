@@ -360,7 +360,7 @@ public class TestPackageNode
 		
 		// paramters
 		Assert.assertFalse(method.hasParameters);
-		Assert.assertNull(method.parameters);
+		Assert.assertNotNull(method.parameters);
 		
 		// type
 		Assert.assertFalse(method.hasType);

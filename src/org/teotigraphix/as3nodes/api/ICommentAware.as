@@ -48,5 +48,21 @@ public interface ICommentAware extends INode
 	 * @private
 	 */
 	function set comment(value:ICommentNode):void;
+	
+	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get description():String;
+	
+	/**
+	 * @private
+	 */
+	function set description(value:String):void;
+	
+	function addDocTag(name:String, body:String):IDocTag;
 }
 }

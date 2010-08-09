@@ -21,6 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
@@ -158,6 +159,48 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	public function set comment(value:ICommentNode):void
 	{
 		_comment = value;
+	}
+	
+	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _description:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#description
+	 */
+	public function get description():String
+	{
+		return _description;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set description(value:String):void
+	{
+		_description = value;
+		
+		var asdoc:IParserNode = ASTNodeUtil.createAsDoc(this, _description);
+		comment = new CommentNode(asdoc.getLastChild(), this);
+	}
+	
+	public function addDocTag(name:String, body:String):IDocTag
+	{
+		if (!comment || comment is CommentPlaceholderNode)
+			initComment();
+		
+		return comment.addDocTag(name, body);
+	}
+	
+	protected function initComment():void
+	{
+		var asdoc:IParserNode = ASTNodeUtil.createEmptyAsDoc(this);
+		comment = new CommentNode(asdoc.getLastChild(), this);
 	}
 	
 	//--------------------------------------------------------------------------
