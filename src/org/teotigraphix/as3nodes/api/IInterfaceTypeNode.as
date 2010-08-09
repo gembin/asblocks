@@ -36,12 +36,12 @@ public interface IInterfaceTypeNode extends ITypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  superTypeList
+	//  superInterfaces
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get superTypeList():Vector.<IIdentifierNode>;
+	function get superInterfaces():Vector.<IIdentifierNode>;
 }
 }

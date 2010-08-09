@@ -25,7 +25,7 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
-import org.teotigraphix.as3nodes.utils.NodeUtil;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
@@ -45,22 +45,40 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  superType
+	//  superClass
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	private var _superType:IIdentifierNode;
+	private var _superClass:IIdentifierNode;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#superType
 	 */
-	public function get superType():IIdentifierNode
+	public function get superClass():IIdentifierNode
 	{
-		if (superTypeList && superTypeList.length == 1)
-			return superTypeList[0];
-		return null;
+		return _superClass;
+	}
+	
+	public function set superClass(value:IIdentifierNode):void
+	{
+		_superClass = value;
+		
+		ASTNodeUtil.setSuperClass(this, _superClass);
+	}
+	
+	
+	//----------------------------------
+	//  isSubType
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function get isSubType():Boolean
+	{
+		return _superClass != null;
 	}
 	
 	//----------------------------------
@@ -175,7 +193,22 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 	 */
 	public function addImplementation(implementation:IIdentifierNode):void
 	{
+		if (hasImplementation(implementation))
+			return;
+		
 		_implementList.push(implementation);
+		
+		ASTNodeUtil.addImplementation(this, implementation);
+	}
+	
+	public function hasImplementation(implementation:IIdentifierNode):Boolean
+	{
+		for each (var element:IIdentifierNode in _implementList)
+		{
+			if (element.qualifiedName == implementation.qualifiedName)
+				return true;
+		}
+		return false;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -191,7 +224,6 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 	{
 		super.compute();
 		
-		superTypeList = new Vector.<IIdentifierNode>();
 		implementList = new Vector.<IIdentifierNode>();
 		
 		if (node.numChildren == 0)
@@ -237,19 +269,31 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @private
+	 * Computes the <code>superType</code> and <code>superTypes</code>.
+	 * 
+	 * @param typeContent An ITypeNode node.
 	 */
 	protected function computeExtends(typeContent:IParserNode):void
 	{
-		NodeUtil.computeExtends(this, typeContent);
+		_superClass = NodeFactory.instance.createIdentifier(typeContent, this);
 	}
 	
 	/**
-	 * @private
+	 * Computes the <code>implementsList</code>.
+	 * 
+	 * @param typeContent An IClassNode node.
 	 */
 	protected function computeImplementsList(typeContent:IParserNode):void
 	{
-		NodeUtil.computeImplementsList(this, typeContent);
+		if (!typeContent || typeContent.numChildren == 0)
+			return;
+		
+		var len:int = typeContent.children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			implementList.push(NodeFactory.instance.
+				createIdentifier(typeContent.children[i], this));
+		}
 	}
 	
 	/**

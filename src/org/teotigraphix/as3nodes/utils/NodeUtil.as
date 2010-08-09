@@ -133,41 +133,6 @@ public class NodeUtil
 	}
 	
 	/**
-	 * Computes the <code>node.superType</code> and <code>node.superTypes</code>.
-	 * 
-	 * @param node An ITypeNode node.
-	 * @param child The IParserNode internal node.
-	 */
-	public static function computeExtends(node:ITypeNode, 
-										  child:IParserNode):void
-	{
-		if (!child)
-			return;
-		
-		node.addSuperType(NodeFactory.instance.createIdentifier(child, node));
-	}
-	
-	/**
-	 * Computes the <code>node.implementsList</code>.
-	 * 
-	 * @param node An IClassNode node.
-	 * @param child The IParserNode internal node.
-	 */
-	public static function computeImplementsList(node:IClassTypeNode, 
-												 child:IParserNode):void
-	{
-		if (!child || child.numChildren == 0)
-			return;
-		
-		var len:int = child.children.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			node.addImplementation(NodeFactory.instance.
-				createIdentifier(child.children[i], node));
-		}
-	}
-	
-	/**
 	 * Computes the <code>node.parameters</code>.
 	 * 
 	 * @param node An IParameterAware node.

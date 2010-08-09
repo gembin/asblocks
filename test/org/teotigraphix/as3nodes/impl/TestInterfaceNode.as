@@ -123,10 +123,10 @@ public class TestInterfaceNode
 		Assert.assertEquals("my.domain.ITest", IPackageNode(typeNode.parent).qualifiedName);
 		
 		// extends
-		Assert.assertNotNull(typeNode.superTypeList);
-		Assert.assertEquals(2, typeNode.superTypeList.length);
-		Assert.assertEquals("IOtherTest", typeNode.superTypeList[0].localName);
-		Assert.assertEquals("IEventDispatcher", typeNode.superTypeList[1].localName);
+		Assert.assertNotNull(typeNode.superInterfaces);
+		Assert.assertEquals(2, typeNode.superInterfaces.length);
+		Assert.assertEquals("IOtherTest", typeNode.superInterfaces[0].localName);
+		Assert.assertEquals("IEventDispatcher", typeNode.superInterfaces[1].localName);
 	}
 	
 	[Test]

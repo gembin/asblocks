@@ -90,11 +90,6 @@ public interface ITypeNode extends INode, IScriptNode,
 	/**
 	 * TODO DOCME
 	 */
-	function addSuperType(type:IIdentifierNode):void;
-	
-	/**
-	 * TODO DOCME
-	 */
 	function addAccessor(node:IAccessorNode):void;
 }
 }

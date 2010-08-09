@@ -37,13 +37,18 @@ public interface IClassTypeNode extends ITypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  superType
+	//  superClass
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get superType():IIdentifierNode;
+	function get superClass():IIdentifierNode;
+	
+	/**
+	 * @private
+	 */
+	function set superClass(value:IIdentifierNode):void;
 	
 	//----------------------------------
 	//  implements
@@ -97,5 +102,9 @@ public interface IClassTypeNode extends ITypeNode
 	 */
 	function addImplementation(implementation:IIdentifierNode):void;
 	
+	/**
+	 * TODO Docme
+	 */
+	function hasImplementation(implementation:IIdentifierNode):Boolean;
 }
 }

@@ -188,8 +188,8 @@ public class TestPackageNode
 		Assert.assertEquals("my.domain.Test", IPackageNode(typeNode.parent).qualifiedName);
 		
 		// extends
-		Assert.assertNotNull(typeNode.superType);
-		Assert.assertEquals("OtherTest", typeNode.superType.localName);
+		Assert.assertNotNull(typeNode.superClass);
+		Assert.assertEquals("OtherTest", typeNode.superClass.localName);
 		
 		// implements
 		Assert.assertNotNull(typeNode.implementList);

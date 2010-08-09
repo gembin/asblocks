@@ -55,7 +55,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	 */
 	public function get isSubType():Boolean
 	{
-		return superTypeList != null && superTypeList.length > 0;
+		return false;
 	}
 	
 	//----------------------------------
@@ -158,31 +158,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		_methods = value;
 	}
 	
-	//----------------------------------
-	//  superTypeList
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _superTypeList:Vector.<IIdentifierNode>;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.IInterfaceNode#superTypeList
-	 */
-	public function get superTypeList():Vector.<IIdentifierNode>
-	{
-		return _superTypeList;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set superTypeList(value:Vector.<IIdentifierNode>):void
-	{
-		_superTypeList = value;
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -216,14 +191,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	//  ITypeNode API :: Methods
 	//
 	//--------------------------------------------------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#addSuperType()
-	 */
-	public function addSuperType(type:IIdentifierNode):void
-	{
-		_superTypeList.push(type);
-	}
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#addAccessor()

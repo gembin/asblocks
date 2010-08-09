@@ -38,6 +38,49 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceTypeNode
 {
 	//--------------------------------------------------------------------------
 	//
+	//  IInterfaceTypeNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  superInterfaces
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _superInterfaces:Vector.<IIdentifierNode>;
+	
+	/**
+	 * doc
+	 */
+	public function get superInterfaces():Vector.<IIdentifierNode>
+	{
+		return _superInterfaces;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set superInterfaces(value:Vector.<IIdentifierNode>):void
+	{
+		_superInterfaces = value;
+	}
+	
+	//----------------------------------
+	//  isSubType
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */	
+	override public function get isSubType():Boolean
+	{
+		return superInterfaces.length > 0;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -63,7 +106,7 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceTypeNode
 	{
 		super.compute();
 		
-		superTypeList = new Vector.<IIdentifierNode>();
+		superInterfaces = new Vector.<IIdentifierNode>();
 		
 		if (node.numChildren == 0)
 			return;
@@ -86,9 +129,9 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceTypeNode
 	/**
 	 * @private
 	 */
-	protected function computeExtends(typeContent:IParserNode):void
+	protected function computeExtends(child:IParserNode):void
 	{
-		NodeUtil.computeExtends(this, typeContent);
+		superInterfaces.push(NodeFactory.instance.createIdentifier(child, this));
 	}
 }
 }

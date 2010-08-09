@@ -141,10 +141,10 @@ public class TestIdentiferNode
 		Assert.assertEquals("flash.events.EventDispatcher", imports[1].qualifiedName);
 		
 		var type:IClassTypeNode = packageNode.typeNode as IClassTypeNode;
-		Assert.assertTrue(type.superType.isQualified);
-		Assert.assertEquals("OtherTest", type.superType.localName);
-		Assert.assertEquals("my.domain", type.superType.packageName);
-		Assert.assertEquals("my.domain.OtherTest", type.superType.qualifiedName);
+		Assert.assertTrue(type.superClass.isQualified);
+		Assert.assertEquals("OtherTest", type.superClass.localName);
+		Assert.assertEquals("my.domain", type.superClass.packageName);
+		Assert.assertEquals("my.domain.OtherTest", type.superClass.qualifiedName);
 		
 		var implementations:Vector.<IIdentifierNode> = type.implementList;
 		Assert.assertEquals(2, implementations.length);
