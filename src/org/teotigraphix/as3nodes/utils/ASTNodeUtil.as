@@ -3,6 +3,7 @@ package org.teotigraphix.as3nodes.utils
 
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.Modifier;
@@ -18,15 +19,34 @@ public class ASTNodeUtil
 	 */
 	public static function createEmptyClass(uid:IIdentifierNode):Node
 	{
-		var compilationUnitNode:Node = create(AS3NodeKind.COMPILATION_UNIT);
-		var packageNode:Node = compilationUnitNode.addChild(create(AS3NodeKind.PACKAGE)) as Node;
-		var packageNameNode:Node = packageNode.addChild(createText(AS3NodeKind.NAME, uid.packageName)) as Node;
-		var packageContentNode:Node = packageNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
+		var compilationUnitNode:Node = createCompilationUnit(uid.packageName);
+		var packageContentNode:Node = compilationUnitNode.getChild(0).getLastChild() as Node;
 		var classNode:Node = packageContentNode.addChild(create(AS3NodeKind.CLASS)) as Node;
 		var classNameNode:Node = classNode.addChild(createText(AS3NodeKind.NAME, uid.localName)) as Node;
 		var classContentNode:Node = classNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
+		return compilationUnitNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createEmptyInterface(uid:IIdentifierNode):Node
+	{
+		var compilationUnitNode:Node = createCompilationUnit(uid.packageName);
+		var packageContentNode:Node = compilationUnitNode.getChild(0).getLastChild() as Node;
+		var classNode:Node = packageContentNode.addChild(create(AS3NodeKind.INTERFACE)) as Node;
+		var classNameNode:Node = classNode.addChild(createText(AS3NodeKind.NAME, uid.localName)) as Node;
+		var classContentNode:Node = classNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
+		return compilationUnitNode;
+	}
+	
+	private static function createCompilationUnit(packageName:String):Node
+	{
+		var compilationUnitNode:Node = create(AS3NodeKind.COMPILATION_UNIT);
+		var packageNode:Node = compilationUnitNode.addChild(create(AS3NodeKind.PACKAGE)) as Node;
+		var packageNameNode:Node = packageNode.addChild(createText(AS3NodeKind.NAME, packageName)) as Node;
+		var packageContentNode:Node = packageNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
 		var compilationUnitContentNode:Node = compilationUnitNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
-		
 		return compilationUnitNode;
 	}
 	
@@ -37,7 +57,7 @@ public class ASTNodeUtil
 									   modifier:Modifier):void
 	{
 		// compilation-unit/package/content/class/mod-list/mod
-			
+		
 		var node:IParserNode = INode(aware).node;
 		var workNode:IParserNode = node;
 		
@@ -82,6 +102,18 @@ public class ASTNodeUtil
 		impList.addChild(createText(AS3NodeKind.IMPLEMENTS, implementation.qualifiedName));
 	}
 	
+	/**
+	 * @private
+	 */
+	public static function addSuperInterface(type:IInterfaceTypeNode, 
+											 superInterface:IIdentifierNode):void
+	{
+		// compilation-unit/package/content/interface/extends
+		
+		var node:IParserNode = INode(type).node;
+		// add a extends to interface, cannot be last child, content is
+		node.addChildAt(createText(AS3NodeKind.EXTENDS, superInterface.qualifiedName), node.numChildren - 1);
+	}
 	
 	
 	

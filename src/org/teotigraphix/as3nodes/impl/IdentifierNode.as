@@ -307,6 +307,45 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  IIdentifierNode API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IIdentifierNode#equals()
+	 */
+	public function equals(object:Object):Boolean
+	{
+		if (this == object)
+			return true;
+		if (object == null)
+			return false;
+		//if (getClass() != other.getClass())
+		//	return false;
+		var other:IIdentifierNode = other as IIdentifierNode;
+		if (localName == null)
+		{
+			if (other.localName != null)
+				return false;
+		}
+		else if (localName != other.localName)
+		{
+			return false;
+		}
+		if (packageName == null)
+		{
+			if (other.packageName != null)
+				return false;
+		}
+		else if (packageName != other.packageName)
+		{
+			return false;
+		}
+		return true;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Overridden Protected :: Methods
 	//
 	//--------------------------------------------------------------------------

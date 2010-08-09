@@ -23,7 +23,7 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.INode;
-import org.teotigraphix.as3nodes.utils.NodeUtil;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
@@ -52,7 +52,7 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceTypeNode
 	private var _superInterfaces:Vector.<IIdentifierNode>;
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.as3nodes.api.IInterfaceTypeNode#superInterfaces
 	 */
 	public function get superInterfaces():Vector.<IIdentifierNode>
 	{
@@ -91,6 +91,39 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceTypeNode
 	public function InterfaceTypeNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IInterfaceTypeNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IInterfaceTypeNode#addSuperInterface()
+	 */
+	public function addSuperInterface(superInterface:IIdentifierNode):void
+	{
+		superInterfaces.push(superInterface);
+		
+		ASTNodeUtil.addSuperInterface(this, superInterface);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IInterfaceTypeNode#removeSuperInterface()
+	 */
+	public function removeSuperInterface(superInterface:IIdentifierNode):void
+	{
+		var len:int = superInterfaces.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IIdentifierNode = superInterfaces[i] as IIdentifierNode;
+			if (element.equals(superInterface))
+			{
+				superInterfaces.splice(i, 1);
+				break;
+			}
+		}
 	}
 	
 	//--------------------------------------------------------------------------

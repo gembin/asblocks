@@ -120,5 +120,16 @@ public interface IIdentifierNode extends INode
 	 * TODO Docme
 	 */
 	function get hasFragmentType():Boolean;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function equals(object:Object):Boolean;
 }
 }

@@ -43,5 +43,21 @@ public interface IInterfaceTypeNode extends ITypeNode
 	 * TODO Docme
 	 */
 	function get superInterfaces():Vector.<IIdentifierNode>;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function addSuperInterface(superInterface:IIdentifierNode):void;
+	
+	/**
+	 * TODO Docme
+	 */
+	function removeSuperInterface(superInterface:IIdentifierNode):void;
 }
 }
