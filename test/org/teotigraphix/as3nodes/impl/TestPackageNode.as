@@ -143,7 +143,7 @@ public class TestPackageNode
 		Assert.assertFalse(typeNode.hasModifier(Modifier.DYNAMIC));
 		
 		Assert.assertTrue(typeNode.isPublic);
-		Assert.assertTrue(TypeNode(typeNode).isFinal);
+		Assert.assertTrue(typeNode.isFinal);
 		Assert.assertTrue(TypeNode(typeNode).isBindable);
 		
 		// metadata

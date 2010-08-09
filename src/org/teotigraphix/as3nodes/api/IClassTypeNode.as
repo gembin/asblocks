@@ -37,6 +37,34 @@ public interface IClassTypeNode extends ITypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  isFinal
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get isFinal():Boolean;
+	
+	/**
+	 * @private
+	 */
+	function set isFinal(value:Boolean):void;
+	
+	//----------------------------------
+	//  isDynamic
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get isDynamic():Boolean;
+	
+	/**
+	 * @private
+	 */
+	function set isDynamic(value:Boolean):void;
+	
+	//----------------------------------
 	//  superClass
 	//----------------------------------
 	

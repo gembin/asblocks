@@ -289,18 +289,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		return hasModifier(Modifier.STATIC);
 	}
 	
-	//----------------------------------
-	//  isFinal
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.IScriptElement#isFinal
-	 */
-	public function get isFinal():Boolean
-	{
-		return hasModifier(Modifier.FINAL);
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  IDeprecateAware API :: Properties

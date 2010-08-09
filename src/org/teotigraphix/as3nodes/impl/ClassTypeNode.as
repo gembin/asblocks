@@ -25,6 +25,7 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -43,6 +44,52 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 	//  IClassTypeNode API :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  isFinal
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#isFinal
+	 */
+	public function get isFinal():Boolean
+	{
+		return hasModifier(Modifier.FINAL);
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set isFinal(value:Boolean):void
+	{
+		if (hasModifier(Modifier.FINAL))
+			return;
+		
+		addModifier(Modifier.FINAL);
+	}
+	
+	//----------------------------------
+	//  isDynamic
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#isDynamic
+	 */
+	public function get isDynamic():Boolean
+	{
+		return hasModifier(Modifier.DYNAMIC);
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set isDynamic(value:Boolean):void
+	{
+		if (hasModifier(Modifier.DYNAMIC))
+			return;
+		
+		addModifier(Modifier.DYNAMIC);
+	}
 	
 	//----------------------------------
 	//  superClass
@@ -67,7 +114,6 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 		
 		ASTNodeUtil.setSuperClass(this, _superClass);
 	}
-	
 	
 	//----------------------------------
 	//  isSubType

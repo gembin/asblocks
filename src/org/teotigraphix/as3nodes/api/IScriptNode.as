@@ -64,15 +64,6 @@ public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
 	function get parentQualifiedName():String;
 	
 	//----------------------------------
-	//  isFinal
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isFinal():Boolean;
-	
-	//----------------------------------
 	//  isStatic
 	//----------------------------------
 	

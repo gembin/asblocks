@@ -104,7 +104,6 @@ public class TestInterfaceNode
 		Assert.assertTrue(typeNode.hasModifier(Modifier.PUBLIC));
 		
 		Assert.assertTrue(typeNode.isPublic);
-		Assert.assertFalse(TypeNode(typeNode).isFinal);
 		Assert.assertTrue(TypeNode(typeNode).isBindable);
 		
 		// metadata
