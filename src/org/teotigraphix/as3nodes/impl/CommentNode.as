@@ -25,6 +25,7 @@ import mx.utils.StringUtil;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3nodes.utils.AsDocUtil;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParser;
@@ -97,6 +98,31 @@ public class CommentNode extends NodeBase implements ICommentNode
 	public function set longDescription(value:String):void
 	{
 		_longDescription = value;
+	}
+	
+	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _description:String;
+	
+	/**
+	 * doc
+	 */
+	public function get description():String
+	{
+		return _description;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set description(value:String):void
+	{
+		_description = value;
 	}
 	
 	//----------------------------------
@@ -210,6 +236,20 @@ public class CommentNode extends NodeBase implements ICommentNode
 		return result;
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#addDocTag()
+	 */
+	public function addDocTag(name:String, body:String = null):IDocTag
+	{
+		var ast:IParserNode = ASTNodeUtil.addDocTag(asdocNode, name, body);
+		
+		var tag:DocTagNode = new DocTagNode(ast, this);
+
+		docTags.push(tag);
+		
+		return tag;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public :: Methods
@@ -240,12 +280,19 @@ public class CommentNode extends NodeBase implements ICommentNode
 		if (!node)
 			return;
 		
-		var parser:IParser = ParserFactory.instance.asdocParser;
-		
-		var lines:Array = toString().split("\n");
-		
-		asdocNode = parser.buildAst(ASTUtil.toVector(lines), "asdoc");
-		
+		if (node.isKind(ASDocNodeKind.COMPILATION_UNIT))
+		{
+			asdocNode = node;
+		}
+		else
+		{
+			var parser:IParser = ParserFactory.instance.asdocParser;
+			
+			var lines:Array = toString().split("\n");
+			
+			asdocNode = parser.buildAst(ASTUtil.toVector(lines), "asdoc");
+		}
+
 		// compilation-unit/content
 		var contentNode:IParserNode = asdocNode.getLastChild();
 		shortDescription = computeShortDescription(contentNode); 

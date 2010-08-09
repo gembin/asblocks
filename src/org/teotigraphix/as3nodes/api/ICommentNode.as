@@ -60,8 +60,13 @@ public interface ICommentNode
 	/**
 	 * TODO Docme
 	 */
-	//function get description():String;
-
+	function get description():String;
+	
+	/**
+	 * @private
+	 */
+	function set description(value:String):void;
+	
 	//----------------------------------
 	//  docTags
 	//----------------------------------
@@ -105,5 +110,10 @@ public interface ICommentNode
 	 * TODO Docme
 	 */
 	function getDocTags(name:String):Vector.<IDocTag>;
+	
+	/**
+	 * TODO Docme
+	 */
+	function addDocTag(name:String, body:String = null):IDocTag;
 }
 }

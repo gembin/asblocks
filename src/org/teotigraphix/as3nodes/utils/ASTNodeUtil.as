@@ -2,12 +2,15 @@ package org.teotigraphix.as3nodes.utils
 {
 
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
+import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.impl.ParserFactory;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.Node;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -48,6 +51,49 @@ public class ASTNodeUtil
 		var packageContentNode:Node = packageNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
 		var compilationUnitContentNode:Node = compilationUnitNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
 		return compilationUnitNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createAsDoc(aware:ICommentAware, description:String):Node
+	{
+		description = "/** " + description + " */";
+		
+		// need to append asdoc or create node, asdoc compilation-unit
+		var asdocNode:Node = create(AS3NodeKind.AS_DOC);
+		var compilationUnit:IParserNode = ParserFactory.instance.
+			asdocParser.buildAst(Vector.<String>(description.split("\n")), "internal");
+		
+		aware.node.addChildAt(asdocNode, 1);
+		asdocNode.addChild(compilationUnit);
+		
+		//var asdocNode:Node = createText(AS3NodeKind.AS_DOC, "/** " + description + " */");
+		return asdocNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function addDocTag(node:IParserNode, 
+									 name:String, 
+									 body:String = null):Node
+	{
+		var content:IParserNode = node.getLastChild();
+		
+		var doctagList:Node =  ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, content) as Node;
+		if (!doctagList)
+			doctagList = content.addChild(create(ASDocNodeKind.DOCTAG_LIST)) as Node;
+		
+		var docTag:Node = doctagList.addChild(create(ASDocNodeKind.DOCTAG)) as Node;
+		docTag.addChild(createText(ASDocNodeKind.NAME, name));
+		if (body)
+		{
+			var bodyNode:Node = create(ASDocNodeKind.BODY);
+			bodyNode.addChild(createText(ASDocNodeKind.TEXT, body));
+			docTag.addChild(bodyNode);
+		}
+		return docTag;
 	}
 	
 	/**

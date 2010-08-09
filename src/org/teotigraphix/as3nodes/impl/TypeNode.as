@@ -24,6 +24,7 @@ import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
@@ -41,6 +42,49 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	//  ITypeNode API :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _description:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#description
+	 */
+	public function get description():String
+	{
+		return _description;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set description(value:String):void
+	{
+		_description = value;
+		
+		/*
+		compilation-unit
+		compilation-unit/content/short-list
+		compilation-unit/content/short-list/text
+		compilation-unit/content/long-list
+		compilation-unit/content/long-list/text
+		compilation-unit/content/tag-list
+		compilation-unit/content/tag-list/doc-tag
+		compilation-unit/content/tag-list/doc-tag/name
+		compilation-unit/content/tag-list/doc-tag/body
+		compilation-unit/content/tag-list/doc-tag/body/text
+		*/
+		
+		var asdoc:IParserNode = ASTNodeUtil.createAsDoc(this, _description);
+		
+		comment = new CommentNode(asdoc.getLastChild(), this);
+		//node.addChildAt(asdoc, 1);
+	}
 	
 	//----------------------------------
 	//  isSubType
