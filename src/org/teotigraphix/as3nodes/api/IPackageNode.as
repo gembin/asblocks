@@ -74,5 +74,12 @@ public interface IPackageNode extends INode, INameAware, IIdentifierAware
 	 * @param node The IIdentifierNode node.
 	 */
 	function addImport(node:IIdentifierNode):void;
+	
+	/**
+	 * Removes an import node from the package node.
+	 * 
+	 * @param node The IIdentifierNode node.
+	 */
+	function removeImport(node:IIdentifierNode):void;
 }
 }

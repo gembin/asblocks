@@ -23,6 +23,7 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
+import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
@@ -48,7 +49,7 @@ public class CompilationNode extends NodeBase implements ICompilationNode
 	/**
 	 * @private
 	 */
-	private var _packageNode:IPackageNode;
+	protected var _packageNode:IPackageNode;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICompilationNode#packageNode
@@ -58,12 +59,32 @@ public class CompilationNode extends NodeBase implements ICompilationNode
 		return _packageNode;
 	}
 	
+	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
 	/**
-	 * @private
-	 */	
-	public function set packageNode(value:IPackageNode):void
+	 * @copy org.teotigraphix.as3nodes.api.ICompilationNode#packageName
+	 */
+	public function get packageName():String
 	{
-		_packageNode = value;
+		if (_packageNode)
+			return _packageNode.name;
+		return null;
+	}
+	
+	//----------------------------------
+	//  typeNode
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICompilationNode#typeNode
+	 */
+	public function get typeNode():ITypeNode
+	{
+		if (_packageNode)
+			return _packageNode.typeNode;
+		return null;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -91,7 +112,7 @@ public class CompilationNode extends NodeBase implements ICompilationNode
 	 */
 	override protected function compute():void
 	{
-		packageNode = NodeFactory.instance.
+		_packageNode = NodeFactory.instance.
 			createPackage(ASTUtil.getPackage(node), this);
 	}
 }

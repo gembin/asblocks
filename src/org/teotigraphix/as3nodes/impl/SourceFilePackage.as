@@ -66,9 +66,6 @@ public class SourceFilePackage extends NodeBase implements ISourceFilePackage
 	public function set name(value:String):void
 	{
 		_name = value;
-		
-		if (_name == "")
-			_name = "toplevel";
 	}
 	
 	//--------------------------------------------------------------------------

@@ -54,9 +54,9 @@ public class PackageNode extends NodeBase implements IPackageNode
 	 */
 	public function get name():String
 	{
-		if (_uid)
+		if (_uid && _uid.isQualified)
 			return _uid.qualifiedName;
-		return null;
+		return ""; // "" toplevel (default)
 	}
 	
 	//--------------------------------------------------------------------------
@@ -90,9 +90,13 @@ public class PackageNode extends NodeBase implements IPackageNode
 		_uid = value;
 		if (_uid)
 		{
-			_qualifiedName = _uid.qualifiedName;
-			if (_typeNode && (_uid.qualifiedName != null || _uid.qualifiedName != ""))
-				_qualifiedName = _uid.qualifiedName + "." + _typeNode.uid.localName;
+			var packageName:String = "";
+			if(_uid.qualifiedName != null)
+				packageName = _uid.qualifiedName;
+			if (_typeNode && (packageName != ""))
+				_qualifiedName = packageName + "." + _typeNode.uid.localName;
+			else if (_typeNode)
+				_qualifiedName = _typeNode.uid.localName;
 		}
 	}
 	
@@ -202,6 +206,24 @@ public class PackageNode extends NodeBase implements IPackageNode
 	 */
 	public function addImport(node:IIdentifierNode):void
 	{
+		_imports.push(node);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#removeImport()
+	 */
+	public function removeImport(node:IIdentifierNode):void
+	{
+		var len:int = _imports.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IIdentifierNode = _imports[i];
+			if (element.qualifiedName == node.qualifiedName)
+			{
+				_imports.splice(i, 1);
+				break;
+			}
+		}
 		_imports.push(node);
 	}
 	

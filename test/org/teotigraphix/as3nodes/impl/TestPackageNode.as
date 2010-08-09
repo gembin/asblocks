@@ -102,6 +102,13 @@ public class TestPackageNode
 	}
 	
 	[Test]
+	public function test_addRemoveImports():void
+	{
+		//var node:PackageNode = new PackageNode(null, null);
+		
+	}
+	
+	[Test]
 	public function testPackageNode():void
 	{
 		Assert.assertNotNull(packageNode.node);

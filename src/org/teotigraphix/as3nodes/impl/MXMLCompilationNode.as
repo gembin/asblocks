@@ -110,7 +110,7 @@ public class MXMLCompilationNode extends CompilationNode
 		
 		node = unit;
 		
-		packageNode = NodeFactory.instance.
+		_packageNode = NodeFactory.instance.
 			createPackage(ASTUtil.getPackage(node), this);
 	}
 	

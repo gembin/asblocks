@@ -21,7 +21,12 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * The <strong>ICompilationNode</strong> is at the top of the compilation
+ * parse tree.
+ * 
+ * <p>The <strong>ICompilationNode</strong> contains the public package 
+ * and a reference to the type (class|interface) declared in the 
+ * public package.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -40,8 +45,26 @@ public interface ICompilationNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * The public package found in this compilation node.
 	 */
 	function get packageNode():IPackageNode;
+	
+	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
+	/**
+	 * The package name of the compilation node.
+	 */
+	function get packageName():String;
+	
+	//----------------------------------
+	//  typeNode
+	//----------------------------------
+	
+	/**
+	 * The public type found in this compilation node, either class or interface.
+	 */
+	function get typeNode():ITypeNode;
 }
 }

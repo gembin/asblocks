@@ -227,7 +227,8 @@ public class SourceCode implements ISourceCode
 			}
 			else
 			{
-				_packageName = "toplevel"; // toplevel
+				//_packageName = "toplevel"; // toplevel
+				_packageName = "";
 			}
 		}
 		

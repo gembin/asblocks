@@ -157,6 +157,8 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	public function set qualifiedName(value:String):void
 	{
 		var string:String = value;
+		if (string == null)
+			return;
 		
 		var pos:int = string.lastIndexOf('.');
 		if (pos != -1)
