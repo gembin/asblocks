@@ -147,8 +147,8 @@ public class NodeUtil
 		var len:int = child.children.length;
 		for (var i:int = 0; i < len; i++)
 		{
-			node.addParameter(NodeFactory.instance.
-				createParameter(child.children[i], node));
+			node.parameters[i] = NodeFactory.instance.
+				createParameter(child.children[i], node)
 		}
 	}
 	

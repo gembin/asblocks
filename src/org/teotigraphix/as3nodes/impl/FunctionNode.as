@@ -25,8 +25,8 @@ import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INameAware;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
-import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -70,6 +70,37 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	public function get isOverride():Boolean
 	{
 		return hasModifier(Modifier.OVERRIDE);
+	}
+	
+	//----------------------------------
+	//  isStatic
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _isStatic:Boolean;
+	
+	/**
+	 * doc
+	 */
+	public function get isStatic():Boolean
+	{
+		return hasModifier(Modifier.STATIC);
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set isStatic(value:Boolean):void
+	{
+		if (value && hasModifier(Modifier.STATIC))
+			return;
+		
+		if (value)
+			addModifier(Modifier.STATIC);
+//		else
+//			removeModifier(Modifier.STATIC);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -181,12 +212,23 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#addParameter()
 	 */
-	public function addParameter(parameter:IParameterNode):void
+	public function addParameter(name:String, type:IIdentifierNode):IParameterNode
 	{
-		if (!_parameters)
-			_parameters = new Vector.<IParameterNode>();
-		
-		_parameters.push(parameter);
+		var ast:IParserNode = ASTNodeUtil.createParameter(this, name, type);
+		var parameter:IParameterNode = NodeFactory.instance.createParameter(ast, this);
+		parameters.push(parameter);
+		return parameter;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#addRestParameter()
+	 */
+	public function addRestParameter(name:String):IParameterNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createRestParameter(this, name);
+		var parameter:IParameterNode = NodeFactory.instance.createParameter(ast, this);
+		parameters.push(parameter);
+		return parameter;
 	}
 	
 	/**
@@ -214,6 +256,8 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	override protected function compute():void
 	{
 		super.compute();
+		
+		parameters = new Vector.<IParameterNode>();
 		
 		if (node.numChildren == 0)
 			return;

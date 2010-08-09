@@ -7,6 +7,8 @@ import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IParameterAware;
+import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.impl.ParserFactory;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
@@ -163,11 +165,70 @@ public class ASTNodeUtil
 	
 	
 	
+	public static function createMethod(type:ITypeNode,
+										name:String, 
+										modifier:Modifier, 
+										returnType:IIdentifierNode):IParserNode
+		
+	{
+		var node:Node = create(AS3NodeKind.FUNCTION);
+		
+		var content:IParserNode = type.node.getLastChild();
+		content.addChild(node);
+		
+		// add the modifier
+		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+		modList.addChild(createText(AS3NodeKind.MODIFIER, modifier.name));
+		// add the name
+		node.addChild(createText(AS3NodeKind.NAME, name));
+		// add the type
+		if (returnType)
+			node.addChild(createText(AS3NodeKind.TYPE, returnType.localName));
+		// add the block
+		node.addChild(create(AS3NodeKind.BLOCK));
+		
+		return node as IParserNode;
+	}
 	
+	public static function createParameter(aware:IParameterAware,
+										   name:String,  
+										   type:IIdentifierNode):IParserNode
+		
+	{
+		var node:IParserNode = INode(aware).node;
+		
+		//var node:Node = create(AS3NodeKind.FUNCTION);
+		var paramList:IParserNode = ASTUtil.getNode(AS3NodeKind.PARAMETER_LIST, node);
+		if (!paramList)
+			paramList = node.addChildAt(create(AS3NodeKind.PARAMETER_LIST), node.numChildren - 1);
+		
+		var param:Node = paramList.addChild(create(AS3NodeKind.PARAMETER)) as Node;
+		// name-type-init
+		var nti:Node = create(AS3NodeKind.NAME_TYPE_INIT);
+		nti.addChild(createText(AS3NodeKind.NAME, name));
+		nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
+		
+		param.addChild(nti);
+		
+		return param;
+	}
 	
-	
-	
-	
+	public static function createRestParameter(aware:IParameterAware,
+										   name:String):IParserNode
+		
+	{
+		var node:IParserNode = INode(aware).node;
+		
+		//var node:Node = create(AS3NodeKind.FUNCTION);
+		var paramList:IParserNode = ASTUtil.getNode(AS3NodeKind.PARAMETER_LIST, node);
+		if (!paramList)
+			paramList = node.addChildAt(create(AS3NodeKind.PARAMETER_LIST), node.numChildren - 1);
+		
+		var param:Node = paramList.addChild(create(AS3NodeKind.PARAMETER)) as Node;
+		var rest:Node = param.addChild(createText(AS3NodeKind.REST, name)) as Node;
+		
+		return param;
+	}
 	
 	/**
 	 * @private

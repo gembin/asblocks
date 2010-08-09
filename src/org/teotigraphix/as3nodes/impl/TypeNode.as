@@ -21,9 +21,11 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.IAccessorNode;
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -238,6 +240,19 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	public function addAccessor(node:IAccessorNode):void
 	{
 		accessors.push(node);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#newMethod()
+	 */
+	public function newMethod(name:String, 
+							  modifier:Modifier, 
+							  type:IIdentifierNode):IMethodNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createMethod(this, name, modifier, type);
+		var method:IMethodNode = NodeFactory.instance.createMethod(ast, this);
+		methods.push(method);
+		return method;
 	}
 	
 	//--------------------------------------------------------------------------

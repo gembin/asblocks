@@ -277,18 +277,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		return ITypeNode(parent).qualifiedName;
 	}
 	
-	//----------------------------------
-	//  isStatic
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.IScriptElement#isStatic
-	 */
-	public function get isStatic():Boolean
-	{
-		return hasModifier(Modifier.STATIC);
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  IDeprecateAware API :: Properties

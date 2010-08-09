@@ -212,7 +212,7 @@ public class TestPackageNode
 		Assert.assertTrue(constants[0].hasModifier(Modifier.STATIC));
 		
 		Assert.assertTrue(constants[0].isPublic);
-		Assert.assertTrue(constants[0].isStatic);
+//		Assert.assertTrue(constants[0].isStatic);
 		Assert.assertTrue(ConstantNode(constants[0]).isBindable);
 		
 		Assert.assertEquals("NAME", constants[0].name);
@@ -243,7 +243,7 @@ public class TestPackageNode
 		Assert.assertTrue(attributes[1].hasModifier(Modifier.PUBLIC));
 		
 		Assert.assertTrue(attributes[0].isPublic);
-		Assert.assertFalse(attributes[0].isStatic);
+//		Assert.assertFalse(attributes[0].isStatic);
 		Assert.assertFalse(AttributeNode(attributes[0]).isBindable);
 		
 		Assert.assertEquals("variable", attributes[0].name);

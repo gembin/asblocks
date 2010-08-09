@@ -62,14 +62,5 @@ public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
 	 * The type's containing IPackageNode.name + name.
 	 */
 	function get parentQualifiedName():String;
-	
-	//----------------------------------
-	//  isStatic
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isStatic():Boolean;
 }
 }

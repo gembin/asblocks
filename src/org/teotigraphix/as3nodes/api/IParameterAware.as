@@ -67,7 +67,12 @@ public interface IParameterAware extends INode
 	/**
 	 * TODO Docme
 	 */
-	function addParameter(parameter:IParameterNode):void;
+	function addParameter(name:String, type:IIdentifierNode):IParameterNode;
+	
+	/**
+	 * TODO Docme
+	 */
+	function addRestParameter(name:String):IParameterNode;
 	
 	/**
 	 * TODO Docme
