@@ -127,7 +127,8 @@ public class NodeUtil
 		{
 			var element:IParserNode = child.children[i] as IParserNode;
 			var modifier:Modifier = Modifier.create(element.stringValue);
-			node.addModifier(modifier);
+			node.modifiers.push(modifier);
+			//node.addModifier(modifier);
 		}
 	}
 	

@@ -177,6 +177,25 @@ public class NestedNode
 	}
 	
 	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#addChildAt()
+	 */
+	public function addChildAt(child:IParserNode, index:int):IParserNode
+	{
+		if (child == null)
+			return null;
+		
+		if (index > numChildren)
+			index = numChildren;
+		
+		if (_children == null)
+			_children = new Vector.<IParserNode>();
+		
+		_children.splice(index, 0, child);
+		
+		return child;
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3parser.api.IParserNode#addRawChild()
 	 */
 	public function addRawChild(kind:String,

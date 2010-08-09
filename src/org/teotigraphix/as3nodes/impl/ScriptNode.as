@@ -29,6 +29,7 @@ import org.teotigraphix.as3nodes.api.IScriptNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -401,7 +402,12 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	public function addModifier(modifier:Modifier):void
 	{
+		if (hasModifier(modifier))
+			return;
+		
 		modifiers.push(modifier);
+		
+		ASTNodeUtil.addModifier(this, modifier);
 	}
 	
 	/**

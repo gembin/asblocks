@@ -160,5 +160,7 @@ public interface IParserNode
 	 * @return The <code>IParserNode</code> added.
 	 */
 	function addChild(node:IParserNode):IParserNode;
+	
+	function addChildAt(node:IParserNode, index:int):IParserNode;
 }
 }
