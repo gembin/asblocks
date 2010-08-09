@@ -61,7 +61,12 @@ public class NodeBase implements INode
 	 */	
 	public function set node(value:IParserNode):void
 	{
+		if (!value || value == _node)
+			return;
+		
 		_node = value;
+		
+		compute();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -106,10 +111,8 @@ public class NodeBase implements INode
 	 */
 	public function NodeBase(node:IParserNode, parent:INode)
 	{
-		_node = node;
-		_parent = parent;
-		
-		compute();
+		this.node = node;
+		this.parent = parent;
 	}
 	
 	//--------------------------------------------------------------------------

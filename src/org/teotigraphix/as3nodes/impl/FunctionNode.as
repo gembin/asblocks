@@ -22,6 +22,7 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.INameAware;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
@@ -50,16 +51,13 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _isConstructor:Boolean;
-	
-	/**
 	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#isConstructor
 	 */
 	public function get isConstructor():Boolean
 	{
-		return _isConstructor;
+		if (parent is INameAware)
+			return INameAware(parent).name == name;
+		return false;
 	}
 	
 	//----------------------------------
@@ -230,13 +228,6 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 			{
 				computeType(child);
 			}
-		}
-		
-		var parentType:ITypeNode = parent as ITypeNode;
-		if (parentType)
-		{
-			if (parentType.name == name)
-				_isConstructor = true;
 		}
 	}
 	
