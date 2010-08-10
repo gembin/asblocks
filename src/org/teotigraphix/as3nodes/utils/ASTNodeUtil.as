@@ -5,6 +5,7 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
+import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IParameterAware;
@@ -208,6 +209,31 @@ public class ASTNodeUtil
 		node.addChild(create(AS3NodeKind.BLOCK));
 		
 		return node as IParserNode;
+	}
+	
+
+	public static function createMetaData(aware:IMetaDataAware, name:String):IParserNode
+	{
+		// FIXME MetaData when parsing needs work, I am implementing
+		// the correct ast here, will change in AS3Parser down the road
+		// meta-list/meta
+		// meta-list/meta/as-doc
+		// meta-list/meta/name
+		// meta-list/meta/parameter-list
+		// meta-list/meta/parameter-list/parameter
+		// meta-list/meta/parameter-list/parameter/name
+		// meta-list/meta/parameter-list/parameter/type
+		var node:IParserNode = INode(aware).node;
+		
+		//var node:Node = create(AS3NodeKind.FUNCTION);
+		var metaList:IParserNode = ASTUtil.getNode(AS3NodeKind.META_LIST, node);
+		if (!metaList)
+			metaList = node.addChildAt(create(AS3NodeKind.META_LIST), node.numChildren - 1);
+		
+		var meta:Node = metaList.addChild(create(AS3NodeKind.META)) as Node;
+		meta.addChild(createText(AS3NodeKind.NAME, name));
+		
+		return meta as IParserNode;
 	}
 	
 	public static function createParameter(aware:IParameterAware,

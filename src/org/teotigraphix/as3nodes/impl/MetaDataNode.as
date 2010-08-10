@@ -320,20 +320,28 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 			{
 				computeAsdoc(child);
 			}
+			else if (child.isKind(AS3NodeKind.NAME))
+			{
+				_name = child.stringValue;
+			}
 		}
 		
 		var data:String = node.stringValue;
 		
-		_name = data.indexOf(" ( ") > -1 ? 
-			data.substring( 0, data.indexOf(" ( "))	: 
-			data;
-		
-		_parameter = data.indexOf("( ") > -1 ? 
-			data.substring(data.indexOf("( ") + 2, data.lastIndexOf(" )")) : 
-			"";
-		
-		if (_parameter && _parameter != "")
-			computeParameters();
+		// FIXME OLD MetaData AST will fix
+		if (data)
+		{
+			_name = data.indexOf(" ( ") > -1 ? 
+				data.substring( 0, data.indexOf(" ( "))	: 
+				data;
+			
+			_parameter = data.indexOf("( ") > -1 ? 
+				data.substring(data.indexOf("( ") + 2, data.lastIndexOf(" )")) : 
+				"";
+			
+			if (_parameter && _parameter != "")
+				computeParameters();
+		}
 	}
 	
 	//--------------------------------------------------------------------------

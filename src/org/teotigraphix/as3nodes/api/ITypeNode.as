@@ -92,13 +92,14 @@ public interface ITypeNode extends INode, IScriptNode,
 	 */
 	function addAccessor(node:IAccessorNode):void;
 	
-	
 	/**
 	 * TODO DOCME
 	 */
 	function newMethod(name:String, modifier:Modifier, type:IIdentifierNode):IMethodNode;
 	
-	
-	
+	/**
+	 * TODO DOCME
+	 */
+	function newMetaData(name:String):IMetaDataNode;
 }
 }
