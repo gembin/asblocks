@@ -263,6 +263,15 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	}
 	
 	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#addNamedStringParameter()
+	 */
+	public function addNamedStringParameter(name:String, 
+											value:String):IMetaDataParameterNode
+	{
+		return addNamedParameter(name, "\"" + value + "\"");
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#getParameter()
 	 */
 	public function getParameter(name:String):IMetaDataParameterNode

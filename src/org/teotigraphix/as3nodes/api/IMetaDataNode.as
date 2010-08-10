@@ -75,6 +75,11 @@ public interface IMetaDataNode extends INode, ICommentAware,
 	function addNamedParameter(name:String, value:String):IMetaDataParameterNode;
 	
 	/**
+	 * TODO DOCME
+	 */
+	function addNamedStringParameter(name:String, value:String):IMetaDataParameterNode;
+	
+	/**
 	 * Returns a <code>IMetaDataParameterNode</code> by the specified name
 	 * or <code>null</code> if the named parameter does not exist.
 	 * 
