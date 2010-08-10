@@ -29,6 +29,7 @@ import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
+import org.teotigraphix.as3nodes.api.IMetaDataParameterNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
@@ -175,6 +176,18 @@ public class NodeFactory
 								   parent:INode):IMetaDataNode
 	{
 		return new MetaDataNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IMetaDataParameterNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createMetaDataParameter(node:IParserNode, 
+											parent:INode):IMetaDataParameterNode
+	{
+		return new MetaDataParameterNode(node, parent);
 	}
 	
 	/**

@@ -22,7 +22,9 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IMetaDataParameterNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
  * TODO DOCME
@@ -126,6 +128,22 @@ public class MetaDataParameterNode extends NodeBase implements IMetaDataParamete
 	 */
 	override protected function compute():void
 	{
+		if (node.numChildren > 0)
+		{
+			for each (var child:IParserNode in node.children) 
+			{
+				if (child.isKind(AS3NodeKind.NAME))
+				{
+					_name = child.stringValue;
+				}
+				else if (child.isKind(AS3NodeKind.VALUE))
+				{
+					_value = child.stringValue;
+				}
+			}
+			return;
+		}
+		
 		var string:String = node.stringValue;
 		if (string.indexOf(" = ") == -1)
 		{

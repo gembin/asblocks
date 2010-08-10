@@ -6,6 +6,7 @@ import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
+import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IParameterAware;
@@ -211,7 +212,7 @@ public class ASTNodeUtil
 		return node as IParserNode;
 	}
 	
-
+	
 	public static function createMetaData(aware:IMetaDataAware, name:String):IParserNode
 	{
 		// FIXME MetaData when parsing needs work, I am implementing
@@ -234,6 +235,29 @@ public class ASTNodeUtil
 		meta.addChild(createText(AS3NodeKind.NAME, name));
 		
 		return meta as IParserNode;
+	}
+	
+	
+	public static function createMetaDataParameter(aware:IMetaDataNode,
+												   name:String,
+												   value:String):IParserNode
+		
+	{
+		var node:IParserNode = INode(aware).node; // meta-list/meta
+		
+		var paramList:IParserNode = ASTUtil.getNode(AS3NodeKind.PARAMETER_LIST, node);
+		if (!paramList)
+			paramList = node.addChild(create(AS3NodeKind.PARAMETER_LIST));
+		
+		var param:Node = paramList.addChild(create(AS3NodeKind.PARAMETER)) as Node;
+		
+		if (name)
+			param.addChild(createText(AS3NodeKind.NAME, name)) as Node;
+		
+		if (value)
+			param.addChild(createText(AS3NodeKind.VALUE, value)) as Node;
+		
+		return param as IParserNode;
 	}
 	
 	public static function createParameter(aware:IParameterAware,
@@ -269,7 +293,7 @@ public class ASTNodeUtil
 	}
 	
 	public static function createRestParameter(aware:IParameterAware,
-										   name:String):IParserNode
+											   name:String):IParserNode
 		
 	{
 		var node:IParserNode = INode(aware).node;

@@ -230,6 +230,39 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#addParameter()
+	 */
+	public function addParameter(value:String):IMetaDataParameterNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createMetaDataParameter(this, null, value);
+		var parameter:IMetaDataParameterNode = NodeFactory.instance.createMetaDataParameter(ast, this);
+		
+		if (!parameters)
+			parameters = new Vector.<IMetaDataParameterNode>();
+		
+		parameters.push(parameter);
+		
+		return parameter;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#addNamedParameter()
+	 */
+	public function addNamedParameter(name:String, 
+									  value:String):IMetaDataParameterNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createMetaDataParameter(this, name, value);
+		var parameter:IMetaDataParameterNode = NodeFactory.instance.createMetaDataParameter(ast, this);
+		
+		if (!parameters)
+			parameters = new Vector.<IMetaDataParameterNode>();
+		
+		parameters.push(parameter);
+		
+		return parameter;
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.IMetaDataNode#getParameter()
 	 */
 	public function getParameter(name:String):IMetaDataParameterNode
