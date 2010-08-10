@@ -229,10 +229,13 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#addParameter()
 	 */
-	public function addParameter(name:String, type:IIdentifierNode):IParameterNode
+	public function addParameter(name:String, 
+								 type:IIdentifierNode, 
+								 defaultValue:String = null):IParameterNode
 	{
-		var ast:IParserNode = ASTNodeUtil.createParameter(this, name, type);
+		var ast:IParserNode = ASTNodeUtil.createParameter(this, name, type, defaultValue);
 		var parameter:IParameterNode = NodeFactory.instance.createParameter(ast, this);
+		parameter.defaultValue = defaultValue;
 		parameters.push(parameter);
 		return parameter;
 	}

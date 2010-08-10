@@ -212,7 +212,8 @@ public class ASTNodeUtil
 	
 	public static function createParameter(aware:IParameterAware,
 										   name:String,  
-										   type:IIdentifierNode):IParserNode
+										   type:IIdentifierNode,
+										   defaultValue:String = null):IParserNode
 		
 	{
 		var node:IParserNode = INode(aware).node;
@@ -226,7 +227,15 @@ public class ASTNodeUtil
 		// name-type-init
 		var nti:Node = create(AS3NodeKind.NAME_TYPE_INIT);
 		nti.addChild(createText(AS3NodeKind.NAME, name));
-		nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
+		
+		if (type)
+			nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
+		
+		if (defaultValue)
+		{
+			var init:Node = nti.addChild(create(AS3NodeKind.INIT)) as Node;
+			init.addChild(createText(AS3NodeKind.PRIMARY, defaultValue));
+		}
 		
 		param.addChild(nti);
 		

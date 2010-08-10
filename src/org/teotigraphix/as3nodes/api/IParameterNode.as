@@ -86,6 +86,20 @@ public interface IParameterNode extends INode, /*ICommentAware,*/ INameAware
 	function get hasValue():Boolean;
 	
 	//----------------------------------
+	//  defaultValue
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get defaultValue():String;
+	
+	/**
+	 * @private
+	 */
+	function set defaultValue(value:String):void;
+	
+	//----------------------------------
 	//  isRest
 	//----------------------------------
 	

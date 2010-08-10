@@ -246,6 +246,31 @@ public class ParameterNode extends NodeBase implements IParameterNode
 	}
 	
 	//----------------------------------
+	//  defaultValue
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _defaultValue:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterNode#defaultValue
+	 */
+	public function get defaultValue():String
+	{
+		return _defaultValue;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set defaultValue(value:String):void
+	{
+		_defaultValue = value;
+	}
+	
+	//----------------------------------
 	//  isRest
 	//----------------------------------
 	
