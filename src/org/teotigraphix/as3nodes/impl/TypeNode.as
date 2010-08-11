@@ -292,32 +292,43 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		
 		for each (var child:IParserNode in typeContent.children)
 		{
-			detectAccessor(child);
-			detectMethod(child);
+			if (child.isKind(AS3NodeKind.GET))
+			{
+				computeGetter(child);
+			}
+			else if (child.isKind(AS3NodeKind.SET))
+			{
+				computeSetter(child);
+			}
+			else if (child.isKind(AS3NodeKind.FUNCTION))
+			{
+				computeMethod(child);
+			}
 		}
 	}
 	
 	/**
 	 * @private
 	 */
-	protected function detectAccessor(child:IParserNode):void
+	protected function computeGetter(child:IParserNode):void
 	{
-		if (child.isKind(AS3NodeKind.GET))
-		{
-			getters.push(NodeFactory.instance.createAccessor(child, this));
-		}
-		else if (child.isKind(AS3NodeKind.SET))
-		{
-			setters.push(NodeFactory.instance.createAccessor(child, this));
-		}
+		getters.push(NodeFactory.instance.createAccessor(child, this));
 	}
 	
-	protected function detectMethod(child:IParserNode):void
+	/**
+	 * @private
+	 */
+	protected function computeSetter(child:IParserNode):void
 	{
-		if (child.isKind(AS3NodeKind.FUNCTION))
-		{
-			methods.push(NodeFactory.instance.createMethod(child, this));
-		}
+		setters.push(NodeFactory.instance.createAccessor(child, this));
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function computeMethod(child:IParserNode):void
+	{
+		methods.push(NodeFactory.instance.createMethod(child, this));
 	}
 }
 }
