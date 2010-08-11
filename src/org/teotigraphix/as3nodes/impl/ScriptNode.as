@@ -98,14 +98,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		return _metaDatas;
 	}
 	
-	/**
-	 * @private
-	 */
-	public function set metaDatas(value:Vector.<IMetaDataNode>):void
-	{
-		_metaDatas = value;
-	}
-	
 	//----------------------------------
 	//  numMetaData
 	//----------------------------------
@@ -376,7 +368,25 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	public function addMetaData(node:IMetaDataNode):void
 	{
-		_metaDatas.push(node);
+		metaDatas.push(node);
+	}
+	
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#removeMetaData()
+	 */
+	public function removeMetaData(node:IMetaDataNode):void
+	{
+		var len:int = metaDatas.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IMetaDataNode = metaDatas[i] as IMetaDataNode;
+			if (element == node)
+			{
+				metaDatas.splice(i, 1);
+				break;
+			}
+		}
 	}
 	
 	/**

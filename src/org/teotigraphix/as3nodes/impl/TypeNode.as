@@ -65,7 +65,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	/**
 	 * @private
 	 */
-	private var _accessors:Vector.<IAccessorNode>;
+	protected var _accessors:Vector.<IAccessorNode>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#accessors
@@ -75,14 +75,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		return _accessors;
 	}
 	
-	/**
-	 * @private
-	 */	
-	public function set accessors(value:Vector.<IAccessorNode>):void
-	{
-		_accessors = value;
-	}
-	
 	//----------------------------------
 	//  getters
 	//----------------------------------
@@ -90,7 +82,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	/**
 	 * @private
 	 */
-	private var _getters:Vector.<IAccessorNode>;
+	protected var _getters:Vector.<IAccessorNode>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#getters
@@ -100,14 +92,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		return _getters;
 	}
 	
-	/**
-	 * @private
-	 */	
-	public function set getters(value:Vector.<IAccessorNode>):void
-	{
-		_getters = value;
-	}
-	
 	//----------------------------------
 	//  setters
 	//----------------------------------
@@ -115,7 +99,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	/**
 	 * @private
 	 */
-	private var _setters:Vector.<IAccessorNode>;
+	protected var _setters:Vector.<IAccessorNode>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#setters
@@ -125,14 +109,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		return _setters;
 	}
 	
-	/**
-	 * @private
-	 */	
-	public function set setters(value:Vector.<IAccessorNode>):void
-	{
-		_setters = value;
-	}
-	
 	//----------------------------------
 	//  methods
 	//----------------------------------
@@ -140,7 +116,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	/**
 	 * @private
 	 */
-	private var _methods:Vector.<IMethodNode>;
+	protected var _methods:Vector.<IMethodNode>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#methods
@@ -148,14 +124,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	public function get methods():Vector.<IMethodNode>
 	{
 		return _methods;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set methods(value:Vector.<IMethodNode>):void
-	{
-		_methods = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -200,28 +168,87 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		accessors.push(node);
 	}
 	
+	//----------------------------------
+	//  Methods
+	//----------------------------------
+	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#newMethod()
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#hasMethod()
 	 */
-	public function newMethod(name:String, 
-							  modifier:Modifier, 
-							  type:IIdentifierNode):IMethodNode
+	public function hasMethod(name:String):Boolean
 	{
-		var ast:IParserNode = ASTNodeUtil.createMethod(this, name, modifier, type);
-		var method:IMethodNode = NodeFactory.instance.createMethod(ast, this);
-		methods.push(method);
-		return method;
+		var len:int = methods.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (methods[i].name == name)
+				return true;
+		}
+		return false;
 	}
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#newMetaData()
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#addMethod()
+	 */
+	public function addMethod(node:IMethodNode):void
+	{
+		if (hasMethod(node.name))
+			return;
+		
+		methods.push(node);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#removeMethod()
+	 */
+	public function removeMethod(node:IMethodNode):IMethodNode
+	{
+		var len:int = methods.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IMethodNode = methods[i] as IMethodNode;
+			if (element.name == node.name)
+			{
+				methods.splice(i, 1);
+				return element;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#getMethod()
+	 */
+	public function getMethod(name:String):IMethodNode
+	{
+		var len:int = methods.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (methods[i].name == name)
+				return methods[i];
+		}
+		return null;
+	}
+	
+	//----------------------------------
+	//  Factory Methods
+	//----------------------------------
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMethod()
+	 */
+	public function newMethod(name:String, 
+							  visibility:Modifier, 
+							  returnType:IIdentifierNode):IMethodNode
+	{
+		return factory.newMethod(this, name, visibility, returnType);
+	}
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMetaData()
 	 */
 	public function newMetaData(name:String):IMetaDataNode
 	{
-		var ast:IParserNode = ASTNodeUtil.createMetaData(this, name);
-		var metaData:IMetaDataNode = NodeFactory.instance.createMetaData(ast, this);
-		metaDatas.push(metaData);
-		return metaData;
+		return factory.newMetaData(this, name);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -252,13 +279,13 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		// accessors get added during post proccessing of the whole
 		// parsing session, there is no way of knowing if get and set match
 		// without knowing superclasses
-		accessors = new Vector.<IAccessorNode>();
+		_accessors = new Vector.<IAccessorNode>();
 		
 		// during this phase, getters and setters reflect reality
-		getters = new Vector.<IAccessorNode>();
-		setters = new Vector.<IAccessorNode>();
+		_getters = new Vector.<IAccessorNode>();
+		_setters = new Vector.<IAccessorNode>();
 		
-		methods = new Vector.<IMethodNode>();
+		_methods = new Vector.<IMethodNode>();
 		
 		if (!typeContent || typeContent.numChildren == 0)
 			return;

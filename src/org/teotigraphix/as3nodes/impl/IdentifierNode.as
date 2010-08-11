@@ -341,6 +341,7 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 		{
 			return false;
 		}
+		// TODO add fragment test
 		return true;
 	}
 	

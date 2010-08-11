@@ -92,13 +92,57 @@ public interface ITypeNode extends INode, IScriptNode,
 	 */
 	function addAccessor(node:IAccessorNode):void;
 	
-	/**
-	 * TODO DOCME
-	 */
-	function newMethod(name:String, modifier:Modifier, type:IIdentifierNode):IMethodNode;
+	//----------------------------------
+	//  Methods
+	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Returns whether a method node with the same name exists.
+	 * 
+	 * @param A String method name.
+	 * @return A Boolean indicating whether a method node with the same 
+	 * name exists.
+	 */
+	function hasMethod(name:String):Boolean;
+	
+	/**
+	 * Adds a method to the <code>ITypeNode</code>.
+	 * 
+	 * @param node The <code>IMethodNode</code> to add. 
+	 */
+	function addMethod(node:IMethodNode):void;
+	
+	/**
+	 * Removes a method from the <code>ITypeNode</code> by method name.
+	 * 
+	 * @param node The <code>IMethodNode</code> to remove by name.
+	 * @return A <code>IMethodNode</code> if removal was successfull, <code>null</code>
+	 * if the method could not be found.
+	 */
+	function removeMethod(node:IMethodNode):IMethodNode;
+	
+	/**
+	 * Returns a <code>IMethodNode</code> by nsame.
+	 * 
+	 * @param name A String method name.
+	 * @return A <code>IMethodNode</code> if exists, <code>null</code>
+	 * if the method could not be found.
+	 */
+	function getMethod(name:String):IMethodNode;
+	
+	//----------------------------------
+	//  Factory Methods
+	//----------------------------------
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMethod()
+	 */
+	function newMethod(name:String, 
+					   visibility:Modifier, 
+					   returnType:IIdentifierNode):IMethodNode;
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMetaData()
 	 */
 	function newMetaData(name:String):IMetaDataNode;
 }

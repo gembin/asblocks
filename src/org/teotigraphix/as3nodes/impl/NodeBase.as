@@ -20,6 +20,7 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IAS3Factory;
 import org.teotigraphix.as3nodes.api.INestedNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -98,6 +99,24 @@ public class NodeBase implements INode
 	public function set parent(value:INode):void
 	{
 		_parent = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  factory
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function get factory():IAS3Factory
+	{
+		return AS3Factory.instance;
 	}
 	
 	//--------------------------------------------------------------------------

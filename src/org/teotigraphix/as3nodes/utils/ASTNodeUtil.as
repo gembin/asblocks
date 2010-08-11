@@ -186,27 +186,31 @@ public class ASTNodeUtil
 	}
 	
 	
-	
-	public static function createMethod(type:ITypeNode,
+	/**
+	 * @private
+	 */
+	public static function createMethod(parent:ITypeNode,
 										name:String, 
-										modifier:Modifier, 
+										visibility:Modifier, 
 										returnType:IIdentifierNode):IParserNode
 		
 	{
 		var node:Node = create(AS3NodeKind.FUNCTION);
 		
-		var content:IParserNode = type.node.getLastChild();
+		// parent.node/content
+		var content:IParserNode = parent.node.getLastChild();
+		// parent.node/content/function
 		content.addChild(node);
-		
-		// add the modifier
+		// parent.node/content/function/mod-list
 		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
-		modList.addChild(createText(AS3NodeKind.MODIFIER, modifier.name));
-		// add the name
+		// parent.node/content/function/mod-list/mod
+		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
+		// parent.node/content/function/name
 		node.addChild(createText(AS3NodeKind.NAME, name));
-		// add the type
+		// parent.node/content/function/type
 		if (returnType)
 			node.addChild(createText(AS3NodeKind.TYPE, returnType.localName));
-		// add the block
+		// parent.node/content/function/block
 		node.addChild(create(AS3NodeKind.BLOCK));
 		
 		return node as IParserNode;

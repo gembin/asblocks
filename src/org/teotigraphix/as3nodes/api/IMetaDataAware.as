@@ -67,6 +67,13 @@ public interface IMetaDataAware
 	function addMetaData(node:IMetaDataNode):void;
 	
 	/**
+	 * Removes an IMetaDataNode node from the host.
+	 * 
+	 * @param node The metadata node to remove.
+	 */
+	function removeMetaData(node:IMetaDataNode):void;
+	
+	/**
 	 * Returns all metadata named name as a Vector.
 	 * 
 	 * @param name A String indicating the metadata nodes to return.
