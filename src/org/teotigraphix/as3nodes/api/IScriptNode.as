@@ -62,5 +62,20 @@ public interface IScriptNode extends INode, IMetaDataAware, ICommentAware,
 	 * The type's containing IPackageNode.name + name.
 	 */
 	function get parentQualifiedName():String;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  Factory Methods
+	//----------------------------------
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMetaData()
+	 */
+	function newMetaData(name:String):IMetaDataNode;
 }
 }

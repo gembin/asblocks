@@ -88,7 +88,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @private
 	 */
-	private var _metaDatas:Vector.<IMetaDataNode>;
+	protected var _metaDatas:Vector.<IMetaDataNode>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#metaDatas
@@ -119,7 +119,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	public function get isBindable():Boolean
 	{
-		return hasMetaData(MetaData.BINDABLE.toString());
+		return hasMetaData(MetaData.BINDABLE.name);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -177,22 +177,15 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	{
 		_description = value;
 		
-		var asdoc:IParserNode = ASTNodeUtil.createAsDoc(this, _description);
-		comment = new CommentNode(asdoc.getLastChild(), this);
+		factory.newComment(this, _description);
 	}
 	
+	/**
+	 * @private
+	 */
 	public function addDocTag(name:String, body:String):IDocTag
 	{
-		if (!comment || comment is CommentPlaceholderNode)
-			initComment();
-		
 		return comment.addDocTag(name, body);
-	}
-	
-	protected function initComment():void
-	{
-		var asdoc:IParserNode = ASTNodeUtil.createEmptyAsDoc(this);
-		comment = new CommentNode(asdoc.getLastChild(), this);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -246,7 +239,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @private
 	 */
-	private var _modifiers:Vector.<Modifier>;
+	protected var _modifiers:Vector.<Modifier>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IModifierAware#modifiers
@@ -254,14 +247,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	public function get modifiers():Vector.<Modifier>
 	{
 		return _modifiers;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set modifiers(value:Vector.<Modifier>):void
-	{
-		_modifiers = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -420,6 +405,14 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		return false;
 	}
 	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMetaData()
+	 */
+	public function newMetaData(name:String):IMetaDataNode
+	{
+		return factory.newMetaData(this, name);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  IModifierAware API :: Methods
@@ -477,9 +470,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	override protected function compute():void
 	{
-		comment = NodeFactory.instance.createCommentPlaceholderNode(this);
-		
-		modifiers = new Vector.<Modifier>();
+		_modifiers = new Vector.<Modifier>();
 		_metaDatas = new Vector.<IMetaDataNode>();
 		
 		if (!node || node.numChildren == 0)
@@ -508,6 +499,9 @@ public class ScriptNode extends NodeBase implements IScriptNode
 				computeContent(child);
 			}
 		}
+		
+		if (!comment)
+			comment = factory.newComment(this);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -519,9 +513,9 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @private
 	 */
-	protected function computeMetaDataList(typeContent:IParserNode):void
+	protected function computeMetaDataList(child:IParserNode):void
 	{
-		NodeUtil.computeMetaDataList(this, typeContent);
+		NodeUtil.computeMetaDataList(this, child);
 		
 		_isDeprecated = hasMetaData(MetaData.DEPRECATED.name);
 	}
@@ -529,17 +523,18 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @private
 	 */
-	protected function computeAsDoc(typeContent:IParserNode):void
+	protected function computeAsDoc(child:IParserNode):void
 	{
-		NodeUtil.computeAsDoc(this, typeContent);
+		NodeUtil.computeAsDoc(this, child);
+		//factory.newComment(this, child.stringValue);
 	}
 	
 	/**
 	 * @private
 	 */
-	protected function computeModifierList(typeContent:IParserNode):void
+	protected function computeModifierList(child:IParserNode):void
 	{
-		NodeUtil.computeModifierList(this, typeContent);
+		NodeUtil.computeModifierList(this, child);
 	}
 	
 	/**

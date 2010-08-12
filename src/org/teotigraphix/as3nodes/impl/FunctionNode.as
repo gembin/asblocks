@@ -215,7 +215,7 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	public function addReturnDescription(description:String):void
 	{
 		if (!comment || comment is CommentPlaceholderNode)
-			initComment();
+			factory.newComment(this);
 		
 		comment.addDocTag("return", description);
 	}

@@ -22,12 +22,10 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
-import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
-import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
@@ -241,14 +239,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 							  returnType:IIdentifierNode):IMethodNode
 	{
 		return factory.newMethod(this, name, visibility, returnType);
-	}
-	
-	/**
-	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMetaData()
-	 */
-	public function newMetaData(name:String):IMetaDataNode
-	{
-		return factory.newMetaData(this, name);
 	}
 	
 	//--------------------------------------------------------------------------

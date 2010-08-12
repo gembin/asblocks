@@ -138,7 +138,7 @@ public class NodeFactory
 	 * @param node An IParserNode internal node.
 	 * @param parent An INode parent.
 	 */
-	public function createCommentNode(node:IParserNode, 
+	public function createComment(node:IParserNode, 
 									  parent:INode):ICommentNode
 	{
 		return new CommentNode(node, parent);
@@ -149,10 +149,10 @@ public class NodeFactory
 	 * 
 	 * @param parent An INode parent.
 	 */
-	public function createCommentPlaceholderNode(parent:INode):ICommentNode
-	{
-		return new CommentPlaceholderNode(parent);
-	}
+	//public function createCommentPlaceholderNode(parent:INode):ICommentNode
+	//{
+	//	return new CommentPlaceholderNode(parent);
+	//}
 	
 	/**
 	 * Creates an IPackageNode.

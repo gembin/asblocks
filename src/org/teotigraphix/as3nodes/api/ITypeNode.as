@@ -130,20 +130,11 @@ public interface ITypeNode extends INode, IScriptNode,
 	 */
 	function getMethod(name:String):IMethodNode;
 	
-	//----------------------------------
-	//  Factory Methods
-	//----------------------------------
-	
 	/**
 	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMethod()
 	 */
 	function newMethod(name:String, 
 					   visibility:Modifier, 
 					   returnType:IIdentifierNode):IMethodNode;
-	
-	/**
-	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMetaData()
-	 */
-	function newMetaData(name:String):IMetaDataNode;
 }
 }

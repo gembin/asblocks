@@ -62,19 +62,5 @@ public interface IDocTag extends INode
 	 * @private
 	 */
 	function set body(value:String):void;
-	
-	//----------------------------------
-	//  preformated
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get preformated():String;
-	
-	/**
-	 * @private
-	 */
-	function set preformated(value:String):void;
 }
 }

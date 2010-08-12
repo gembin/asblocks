@@ -101,13 +101,13 @@ public class NodeUtil
 	public static function computeAsDoc(node:ICommentAware, 
 										child:IParserNode):void
 	{
-		if (!child)
-		{
-			node.comment = NodeFactory.instance.createCommentPlaceholderNode(node);
-			return;
-		}
+		//if (!child)
+		//{
+		//	node.comment = NodeFactory.instance.createCommentPlaceholderNode(node);
+		//	return;
+		//}
 		
-		node.comment = NodeFactory.instance.createCommentNode(child, node);
+		node.comment = NodeFactory.instance.createComment(child, node);
 	}
 	
 	/**

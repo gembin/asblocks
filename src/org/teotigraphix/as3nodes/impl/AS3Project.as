@@ -243,7 +243,7 @@ public class AS3Project implements IAS3Project
 		
 		// add empty comment
 		compilationNode.typeNode.comment = NodeFactory.instance.
-			createCommentNode(null, compilationNode.typeNode);
+			createComment(null, compilationNode.typeNode);
 		
 		// add public modifier
 		compilationNode.typeNode.addModifier(Modifier.PUBLIC);

@@ -312,7 +312,7 @@ public class ParameterNode extends NodeBase implements IParameterNode
 	 */
 	override protected function compute():void
 	{
-		comment = NodeFactory.instance.createCommentPlaceholderNode(this);
+		//comment = NodeFactory.instance.createCommentPlaceholderNode(this);
 		
 		if (node.numChildren == 0)
 			return;

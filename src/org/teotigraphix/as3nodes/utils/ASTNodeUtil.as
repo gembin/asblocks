@@ -63,9 +63,10 @@ public class ASTNodeUtil
 	public static function createAsDoc(aware:ICommentAware, description:String):Node
 	{
 		if (description == null)
-			description = "";
+			return createEmptyAsDoc(aware);
 		
-		description = "/** " + description + " */";
+		if (description.indexOf("/**") == -1)
+			description = "/** " + description + " */";
 		
 		// need to append asdoc or create node, asdoc compilation-unit
 		var asdocNode:Node = create(AS3NodeKind.AS_DOC);

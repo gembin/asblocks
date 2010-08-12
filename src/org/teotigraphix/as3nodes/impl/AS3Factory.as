@@ -22,6 +22,8 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IAS3Factory;
 import org.teotigraphix.as3nodes.api.IAS3Project;
+import org.teotigraphix.as3nodes.api.ICommentAware;
+import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -69,6 +71,18 @@ public class AS3Factory implements IAS3Factory
 		var project:AS3Project = new AS3Project(output);
 		project.output = output;
 		return project;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newComment()
+	 */
+	public function newComment(parent:ICommentAware, 
+							   description:String = null):ICommentNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createAsDoc(parent, description);
+		var comment:ICommentNode = NodeFactory.instance.createComment(ast.getLastChild(), parent);
+		parent.comment = comment;
+		return comment;
 	}
 	
 	/**
