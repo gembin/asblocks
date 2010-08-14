@@ -27,7 +27,7 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ICommentNode
+public interface ICommentNode extends INode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -94,6 +94,11 @@ public interface ICommentNode
 	/**
 	 * TODO Docme
 	 */
+	function addDocTag(node:IDocTag):void;
+	
+	/**
+	 * TODO Docme
+	 */
 	function getDocTagAt(index:int):IDocTag;
 	
 	/**
@@ -114,6 +119,6 @@ public interface ICommentNode
 	/**
 	 * TODO Docme
 	 */
-	function addDocTag(name:String, body:String = null):IDocTag;
+	function newDocTag(name:String, body:String = null):IDocTag;
 }
 }

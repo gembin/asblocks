@@ -217,7 +217,7 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 		if (!comment || comment is CommentPlaceholderNode)
 			factory.newComment(this);
 		
-		comment.addDocTag("return", description);
+		comment.newDocTag("return", description);
 	}
 	
 	//--------------------------------------------------------------------------

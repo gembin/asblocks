@@ -43,9 +43,18 @@ public interface IAS3Factory
 	 */
 	function newASProject(output:String):IAS3Project;
 	
+	/**
+	 * TODO DOCME
+	 */
 	function newComment(parent:ICommentAware, 
 						description:String = null):ICommentNode;
 	
+	/**
+	 * TODO DOCME
+	 */
+	function newDocTag(parent:ICommentNode,
+					   name:String,
+					   body:String = null):IDocTag;
 	/**
 	 * Creates a new <code>IMethodNode</code> on the parent <code>ITypeNode</code> 
 	 * and fills the <code>IMethodNode</code> with valid AST.

@@ -26,6 +26,7 @@ import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
+import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -139,9 +140,21 @@ public class NodeFactory
 	 * @param parent An INode parent.
 	 */
 	public function createComment(node:IParserNode, 
-									  parent:INode):ICommentNode
+								  parent:INode):ICommentNode
 	{
 		return new CommentNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IDocTag.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createDocTag(node:IParserNode, 
+								 parent:INode):IDocTag
+	{
+		return new DocTagNode(node, parent);
 	}
 	
 	/**

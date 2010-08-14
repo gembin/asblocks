@@ -101,7 +101,7 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	
 	public function addDocTag(name:String, body:String):IDocTag
 	{
-		return comment.addDocTag(name, body);
+		return comment.newDocTag(name, body);
 	}
 	
 	//--------------------------------------------------------------------------

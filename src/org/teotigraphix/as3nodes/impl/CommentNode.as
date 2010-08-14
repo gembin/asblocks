@@ -192,6 +192,17 @@ public class CommentNode extends NodeBase implements ICommentNode
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#addDocTag()
+	 */
+	public function addDocTag(node:IDocTag):void
+	{
+		if (!docTags)
+			return;
+		
+		docTags.push(node);
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#getDocTagAt()
 	 */
 	public function getDocTagAt(index:int):IDocTag
@@ -246,17 +257,11 @@ public class CommentNode extends NodeBase implements ICommentNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#addDocTag()
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#newDocTag()
 	 */
-	public function addDocTag(name:String, body:String = null):IDocTag
+	public function newDocTag(name:String, body:String = null):IDocTag
 	{
-		var ast:IParserNode = ASTNodeUtil.addDocTag(asdocNode, name, body);
-		
-		var tag:DocTagNode = new DocTagNode(ast, this);
-
-		docTags.push(tag);
-		
-		return tag;
+		return factory.newDocTag(this, name, body);
 	}
 	
 	//--------------------------------------------------------------------------

@@ -24,6 +24,7 @@ import org.teotigraphix.as3nodes.api.IAS3Factory;
 import org.teotigraphix.as3nodes.api.IAS3Project;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -83,6 +84,19 @@ public class AS3Factory implements IAS3Factory
 		var comment:ICommentNode = NodeFactory.instance.createComment(ast.getLastChild(), parent);
 		parent.comment = comment;
 		return comment;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newDocTag()
+	 */
+	public function newDocTag(parent:ICommentNode, 
+							  name:String,
+							  body:String = null):IDocTag
+	{
+		var ast:IParserNode = ASTNodeUtil.newDocTag(parent, name, body);
+		var docTag:IDocTag = NodeFactory.instance.createDocTag(ast, parent);
+		parent.addDocTag(docTag);
+		return docTag;
 	}
 	
 	/**

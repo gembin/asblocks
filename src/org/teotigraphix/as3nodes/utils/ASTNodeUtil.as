@@ -3,6 +3,7 @@ package org.teotigraphix.as3nodes.utils
 
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
+import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
@@ -100,10 +101,11 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
-	public static function addDocTag(node:IParserNode, 
+	public static function newDocTag(comment:ICommentNode, 
 									 name:String, 
 									 body:String = null):Node
 	{
+		var node:IParserNode = INode(comment).node;
 		var content:IParserNode = node.getLastChild();
 		
 		var doctagList:Node =  ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, content) as Node;
