@@ -74,12 +74,20 @@ public interface IMetaDataAware
 	function removeMetaData(node:IMetaDataNode):void;
 	
 	/**
-	 * Returns all metadata named name as a Vector.
+	 * Returns the first IMetaDataNode node named name.
 	 * 
-	 * @param name A String indicating the metadata nodes to return.
+	 * @param name A String indicating the first IMetaDataNode node to return.
+	 * @return An IMetaDataNode named name.
+	 */
+	function getMetaData(name:String):IMetaDataNode;
+	
+	/**
+	 * Returns all IMetaDataNode nodes named name as a Vector.
+	 * 
+	 * @param name A String indicating the IMetaDataNode nodes to return.
 	 * @return A Vector of IMetaDataNode named name.
 	 */
-	function getMetaData(name:String):Vector.<IMetaDataNode>;
+	function getAllMetaData(name:String):Vector.<IMetaDataNode>;
 	
 	/**
 	 * Returns whether the host contains metadata named name.

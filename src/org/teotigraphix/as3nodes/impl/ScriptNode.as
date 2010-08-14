@@ -356,7 +356,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		metaDatas.push(node);
 	}
 	
-	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#removeMetaData()
 	 */
@@ -365,8 +364,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		var len:int = metaDatas.length;
 		for (var i:int = 0; i < len; i++)
 		{
-			var element:IMetaDataNode = metaDatas[i] as IMetaDataNode;
-			if (element == node)
+			if (metaDatas[i] == node)
 			{
 				metaDatas.splice(i, 1);
 				break;
@@ -377,16 +375,30 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#getMetaData()
 	 */
-	public function getMetaData(name:String):Vector.<IMetaDataNode>
+	public function getMetaData(name:String):IMetaDataNode
+	{
+		var len:int = metaDatas.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (metaDatas[i].name == name)
+				return metaDatas[i];
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#getAllMetaData()
+	 */
+	public function getAllMetaData(name:String):Vector.<IMetaDataNode>
 	{
 		var result:Vector.<IMetaDataNode> = new Vector.<IMetaDataNode>();
 		
-		var len:int = _metaDatas.length;
+		var len:int = metaDatas.length;
 		for (var i:int = 0; i < len; i++)
 		{
-			var element:IMetaDataNode = _metaDatas[i] as IMetaDataNode;
-			if (element.name == name)
-				result.push(element);
+			if (metaDatas[i].name == name)
+				result.push(metaDatas[i]);
 		}
 		
 		return result;
@@ -397,9 +409,10 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	public function hasMetaData(name:String):Boolean
 	{
-		for each (var element:IMetaDataNode in _metaDatas)
+		var len:int = metaDatas.length;
+		for (var i:int = 0; i < len; i++)
 		{
-			if (element.name == name)
+			if (metaDatas[i].name == name)
 				return true;
 		}
 		return false;

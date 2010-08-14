@@ -149,34 +149,34 @@ public class TestPackageNode
 		// metadata
 		var meta:Vector.<IMetaDataNode>;
 		Assert.assertEquals(6, typeNode.numMetaData);
-		meta = typeNode.getMetaData("Bindable");
+		meta = typeNode.getAllMetaData("Bindable");
 		Assert.assertStrictlyEquals(typeNode, meta[0].parent);
 		Assert.assertNotNull(meta);
 		Assert.assertEquals("Bindable", meta[0].name);
 		Assert.assertEquals("", meta[0].parameter);
 		
 		// events
-		var events:Vector.<IMetaDataNode> = typeNode.getMetaData("Event");
+		var events:Vector.<IMetaDataNode> = typeNode.getAllMetaData("Event");
 		Assert.assertNotNull(events);
 		Assert.assertEquals(1, events.length);
 		Assert.assertEquals("Event", events[0].name);
 		Assert.assertEquals("name = \"myEvent\" , type = \"flash.events.Event\"", events[0].parameter);
 		
 		// styles
-		var styles:Vector.<IMetaDataNode> = typeNode.getMetaData("Style");
+		var styles:Vector.<IMetaDataNode> = typeNode.getAllMetaData("Style");
 		Assert.assertNotNull(styles);
 		Assert.assertEquals(1, styles.length);
 		Assert.assertEquals("Style", styles[0].name);
 		Assert.assertEquals("name = \"myStyle\" , type = \"Number\"", styles[0].parameter);
 		
 		//skinstate
-		var states:Vector.<IMetaDataNode> = typeNode.getMetaData("SkinState");
+		var states:Vector.<IMetaDataNode> = typeNode.getAllMetaData("SkinState");
 		Assert.assertNotNull(states);
 		Assert.assertEquals(1, states.length);
 		Assert.assertEquals("SkinState", states[0].name);
 		Assert.assertEquals("\"up\"", states[0].parameter);
 		
-		meta = typeNode.getMetaData("Factory");
+		meta = typeNode.getAllMetaData("Factory");
 		Assert.assertStrictlyEquals(typeNode, meta[0].parent);
 		Assert.assertNotNull(meta);
 		Assert.assertEquals("Factory", meta[0].name);
@@ -298,7 +298,7 @@ public class TestPackageNode
 		// metadata
 		var meta:Vector.<IMetaDataNode>;
 		Assert.assertEquals(1, method.numMetaData);
-		meta = method.getMetaData("Test");
+		meta = method.getAllMetaData("Test");
 		Assert.assertStrictlyEquals(method, meta[0].parent);
 		Assert.assertNotNull(meta);
 		Assert.assertEquals("Test", meta[0].name);

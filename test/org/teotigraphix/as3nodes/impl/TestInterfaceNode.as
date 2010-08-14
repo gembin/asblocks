@@ -110,7 +110,7 @@ public class TestInterfaceNode
 		var meta:Vector.<IMetaDataNode>;
 		Assert.assertEquals(2, typeNode.numMetaData);
 		Assert.assertTrue(typeNode.isDeprecated);
-		meta = typeNode.getMetaData("Bindable");
+		meta = typeNode.getAllMetaData("Bindable");
 		Assert.assertStrictlyEquals(typeNode, meta[0].parent);
 		Assert.assertNotNull(meta);
 		Assert.assertEquals("Bindable", meta[0].name);
@@ -166,7 +166,7 @@ public class TestInterfaceNode
 		var meta:Vector.<IMetaDataNode>;
 		Assert.assertEquals(2, method.numMetaData);
 		Assert.assertTrue(method.isDeprecated);
-		meta = method.getMetaData("Inject");
+		meta = method.getAllMetaData("Inject");
 		Assert.assertStrictlyEquals(method, meta[0].parent);
 		Assert.assertNotNull(meta);
 		Assert.assertEquals("Inject", meta[0].name);
