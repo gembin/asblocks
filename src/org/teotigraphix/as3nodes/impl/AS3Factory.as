@@ -122,10 +122,16 @@ public class AS3Factory implements IAS3Factory
 	 */
 	public function newMetaData(parent:IMetaDataAware, name:String):IMetaDataNode
 	{
-		// parent.node/meta-list/meta
-		var ast:IParserNode = ASTNodeUtil.createMetaData(parent, name);
-		var node:IMetaDataNode = NodeFactory.instance.createMetaData(ast, INode(parent));
+		// create a non-parent AST 'meta' node with 'name' child
+		var meta:IParserNode = ASTNodeUtil.createMeta(name);
+		// create an IMetaDataNode passing the new AST and parent aware node 
+		var node:IMetaDataNode = NodeFactory.instance.createMetaData(meta, INode(parent));
+		// add the IMetaDataNode to the aware parent which will trigger
+		// a meta-list change event that will update the parent's AST to
+		// include the new meta node, this could create a new meta-list if
+		// once does not exist on the aware parent
 		parent.addMetaData(node);
+		// return the node
 		return node;
 	}
 	

@@ -21,8 +21,9 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.IAS3Factory;
-import org.teotigraphix.as3nodes.api.INestedNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.utils.ASTChangeEvent;
+import org.teotigraphix.as3nodes.utils.ASTChangeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -145,6 +146,28 @@ public class NodeBase implements INode
 	 */
 	protected function compute():void
 	{
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function dispatchAddChange(type:String, data:Object):void
+	{
+		var event:ASTChangeEvent = new ASTChangeEvent(
+			type, ASTChangeKind.ADD, this, data);	
+		
+		ASTChangeManager.instance.dispatchEvent(event);
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function dispatchRemoveChange(type:String, data:Object):void
+	{
+		var event:ASTChangeEvent = new ASTChangeEvent(
+			type, ASTChangeKind.REMOVE, this, data);	
+		
+		ASTChangeManager.instance.dispatchEvent(event);
 	}
 }
 }

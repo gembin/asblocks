@@ -24,8 +24,25 @@ public class ASTNodeUtil
 {
 	
 	
+	/**
+	 * Method does NOT add the AST to the parent. IMetaDataAware.addMetaData() will actually
+	 * add the ast to the parent.
+	 */
+	public static function createMeta(name:String):IParserNode
+	{
+		// meta
+		var meta:Node = create(AS3NodeKind.META);
+		// meta/name
+		meta.addChild(createText(AS3NodeKind.NAME, name));
+		
+		return meta as IParserNode;
+	}
 	
-	
+	public static function createModifier(name:String):IParserNode
+	{
+		// mod
+		return createText(AS3NodeKind.MODIFIER, name) as IParserNode;
+	}
 	
 	
 	
@@ -248,30 +265,7 @@ public class ASTNodeUtil
 		return node as IParserNode;
 	}
 	
-	
-	public static function createMetaData(aware:IMetaDataAware, name:String):IParserNode
-	{
-		// FIXME MetaData when parsing needs work, I am implementing
-		// the correct ast here, will change in AS3Parser down the road
-		// meta-list/meta
-		// meta-list/meta/as-doc
-		// meta-list/meta/name
-		// meta-list/meta/parameter-list
-		// meta-list/meta/parameter-list/parameter
-		// meta-list/meta/parameter-list/parameter/name
-		// meta-list/meta/parameter-list/parameter/type
-		var node:IParserNode = INode(aware).node;
-		
-		//var node:Node = create(AS3NodeKind.FUNCTION);
-		var metaList:IParserNode = ASTUtil.getNode(AS3NodeKind.META_LIST, node);
-		if (!metaList)
-			metaList = node.addChildAt(create(AS3NodeKind.META_LIST), node.numChildren - 1);
-		
-		var meta:Node = metaList.addChild(create(AS3NodeKind.META)) as Node;
-		meta.addChild(createText(AS3NodeKind.NAME, name));
-		
-		return meta as IParserNode;
-	}
+
 	
 	
 	public static function createMetaDataParameter(aware:IMetaDataNode,
@@ -348,7 +342,7 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
-	private static function create(kind:String):Node
+	public static function create(kind:String):Node
 	{
 		return Node.create(kind, -1, -1, null);
 	}
@@ -356,7 +350,7 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
-	private static function createText(kind:String, text:String):Node
+	public static function createText(kind:String, text:String):Node
 	{
 		return Node.create(kind, -1, -1, text);
 	}

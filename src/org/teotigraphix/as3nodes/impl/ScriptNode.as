@@ -30,7 +30,6 @@ import org.teotigraphix.as3nodes.api.IScriptNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
-import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -354,6 +353,8 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	public function addMetaData(node:IMetaDataNode):void
 	{
 		metaDatas.push(node);
+		
+		dispatchAddChange(AS3NodeKind.META, node);
 	}
 	
 	/**
@@ -367,6 +368,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 			if (metaDatas[i] == node)
 			{
 				metaDatas.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.META, node);
 				break;
 			}
 		}
@@ -444,7 +446,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		// add the modifier to the vector
 		modifiers.push(modifier);
 		
-		ASTNodeUtil.modListChanged(this, "add", modifier.name);
+		dispatchAddChange(AS3NodeKind.MODIFIER, modifier);
 		
 		return true;
 	}
@@ -467,7 +469,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 			}
 		}
 		
-		ASTNodeUtil.modListChanged(this, "remove", modifier.name);
+		dispatchRemoveChange(AS3NodeKind.MODIFIER, modifier);
 		
 		return true;
 	}
@@ -555,7 +557,13 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	protected function computeMetaDataList(child:IParserNode):void
 	{
-		NodeUtil.computeMetaDataList(this, child);
+		var len:int = child.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			var metaData:IMetaDataNode = NodeFactory.instance.
+				createMetaData(child.children[i], this);
+			metaDatas.push(metaData);
+		}
 		
 		_isDeprecated = hasMetaData(MetaData.DEPRECATED.name);
 	}
