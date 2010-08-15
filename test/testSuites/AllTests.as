@@ -10,5 +10,7 @@ public class AllTests
 	public var mXMLParserTestSuite:MXMLParserTestSuite;
 	public var aSDocParserTestSuite:ASDocParserTestSuite;
 	public var aS3BookTestSuite:AS3BookTestSuite;
+	
+	public var wikiExamples:WikiExamples;
 }
 }
