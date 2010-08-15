@@ -161,6 +161,9 @@ public interface IParserNode
 	 */
 	function addChild(node:IParserNode):IParserNode;
 	
+	/**
+	 * 
+	 */
 	function addChildAt(node:IParserNode, index:int):IParserNode;
 }
 }

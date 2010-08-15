@@ -22,6 +22,13 @@ import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class ASTNodeUtil
 {
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * @private
 	 */
@@ -123,24 +130,46 @@ public class ASTNodeUtil
 		return docTag;
 	}
 	
-	/**
-	 * @private
-	 */
-	public static function addModifier(aware:IModifierAware, 
-									   modifier:Modifier):void
+	//ASTNodeUtil.modListChanged(this, "add", modifier.name);
+	public static function modListChanged(parent:INode, 
+										  kind:String, 
+										  stringValue:String):void
 	{
 		// compilation-unit/package/content/class/mod-list/mod
+		var node:IParserNode = INode(parent).node;
 		
-		var node:IParserNode = INode(aware).node;
-		var workNode:IParserNode = node;
-		
-		var modList:IParserNode =  ASTUtil.getNode(AS3NodeKind.MOD_LIST, workNode);
+		// compilation-unit/package/content/class/mod-list
+		var modList:IParserNode =  ASTUtil.getNode(AS3NodeKind.MOD_LIST, node);
 		
 		// add a mod-list to node if not defined
 		if (!modList)
-			modList = workNode.addChildAt(create(AS3NodeKind.MOD_LIST), 1);
-		// add a mod to mod-list, cannot be last child, content is
-		modList.addChild(createText(AS3NodeKind.MODIFIER, modifier.name));
+			modList = node.addChildAt(create(AS3NodeKind.MOD_LIST), 1);
+		
+		if (kind == "add")
+		{
+			// add a mod to mod-list
+			modList.addChild(createText(AS3NodeKind.MODIFIER, stringValue));
+		}
+		else if (kind == "remove" && modList)
+		{
+			spliceStringValue(modList, stringValue);
+		}
+	}
+	
+	private static function spliceStringValue(parent:IParserNode, 
+											  stringValue:String):Boolean
+	{
+		var len:int = parent.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (parent.children[i].stringValue == stringValue)
+			{
+				parent.children.splice(i, 1);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	/**

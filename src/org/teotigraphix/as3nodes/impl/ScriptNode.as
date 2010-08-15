@@ -435,14 +435,41 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IModifierAware#addModifier()
 	 */
-	public function addModifier(modifier:Modifier):void
+	public function addModifier(modifier:Modifier):Boolean
 	{
+		// test to see if we have the modifier
 		if (hasModifier(modifier))
-			return;
+			return false;
 		
+		// add the modifier to the vector
 		modifiers.push(modifier);
 		
-		ASTNodeUtil.addModifier(this, modifier);
+		ASTNodeUtil.modListChanged(this, "add", modifier.name);
+		
+		return true;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IModifierAware#removeModifier()
+	 */
+	public function removeModifier(modifier:Modifier):Boolean
+	{
+		if (!hasModifier(modifier))
+			return false;
+		
+		var len:int = modifiers.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (modifiers[i].equals(modifier))
+			{
+				modifiers.splice(i, 1);
+				break;
+			}
+		}
+		
+		ASTNodeUtil.modListChanged(this, "remove", modifier.name);
+		
+		return true;
 	}
 	
 	/**

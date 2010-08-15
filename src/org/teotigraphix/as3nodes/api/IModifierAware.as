@@ -56,7 +56,14 @@ public interface IModifierAware
 	 * 
 	 * @param modifier A node modifier.
 	 */
-	function addModifier(modifier:Modifier):void;
+	function addModifier(modifier:Modifier):Boolean;
+	
+	/**
+	 * Removes a Modifier from the hosting node.
+	 * 
+	 * @param modifier A node modifier.
+	 */
+	function removeModifier(modifier:Modifier):Boolean;
 	
 	/**
 	 * Returns whether the hosting nod contains the Modifier.

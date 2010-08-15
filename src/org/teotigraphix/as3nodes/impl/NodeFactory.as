@@ -39,6 +39,7 @@ import org.teotigraphix.as3nodes.api.ISourceFile;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
 import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.as3parser.utils.FileUtil;
 
 /**
  * TODO DOCME
@@ -77,26 +78,54 @@ public class NodeFactory
 	 * <strong>.mxml</strong>.</p>
 	 * 
 	 * @param data The String source code data.
-	 * @param fileName The data's source fileName.
+	 * @param filePath The data's source fileName.
 	 * @param classPath The files's classPath.
 	 */
 	public function createSourceFile(data:String, 
-									 fileName:String,
+									 filePath:String,
 									 classPath:String):ISourceFile
 	{
-		var sourceCode:ISourceCode = new SourceCode(data, fileName, classPath);
+		var sourceCode:ISourceCode = new SourceCode(data, filePath, classPath);
 		
-		if (fileName.indexOf(".as") != -1)
+		if (filePath.indexOf(".as") != -1)
 		{
 			return new AS3SourceFile(null, sourceCode);
 		}
-		else if (fileName.indexOf(".mxml") != -1)
+		else if (filePath.indexOf(".mxml") != -1)
 		{
 			return new MXMLSourceFile(null, sourceCode);
 		}
 		
 		// TODO throw Error?
 		return null;
+	}
+	
+	/**
+	 * Attempts to load file data from the filePath.
+	 * 
+	 * <p>This method will fail if not used with AIR libraries.</p>
+	 * 
+	 * @param filePath The data's source fileName.
+	 * @param classPath The files's classPath.
+	 * @see #createSourceFile()
+	 * @throws Error Definition flash.filesystem.File not found, import AIR library
+	 * @throws Error File 'filePath' does not exist
+	 */
+	public function loadSourceFile(filePath:String,
+								   classPath:String):ISourceFile
+	{
+		var data:String;
+		
+		try
+		{
+			data = FileUtil.readFile(filePath);
+		}
+		catch (e:Error)
+		{
+			throw e;
+		}
+		
+		return createSourceFile(data, filePath, classPath);
 	}
 	
 	/**
