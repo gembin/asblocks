@@ -208,7 +208,13 @@ public class ASDocParser extends ParserBase
 	 */
 	internal function parseContent():Node
 	{
-		// token /**
+		// token after /**
+		// if the token is not valid, move to next valid token
+		// this should just advance the parser to the first identifier right of
+		// the astrix, or if just a single line comment, make the next token
+		// valid by setting _rightSideOfAtrix = true
+		if (!tokIsValid())
+			nextTokenEatRight();
 		
 		var result:Node =
 			Node.create(ASDocNodeKind.CONTENT,
@@ -251,7 +257,8 @@ public class ASDocParser extends ParserBase
 	 */
 	internal function parseShortList():Node
 	{
-		nextTokenEatRight();
+		if (!tokIsValid())
+			nextTokenEatRight();
 		
 		var result:Node =
 			Node.create(ASDocNodeKind.SHORT_LIST,
@@ -262,7 +269,6 @@ public class ASDocParser extends ParserBase
 		{
 			if (tokIsValid())
 			{
-				// TODO temp <listing
 				if (token.text== "<code")
 				{
 					result.addChild(parseCodeText());
@@ -321,7 +327,8 @@ public class ASDocParser extends ParserBase
 	 */
 	internal function parseLongList():Node
 	{
-		nextTokenEatRight();
+		if (!tokIsValid())
+			nextTokenEatRight();
 		
 		var result:Node =
 			Node.create(ASDocNodeKind.LONG_LIST,
@@ -639,8 +646,6 @@ public class ASDocParser extends ParserBase
 		
 		do
 		{
-			nextToken();
-			
 			if (tokIs(ML_COMMENT_END))
 			{
 				break;
@@ -668,6 +673,8 @@ public class ASDocParser extends ParserBase
 				_rightSideOfAtrix = true;
 				break;
 			}
+			
+			nextToken();
 		}
 		while (!_rightSideOfAtrix
 			|| ((_rightSideOfAtrix && token.text == ASTRIX) || (!spaceFound)));
@@ -719,6 +726,9 @@ public class ASDocParser extends ParserBase
 	 */
 	protected function tokIsValid():Boolean
 	{
+		if (!_rightSideOfAtrix && isIdentifierCharacter(token.text))
+			_rightSideOfAtrix = true;
+		
 		return _rightSideOfAtrix;
 	}
 	

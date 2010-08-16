@@ -115,10 +115,12 @@ public class ParserBase implements IParser
 	public function buildFileAst(fileName:String):IParserNode
 	{
 		var lines:Vector.<String>;
-		try {
+		try
+		{
 			lines = FileUtil.readLines(fileName);
 		}
-		catch (e:Error) {
+		catch (e:Error)
+		{
 			throw e; // TODO different error
 		}
 		
@@ -179,6 +181,7 @@ public class ParserBase implements IParser
 		_scanner.setLines(lines);
 		
 		_fileName = fileName;
+		token = null;
 		
 		initialize();
 		

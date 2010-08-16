@@ -18,6 +18,28 @@ public class TestASDocParser
 		scanner = parser.scanner as ASDocScanner;
 	}
 	
+	[Test]
+	public function test_shortNoSpace():void
+	{
+		var lines:Array =
+			[
+				"/**A short comment.*/"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
+		
+		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
+			"<content line=\"1\" column=\"4\">" +
+			"<short-list line=\"1\" column=\"4\">" +
+			"<text line=\"1\" column=\"4\">A short comment.</text>" +
+			"</short-list>" +
+			"</content>" +
+			"</compilation-unit>",
+			result);
+	}
+	
 	/**
 	 * compilation-unit
 	 *   - content
@@ -57,7 +79,7 @@ public class TestASDocParser
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
 		
 		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">"
-			+ "<content line=\"2\" column=\"0\"><short-list line=\"2\" "
+			+ "<content line=\"2\" column=\"4\"><short-list line=\"2\" "
 			+ "column=\"4\"><text line=\"2\" column=\"4\">A short "
 			+ "</text><code-text line=\"2\" column=\"12\">document()"
 			+ "</code-text><text line=\"2\" column=\"35\"> comment span 2."
@@ -83,6 +105,7 @@ public class TestASDocParser
 	{
 		var lines:Array =
 			[
+				"/**",
 				" * A short document comment",
 				" * that spans two.",
 				" * ",
@@ -93,18 +116,14 @@ public class TestASDocParser
 		
 		scanner.setLines(ASTUtil.toVector(lines));
 		
-		parser.nextToken();
+		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
 		
-		var result:String = ASTUtil.convert(parser.parseContent());
-		
-		Assert.assertEquals("<content line=\"1\" column=\"1\">"
-			+ "<short-list line=\"1\" column=\"4\">"
-			+ "<text line=\"1\" column=\"4\">A short document comment that spans two.</text>"
-			+ "</short-list>"
-			+ "<long-list line=\"4\" column=\"4\">"
-			+ "<text line=\"4\" column=\"4\">&lt;p&gt;Long description 1.&lt;/p&gt;"
-			+ " &lt;p&gt;Long description 2.&lt;/p&gt;</text>"
-			+ "</long-list></content>",
+		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
+			"<content line=\"2\" column=\"4\"><short-list line=\"2\" column=\"4\">" +
+			"<text line=\"2\" column=\"4\">A short document comment that spans two.</text>" +
+			"</short-list><long-list line=\"5\" column=\"4\"><text line=\"5\" column=\"4\">" +
+			"&lt;p&gt;Long description 1.&lt;/p&gt; &lt;p&gt;Long description 2.&lt;/p&gt;" +
+			"</text></long-list></content></compilation-unit>",
 			result);
 	}
 	
@@ -121,7 +140,7 @@ public class TestASDocParser
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
 		
 		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
-			"<content line=\"1\" column=\"4\"><short-list line=\"1\" column=\"5\">" +
+			"<content line=\"1\" column=\"5\"><short-list line=\"1\" column=\"5\">" +
 			"<text line=\"1\" column=\"5\">Class comment. </text></short-list>" +
 			"</content></compilation-unit>",
 			result);
