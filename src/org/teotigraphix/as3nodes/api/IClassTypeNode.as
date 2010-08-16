@@ -134,5 +134,37 @@ public interface IClassTypeNode extends ITypeNode
 	 * TODO Docme
 	 */
 	function hasImplementation(implementation:IIdentifierNode):Boolean;
+	
+	//----------------------------------
+	//  IAccessorNode
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function hasAttribute(name:String):Boolean;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function addAttribute(child:IAttributeNode):IAttributeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function removeAttribute(child:IAttributeNode):IAttributeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function getAttribute(name:String):IAttributeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newAttribute(name:String, 
+						  visibility:Modifier, 
+						  type:IIdentifierNode,
+						  primaray:String = null):IAttributeNode;
 }
 }

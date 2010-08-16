@@ -147,6 +147,68 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
+	public static function createAttribute(name:String, 
+										   visibility:Modifier, 
+										   type:IIdentifierNode,
+										   primary:String = null):IParserNode
+		
+	{
+		var node:Node = create(AS3NodeKind.VAR_LIST);
+		
+		// parent.node/content/var-list/mod-list
+		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+		// parent.node/content/var-list/mod-list/mod
+		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
+		// parent.node/content/var-list/name-type-init
+		var nti:Node = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT)) as Node;
+		// parent.node/content/var-list/name-type-init/name
+		nti.addChild(createText(AS3NodeKind.NAME, name));
+		if (type)
+		{
+			// parent.node/content/var-list/name-type-init/type
+			nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
+		}
+		
+		if (primary)
+		{
+			// parent.node/content/var-list/name-type-init/init
+			var initNode:Node = nti.addChild(create(AS3NodeKind.INIT)) as Node;
+			// parent.node/content/var-list/name-type-init/init/primary
+			initNode.addChild(createText(AS3NodeKind.PRIMARY, primary));
+		}
+		
+		return node as IParserNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createAccessor(name:String, 
+										  visibility:Modifier,
+										  access:String,
+										  type:IIdentifierNode):IParserNode
+		
+	{
+		var node:Node = create(AS3NodeKind.FUNCTION);
+		
+		// parent.node/content/function/mod-list
+		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+		// parent.node/content/function/mod-list/mod
+		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
+		// parent.node/content/function/name
+		node.addChild(createText(AS3NodeKind.NAME, name));
+		// parent.node/content/function/type
+		if (type)
+			node.addChild(createText(AS3NodeKind.TYPE, type.localName));
+		// parent.node/content/function/block
+		node.addChild(create(AS3NodeKind.BLOCK));
+		
+		return node as IParserNode;
+	}
+	
+	/**
+	 * @private
+	 */
 	public static function createMethod(name:String, 
 										visibility:Modifier, 
 										returnType:IIdentifierNode):IParserNode
@@ -308,7 +370,7 @@ public class ASTNodeUtil
 	}
 	
 	
-
+	
 	
 	
 	

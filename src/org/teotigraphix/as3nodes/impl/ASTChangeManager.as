@@ -23,8 +23,10 @@ package org.teotigraphix.as3nodes.impl
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
 
+import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IIdentifierAware;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -60,6 +62,7 @@ public class ASTChangeManager extends EventDispatcher
 		addEventListener(AS3NodeKind.NAME, nameChangeHandler);
 		
 		// members
+		addEventListener(AS3NodeKind.VAR_LIST, varListChangeHandler);
 		addEventListener(AS3NodeKind.GET, getChangeHandler);
 		addEventListener(AS3NodeKind.SET, setChangeHandler);
 		addEventListener(AS3NodeKind.FUNCTION, functionChangeHandler);
@@ -267,6 +270,39 @@ public class ASTChangeManager extends EventDispatcher
 	}
 	
 	/**
+	 * Handles the AS3NodeKind.VAR_LIST add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IClassTypeNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IAttributeNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.ITypeNode#attributes
+	 */
+	protected function varListChangeHandler(event:ASTChangeEvent):void
+	{
+		var attributeNode:IAttributeNode = event.data as IAttributeNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(attributeNode.node);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(attributeNode.node);
+		}
+	}
+	
+	/**
 	 * Handles the AS3NodeKind.GET add/remove.
 	 * 
 	 * <p>
@@ -315,7 +351,7 @@ public class ASTChangeManager extends EventDispatcher
 	 */
 	protected function functionChangeHandler(event:ASTChangeEvent):void
 	{
-		var methodNode:IMethodNode = event.data as IMethodNode;
+		var functionNode:IFunctionNode = event.data as IFunctionNode;
 		var node:IParserNode = INode(event.parent).node;
 		
 		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
@@ -325,11 +361,11 @@ public class ASTChangeManager extends EventDispatcher
 			if (!content)
 				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
 			
-			content.addChild(methodNode.node);
+			content.addChild(functionNode.node);
 		}
 		else if (event.kind == ASTChangeKind.REMOVE && content)
 		{
-			content.removeChild(methodNode.node);
+			content.removeChild(functionNode.node);
 		}
 	}
 	

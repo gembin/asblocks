@@ -176,14 +176,59 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#addAccessor()
 	 */
-	public function addAccessor(child:IAccessorNode):void
+	public function addAccessor(child:IAccessorNode):IAccessorNode
 	{
 		if (hasAccessor(child.name))
-			return;
+			return null;
 		
 		accessors.push(child);
 		
-		dispatchAddChange(child.node.kind, child);
+//		dispatchAddChange(AS3NodeKind.FUNCTION, child);
+		return child;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#removeAccessor()
+	 */
+	public function removeAccessor(child:IAccessorNode):IAccessorNode
+	{
+		var len:int = accessors.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IAccessorNode = accessors[i] as IAccessorNode;
+			if (element.name == child.name)
+			{
+				accessors.splice(i, 1);
+//				dispatchRemoveChange(AS3NodeKind.FUNCTION, child);
+				return element;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#getAccessor()
+	 */
+	public function getAccessor(name:String):IAccessorNode
+	{
+		var len:int = accessors.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (accessors[i].name == name)
+				return accessors[i];
+		}
+		return null;
+	}
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMethod()
+	 */
+	public function newAccessor(name:String, 
+								visibility:Modifier, 
+								access:String,
+								type:IIdentifierNode):IAccessorNode
+	{
+		return as3Factory.newAccessor(this, name, visibility, access, type);
 	}
 	
 	//----------------------------------
@@ -249,10 +294,6 @@ public class TypeNode extends ScriptNode implements ITypeNode
 		}
 		return null;
 	}
-	
-	//----------------------------------
-	//  Factory Methods
-	//----------------------------------
 	
 	/**
 	 * @see org.teotigraphix.as3nodes.api.IAS3Factory#newMethod()

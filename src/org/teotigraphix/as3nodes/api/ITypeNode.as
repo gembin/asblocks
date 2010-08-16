@@ -87,6 +87,10 @@ public interface ITypeNode extends INode, IScriptNode,
 	//
 	//--------------------------------------------------------------------------
 	
+	//----------------------------------
+	//  IAccessorNode
+	//----------------------------------
+	
 	/**
 	 * Returns whether an accessor node with the same name exists.
 	 * 
@@ -106,10 +110,28 @@ public interface ITypeNode extends INode, IScriptNode,
 	/**
 	 * TODO DOCME
 	 */
-	function addAccessor(node:IAccessorNode):void;
+	function addAccessor(node:IAccessorNode):IAccessorNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function removeAccessor(node:IAccessorNode):IAccessorNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function getAccessor(name:String):IAccessorNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newAccessor(name:String, 
+						 visibility:Modifier, 
+						 access:String,
+						 type:IIdentifierNode):IAccessorNode;
 	
 	//----------------------------------
-	//  Methods
+	//  IMethodNode
 	//----------------------------------
 	
 	/**

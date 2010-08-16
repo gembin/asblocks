@@ -1,6 +1,7 @@
 package testSuites
 {
 
+import org.teotigraphix.as3nodes.impl.TestAttributeNode;
 import org.teotigraphix.as3nodes.impl.TestCompilationNode;
 import org.teotigraphix.as3nodes.impl.TestIdentiferNode;
 import org.teotigraphix.as3nodes.impl.TestInterfaceNode;
@@ -20,5 +21,6 @@ public class AS3NodeTestSuite
 	public var testScriptNode:TestScriptNode;
 	public var testInterfaceNode:TestInterfaceNode;
 	public var testIdentiferNode:TestIdentiferNode;
+	public var testAttributeNode:TestAttributeNode;
 }
 }

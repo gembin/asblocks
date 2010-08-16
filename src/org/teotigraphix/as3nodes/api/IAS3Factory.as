@@ -55,6 +55,24 @@ public interface IAS3Factory
 	function newDocTag(parent:ICommentNode,
 					   name:String,
 					   body:String = null):IDocTag;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newAttribute(parent:IClassTypeNode,
+						  name:String, 
+						  visibility:Modifier, 
+						  type:IIdentifierNode,
+						  primaray:String = null):IAttributeNode;
+	/**
+	 * TODO DOCME
+	 */
+	function newAccessor(parent:ITypeNode,
+						 name:String, 
+						 visibility:Modifier, 
+						 access:String,
+						 type:IIdentifierNode):IAccessorNode;
+	
 	/**
 	 * Creates a new <code>IMethodNode</code> on the parent <code>ITypeNode</code> 
 	 * and fills the <code>IMethodNode</code> with valid AST.

@@ -257,6 +257,83 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 		return false;
 	}
 	
+	//----------------------------------
+	//  IAttributeNode
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#hasAttribute()
+	 */
+	public function hasAttribute(name:String):Boolean
+	{
+		var len:int = attributes.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (attributes[i].name == name)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#addAttribute()
+	 */
+	public function addAttribute(child:IAttributeNode):IAttributeNode
+	{
+		if (hasAttribute(child.name))
+			return null;
+		
+		attributes.push(child);
+		
+		dispatchAddChange(AS3NodeKind.VAR_LIST, child);
+		
+		return child;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#removeAttribute()
+	 */
+	public function removeAttribute(child:IAttributeNode):IAttributeNode
+	{
+		var len:int = attributes.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IAttributeNode = attributes[i] as IAttributeNode;
+			if (element.name == child.name)
+			{
+				attributes.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.VAR_LIST, child);
+				return element;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#getAttribute()
+	 */
+	public function getAttribute(name:String):IAttributeNode
+	{
+		var len:int = attributes.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (attributes[i].name == name)
+				return attributes[i];
+		}
+		return null;
+	}
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IClassTypeNode#newAttribute()
+	 */
+	public function newAttribute(name:String, 
+								 visibility:Modifier, 
+								 type:IIdentifierNode,
+								 primary:String = null):IAttributeNode
+	{
+		return as3Factory.newAttribute(this, name, visibility, type, primary);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Overridden Protected :: Methods

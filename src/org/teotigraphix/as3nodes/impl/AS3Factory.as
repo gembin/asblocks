@@ -22,6 +22,9 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IAS3Factory;
 import org.teotigraphix.as3nodes.api.IAS3Project;
+import org.teotigraphix.as3nodes.api.IAccessorNode;
+import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IDocTag;
@@ -102,6 +105,36 @@ public class AS3Factory implements IAS3Factory
 		var docTag:IDocTag = NodeFactory.instance.createDocTag(ast, parent);
 		parent.addDocTag(docTag);
 		return docTag;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newAccessor()
+	 */
+	public function newAccessor(parent:ITypeNode,
+								name:String, 
+								visibility:Modifier,
+								access:String,
+								type:IIdentifierNode):IAccessorNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createAccessor(name, visibility, access, type);
+		var accessor:IAccessorNode = NodeFactory.instance.createAccessor(ast, parent);
+		parent.addAccessor(accessor);
+		return accessor;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newAttribute()
+	 */
+	public function newAttribute(parent:IClassTypeNode,
+								 name:String, 
+								 visibility:Modifier, 
+								 type:IIdentifierNode,
+								 primary:String = null):IAttributeNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createAttribute(name, visibility, type, primary);
+		var attribute:IAttributeNode = NodeFactory.instance.createAttribute(ast, parent);
+		parent.addAttribute(attribute);
+		return attribute;
 	}
 	
 	/**
