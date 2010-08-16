@@ -31,7 +31,7 @@
 package org.teotigraphix.as3parser.api
 {
 
-import mx.collections.IList;
+
 
 /**
  * The <strong>IParserNode</strong> interface marks a class as having the
@@ -131,6 +131,8 @@ public interface IParserNode
 	//
 	//--------------------------------------------------------------------------
 	
+	function contains(other:IParserNode):Boolean;
+	
 	/**
 	 * Returns the <code>kind</code> of parser node.
 	 * 
@@ -186,5 +188,13 @@ public interface IParserNode
 	 * @return A Boolean indicating whether the kind was removed from the parser node.
 	 */
 	function removeKind(kind:String):Boolean;
+	
+	/**
+	 * Removes the node.
+	 * 
+	 * @param node An IParserNode parser node.
+	 * @return A Boolean indicating whether the node was removed from the parser node.
+	 */
+	function removeChild(node:IParserNode):IParserNode;
 }
 }

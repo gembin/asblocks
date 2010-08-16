@@ -30,7 +30,6 @@ import org.teotigraphix.as3nodes.api.IScriptNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
-import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
@@ -617,16 +616,16 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @private
 	 */
-	protected function computeName(typeContent:IParserNode):void
+	protected function computeName(child:IParserNode):void
 	{
 		// we set the backing var so we don't trigger a change event
-		_uid = NodeFactory.instance.createIdentifier(typeContent, this);
+		_uid = NodeFactory.instance.createIdentifier(child, this);
 	}
 	
 	/**
 	 * @private
 	 */
-	protected function computeContent(typeContent:IParserNode):void
+	protected function computeContent(child:IParserNode):void
 	{
 	}
 }

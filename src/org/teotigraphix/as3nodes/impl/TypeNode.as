@@ -28,6 +28,7 @@ import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
  * The class|interface|function found in the package node.
@@ -53,7 +54,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	 */
 	public function get isSubType():Boolean
 	{
-		return false;
+		return false; // abstract
 	}
 	
 	//----------------------------------
@@ -149,7 +150,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	 */
 	override public function toLink():String
 	{
-		return qualifiedName;
+		return qualifiedName; // works for class|interface|function
 	}
 	
 	//--------------------------------------------------------------------------
@@ -159,11 +160,30 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#hasMethod()
+	 */
+	public function hasAccessor(name:String):Boolean
+	{
+		var len:int = accessors.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (accessors[i].name == name)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#addAccessor()
 	 */
-	public function addAccessor(node:IAccessorNode):void
+	public function addAccessor(child:IAccessorNode):void
 	{
-		accessors.push(node);
+		if (hasAccessor(child.name))
+			return;
+		
+		accessors.push(child);
+		
+		dispatchAddChange(child.node.kind, child);
 	}
 	
 	//----------------------------------
@@ -187,26 +207,29 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#addMethod()
 	 */
-	public function addMethod(node:IMethodNode):void
+	public function addMethod(child:IMethodNode):void
 	{
-		if (hasMethod(node.name))
+		if (hasMethod(child.name))
 			return;
 		
-		methods.push(node);
+		methods.push(child);
+		
+		dispatchAddChange(AS3NodeKind.FUNCTION, child);
 	}
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ITypeNode#removeMethod()
 	 */
-	public function removeMethod(node:IMethodNode):IMethodNode
+	public function removeMethod(child:IMethodNode):IMethodNode
 	{
 		var len:int = methods.length;
 		for (var i:int = 0; i < len; i++)
 		{
 			var element:IMethodNode = methods[i] as IMethodNode;
-			if (element.name == node.name)
+			if (element.name == child.name)
 			{
 				methods.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.FUNCTION, child);
 				return element;
 			}
 		}

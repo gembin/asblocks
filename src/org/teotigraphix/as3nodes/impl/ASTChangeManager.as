@@ -28,11 +28,13 @@ import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IIdentifierAware;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
+import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTChangeEvent;
 import org.teotigraphix.as3nodes.utils.ASTChangeKind;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
+import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -56,6 +58,11 @@ public class ASTChangeManager extends EventDispatcher
 		addEventListener(AS3NodeKind.MODIFIER, modifierChangeHandler);
 		addEventListener(AS3NodeKind.META, metaChangeHandler);
 		addEventListener(AS3NodeKind.NAME, nameChangeHandler);
+		
+		// members
+		addEventListener(AS3NodeKind.GET, getChangeHandler);
+		addEventListener(AS3NodeKind.SET, setChangeHandler);
+		addEventListener(AS3NodeKind.FUNCTION, functionChangeHandler);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -256,6 +263,73 @@ public class ASTChangeManager extends EventDispatcher
 		else if (event.kind == ASTChangeKind.REMOVE)
 		{
 			node.removeKind(AS3NodeKind.NAME);
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.GET add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>ITypeNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IAccessorNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.ITypeNode#accessors
+	 */
+	protected function getChangeHandler(event:ASTChangeEvent):void
+	{
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.SET add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>ITypeNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IAccessorNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.ITypeNode#accessors
+	 */
+	protected function setChangeHandler(event:ASTChangeEvent):void
+	{
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.FUNCTION add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>ITypeNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IMethodNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.ITypeNode#methods
+	 */
+	protected function functionChangeHandler(event:ASTChangeEvent):void
+	{
+		var methodNode:IMethodNode = event.data as IMethodNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(methodNode.node);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(methodNode.node);
 		}
 	}
 	

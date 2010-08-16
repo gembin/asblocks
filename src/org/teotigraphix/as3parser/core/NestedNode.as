@@ -32,6 +32,7 @@ package org.teotigraphix.as3parser.core
 {
 
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
  * A parser node that contains parser node children.
@@ -130,6 +131,26 @@ public class NestedNode
 	//  Public :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	public function contains(node:IParserNode):Boolean
+	{
+		if (numChildren == 0)
+			return false;
+		
+		var kind:String = node.kind;
+		var unique:Vector.<IParserNode> = ASTUtil.getNodes(kind, IParserNode(this));
+		if (!unique || unique.length == 0)
+			return false;
+		
+		var len:int = unique.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (unique[i] === node)
+				return true;
+		}
+		
+		return false;
+	}
 	
 	/**
 	 * @copy org.teotigraphix.as3parser.api.IParserNode#isKind()
@@ -269,6 +290,24 @@ public class NestedNode
 		}
 		
 		return false;
+	}
+	
+	public function removeChild(node:IParserNode):IParserNode
+	{
+		if (numChildren == 0)
+			return null;
+		
+		var len:int = children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (children[i] === node)
+			{
+				children.splice(i, 1);
+				return node;
+			}
+		}
+		
+		return null;
 	}
 }
 }

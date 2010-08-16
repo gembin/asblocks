@@ -144,7 +144,30 @@ public class ASTNodeUtil
 		return createText(AS3NodeKind.MODIFIER, name) as IParserNode;
 	}
 	
-	
+	/**
+	 * @private
+	 */
+	public static function createMethod(name:String, 
+										visibility:Modifier, 
+										returnType:IIdentifierNode):IParserNode
+		
+	{
+		var node:Node = create(AS3NodeKind.FUNCTION);
+		
+		// parent.node/content/function/mod-list
+		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+		// parent.node/content/function/mod-list/mod
+		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
+		// parent.node/content/function/name
+		node.addChild(createText(AS3NodeKind.NAME, name));
+		// parent.node/content/function/type
+		if (returnType)
+			node.addChild(createText(AS3NodeKind.TYPE, returnType.localName));
+		// parent.node/content/function/block
+		node.addChild(create(AS3NodeKind.BLOCK));
+		
+		return node as IParserNode;
+	}
 	
 	
 	
@@ -285,35 +308,7 @@ public class ASTNodeUtil
 	}
 	
 	
-	/**
-	 * @private
-	 */
-	public static function createMethod(parent:ITypeNode,
-										name:String, 
-										visibility:Modifier, 
-										returnType:IIdentifierNode):IParserNode
-		
-	{
-		var node:Node = create(AS3NodeKind.FUNCTION);
-		
-		// parent.node/content
-		var content:IParserNode = parent.node.getLastChild();
-		// parent.node/content/function
-		content.addChild(node);
-		// parent.node/content/function/mod-list
-		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
-		// parent.node/content/function/mod-list/mod
-		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
-		// parent.node/content/function/name
-		node.addChild(createText(AS3NodeKind.NAME, name));
-		// parent.node/content/function/type
-		if (returnType)
-			node.addChild(createText(AS3NodeKind.TYPE, returnType.localName));
-		// parent.node/content/function/block
-		node.addChild(create(AS3NodeKind.BLOCK));
-		
-		return node as IParserNode;
-	}
+
 	
 	
 	

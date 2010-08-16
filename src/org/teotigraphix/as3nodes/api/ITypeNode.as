@@ -88,6 +88,22 @@ public interface ITypeNode extends INode, IScriptNode,
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * Returns whether an accessor node with the same name exists.
+	 * 
+	 * <p>There can only be one <code>IAccessorNode</code> with matching 
+	 * <code>name</code> and <code>access</code> set to <strong>read-only</strong>, 
+	 * <strong>read-write</strong> and <strong>write-only</strong>.</p>
+	 * 
+	 * <p>This may change when the <code>access</code> is set on the 
+	 * <code>IAccessorNode</code>.</p>
+	 * 
+	 * @param A String accessor name.
+	 * @return A Boolean indicating whether a accessor node with the same 
+	 * name exists.
+	 */
+	function hasAccessor(name:String):Boolean;
+	
+	/**
 	 * TODO DOCME
 	 */
 	function addAccessor(node:IAccessorNode):void;

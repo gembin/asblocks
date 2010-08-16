@@ -112,11 +112,7 @@ public class AS3Factory implements IAS3Factory
 							  visibility:Modifier, 
 							  returnType:IIdentifierNode):IMethodNode
 	{
-		if (parent.hasMethod(name))
-			return null;
-		
-		// parent.node/content/function
-		var ast:IParserNode = ASTNodeUtil.createMethod(parent, name, visibility, returnType);
+		var ast:IParserNode = ASTNodeUtil.createMethod(name, visibility, returnType);
 		var method:IMethodNode = NodeFactory.instance.createMethod(ast, parent);
 		parent.addMethod(method);
 		return method;
