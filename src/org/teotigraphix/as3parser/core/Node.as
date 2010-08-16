@@ -151,6 +151,11 @@ public class Node extends NestedNode implements IParserNode
 		return _stringValue;
 	}
 	
+	public function set stringValue(value:String):void
+	{
+		_stringValue = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

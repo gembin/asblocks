@@ -58,14 +58,6 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 		return _localName;
 	}
 	
-	/**
-	 * @private
-	 */	
-	public function set localName(value:String):void
-	{
-		_localName = value;
-	}
-	
 	//----------------------------------
 	//  packageName
 	//----------------------------------
@@ -83,14 +75,6 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 		return _packageName;
 	}
 	
-	/**
-	 * @private
-	 */	
-	public function set packageName(value:String):void
-	{
-		_packageName = value;
-	}
-	
 	//----------------------------------
 	//  qualifiedName
 	//----------------------------------
@@ -105,72 +89,22 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	public function get qualifiedName():String
 	{
-		if (isQualified)
-		{
-			if (hasFragment)
-			{
-				if (hasFragmentType)
-				{
-					return _packageName + "." + _localName + "#" + _fragmentType + ":"
-						+ _fragmentName;
-				}
-				else
-				{
-					return _packageName + "." + _localName + "#" + _fragmentName;
-				}
-			}
-			else
-			{
-				if (_packageName == "")
-				{
-					return _localName;
-				}
-				else
-				{
-					return _packageName + "." + _localName;
-				}
-			}
-		}
-		else
-		{
-			if (hasFragment)
-			{
-				if (hasFragmentType)
-				{
-					return _localName + "#" + _fragmentType + ":" + _fragmentName;
-				}
-				else
-				{
-					return _localName + "#" + _fragmentName;
-				}
-			}
-			else
-			{
-				return _localName;
-			}
-		}
+		return _qualfiedName;
 	}
+	
+	private var _qualfiedName:String;
 	
 	/**
 	 * @private
 	 */	
 	public function set qualifiedName(value:String):void
 	{
-		var string:String = value;
-		if (string == null)
+		if (_qualfiedName == value)
 			return;
 		
-		var pos:int = string.lastIndexOf('.');
-		if (pos != -1)
-		{
-			_packageName = string.substring(0, pos);
-			parse(string.substring(pos + 1));
-		}
-		else
-		{
-			_packageName = null;
-			parse(string);
-		}
+		_qualfiedName = value;
+		
+		parse(_qualfiedName);
 	}
 	
 	//----------------------------------
@@ -182,11 +116,16 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	public function get parentQualifiedName():String
 	{
-		if (!isQualified)
+		if (!isQualified && !hasFragment)
 			return _localName;
+		
+		if (!isQualified && hasFragment)
+			return _parentName;
 		
 		if (!hasFragment)
 			return _packageName;
+		else
+			return _packageName + "." + _parentName;
 		
 		return _packageName + "." + _localName;
 	}
@@ -208,14 +147,6 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 		return _fragmentName;
 	}
 	
-	/**
-	 * @private
-	 */	
-	public function set fragmentName(value:String):void
-	{
-		_fragmentName = value;
-	}
-	
 	//----------------------------------
 	//  fragmentType
 	//----------------------------------
@@ -231,14 +162,6 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	public function get fragmentType():String
 	{
 		return _fragmentType;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set fragmentType(value:String):void
-	{
-		_fragmentType = value;
 	}
 	
 	//----------------------------------
@@ -302,7 +225,7 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 	 */
 	public function toString():String
 	{
-		return _qualifiedName;
+		return qualifiedName;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -359,13 +282,26 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 		qualifiedName = node.stringValue;
 	}
 	
+	private var _parentName:String;
+	
 	private function parse(data:String):void
 	{
+		var spos:int = data.lastIndexOf('.');
+		if (spos != -1)
+		{
+			_packageName = data.substring(0, spos);
+			data = data.substring(spos + 1);
+		}
+		else
+		{
+			_packageName = null;
+		}
+		
 		var pos:int = data.indexOf('#');
 		if (pos != -1)
 		{
 			// next :: MyClass#myVariable
-			_localName = data.substring(0, pos);
+			_parentName = _localName = data.substring(0, pos);
 			_fragmentName = data.substring(pos + 1);
 			
 			pos = _fragmentName.indexOf(':');
@@ -373,6 +309,7 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 			{
 				_fragmentType = _fragmentName.substring(0, pos);
 				_fragmentName = _fragmentName.substring(pos + 1);
+				_localName = _fragmentName;
 			}
 		}
 		else
@@ -380,6 +317,91 @@ public class IdentifierNode extends NodeBase implements IIdentifierNode
 			_localName = data;
 		}
 	}
+	
+	public static function createQualifiedName(parent:INode,
+											   localOrPackageName:String, 
+											   localName:String = null, 
+											   fragmentType:String = null, 
+											   fragmentName:String = null):IIdentifierNode
+	{
+		var qualifiedName:String;
+		var old:String;
+		
+		var isQualified:Boolean = localName != null;
+		
+		if (localOrPackageName && localOrPackageName != "")
+		{
+			// specail shortcut
+			if (localName == null && localOrPackageName.indexOf(".") != -1)
+			{
+				old = localOrPackageName;
+				localOrPackageName = old.substring(0, old.indexOf("."));
+				localName = old.substring(old.indexOf(".") + 1);
+				isQualified = true;
+			}
+			
+			if (isQualified)
+			{
+				old = localOrPackageName + "." + localName;
+				localOrPackageName = old.substring(0, old.indexOf("."));
+				localName = old.substring(old.indexOf(".") + 1);
+			}
+		}
+		else
+		{
+			localOrPackageName = "";
+			isQualified = false;
+		}
+		
+		var hasFragment:Boolean = fragmentName != null;
+		var hasFragmentType:Boolean = fragmentType != null;
+		if (isQualified)
+		{
+			if (hasFragment)
+			{
+				if (hasFragmentType)
+				{
+					qualifiedName = localOrPackageName + "." + localName + "#" + fragmentType + ":" + fragmentName;
+				}
+				else
+				{
+					qualifiedName = localOrPackageName + "." + localName + "#" + fragmentName;
+				}
+			}
+			else
+			{
+				if (localOrPackageName == "")
+				{
+					qualifiedName = localName;
+				}
+				else
+				{
+					qualifiedName = localOrPackageName + "." + localName;
+				}
+			}
+		}
+		else
+		{
+			if (hasFragment)
+			{
+				if (hasFragmentType)
+				{
+					qualifiedName = localName + "#" + fragmentType + ":" + fragmentName;
+				}
+				else
+				{
+					qualifiedName = localName + "#" + fragmentName;
+				}
+			}
+			else
+			{
+				qualifiedName = localName;
+			}
+		}
+		
+		return createName(qualifiedName, parent);
+	}
+	
 	
 	public static function createName(qualifiedName:String, 
 									  parent:INode = null):IIdentifierNode

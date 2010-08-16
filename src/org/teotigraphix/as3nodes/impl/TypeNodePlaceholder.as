@@ -22,6 +22,8 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.ITypeNodePlaceholder;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -102,6 +104,8 @@ public class TypeNodePlaceholder extends TypeNode implements ITypeNodePlaceholde
 	public function TypeNodePlaceholder(qualifiedName:String)
 	{
 		super(null, null);
+		
+		node = ASTNodeUtil.create(AS3NodeKind.CONTENT);
 		
 		_name = qualifiedName;
 		_packageName = qualifiedName;

@@ -64,14 +64,14 @@ public interface IMetaDataAware
 	 * 
 	 * @param node The metadata node to add.
 	 */
-	function addMetaData(node:IMetaDataNode):void;
+	function addMetaData(node:IMetaDataNode):Boolean;
 	
 	/**
 	 * Removes an IMetaDataNode node from the host.
 	 * 
 	 * @param node The metadata node to remove.
 	 */
-	function removeMetaData(node:IMetaDataNode):void;
+	function removeMetaData(node:IMetaDataNode):Boolean;
 	
 	/**
 	 * Returns the first IMetaDataNode node named name.

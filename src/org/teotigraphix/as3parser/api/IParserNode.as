@@ -69,6 +69,8 @@ public interface IParserNode
 	 */
 	function get stringValue():String;
 	
+	function set stringValue(value:String):void;
+	
 	//----------------------------------
 	//  line
 	//----------------------------------
@@ -153,6 +155,9 @@ public interface IParserNode
 	 * or <code>null</code>.
 	 */
 	function getChild(index:int):IParserNode;
+	
+	function getKind(kind:String):IParserNode;
+	
 	
 	/**
 	 * Returns the last <code>IParserNode</code> child.

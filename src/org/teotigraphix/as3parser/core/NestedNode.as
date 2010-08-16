@@ -160,6 +160,25 @@ public class NestedNode
 	}
 	
 	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#getKind()
+	 */
+	public function getKind(kind:String):IParserNode
+	{
+		if (numChildren == 0)
+			return null;
+		
+		var len:int = children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (children[i].isKind(kind))
+				return children[i];
+		}
+		
+		return null;
+	}
+	
+	
+	/**
 	 * @copy org.teotigraphix.as3parser.api.IParserNode#getChild()
 	 */
 	public function getChild(index:int):IParserNode

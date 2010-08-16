@@ -101,9 +101,17 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
-	public static function createDocTagName(name:String):Node
+	public static function createName(name:String):Node
 	{
 		return createText(ASDocNodeKind.NAME, name);
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createDocTagName(name:String):Node
+	{
+		return createName(name);
 	}
 	
 	/**

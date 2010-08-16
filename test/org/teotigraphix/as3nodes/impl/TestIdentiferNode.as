@@ -8,6 +8,7 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -51,7 +52,92 @@ public class TestIdentiferNode
 	}
 	
 	[Test]
+	public function test_createQualifiedName():void
+	{
+		var uid:IIdentifierNode;
+		
+		uid = IdentifierNode.createQualifiedName(null, "my", "package");
+		Assert.assertEquals("package", uid.localName);
+		Assert.assertEquals("my", uid.packageName);
+		Assert.assertEquals("my.package", uid.qualifiedName);
+		Assert.assertEquals("my", uid.parentQualifiedName);
+		Assert.assertFalse(uid.hasFragmentType);
+		Assert.assertFalse(uid.hasFragment);
+		// shortcut
+		uid = IdentifierNode.createQualifiedName(null, "my.package");
+		Assert.assertEquals("package", uid.localName);
+		Assert.assertEquals("my", uid.packageName);
+		Assert.assertEquals("my.package", uid.qualifiedName);
+		Assert.assertEquals("my", uid.parentQualifiedName);
+		Assert.assertFalse(uid.hasFragmentType);
+		Assert.assertFalse(uid.hasFragment);
+		
+		uid = IdentifierNode.createQualifiedName(null, "my.package", "Test");
+		Assert.assertEquals("Test", uid.localName);
+		Assert.assertEquals("my.package", uid.packageName);
+		Assert.assertEquals("my.package.Test", uid.qualifiedName);
+		Assert.assertEquals("my.package", uid.parentQualifiedName);
+		Assert.assertFalse(uid.hasFragmentType);
+		Assert.assertFalse(uid.hasFragment);
+		// shortcut
+		uid = IdentifierNode.createQualifiedName(null, "my.package.Test");
+		Assert.assertEquals("Test", uid.localName);
+		Assert.assertEquals("my.package", uid.packageName);
+		Assert.assertEquals("my.package.Test", uid.qualifiedName);
+		Assert.assertEquals("my.package", uid.parentQualifiedName);
+		Assert.assertFalse(uid.hasFragmentType);
+		Assert.assertFalse(uid.hasFragment);
+		
+		// no shortcut for fragments
+		uid = IdentifierNode.createQualifiedName(null, "", "Test", "style", "myStyle");
+		Assert.assertEquals("myStyle", uid.localName);
+		Assert.assertNull(uid.packageName);
+		Assert.assertEquals("Test#style:myStyle", uid.qualifiedName);
+		Assert.assertEquals("Test", uid.parentQualifiedName);
+		Assert.assertTrue(uid.hasFragmentType);
+		Assert.assertTrue(uid.hasFragment);
+		Assert.assertEquals("style", uid.fragmentType);
+		Assert.assertEquals("myStyle", uid.fragmentName);
+	}
+	
+	[Test]
 	public function testBasic():void
+	{
+		var name:IParserNode = ASTNodeUtil.createName("my.package");
+		var uid:IIdentifierNode = NodeFactory.instance.createIdentifier(name, null);
+		
+		Assert.assertEquals("package", uid.localName);
+		Assert.assertEquals("my", uid.packageName);
+		Assert.assertEquals("my.package", uid.qualifiedName);
+		Assert.assertEquals("my", uid.parentQualifiedName);
+		Assert.assertFalse(uid.hasFragmentType);
+		Assert.assertFalse(uid.hasFragment);
+		
+		name = ASTNodeUtil.createName("my.package.File");
+		uid = NodeFactory.instance.createIdentifier(name, null);
+		
+		Assert.assertEquals("File", uid.localName);
+		Assert.assertEquals("my.package", uid.packageName);
+		Assert.assertEquals("my.package.File", uid.qualifiedName);
+		Assert.assertEquals("my.package", uid.parentQualifiedName);
+		Assert.assertFalse(uid.hasFragmentType);
+		Assert.assertFalse(uid.hasFragment);
+		
+		name = ASTNodeUtil.createName("my.package.File#style:myStyle");
+		uid = NodeFactory.instance.createIdentifier(name, null);
+		
+		Assert.assertEquals("myStyle", uid.localName);
+		Assert.assertEquals("my.package", uid.packageName);
+		Assert.assertEquals("my.package.File#style:myStyle", uid.qualifiedName);
+		Assert.assertEquals("my.package.File", uid.parentQualifiedName);
+		Assert.assertTrue(uid.hasFragmentType);
+		Assert.assertTrue(uid.hasFragment);
+		Assert.assertEquals("style", uid.fragmentType);
+		Assert.assertEquals("myStyle", uid.fragmentName);
+	}
+	
+	[Test]
+	public function testBasicParse():void
 	{
 		var uid:IIdentifierNode = IdentifierNode.createName("my.domain.core");
 		
@@ -77,7 +163,7 @@ public class TestIdentiferNode
 		
 		uid = IdentifierNode.createName("my.domain.core.MyClass#style:myStyle");
 		
-		Assert.assertEquals("MyClass", uid.localName);
+		Assert.assertEquals("myStyle", uid.localName);
 		Assert.assertEquals("my.domain.core", uid.packageName);
 		Assert.assertEquals("style", uid.fragmentType);
 		Assert.assertEquals("myStyle", uid.fragmentName);
@@ -102,7 +188,7 @@ public class TestIdentiferNode
 		uid = IdentifierNode.createName("MyClass#style:myStyle");
 		
 		Assert.assertNull(uid.packageName);
-		Assert.assertEquals("MyClass", uid.localName);
+		Assert.assertEquals("myStyle", uid.localName);
 		Assert.assertEquals("style", uid.fragmentType);
 		Assert.assertEquals("myStyle", uid.fragmentName);
 		Assert.assertEquals("MyClass", uid.parentQualifiedName);
@@ -115,7 +201,7 @@ public class TestIdentiferNode
 		var uid:IIdentifierNode = IdentifierNode.
 			createName("org.example.core.ClassA#constant:aPublicStaticConst");
 		
-		Assert.assertEquals("ClassA", uid.localName);
+		Assert.assertEquals("aPublicStaticConst", uid.localName);
 		Assert.assertEquals("org.example.core", uid.packageName);
 		Assert.assertEquals("org.example.core.ClassA", uid.parentQualifiedName);
 		

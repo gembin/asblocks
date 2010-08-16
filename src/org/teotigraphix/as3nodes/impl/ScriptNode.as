@@ -56,7 +56,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @private
 	 */
-	private var _uid:IIdentifierNode;
+	protected var _uid:IIdentifierNode;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IIdentifierAware#uid
@@ -71,7 +71,15 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */	
 	public function set uid(value:IIdentifierNode):void
 	{
+		if (_uid)
+			dispatchRemoveChange(AS3NodeKind.NAME, _uid);
+		
 		_uid = value;
+		
+		if (!_uid)
+			return;
+		
+		dispatchAddChange(AS3NodeKind.NAME, _uid);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -313,24 +321,11 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _isDeprecated:Boolean;
-	
-	/**
-	 * @copy org.teotigraphix.as3nodes.api.IDeprecateAware#isDeprecated
+	 * Returns whether this node is DEPRECATED.
 	 */
 	public function get isDeprecated():Boolean
 	{
-		return _isDeprecated;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set isDeprecated(value:Boolean):void
-	{
-		_isDeprecated = value;
+		return hasMetaData(MetaData.DEPRECATED.name);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -356,17 +351,19 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#addMetaData()
 	 */
-	public function addMetaData(node:IMetaDataNode):void
+	public function addMetaData(node:IMetaDataNode):Boolean
 	{
 		metaDatas.push(node);
 		
 		dispatchAddChange(AS3NodeKind.META, node);
+		
+		return true;
 	}
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IMetaDataAware#removeMetaData()
 	 */
-	public function removeMetaData(node:IMetaDataNode):void
+	public function removeMetaData(node:IMetaDataNode):Boolean
 	{
 		var len:int = metaDatas.length;
 		for (var i:int = 0; i < len; i++)
@@ -375,9 +372,11 @@ public class ScriptNode extends NodeBase implements IScriptNode
 			{
 				metaDatas.splice(i, 1);
 				dispatchRemoveChange(AS3NodeKind.META, node);
-				break;
+				return true;
 			}
 		}
+		
+		return false;
 	}
 	
 	/**
@@ -580,8 +579,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 				createMetaData(child.children[i], this);
 			metaDatas.push(metaData);
 		}
-		
-		_isDeprecated = hasMetaData(MetaData.DEPRECATED.name);
 	}
 	
 	/**
@@ -611,7 +608,8 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	protected function computeName(typeContent:IParserNode):void
 	{
-		uid = NodeFactory.instance.createIdentifier(typeContent, this);
+		// we set the backing var so we don't trigger a change event
+		_uid = NodeFactory.instance.createIdentifier(typeContent, this);
 	}
 	
 	/**

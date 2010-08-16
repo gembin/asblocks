@@ -40,7 +40,11 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The short name for the node; given <code>my.domain.Test</code>, 
+	 * returns <code>Test</code>.
+	 * 
+	 * <p>When a fragment exists; given <code>my.package.Test#style:myStyle</code>
+	 * returns <code>myStyle</code>.</p>
 	 */
 	function get localName():String;
 	
@@ -49,7 +53,11 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The package name for the node; given <code>my.package.Test</code>, 
+	 * returns <code>my.package</code>.
+	 * 
+	 * <p>When a fragment exists; given <code>my.package.Test#style:myStyle</code>
+	 * returns <code>my.package</code>.</p>
 	 */
 	function get packageName():String;
 	
@@ -58,7 +66,11 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The qualified name for the node; given <code>my.package.File</code>, 
+	 * returns <code>my.package.File</code>.
+	 * 
+	 * <p>When a fragment exists; given <code>my.package.Test#style:myStyle</code>
+	 * returns <code>my.package.File#fragementType:fragementName</code>.</p>
 	 */
 	function get qualifiedName():String;
 	
@@ -72,7 +84,11 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The qualified name for the node; given <code>my.package.File</code>, 
+	 * returns <code>my.package</code>.
+	 * 
+	 * <p>When a fragment exists; given <code>my.package.Test#style:myStyle</code>
+	 * returns <code>my.package.File</code>.</p>
 	 */
 	function get parentQualifiedName():String;
 	
@@ -81,7 +97,8 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The qualified name for the node; given <code>my.package.Test#style:myStyle</code>, 
+	 * returns <code>myStyle</code>.
 	 */
 	function get fragmentName():String;
 	
@@ -90,7 +107,8 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The qualified name for the node; given <code>my.package.Test#style:myStyle</code>, 
+	 * returns <code>style</code>.
 	 */
 	function get fragmentType():String;
 	
@@ -99,7 +117,8 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Returns whether the <code>qualifiedName</code> contains a 
+	 * <code>packageName</code>.
 	 */
 	function get isQualified():Boolean;
 	
@@ -108,7 +127,7 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Returns whether the <code>fragmentName</code> is not <code>null</code>.
 	 */
 	function get hasFragment():Boolean;
 	
@@ -117,7 +136,7 @@ public interface IIdentifierNode extends INode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Returns whether the <code>fragmentType</code> is not <code>null</code>.
 	 */
 	function get hasFragmentType():Boolean;
 	
@@ -128,7 +147,9 @@ public interface IIdentifierNode extends INode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Returns whether another <code>uid</code> is condidered identical.
+	 * 
+	 * Param object The comparable <code>IIDentifierNode</code>.
 	 */
 	function equals(object:Object):Boolean;
 }

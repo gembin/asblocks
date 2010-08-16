@@ -25,6 +25,8 @@ import flash.events.IEventDispatcher;
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IIdentifierAware;
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.Modifier;
@@ -53,6 +55,7 @@ public class ASTChangeManager extends EventDispatcher
 		addEventListener(ASDocNodeKind.DOCTAG, docTagChangeHandler);
 		addEventListener(AS3NodeKind.MODIFIER, modifierChangeHandler);
 		addEventListener(AS3NodeKind.META, metaChangeHandler);
+		addEventListener(AS3NodeKind.NAME, nameChangeHandler);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -216,6 +219,43 @@ public class ASTChangeManager extends EventDispatcher
 					break;
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.NAME add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IIDentifierAware</code></li>
+	 * <li><strong>event.data</strong> : <code>IIDentifierNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IIDentifierAware#uid
+	 */
+	protected function nameChangeHandler(event:ASTChangeEvent):void
+	{
+		var idNode:IIdentifierNode = event.data as IIdentifierNode;
+		var node:IParserNode = INode(event.parent).node;
+		var nameNode:IParserNode = node.getKind(AS3NodeKind.NAME);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!nameNode)
+			{
+				node.addChildAt(ASTNodeUtil.createName(
+					idNode.qualifiedName), node.numChildren - 1);
+			}
+			else
+			{
+				nameNode.stringValue = idNode.qualifiedName;
+			}
+		}
+		else if (event.kind == ASTChangeKind.REMOVE)
+		{
+			node.removeKind(AS3NodeKind.NAME);
 		}
 	}
 	

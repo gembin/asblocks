@@ -8,6 +8,7 @@ import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -19,6 +20,31 @@ public class TestScriptNode
 	[Before]
 	public function setUp():void
 	{
+	}
+	
+	[Test]
+	public function test_uid():void
+	{
+		var ast:IParserNode = Node.create("content", -1, -1, null);
+		var element:ScriptNode = new ScriptNode(ast, null);
+		Assert.assertNull(element.uid);
+		
+		var name:IParserNode = ASTNodeUtil.createName("my.domain.Test");
+		element.uid = NodeFactory.instance.createIdentifier(name, element);
+		Assert.assertEquals("my.domain.Test", element.uid.qualifiedName);
+		Assert.assertEquals("my.domain.Test", element.uid.node.stringValue);
+		Assert.assertEquals("my.domain.Test", element.node.getKind(AS3NodeKind.NAME).stringValue);
+		Assert.assertTrue(element.uid.node === name);
+		
+		name = ASTNodeUtil.createName("my.domain2.Test2");
+		element.uid = NodeFactory.instance.createIdentifier(name, element);
+		Assert.assertEquals("my.domain2.Test2", element.uid.qualifiedName);
+		Assert.assertEquals("my.domain2.Test2", element.uid.node.stringValue);
+		Assert.assertEquals("my.domain2.Test2", element.node.getKind(AS3NodeKind.NAME).stringValue);
+		Assert.assertTrue(element.uid.node === name);
+		
+		element.uid = null;
+		Assert.assertNull(element.uid);
 	}
 	
 	[Test]
@@ -54,6 +80,41 @@ public class TestScriptNode
 		
 		Assert.assertFalse(element.isBindable);
 		Assert.assertFalse(element.hasMetaData(bindable.name));
+	}
+	
+	[Test]
+	public function test_isDeprecated():void
+	{
+		var ast:IParserNode = Node.create("content", -1, -1, null);
+		var element:ScriptNode = new ScriptNode(ast, null);
+		
+		Assert.assertFalse(element.isDeprecated);
+		// new adds the metadata to the node
+		// do not need to call addMetaData()
+		var deprecated:MetaData = MetaData.DEPRECATED;
+		var metaData:IMetaDataNode = element.newMetaData(deprecated.name);
+		
+		Assert.assertTrue(element.isDeprecated);
+		Assert.assertTrue(element.hasMetaData(deprecated.name));
+		
+		// test AST was added
+		var metaList:IParserNode = ASTUtil.getNode(AS3NodeKind.META_LIST, element.node);
+		Assert.assertNotNull(metaList);
+		Assert.assertEquals(1, metaList.numChildren);
+		var meta:IParserNode = metaList.getChild(0);
+		Assert.assertNotNull(meta);
+		Assert.assertEquals("Deprecated", ASTUtil.getNode(AS3NodeKind.NAME, meta).stringValue);
+		
+		element.removeMetaData(metaData);
+		
+		// Test AST was removed
+		metaList = ASTUtil.getNode(AS3NodeKind.META_LIST, element.node);
+		// even though meta-list children is 0, we do not remove the meta-list node
+		Assert.assertNotNull(metaList);
+		Assert.assertEquals(0, metaList.numChildren);
+		
+		Assert.assertFalse(element.isDeprecated);
+		Assert.assertFalse(element.hasMetaData(deprecated.name));
 	}
 	
 	[Test]
@@ -130,7 +191,21 @@ public class TestScriptNode
 	{
 		var ast:IParserNode = Node.create("content", -1, -1, null);
 		var element:ScriptNode = new ScriptNode(ast, null);
-		Assert.assertEquals(0, element.metaDatas);
+		Assert.assertEquals(0, element.numMetaData);
+		
+		var meta:IMetaDataNode = element.newMetaData("MetaData");
+		Assert.assertNotNull(meta);
+		Assert.assertEquals(1, element.numMetaData);
+		// test AST meta-list
+		var metaList:IParserNode = ASTUtil.getNode(AS3NodeKind.META_LIST, element.node);
+		Assert.assertNotNull(metaList);
+		Assert.assertEquals(1, metaList.numChildren);
+		
+		Assert.assertTrue(element.removeMetaData(meta));
+		Assert.assertEquals(0, element.numMetaData);
+		metaList = ASTUtil.getNode(AS3NodeKind.META_LIST, element.node);
+		Assert.assertNotNull(metaList);
+		Assert.assertEquals(0, metaList.numChildren);
 	}
 	
 	[Test]

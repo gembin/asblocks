@@ -21,11 +21,13 @@ package org.teotigraphix.as3nodes.api
 {
 
 /**
- * TODO DOCME
+ * The <strong>IIdentifierAware</strong> interface allows nodes to contain
+ * unique identifiers that act as paths to the instance.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * @see org.teotigraphix.as3nodes.api.IIdentifierNode#uid
  */
 public interface IIdentifierAware
 {
@@ -40,7 +42,9 @@ public interface IIdentifierAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The unique identifier that tags an object with <code>localName</code>, 
+	 * <code>packageName</code>, <code>qualifiedName</code>, 
+	 * <code>fragmentName</code> and <code>fragmentType</code>.
 	 */
 	function get uid():IIdentifierNode;
 }

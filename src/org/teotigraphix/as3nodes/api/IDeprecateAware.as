@@ -47,6 +47,6 @@ public interface IDeprecateAware
 	/**
 	 * @private
 	 */
-	function set isDeprecated(value:Boolean):void;
+	//function set isDeprecated(value:Boolean):void;
 }
 }
