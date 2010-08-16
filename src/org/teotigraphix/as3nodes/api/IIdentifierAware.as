@@ -47,5 +47,10 @@ public interface IIdentifierAware
 	 * <code>fragmentName</code> and <code>fragmentType</code>.
 	 */
 	function get uid():IIdentifierNode;
+	
+	/**
+	 * @private
+	 */
+	function set uid(value:IIdentifierNode):void;
 }
 }
