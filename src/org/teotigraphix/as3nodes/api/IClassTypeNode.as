@@ -136,6 +136,38 @@ public interface IClassTypeNode extends ITypeNode
 	function hasImplementation(implementation:IIdentifierNode):Boolean;
 	
 	//----------------------------------
+	//  IConstantNode
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function hasConstant(name:String):Boolean;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function addConstant(child:IConstantNode):IConstantNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function removeConstant(child:IConstantNode):IConstantNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function getConstant(name:String):IConstantNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newConstant(name:String, 
+						 visibility:Modifier, 
+						 type:IIdentifierNode,
+						 primaray:String):IConstantNode;
+	
+	//----------------------------------
 	//  IAccessorNode
 	//----------------------------------
 	

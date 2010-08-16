@@ -147,6 +147,48 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
+	public static function createConstant(name:String, 
+										  visibility:Modifier, 
+										  type:IIdentifierNode,
+										  primary:String):IParserNode
+		
+	{
+		var node:Node = create(AS3NodeKind.CONST_LIST);
+		
+		// parent.node/content/var-list/mod-list
+		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+		
+		if (visibility)
+		{
+			// parent.node/content/var-list/mod-list/mod
+			modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
+		}
+		
+		// parent.node/content/var-list/mod-list/mod
+		modList.addChild(createText(AS3NodeKind.MODIFIER, Modifier.STATIC.name));
+		
+		// parent.node/content/var-list/name-type-init
+		var nti:Node = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT)) as Node;
+		// parent.node/content/var-list/name-type-init/name
+		nti.addChild(createText(AS3NodeKind.NAME, name));
+		if (type)
+		{
+			// parent.node/content/var-list/name-type-init/type
+			nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
+		}
+		
+		
+		// parent.node/content/var-list/name-type-init/init
+		var initNode:Node = nti.addChild(create(AS3NodeKind.INIT)) as Node;
+		// parent.node/content/var-list/name-type-init/init/primary
+		initNode.addChild(createText(AS3NodeKind.PRIMARY, primary));
+		
+		return node as IParserNode;
+	}
+	
+	/**
+	 * @private
+	 */
 	public static function createAttribute(name:String, 
 										   visibility:Modifier, 
 										   type:IIdentifierNode,

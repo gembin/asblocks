@@ -55,6 +55,14 @@ public interface IAS3Factory
 	function newDocTag(parent:ICommentNode,
 					   name:String,
 					   body:String = null):IDocTag;
+	/**
+	 * TODO DOCME
+	 */
+	function newConstant(parent:IClassTypeNode,
+						  name:String, 
+						  visibility:Modifier, 
+						  type:IIdentifierNode,
+						  primaray:String):IConstantNode;
 	
 	/**
 	 * TODO DOCME

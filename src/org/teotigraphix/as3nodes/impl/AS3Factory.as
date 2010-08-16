@@ -27,6 +27,7 @@ import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
@@ -108,18 +109,18 @@ public class AS3Factory implements IAS3Factory
 	}
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newAccessor()
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newAttribute()
 	 */
-	public function newAccessor(parent:ITypeNode,
+	public function newConstant(parent:IClassTypeNode,
 								name:String, 
-								visibility:Modifier,
-								access:String,
-								type:IIdentifierNode):IAccessorNode
+								visibility:Modifier, 
+								type:IIdentifierNode,
+								primary:String):IConstantNode
 	{
-		var ast:IParserNode = ASTNodeUtil.createAccessor(name, visibility, access, type);
-		var accessor:IAccessorNode = NodeFactory.instance.createAccessor(ast, parent);
-		parent.addAccessor(accessor);
-		return accessor;
+		var ast:IParserNode = ASTNodeUtil.createConstant(name, visibility, type, primary);
+		var constant:IConstantNode = NodeFactory.instance.createConstant(ast, parent);
+		parent.addConstant(constant);
+		return constant;
 	}
 	
 	/**
@@ -135,6 +136,21 @@ public class AS3Factory implements IAS3Factory
 		var attribute:IAttributeNode = NodeFactory.instance.createAttribute(ast, parent);
 		parent.addAttribute(attribute);
 		return attribute;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newAccessor()
+	 */
+	public function newAccessor(parent:ITypeNode,
+								name:String, 
+								visibility:Modifier,
+								access:String,
+								type:IIdentifierNode):IAccessorNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createAccessor(name, visibility, access, type);
+		var accessor:IAccessorNode = NodeFactory.instance.createAccessor(ast, parent);
+		parent.addAccessor(accessor);
+		return accessor;
 	}
 	
 	/**

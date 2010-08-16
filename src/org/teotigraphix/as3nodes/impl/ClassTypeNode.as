@@ -258,6 +258,83 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 	}
 	
 	//----------------------------------
+	//  IConstantNode
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#hasConstant()
+	 */
+	public function hasConstant(name:String):Boolean
+	{
+		var len:int = constants.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (constants[i].name == name)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#addConstant()
+	 */
+	public function addConstant(child:IConstantNode):IConstantNode
+	{
+		if (hasConstant(child.name))
+			return null;
+		
+		constants.push(child);
+		
+		dispatchAddChange(AS3NodeKind.CONST_LIST, child);
+		
+		return child;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#removeConstant()
+	 */
+	public function removeConstant(child:IConstantNode):IConstantNode
+	{
+		var len:int = constants.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IConstantNode = constants[i] as IConstantNode;
+			if (element.name == child.name)
+			{
+				constants.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.CONST_LIST, child);
+				return element;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IClassTypeNode#getConstant()
+	 */
+	public function getConstant(name:String):IConstantNode
+	{
+		var len:int = constants.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (constants[i].name == name)
+				return constants[i];
+		}
+		return null;
+	}
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IClassTypeNode#newConstant()
+	 */
+	public function newConstant(name:String, 
+								 visibility:Modifier, 
+								 type:IIdentifierNode,
+								 primary:String):IConstantNode
+	{
+		return as3Factory.newConstant(this, name, visibility, type, primary);
+	}
+	
+	//----------------------------------
 	//  IAttributeNode
 	//----------------------------------
 	

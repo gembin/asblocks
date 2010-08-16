@@ -25,6 +25,7 @@ import flash.events.IEventDispatcher;
 
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IIdentifierAware;
@@ -62,6 +63,7 @@ public class ASTChangeManager extends EventDispatcher
 		addEventListener(AS3NodeKind.NAME, nameChangeHandler);
 		
 		// members
+		addEventListener(AS3NodeKind.CONST_LIST, constListChangeHandler);
 		addEventListener(AS3NodeKind.VAR_LIST, varListChangeHandler);
 		addEventListener(AS3NodeKind.GET, getChangeHandler);
 		addEventListener(AS3NodeKind.SET, setChangeHandler);
@@ -266,6 +268,39 @@ public class ASTChangeManager extends EventDispatcher
 		else if (event.kind == ASTChangeKind.REMOVE)
 		{
 			node.removeKind(AS3NodeKind.NAME);
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.CONST_LIST add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IClassTypeNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IConstantNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.ITypeNode#attributes
+	 */
+	protected function constListChangeHandler(event:ASTChangeEvent):void
+	{
+		var constantNode:IConstantNode = event.data as IConstantNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(constantNode.node);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(constantNode.node);
 		}
 	}
 	
