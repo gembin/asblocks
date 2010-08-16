@@ -90,15 +90,7 @@ public class ASTChangeManager extends EventDispatcher
 		}
 		else if (event.kind == ASTChangeKind.REMOVE && asDoc)
 		{
-			var len:int = node.numChildren;
-			for (var i:int = 0; i < len; i++)
-			{
-				if (node.children[i] === asDoc)
-				{
-					node.children.splice(i, 1);
-					break;
-				}
-			}
+			node.removeKind(AS3NodeKind.AS_DOC);
 		}
 	}
 	
@@ -135,7 +127,15 @@ public class ASTChangeManager extends EventDispatcher
 		}
 		else if (event.kind == ASTChangeKind.REMOVE && doctagList)
 		{
-			
+			var len:int = doctagList.numChildren;
+			for (var i:int = 0; i < len; i++)
+			{
+				if (doctagList.children[i] === docTagNode.node)
+				{
+					doctagList.children.splice(i, 1);
+					break;
+				}
+			}
 		}
 	}
 	

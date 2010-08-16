@@ -3,11 +3,13 @@ package org.teotigraphix.as3nodes.impl
 
 import flexunit.framework.Assert;
 
+import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.MetaData;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.Node;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -91,15 +93,44 @@ public class TestScriptNode
 		Assert.assertEquals("<p>Long desc.</p>", long.getChild(0).stringValue);
 		// now remove the description which removes the as-doc node from
 		// the comment node
-//		element.description = null;
+		element.description = null;
 		//asdoc = ASTUtil.getNode(AS3NodeKind.AS_DOC, element.node);
-		//Assert.assertNull(asdoc);
+		Assert.assertNull(element.description);
+		Assert.assertFalse(element.comment.hasDescription);
+		// orginial as-doc node was replaced
+		Assert.assertFalse(element.comment.node === asdoc);
+	}
+	
+	[Test]
+	public function test_addRemoveDocTag():void
+	{
+		var ast:IParserNode = Node.create("content", -1, -1, null);
+		var element:ScriptNode = new ScriptNode(ast, null);
+		Assert.assertNotNull(element.comment);
+		Assert.assertNull(element.description);
+		
+		element.addDocTag("name", "Jane Doe");
+		Assert.assertTrue(element.comment.hasDocTag("name"));
+		var docTag:IDocTag = element.comment.getDocTag("name");
+		Assert.assertNotNull(docTag);
+		Assert.assertEquals("Jane Doe", docTag.body);
+		
+		element.comment.removeDocTag(docTag);
+		Assert.assertFalse(element.comment.hasDocTag("name"));
+		
+		// check that the doctag was removed from comment AST
+		var unit:IParserNode = element.comment.node.getLastChild();
+		var content:IParserNode = ASTUtil.getNode(ASDocNodeKind.CONTENT, unit);
+		var docTagList:IParserNode = ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, content);
+		Assert.assertEquals(0, docTagList.numChildren);
 	}
 	
 	[Test]
 	public function test_addRemoveHasMetaData():void
 	{
-		
+		var ast:IParserNode = Node.create("content", -1, -1, null);
+		var element:ScriptNode = new ScriptNode(ast, null);
+		Assert.assertEquals(0, element.metaDatas);
 	}
 	
 	[Test]

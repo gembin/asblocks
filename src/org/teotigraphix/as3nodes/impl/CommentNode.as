@@ -195,27 +195,31 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#addDocTag()
 	 */
-	public function addDocTag(node:IDocTag):void
+	public function addDocTag(node:IDocTag):Boolean
 	{
 		docTags.push(node);
 		
 		dispatchAddChange(ASDocNodeKind.DOCTAG, node);
+		
+		return true;
 	}
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#addDocTag()
 	 */
-	public function removeDocTag(node:IDocTag):void
+	public function removeDocTag(node:IDocTag):Boolean
 	{
 		var len:int = docTags.length;
 		for (var i:int = 0; i < len; i++)
 		{
 			if (docTags[i] === node)
 			{
+				docTags.splice(i, 1);
 				dispatchRemoveChange(ASDocNodeKind.DOCTAG, node);
-				break;
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	/**

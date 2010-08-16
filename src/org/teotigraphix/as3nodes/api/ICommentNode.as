@@ -94,7 +94,12 @@ public interface ICommentNode extends INode
 	/**
 	 * TODO Docme
 	 */
-	function addDocTag(node:IDocTag):void;
+	function addDocTag(node:IDocTag):Boolean;
+	
+	/**
+	 * TODO Docme
+	 */
+	function removeDocTag(node:IDocTag):Boolean;
 	
 	/**
 	 * TODO Docme
