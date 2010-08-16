@@ -155,10 +155,14 @@ public class ASTNodeUtil
 	{
 		var node:Node = create(AS3NodeKind.VAR_LIST);
 		
-		// parent.node/content/var-list/mod-list
-		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
-		// parent.node/content/var-list/mod-list/mod
-		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
+		if (visibility)
+		{
+			// parent.node/content/var-list/mod-list
+			var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+			// parent.node/content/var-list/mod-list/mod
+			modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
+		}
+		
 		// parent.node/content/var-list/name-type-init
 		var nti:Node = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT)) as Node;
 		// parent.node/content/var-list/name-type-init/name

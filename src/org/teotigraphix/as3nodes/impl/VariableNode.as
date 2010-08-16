@@ -69,6 +69,31 @@ public class VariableNode extends ScriptNode implements IVariableNode
 		_type = value;
 	}
 	
+	//----------------------------------
+	//  primary
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _primary:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IVariableNode#primary
+	 */
+	public function get primary():String
+	{
+		return _primary;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set primary(value:String):void
+	{
+		_primary = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -100,8 +125,16 @@ public class VariableNode extends ScriptNode implements IVariableNode
 		if (!nti)
 			return;
 		
-		_uid = NodeFactory.instance.createIdentifier(nti.getChild(0), this);
-		type = NodeFactory.instance.createIdentifier(nti.getChild(1), this);
+		var nameNode:IParserNode = nti.getKind(AS3NodeKind.NAME);
+		_uid = NodeFactory.instance.createIdentifier(nameNode, this);
+		
+		var typeNode:IParserNode = nti.getKind(AS3NodeKind.TYPE);
+		if (typeNode)
+			_type = NodeFactory.instance.createIdentifier(typeNode, this);
+		
+		var initNode:IParserNode = nti.getKind(AS3NodeKind.INIT);
+		if (initNode && initNode.hasKind(AS3NodeKind.PRIMARY))
+			_primary = initNode.getKind(AS3NodeKind.PRIMARY).stringValue;
 	}
 }
 }

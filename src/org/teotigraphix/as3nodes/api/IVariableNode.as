@@ -43,5 +43,14 @@ public interface IVariableNode extends INode
 	 * TODO Docme
 	 */
 	function get type():IIdentifierNode;
+	
+	//----------------------------------
+	//  primary
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get primary():String;
 }
 }
