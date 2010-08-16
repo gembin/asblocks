@@ -397,7 +397,7 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	 */
 	protected function computeAsdoc(child:IParserNode):void
 	{
-		NodeUtil.computeAsDoc(this, child);
+		as3Factory.newComment(this, child.stringValue);
 	}
 	
 	/**

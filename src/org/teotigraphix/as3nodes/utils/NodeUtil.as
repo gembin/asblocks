@@ -93,46 +93,6 @@ public class NodeUtil
 	}
 	
 	/**
-	 * Computes the <code>node.comment</code>.
-	 * 
-	 * @param node An ICommentAware node.
-	 * @param child The IParserNode internal node.
-	 */
-	public static function computeAsDoc(node:ICommentAware, 
-										child:IParserNode):void
-	{
-		//if (!child)
-		//{
-		//	node.comment = NodeFactory.instance.createCommentPlaceholderNode(node);
-		//	return;
-		//}
-		
-		node.setComment(NodeFactory.instance.createComment(child, node));
-	}
-	
-	/**
-	 * Computes the <code>node.modifiers</code>.
-	 * 
-	 * @param node An IModifierAware node.
-	 * @param child The IParserNode internal node.
-	 */
-	public static function computeModifierList(node:IModifierAware, 
-											   child:IParserNode):void
-	{
-		if (child.numChildren == 0)
-			return;
-		
-		var len:int = child.children.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var element:IParserNode = child.children[i] as IParserNode;
-			var modifier:Modifier = Modifier.create(element.stringValue);
-			node.modifiers.push(modifier);
-			//node.addModifier(modifier);
-		}
-	}
-	
-	/**
 	 * Computes the <code>node.parameters</code>.
 	 * 
 	 * @param node An IParameterAware node.

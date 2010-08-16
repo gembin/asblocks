@@ -518,8 +518,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	override protected function compute():void
 	{
-		//as3Factory.newComment(this);
-		
 		_modifiers = new Vector.<Modifier>();
 		_metaDatas = new Vector.<IMetaDataNode>();
 		
@@ -530,7 +528,6 @@ public class ScriptNode extends NodeBase implements IScriptNode
 			as3Factory.newComment(this);
 			return;
 		}
-		//	
 		
 		// need a copy because AST might be added through this loop
 		var children:Vector.<IParserNode> = node.children.concat();
@@ -559,6 +556,8 @@ public class ScriptNode extends NodeBase implements IScriptNode
 			}
 		}
 		
+		// special case; for now all script nodes have a 
+		// comment so they are not null
 		if (!comment)
 			as3Factory.newComment(this);
 	}
@@ -598,7 +597,13 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	protected function computeModifierList(child:IParserNode):void
 	{
-		NodeUtil.computeModifierList(this, child);
+		var len:int = child.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			var modifier:Modifier = Modifier.create(child.children[i].stringValue);
+			// the node already has correct AST, just add the Modifier to the list
+			modifiers.push(modifier);
+		}
 	}
 	
 	/**

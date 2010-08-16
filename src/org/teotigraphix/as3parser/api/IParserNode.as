@@ -137,6 +137,12 @@ public interface IParserNode
 	 */
 	function isKind(kind:String):Boolean;
 	
+	/**
+	 * Returns whether the node has a <code>kind</code> parser node child.
+	 * 
+	 * @param kind A String parser node kind.
+	 * @return A Boolean indicating whether the kind exists on the parser node.
+	 */
 	function hasKind(kind:String):Boolean;
 	
 	/**
@@ -168,6 +174,12 @@ public interface IParserNode
 	 */
 	function addChildAt(node:IParserNode, index:int):IParserNode;
 	
+	/**
+	 * Removes the first <code>kind</code> found.
+	 * 
+	 * @param kind A String parser node kind.
+	 * @return A Boolean indicating whether the kind was removed from the parser node.
+	 */
 	function removeKind(kind:String):Boolean;
 }
 }
