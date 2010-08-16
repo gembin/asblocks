@@ -22,7 +22,99 @@ import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class ASTNodeUtil
 {
+	/**
+	 * @private
+	 */
+	public static function createAsDoc(description:String):IParserNode
+	{
+		if (description == null)
+			return createEmptyAsDoc();
+		
+		if (description.indexOf("/**") == -1)
+			description = "/**" + description + "*/";
+		
+		// need to append asdoc or create node, asdoc compilation-unit
+		var asdocNode:Node = create(AS3NodeKind.AS_DOC);
+		var compilationUnit:IParserNode = ParserFactory.instance.
+			asdocParser.buildAst(Vector.<String>(description.split("\n")), "internal");
+		
+		asdocNode.addChild(compilationUnit);
+		
+		return asdocNode as IParserNode;
+	}
 	
+	/**
+	 * @private
+	 */
+	public static function createAsDocCompilationUnit(description:String):IParserNode
+	{
+		if (description == null)
+			return createEmptyAsDoc();
+		
+		if (description.indexOf("/**") == -1)
+			description = "/**" + description + "*/";
+		
+		var compilationUnit:IParserNode = ParserFactory.instance.
+			asdocParser.buildAst(Vector.<String>(description.split("\n")), "internal");
+		
+		return compilationUnit;
+	}
+	
+	/**
+	 * Creates an empty as-doc AST tree.
+	 */
+	public static function createEmptyAsDoc():IParserNode
+	{
+		// as-doc
+		var asdocNode:Node = create(AS3NodeKind.AS_DOC);
+		// as-doc/compilation-unit
+		var compilationUnit:IParserNode = asdocNode.addChild(create(ASDocNodeKind.COMPILATION_UNIT));
+		// as-doc/compilation-unit/content
+		var content:IParserNode = compilationUnit.addChild(create(ASDocNodeKind.CONTENT));
+		// as-doc/compilation-unit/content/short-list
+		content.addChild(create(ASDocNodeKind.SHORT_LIST));
+		// as-doc/compilation-unit/content/long-list
+		content.addChild(create(ASDocNodeKind.LONG_LIST));
+		// as-doc/compilation-unit/content/doctag-list
+		content.addChild(create(ASDocNodeKind.DOCTAG_LIST));
+		
+		return asdocNode as IParserNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createDocTag(name:String, 
+										body:String = null):Node
+	{
+		var docTag:Node = create(ASDocNodeKind.DOCTAG) as Node;
+		
+		docTag.addChild(createDocTagName(name));
+		if (body)
+		{
+			docTag.addChild(createDocTagBody(body));
+		}
+		
+		return docTag;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createDocTagName(name:String):Node
+	{
+		return createText(ASDocNodeKind.NAME, name);
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createDocTagBody(body:String):Node
+	{
+		var bodyNode:Node = create(ASDocNodeKind.BODY);
+		bodyNode.addChild(createText(ASDocNodeKind.TEXT, body));
+		return bodyNode;
+	}
 	
 	/**
 	 * Method does NOT add the AST to the parent. IMetaDataAware.addMetaData() will actually
@@ -43,6 +135,17 @@ public class ASTNodeUtil
 		// mod
 		return createText(AS3NodeKind.MODIFIER, name) as IParserNode;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -82,70 +185,9 @@ public class ASTNodeUtil
 		return compilationUnitNode;
 	}
 	
-	/**
-	 * @private
-	 */
-	public static function createAsDoc(aware:ICommentAware, description:String):Node
-	{
-		if (description == null)
-			return createEmptyAsDoc(aware);
-		
-		if (description.indexOf("/**") == -1)
-			description = "/** " + description + " */";
-		
-		// need to append asdoc or create node, asdoc compilation-unit
-		var asdocNode:Node = create(AS3NodeKind.AS_DOC);
-		var compilationUnit:IParserNode = ParserFactory.instance.
-			asdocParser.buildAst(Vector.<String>(description.split("\n")), "internal");
-		
-		aware.node.addChildAt(asdocNode, 1);
-		asdocNode.addChild(compilationUnit);
-		
-		return asdocNode;
-	}
 	
-	/**
-	 * @private
-	 */
-	public static function createEmptyAsDoc(aware:ICommentAware):Node
-	{
-		// need to append asdoc or create node, asdoc compilation-unit
-		var asdocNode:Node = create(AS3NodeKind.AS_DOC);
-		var compilationUnit:IParserNode = asdocNode.addChild(create(ASDocNodeKind.COMPILATION_UNIT));
-		var content:IParserNode = compilationUnit.addChild(create(ASDocNodeKind.CONTENT));
-		content.addChild(create(ASDocNodeKind.SHORT_LIST));
-		content.addChild(create(ASDocNodeKind.LONG_LIST));
-		content.addChild(create(ASDocNodeKind.DOCTAG_LIST));
-		
-		aware.node.addChildAt(asdocNode, 1);
-		
-		return asdocNode;
-	}
 	
-	/**
-	 * @private
-	 */
-	public static function newDocTag(comment:ICommentNode, 
-									 name:String, 
-									 body:String = null):Node
-	{
-		var node:IParserNode = INode(comment).node;
-		var content:IParserNode = node.getLastChild();
-		
-		var doctagList:Node =  ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, content) as Node;
-		if (!doctagList)
-			doctagList = content.addChild(create(ASDocNodeKind.DOCTAG_LIST)) as Node;
-		
-		var docTag:Node = doctagList.addChild(create(ASDocNodeKind.DOCTAG)) as Node;
-		docTag.addChild(createText(ASDocNodeKind.NAME, name));
-		if (body)
-		{
-			var bodyNode:Node = create(ASDocNodeKind.BODY);
-			bodyNode.addChild(createText(ASDocNodeKind.TEXT, body));
-			docTag.addChild(bodyNode);
-		}
-		return docTag;
-	}
+	
 	
 	//ASTNodeUtil.modListChanged(this, "add", modifier.name);
 	public static function modListChanged(parent:INode, 
@@ -265,7 +307,7 @@ public class ASTNodeUtil
 		return node as IParserNode;
 	}
 	
-
+	
 	
 	
 	public static function createMetaDataParameter(aware:IMetaDataNode,

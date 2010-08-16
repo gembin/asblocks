@@ -47,7 +47,9 @@ public interface ICommentAware extends INode
 	/**
 	 * @private
 	 */
-	function set comment(value:ICommentNode):void;
+	//function set comment(value:ICommentNode):void;
+	
+	function setComment(value:ICommentNode):void;
 	
 	//----------------------------------
 	//  description

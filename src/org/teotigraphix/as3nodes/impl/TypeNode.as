@@ -238,7 +238,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 							  visibility:Modifier, 
 							  returnType:IIdentifierNode):IMethodNode
 	{
-		return factory.newMethod(this, name, visibility, returnType);
+		return as3Factory.newMethod(this, name, visibility, returnType);
 	}
 	
 	//--------------------------------------------------------------------------

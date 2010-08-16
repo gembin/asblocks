@@ -80,9 +80,14 @@ public class AS3Factory implements IAS3Factory
 	public function newComment(parent:ICommentAware, 
 							   description:String = null):ICommentNode
 	{
-		var ast:IParserNode = ASTNodeUtil.createAsDoc(parent, description);
-		var comment:ICommentNode = NodeFactory.instance.createComment(ast.getLastChild(), parent);
-		parent.comment = comment;
+		// give the update manager a chance to clear out old AST
+		if (!description)
+			parent.setComment(null);
+		
+		var ast:IParserNode = ASTNodeUtil.createAsDoc(description);
+		var comment:ICommentNode = NodeFactory.instance.createComment(ast, parent);
+		parent.setComment(comment);
+		
 		return comment;
 	}
 	
@@ -93,7 +98,7 @@ public class AS3Factory implements IAS3Factory
 							  name:String,
 							  body:String = null):IDocTag
 	{
-		var ast:IParserNode = ASTNodeUtil.newDocTag(parent, name, body);
+		var ast:IParserNode = ASTNodeUtil.createDocTag(name, body);
 		var docTag:IDocTag = NodeFactory.instance.createDocTag(ast, parent);
 		parent.addDocTag(docTag);
 		return docTag;

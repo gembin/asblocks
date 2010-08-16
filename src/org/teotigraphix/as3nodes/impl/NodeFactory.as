@@ -23,11 +23,14 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMetaDataParameterNode;
@@ -206,6 +209,42 @@ public class NodeFactory
 								  parent:INode):IPackageNode
 	{
 		return new PackageNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IClassTypeNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createClassType(node:IParserNode, 
+									parent:INode):IClassTypeNode
+	{
+		return new ClassTypeNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IInterfaceTypeNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createInterfaceType(node:IParserNode, 
+										parent:INode):IInterfaceTypeNode
+	{
+		return new InterfaceTypeNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IFunctionTypeNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createFunctionType(node:IParserNode, 
+									   parent:INode):IFunctionTypeNode
+	{
+		return new FunctionTypeNode(node, parent);
 	}
 	
 	/**

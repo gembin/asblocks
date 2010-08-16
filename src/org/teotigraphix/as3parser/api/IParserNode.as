@@ -137,6 +137,8 @@ public interface IParserNode
 	 */
 	function isKind(kind:String):Boolean;
 	
+	function hasKind(kind:String):Boolean;
+	
 	/**
 	 * Returns the <code>IParserNode</code> at the specified index.
 	 * 
@@ -165,5 +167,7 @@ public interface IParserNode
 	 * 
 	 */
 	function addChildAt(node:IParserNode, index:int):IParserNode;
+	
+	function removeKind(kind:String):Boolean;
 }
 }

@@ -49,7 +49,7 @@ public class AsDocUtil
 		if (!child)
 			return;
 		
-		node.comment = new CommentNode(child, node);
+		node.setComment(new CommentNode(child, node));
 	}
 	
 	/**

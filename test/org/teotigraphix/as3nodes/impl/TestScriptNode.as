@@ -57,7 +57,43 @@ public class TestScriptNode
 	[Test]
 	public function test_description():void
 	{
+		var ast:IParserNode = Node.create("content", -1, -1, null);
+		var element:ScriptNode = new ScriptNode(ast, null);
+		Assert.assertNotNull(element.comment);
 		
+		// setting description will create new new comment with parsed AST
+		element.description = "My comment.\n <p>Long desc.</p>";
+		
+		Assert.assertEquals("My comment.\n <p>Long desc.</p>", element.description);
+		Assert.assertNotNull(element.comment);
+		
+		// usually when an as-doc node is parsed by the as3parser, the as-doc node
+		// will have it's stringValue in the form of "/** A comment. */"
+		// When the description is set, the as-doc node will have it's first child
+		// and ASDocNodeKind.COMPILATION_UNIT
+		// as-doc
+		var asdoc:IParserNode = ASTUtil.getNode(AS3NodeKind.AS_DOC, element.node);
+		Assert.assertNotNull(asdoc);
+		// as-doc/compilation-unit
+		var compUnit:IParserNode = asdoc.getChild(0);
+		Assert.assertNotNull(compUnit);
+		// as-doc/compilation-unit/content
+		var content:IParserNode = compUnit.getChild(0);
+		Assert.assertNotNull(content);
+		Assert.assertEquals(2, content.numChildren);
+		// as-doc/compilation-unit/short-list
+		var short:IParserNode = content.getChild(0);
+		// as-doc/compilation-unit/long-list
+		var long:IParserNode = content.getChild(1);
+		Assert.assertNotNull(short);
+		Assert.assertNotNull(long);
+		Assert.assertEquals("My comment.", short.getChild(0).stringValue);
+		Assert.assertEquals("<p>Long desc.</p>", long.getChild(0).stringValue);
+		// now remove the description which removes the as-doc node from
+		// the comment node
+//		element.description = null;
+		//asdoc = ASTUtil.getNode(AS3NodeKind.AS_DOC, element.node);
+		//Assert.assertNull(asdoc);
 	}
 	
 	[Test]
@@ -73,14 +109,12 @@ public class TestScriptNode
 		var node:ScriptNode = new ScriptNode(ast, null);
 		
 		Assert.assertEquals(0, node.modifiers.length);
-		Assert.assertEquals(0, ast.numChildren);
 		Assert.assertFalse(node.isPublic);
 		Assert.assertFalse(node.hasModifier(Modifier.PUBLIC));
 		
 		node.addModifier(Modifier.PUBLIC);
 		
 		Assert.assertEquals(1, node.modifiers.length);
-		Assert.assertEquals(1, ast.numChildren);
 		Assert.assertEquals(1, ast.getChild(0).numChildren);
 		Assert.assertEquals(Modifier.PUBLIC.name, ast.getChild(0).getChild(0).stringValue);
 		Assert.assertTrue(node.isPublic);
@@ -89,7 +123,6 @@ public class TestScriptNode
 		node.removeModifier(Modifier.PUBLIC);
 		
 		Assert.assertEquals(0, node.modifiers.length);
-		Assert.assertEquals(1, ast.numChildren);
 		Assert.assertTrue(ast.getChild(0).isKind(AS3NodeKind.MOD_LIST));
 		Assert.assertEquals(0, ast.getChild(0).numChildren);
 		Assert.assertFalse(node.isPublic);

@@ -23,6 +23,8 @@ package org.teotigraphix.as3nodes.impl
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
 
+import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.Modifier;
@@ -30,6 +32,7 @@ import org.teotigraphix.as3nodes.utils.ASTChangeEvent;
 import org.teotigraphix.as3nodes.utils.ASTChangeKind;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
@@ -46,6 +49,8 @@ public class ASTChangeManager extends EventDispatcher
 	{
 		super();
 		
+		addEventListener(AS3NodeKind.AS_DOC, asDocChangeHandler);
+		addEventListener(ASDocNodeKind.DOCTAG, docTagChangeHandler);
 		addEventListener(AS3NodeKind.MODIFIER, modifierChangeHandler);
 		addEventListener(AS3NodeKind.META, metaChangeHandler);
 	}
@@ -55,6 +60,84 @@ public class ASTChangeManager extends EventDispatcher
 	//  Protected AST :: Handlers
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * Handles the AS3NodeKind.AS_DOC add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>ICommentAware</code></li>
+	 * <li><strong>event.data</strong> : <code>ICommentNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.ICommentAware#setComment()
+	 */
+	protected function asDocChangeHandler(event:ASTChangeEvent):void
+	{
+		var commentNode:ICommentNode = event.data as ICommentNode;
+		var node:IParserNode = INode(event.parent).node;
+		var asDoc:IParserNode =  ASTUtil.getNode(AS3NodeKind.AS_DOC, node);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			// if there is an existing as-doc node on node, remove it
+			if (node.hasKind(AS3NodeKind.AS_DOC))
+				node.removeKind(AS3NodeKind.AS_DOC);
+			
+			node.addChildAt(commentNode.node, node.numChildren - 1);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && asDoc)
+		{
+			var len:int = node.numChildren;
+			for (var i:int = 0; i < len; i++)
+			{
+				if (node.children[i] === asDoc)
+				{
+					node.children.splice(i, 1);
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.DOCTAG add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>ICommentNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IDocTagNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.ICommentAware#addDocTag()
+	 */
+	protected function docTagChangeHandler(event:ASTChangeEvent):void
+	{
+		var comment:ICommentNode = event.parent as ICommentNode;
+		var docTagNode:IDocTag = event.data as IDocTag;
+		
+		var node:IParserNode = INode(comment).node;
+		var unit:IParserNode = node.getLastChild();
+		var content:IParserNode = unit.getLastChild();
+		
+		var doctagList:IParserNode =  ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, content);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!doctagList)
+				doctagList = content.addChild(ASTNodeUtil.create(ASDocNodeKind.DOCTAG_LIST));
+			
+			doctagList.addChild(docTagNode.node);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && doctagList)
+		{
+			
+		}
+	}
 	
 	/**
 	 * Handles the AS3NodeKind.META add/remove.

@@ -21,6 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
+import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
@@ -91,9 +92,23 @@ public class ParameterNode extends NodeBase implements IParameterNode
 	/**
 	 * @private
 	 */	
-	public function set comment(value:ICommentNode):void
+	public function setComment(value:ICommentNode):void
 	{
 		_comment = value;
+		
+		if (_comment)
+			dispatchAddChange(AS3NodeKind.AS_DOC, _comment);
+		else
+			dispatchRemoveChange(AS3NodeKind.AS_DOC, null);
+	}
+	
+	
+	/**
+	 * @private
+	 */
+	public function addDocTag(name:String, body:String):IDocTag
+	{
+		return null;
 	}
 	
 	//----------------------------------
@@ -312,7 +327,7 @@ public class ParameterNode extends NodeBase implements IParameterNode
 	 */
 	override protected function compute():void
 	{
-		//comment = NodeFactory.instance.createCommentPlaceholderNode(this);
+		as3Factory.newComment(this);
 		
 		if (node.numChildren == 0)
 			return;

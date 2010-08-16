@@ -147,9 +147,14 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @private
 	 */	
-	public function set comment(value:ICommentNode):void
+	public function setComment(value:ICommentNode):void
 	{
 		_comment = value;
+		
+		if (_comment)
+			dispatchAddChange(AS3NodeKind.AS_DOC, _comment);
+		else
+			dispatchRemoveChange(AS3NodeKind.AS_DOC, null);
 	}
 	
 	//----------------------------------
@@ -176,7 +181,8 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	{
 		_description = value;
 		
-		factory.newComment(this, _description);
+		// will call setComment() and update the AST
+		as3Factory.newComment(this, _description);
 	}
 	
 	/**
@@ -425,7 +431,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	public function newMetaData(name:String):IMetaDataNode
 	{
-		return factory.newMetaData(this, name);
+		return as3Factory.newMetaData(this, name);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -512,13 +518,24 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	override protected function compute():void
 	{
+		//as3Factory.newComment(this);
+		
 		_modifiers = new Vector.<Modifier>();
 		_metaDatas = new Vector.<IMetaDataNode>();
 		
-		if (!node || node.numChildren == 0)
+		if (node.numChildren == 0)
+		{
+			// special case; for now all script nodes have a 
+			// comment so they are not null
+			as3Factory.newComment(this);
 			return;
+		}
+		//	
 		
-		for each (var child:IParserNode in node.children)
+		// need a copy because AST might be added through this loop
+		var children:Vector.<IParserNode> = node.children.concat();
+		
+		for each (var child:IParserNode in children)
 		{
 			if (child.isKind(AS3NodeKind.META_LIST))
 			{
@@ -543,7 +560,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		}
 		
 		if (!comment)
-			comment = factory.newComment(this);
+			as3Factory.newComment(this);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -573,8 +590,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	 */
 	protected function computeAsDoc(child:IParserNode):void
 	{
-		NodeUtil.computeAsDoc(this, child);
-		//factory.newComment(this, child.stringValue);
+		as3Factory.newComment(this, child.stringValue);
 	}
 	
 	/**

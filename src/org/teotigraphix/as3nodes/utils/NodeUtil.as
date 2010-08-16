@@ -107,7 +107,7 @@ public class NodeUtil
 		//	return;
 		//}
 		
-		node.comment = NodeFactory.instance.createComment(child, node);
+		node.setComment(NodeFactory.instance.createComment(child, node));
 	}
 	
 	/**

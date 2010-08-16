@@ -66,7 +66,7 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	/**
 	 * @private
 	 */	
-	public function set comment(value:ICommentNode):void
+	public function setComment(value:ICommentNode):void
 	{
 		_comment = value;
 	}
@@ -95,8 +95,8 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	{
 		_description = value;
 		
-		var asdoc:IParserNode = ASTNodeUtil.createAsDoc(this, _description);
-		comment = new CommentNode(asdoc.getLastChild(), this);
+		var asdoc:IParserNode = ASTNodeUtil.createAsDoc(_description);
+		setComment(new CommentNode(asdoc.getLastChild(), this));
 	}
 	
 	public function addDocTag(name:String, body:String):IDocTag

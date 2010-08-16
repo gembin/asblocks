@@ -109,15 +109,27 @@ public class NodeBase implements INode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  factory
+	//  as3Factory
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	protected function get factory():IAS3Factory
+	protected function get as3Factory():IAS3Factory
 	{
 		return AS3Factory.instance;
+	}
+	
+	//----------------------------------
+	//  hodeFactory
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function get hodeFactory():NodeFactory
+	{
+		return NodeFactory.instance;
 	}
 	
 	//--------------------------------------------------------------------------

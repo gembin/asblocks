@@ -27,27 +27,13 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IParameterNode extends INode, /*ICommentAware,*/ INameAware
+public interface IParameterNode extends INode, ICommentAware, INameAware
 {
 	//--------------------------------------------------------------------------
 	//
 	//  Properties
 	//
 	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  description
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get description():String;
-	
-	/**
-	 * @private
-	 */
-	function set description(value:String):void;
 	
 	//----------------------------------
 	//  type

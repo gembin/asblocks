@@ -142,6 +142,24 @@ public class NestedNode
 	}
 	
 	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#hasKind()
+	 */
+	public function hasKind(kind:String):Boolean
+	{
+		if (numChildren == 0)
+			return false;
+		
+		var len:int = children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (children[i].isKind(kind))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3parser.api.IParserNode#getChild()
 	 */
 	public function getChild(index:int):IParserNode
@@ -214,6 +232,24 @@ public class NestedNode
 		var node:IParserNode = Node.create(kind, line, column, null);
 		node.addChild(sibling);
 		return addChild(node);
+	}
+	
+	public function removeKind(kind:String):Boolean
+	{
+		if (!hasKind(kind))
+			return false;
+		
+		var len:int = children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (children[i].isKind(kind))
+			{
+				children.splice(i, 1);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
 }

@@ -25,6 +25,7 @@ import mx.utils.StringUtil;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IDocTag;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3nodes.utils.AsDocUtil;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
@@ -50,7 +51,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @private
 	 */
-	protected var asdocNode:IParserNode;
+	protected var compilationUnit:IParserNode;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -196,10 +197,25 @@ public class CommentNode extends NodeBase implements ICommentNode
 	 */
 	public function addDocTag(node:IDocTag):void
 	{
-		if (!docTags)
-			return;
-		
 		docTags.push(node);
+		
+		dispatchAddChange(ASDocNodeKind.DOCTAG, node);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#addDocTag()
+	 */
+	public function removeDocTag(node:IDocTag):void
+	{
+		var len:int = docTags.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (docTags[i] === node)
+			{
+				dispatchRemoveChange(ASDocNodeKind.DOCTAG, node);
+				break;
+			}
+		}
 	}
 	
 	/**
@@ -261,7 +277,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	 */
 	public function newDocTag(name:String, body:String = null):IDocTag
 	{
-		return factory.newDocTag(this, name, body);
+		return as3Factory.newDocTag(this, name, body);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -291,27 +307,38 @@ public class CommentNode extends NodeBase implements ICommentNode
 	 */
 	override protected function compute():void
 	{
-		if (node.isKind(ASDocNodeKind.COMPILATION_UNIT))
+		var unit:IParserNode = node.getChild(0);
+		if (unit)
 		{
-			asdocNode = node;
+			compilationUnit = unit;
 		}
 		else if (node.stringValue && node.stringValue != "")
 		{
-			var parser:IParser = ParserFactory.instance.asdocParser;
-			
-			var lines:Array = node.stringValue.split("\n");
-			
-			asdocNode = ParserFactory.instance.asdocParser.
-				buildAst(ASTUtil.toVector(lines), "asdoc");
+			compilationUnit = ASTNodeUtil.createAsDocCompilationUnit(node.stringValue);
+			// FIXME !!!
+			node.addChild(compilationUnit);
 		}
 		
-		if (asdocNode)
+		if (compilationUnit)
 		{
 			// compilation-unit/content
-			var contentNode:IParserNode = asdocNode.getLastChild();
-			shortDescription = computeShortDescription(contentNode); 
-			longDescription = computeLongDescription(contentNode);
-			docTags = computeDocTagList(contentNode);
+			var content:IParserNode = compilationUnit.getLastChild();
+			
+			for each (var child:IParserNode in content.children)
+			{
+				if (child.isKind(ASDocNodeKind.SHORT_LIST))
+				{
+					computeShortDescription(child);
+				}
+				else if (child.isKind(ASDocNodeKind.LONG_LIST))
+				{
+					computeLongDescription(child);
+				}
+				else if (child.isKind(ASDocNodeKind.DOCTAG_LIST))
+				{
+					computeDocTagList(child);
+				}
+			}
 		}
 	}
 	
@@ -324,60 +351,50 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @private
 	 */
-	protected function computeShortDescription(child:IParserNode):String
+	protected function computeShortDescription(child:IParserNode):void
 	{
 		var result:String = "";
-		var list:IParserNode = ASTUtil.getNode(ASDocNodeKind.SHORT_LIST, child);
-		if (!list)
-			return null;
 		
-		for each (var element:IParserNode in list.children)
+		for each (var element:IParserNode in child.children)
 		{
 			result += AsDocUtil.returnString(element);
 		}
 		
 		result = StringUtil.trim(result);
 		
-		return result;
+		shortDescription = result;
 	}
 	
 	/**
 	 * @private
 	 */
-	protected function computeLongDescription(child:IParserNode):String
+	protected function computeLongDescription(child:IParserNode):void
 	{
 		var result:String = "";
-		var list:IParserNode = ASTUtil.getNode(ASDocNodeKind.LONG_LIST, child);
-		if (!list)
-			return null;
 		
-		for each (var element:IParserNode in list.children)
+		for each (var element:IParserNode in child.children)
 		{
 			result += AsDocUtil.returnString(element);
 		}
 		
 		result = StringUtil.trim(result);
 		
-		return result;
+		longDescription = result;
 	}
 	
 	/**
 	 * @private
 	 */
-	protected function computeDocTagList(child:IParserNode):Vector.<IDocTag>
+	protected function computeDocTagList(child:IParserNode):void
 	{
 		var result:Vector.<IDocTag> = new Vector.<IDocTag>();
-		var list:IParserNode = ASTUtil.getNode(ASDocNodeKind.DOCTAG_LIST, child);
 		
-		if (!list)
-			return result;
-		
-		for each (var element:IParserNode in list.children)
+		for each (var element:IParserNode in child.children)
 		{
 			result.push(new DocTagNode(element, this));
 		}
 		
-		return result;
+		docTags = result;
 	}
 }
 }
