@@ -65,6 +65,18 @@ public interface ICommentAware extends INode
 	 */
 	function set description(value:String):void;
 	
-	function addDocTag(name:String, body:String):IDocTag;
+	//----------------------------------
+	//  hasDescription
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get hasDescription():Boolean;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#newDocTag()
+	 */
+	function newDocTag(name:String, body:String = null):IDocTag;
 }
 }

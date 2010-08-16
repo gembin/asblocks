@@ -193,10 +193,22 @@ public class ScriptNode extends NodeBase implements IScriptNode
 		as3Factory.newComment(this, _description);
 	}
 	
+	//----------------------------------
+	//  hasDescription
+	//----------------------------------
+	
 	/**
-	 * @private
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#hasDescription
 	 */
-	public function addDocTag(name:String, body:String):IDocTag
+	public function get hasDescription():Boolean
+	{
+		return comment.hasDescription;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#newDocTag()
+	 */
+	public function newDocTag(name:String, body:String = null):IDocTag
 	{
 		return comment.newDocTag(name, body);
 	}
@@ -470,13 +482,12 @@ public class ScriptNode extends NodeBase implements IScriptNode
 			if (modifiers[i].equals(modifier))
 			{
 				modifiers.splice(i, 1);
-				break;
+				dispatchRemoveChange(AS3NodeKind.MODIFIER, modifier);
+				return true;
 			}
 		}
 		
-		dispatchRemoveChange(AS3NodeKind.MODIFIER, modifier);
-		
-		return true;
+		return false;
 	}
 	
 	/**

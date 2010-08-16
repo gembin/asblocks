@@ -106,7 +106,7 @@ public class ParameterNode extends NodeBase implements IParameterNode
 	/**
 	 * @private
 	 */
-	public function addDocTag(name:String, body:String):IDocTag
+	public function newDocTag(name:String, body:String = null):IDocTag
 	{
 		return null;
 	}
@@ -136,7 +136,19 @@ public class ParameterNode extends NodeBase implements IParameterNode
 		_description = value;
 		
 		var func:IFunctionNode = parent as IFunctionNode;
-		func.addDocTag("param", name + " " + _description);
+		func.newDocTag("param", name + " " + _description);
+	}
+	
+	//----------------------------------
+	//  hasDescription
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#hasDescription
+	 */
+	public function get hasDescription():Boolean
+	{
+		return comment.hasDescription;
 	}
 	
 	//--------------------------------------------------------------------------

@@ -170,7 +170,7 @@ public class TestScriptNode
 		Assert.assertNotNull(element.comment);
 		Assert.assertNull(element.description);
 		
-		element.addDocTag("name", "Jane Doe");
+		element.newDocTag("name", "Jane Doe");
 		Assert.assertTrue(element.comment.hasDocTag("name"));
 		var docTag:IDocTag = element.comment.getDocTag("name");
 		Assert.assertNotNull(docTag);

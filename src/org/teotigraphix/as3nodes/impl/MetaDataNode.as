@@ -99,7 +99,19 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 		setComment(new CommentNode(asdoc.getLastChild(), this));
 	}
 	
-	public function addDocTag(name:String, body:String):IDocTag
+	//----------------------------------
+	//  hasDescription
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#hasDescription
+	 */
+	public function get hasDescription():Boolean
+	{
+		return comment.hasDescription;
+	}
+	
+	public function newDocTag(name:String, body:String = null):IDocTag
 	{
 		return comment.newDocTag(name, body);
 	}
