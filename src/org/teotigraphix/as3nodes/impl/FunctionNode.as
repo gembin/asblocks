@@ -129,7 +129,7 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	/**
 	 * @private
 	 */
-	private var _parameters:Vector.<IParameterNode>;
+	protected var _parameters:Vector.<IParameterNode>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#parameters
@@ -360,7 +360,12 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	 */
 	protected function computeParameterList(child:IParserNode):void
 	{
-		NodeUtil.computeParameterList(this, child);
+		var len:int = child.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			_parameters.push(NodeFactory.instance.
+				createParameter(child.children[i], this));
+		}
 	}
 	
 	/**
@@ -368,7 +373,8 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	 */
 	protected function computeType(child:IParserNode):void
 	{
-		NodeUtil.computeReturnType(this, child);
+		if (child && child.stringValue != "")
+			type = NodeFactory.instance.createIdentifier(child, this);
 	}
 }
 }

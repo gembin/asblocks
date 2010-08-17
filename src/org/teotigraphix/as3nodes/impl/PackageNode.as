@@ -257,9 +257,7 @@ public class PackageNode extends NodeBase implements IPackageNode
 		
 		NodeUtil.computeImports(this, node.getLastChild());
 		
-		uid = NodeFactory.instance.createIdentifier(ASTUtil.getNode(AS3NodeKind.NAME, node), this);
-		
-		//uid = new IdentifierNode(ASTUtil.getNode(AS3NodeKind.NAME, node), this);
+		uid = NodeFactory.instance.createIdentifier(node.getKind(AS3NodeKind.NAME), this);
 	}
 }
 }

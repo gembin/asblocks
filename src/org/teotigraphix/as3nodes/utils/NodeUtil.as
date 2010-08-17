@@ -63,8 +63,10 @@ public class NodeUtil
 		if (child.numChildren == 0)
 			return;
 		
-		for each (var element:IParserNode in child.children)
+		var len:int = child.numChildren;
+		for (var i:int = 0; i < len; i++)
 		{
+			var element:IParserNode = child.children[i] as IParserNode;
 			if (element.isKind(AS3NodeKind.IMPORT))
 			{
 				node.addImport(new IdentifierNode(element, node));
@@ -84,45 +86,12 @@ public class NodeUtil
 		if (child.numChildren == 0)
 			return;
 		
-		var len:int = child.children.length;
+		var len:int = child.numChildren;
 		for (var i:int = 0; i < len; i++)
 		{
 			var element:IParserNode = child.children[i] as IParserNode;
 			node.addMetaData(NodeFactory.instance.createMetaData(element, INode(node)));
 		}
-	}
-	
-	/**
-	 * Computes the <code>node.parameters</code>.
-	 * 
-	 * @param node An IParameterAware node.
-	 * @param child The IParserNode internal node.
-	 */
-	public static function computeParameterList(node:IParameterAware, 
-												child:IParserNode):void
-	{
-		if (!child || child.numChildren == 0)
-			return;
-		
-		var len:int = child.children.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			node.parameters[i] = NodeFactory.instance.
-				createParameter(child.children[i], node)
-		}
-	}
-	
-	/**
-	 * Computes the <code>node.type</code>.
-	 * 
-	 * @param node An IFunctionNode node.
-	 * @param child The IParserNode internal node.
-	 */
-	public static function computeReturnType(node:IFunctionNode, 
-											 child:IParserNode):void
-	{
-		if (child && child.stringValue != "")
-			node.type = NodeFactory.instance.createIdentifier(child, node);
 	}
 }
 }

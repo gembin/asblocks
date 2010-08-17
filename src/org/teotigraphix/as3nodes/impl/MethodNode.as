@@ -48,7 +48,7 @@ public class MethodNode extends FunctionNode implements IMethodNode
 	 */
 	override public function get qualifiedName():String
 	{
-		return super.qualifiedName + "#methods:" + name;
+		return super.qualifiedName + "#method:" + name;
 	}
 	
 	//--------------------------------------------------------------------------

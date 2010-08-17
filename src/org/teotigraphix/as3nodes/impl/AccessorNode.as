@@ -70,11 +70,6 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _isReadWrite:Boolean;
-	
-	/**
 	 * @copy org.teotigraphix.as3nodes.api.IAccessorNode#isReadWrite
 	 */
 	public function get isReadWrite():Boolean
@@ -87,11 +82,6 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _isReadOnly:Boolean;
-	
-	/**
 	 * @copy org.teotigraphix.as3nodes.api.IAccessorNode#isReadOnly
 	 */
 	public function get isReadOnly():Boolean
@@ -102,11 +92,6 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	//----------------------------------
 	//  isWriteOnly
 	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _isWriteOnly:Boolean;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IAccessorNode#isWriteOnly

@@ -44,6 +44,9 @@ public interface IAccessorNode extends IFunctionNode
 	 */
 	function get access():Access;
 	
+	/**
+	 * @private
+	 */
 	function set access(value:Access):void;
 	
 	//----------------------------------
