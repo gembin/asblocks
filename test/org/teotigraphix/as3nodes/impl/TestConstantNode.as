@@ -18,8 +18,9 @@ public class TestConstantNode
 		Assert.assertNotNull(element.comment);
 		Assert.assertTrue(element.isPublic);
 		Assert.assertNotNull(element.modifiers);
-		Assert.assertEquals(1, element.modifiers.length);
+		Assert.assertEquals(2, element.modifiers.length);
 		Assert.assertTrue(element.hasModifier(Modifier.PUBLIC));
+		Assert.assertTrue(element.hasModifier(Modifier.STATIC));
 		Assert.assertEquals("MY_CONSTANT", element.name);
 		Assert.assertStrictlyEquals(ast, element.node);
 		Assert.assertEquals(0, element.numMetaData);
