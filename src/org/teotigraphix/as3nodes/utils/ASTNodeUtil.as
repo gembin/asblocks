@@ -258,7 +258,18 @@ public class ASTNodeUtil
 		
 		if (access.equals(Access.READ))
 		{
-			block.addChild(createReturn("null"));
+			var retrn:String = "null";
+			if (type)
+			{
+				if (type.localName == "int" 
+					|| type.localName == "Number" 
+					|| type.localName == "uint")
+				{
+					retrn = "-1";
+				}
+			}
+
+			block.addChild(createReturn(retrn));
 		}
 		
 		return node;
