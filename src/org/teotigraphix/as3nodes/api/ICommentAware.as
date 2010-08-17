@@ -77,6 +77,6 @@ public interface ICommentAware extends INode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#newDocTag()
 	 */
-	function newDocTag(name:String, body:String = null):IDocTag;
+	function newDocTag(name:String, body:String = null):IDocTagNode;
 }
 }

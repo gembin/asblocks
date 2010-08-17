@@ -27,7 +27,7 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
@@ -184,7 +184,7 @@ public class NodeFactory
 	 * @param parent An INode parent.
 	 */
 	public function createDocTag(node:IParserNode, 
-								 parent:INode):IDocTag
+								 parent:INode):IDocTagNode
 	{
 		return new DocTagNode(node, parent);
 	}

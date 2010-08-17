@@ -22,7 +22,7 @@ package org.teotigraphix.as3nodes.impl
 
 import mx.utils.StringUtil;
 
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.utils.AsDocUtil;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
@@ -35,7 +35,7 @@ import org.teotigraphix.as3parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class DocTagNode extends NodeBase implements IDocTag
+public class DocTagNode extends NodeBase implements IDocTagNode
 {
 	//--------------------------------------------------------------------------
 	//

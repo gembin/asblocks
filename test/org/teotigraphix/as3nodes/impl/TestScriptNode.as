@@ -3,7 +3,7 @@ package org.teotigraphix.as3nodes.impl
 
 import flexunit.framework.Assert;
 
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.MetaData;
@@ -172,7 +172,7 @@ public class TestScriptNode
 		
 		element.newDocTag("name", "Jane Doe");
 		Assert.assertTrue(element.comment.hasDocTag("name"));
-		var docTag:IDocTag = element.comment.getDocTag("name");
+		var docTag:IDocTagNode = element.comment.getDocTag("name");
 		Assert.assertNotNull(docTag);
 		Assert.assertEquals("Jane Doe", docTag.body);
 		

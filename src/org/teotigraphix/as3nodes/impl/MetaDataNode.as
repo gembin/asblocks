@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMetaDataParameterNode;
 import org.teotigraphix.as3nodes.api.INode;
@@ -111,7 +111,7 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 		return comment.hasDescription;
 	}
 	
-	public function newDocTag(name:String, body:String = null):IDocTag
+	public function newDocTag(name:String, body:String = null):IDocTagNode
 	{
 		return comment.newDocTag(name, body);
 	}

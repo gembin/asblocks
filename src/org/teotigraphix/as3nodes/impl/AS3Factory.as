@@ -28,7 +28,7 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -100,10 +100,10 @@ public class AS3Factory implements IAS3Factory
 	 */
 	public function newDocTag(parent:ICommentNode, 
 							  name:String,
-							  body:String = null):IDocTag
+							  body:String = null):IDocTagNode
 	{
 		var ast:IParserNode = ASTNodeUtil.createDocTag(name, body);
-		var docTag:IDocTag = NodeFactory.instance.createDocTag(ast, parent);
+		var docTag:IDocTagNode = NodeFactory.instance.createDocTag(ast, parent);
 		parent.addDocTag(docTag);
 		return docTag;
 	}

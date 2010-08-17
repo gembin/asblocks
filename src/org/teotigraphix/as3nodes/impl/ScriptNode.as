@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
@@ -207,7 +207,7 @@ public class ScriptNode extends NodeBase implements IScriptNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#newDocTag()
 	 */
-	public function newDocTag(name:String, body:String = null):IDocTag
+	public function newDocTag(name:String, body:String = null):IDocTagNode
 	{
 		return comment.newDocTag(name, body);
 	}

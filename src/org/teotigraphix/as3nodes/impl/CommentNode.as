@@ -23,7 +23,7 @@ package org.teotigraphix.as3nodes.impl
 import mx.utils.StringUtil;
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
@@ -141,12 +141,12 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @private
 	 */
-	private var _docTags:Vector.<IDocTag> = new Vector.<IDocTag>();
+	private var _docTags:Vector.<IDocTagNode> = new Vector.<IDocTagNode>();
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#docTags
 	 */
-	public function get docTags():Vector.<IDocTag>
+	public function get docTags():Vector.<IDocTagNode>
 	{
 		return _docTags;
 	}
@@ -154,7 +154,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @private
 	 */	
-	public function set docTags(value:Vector.<IDocTag>):void
+	public function set docTags(value:Vector.<IDocTagNode>):void
 	{
 		_docTags = value;
 	}
@@ -195,7 +195,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#addDocTag()
 	 */
-	public function addDocTag(node:IDocTag):Boolean
+	public function addDocTag(node:IDocTagNode):Boolean
 	{
 		docTags.push(node);
 		
@@ -207,7 +207,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#addDocTag()
 	 */
-	public function removeDocTag(node:IDocTag):Boolean
+	public function removeDocTag(node:IDocTagNode):Boolean
 	{
 		var len:int = docTags.length;
 		for (var i:int = 0; i < len; i++)
@@ -225,7 +225,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#getDocTagAt()
 	 */
-	public function getDocTagAt(index:int):IDocTag
+	public function getDocTagAt(index:int):IDocTagNode
 	{
 		if (!docTags || index > docTags.length)
 			return null;
@@ -236,7 +236,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#getDocTag()
 	 */
-	public function getDocTag(name:String):IDocTag
+	public function getDocTag(name:String):IDocTagNode
 	{
 		var len:int = docTags.length;
 		for (var i:int = 0; i < len; i++)
@@ -264,9 +264,9 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#getDocTags()
 	 */
-	public function getDocTags(name:String):Vector.<IDocTag>
+	public function getDocTags(name:String):Vector.<IDocTagNode>
 	{
-		var result:Vector.<IDocTag> = new Vector.<IDocTag>();
+		var result:Vector.<IDocTagNode> = new Vector.<IDocTagNode>();
 		var len:int = docTags.length;
 		for (var i:int = 0; i < len; i++)
 		{
@@ -279,7 +279,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.ICommentNode#newDocTag()
 	 */
-	public function newDocTag(name:String, body:String = null):IDocTag
+	public function newDocTag(name:String, body:String = null):IDocTagNode
 	{
 		return as3Factory.newDocTag(this, name, body);
 	}
@@ -391,7 +391,7 @@ public class CommentNode extends NodeBase implements ICommentNode
 	 */
 	protected function computeDocTagList(child:IParserNode):void
 	{
-		var result:Vector.<IDocTag> = new Vector.<IDocTag>();
+		var result:Vector.<IDocTagNode> = new Vector.<IDocTagNode>();
 		
 		for each (var element:IParserNode in child.children)
 		{

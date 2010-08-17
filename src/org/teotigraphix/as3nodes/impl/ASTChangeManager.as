@@ -26,7 +26,7 @@ import flash.events.IEventDispatcher;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IIdentifierAware;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
@@ -125,7 +125,7 @@ public class ASTChangeManager extends EventDispatcher
 	protected function docTagChangeHandler(event:ASTChangeEvent):void
 	{
 		var comment:ICommentNode = event.parent as ICommentNode;
-		var docTagNode:IDocTag = event.data as IDocTag;
+		var docTagNode:IDocTagNode = event.data as IDocTagNode;
 		
 		var node:IParserNode = INode(comment).node;
 		var unit:IParserNode = node.getLastChild();

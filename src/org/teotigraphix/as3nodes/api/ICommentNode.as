@@ -74,7 +74,7 @@ public interface ICommentNode extends INode
 	/**
 	 * TODO Docme
 	 */
-	function get docTags():Vector.<IDocTag>;
+	function get docTags():Vector.<IDocTagNode>;
 	
 	//----------------------------------
 	//  hasDescription
@@ -94,22 +94,22 @@ public interface ICommentNode extends INode
 	/**
 	 * TODO Docme
 	 */
-	function addDocTag(node:IDocTag):Boolean;
+	function addDocTag(node:IDocTagNode):Boolean;
 	
 	/**
 	 * TODO Docme
 	 */
-	function removeDocTag(node:IDocTag):Boolean;
+	function removeDocTag(node:IDocTagNode):Boolean;
 	
 	/**
 	 * TODO Docme
 	 */
-	function getDocTagAt(index:int):IDocTag;
+	function getDocTagAt(index:int):IDocTagNode;
 	
 	/**
 	 * TODO Docme
 	 */
-	function getDocTag(name:String):IDocTag;
+	function getDocTag(name:String):IDocTagNode;
 	
 	/**
 	 * TODO Docme
@@ -119,11 +119,11 @@ public interface ICommentNode extends INode
 	/**
 	 * TODO Docme
 	 */
-	function getDocTags(name:String):Vector.<IDocTag>;
+	function getDocTags(name:String):Vector.<IDocTagNode>;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newDocTag(name:String, body:String = null):IDocTag;
+	function newDocTag(name:String, body:String = null):IDocTagNode;
 }
 }

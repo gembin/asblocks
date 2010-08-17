@@ -54,7 +54,7 @@ public interface IAS3Factory
 	 */
 	function newDocTag(parent:ICommentNode,
 					   name:String,
-					   body:String = null):IDocTag;
+					   body:String = null):IDocTagNode;
 	/**
 	 * TODO DOCME
 	 */

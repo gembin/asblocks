@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.ICommentNode;
-import org.teotigraphix.as3nodes.api.IDocTag;
+import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
@@ -106,7 +106,7 @@ public class ParameterNode extends NodeBase implements IParameterNode
 	/**
 	 * @private
 	 */
-	public function newDocTag(name:String, body:String = null):IDocTag
+	public function newDocTag(name:String, body:String = null):IDocTagNode
 	{
 		return null;
 	}
