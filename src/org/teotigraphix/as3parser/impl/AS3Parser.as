@@ -1306,7 +1306,8 @@ public class AS3Parser extends ParserBase
 			node = parseDecrement(node);
 		}
 		else if (tokIs(Operators.DOT)
-			|| tokIs( Operators.DOUBLE_COLUMN))
+			|| tokIs(Operators.DOUBLE_COLUMN)
+			|| tokIs(Operators.DOUBLE_DOT))
 		{
 			node = parseDot(node);
 		}
@@ -1527,6 +1528,16 @@ public class AS3Parser extends ParserBase
 	private function parseDot(node:Node):Node
 	{
 		var result:Node;
+		if (tokIs(Operators.DOUBLE_DOT))
+		{
+			nextToken();
+			result = Node.create(AS3NodeKind.E4X_DESCENDENT,
+				token.line,
+				token.column);
+			result.addChild(node);
+			result.addChild(parseExpression());
+			return result;
+		}
 		nextToken();
 		if (tokIs(Operators.LEFT_PARENTHESIS))
 		{

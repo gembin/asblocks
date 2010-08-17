@@ -67,6 +67,8 @@ public class Operators
 	
 	public static const DOUBLE_COLUMN:String = "::";
 	
+	public static const DOUBLE_DOT:String = "..";
+	
 	public static const DOUBLE_EQUAL:String = "==";
 	
 	public static const DOUBLE_QUOTE:String = "\"";

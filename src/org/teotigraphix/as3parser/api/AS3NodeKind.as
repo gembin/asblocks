@@ -101,6 +101,8 @@ public class AS3NodeKind
 	
 	public static const E4X_ATTR:String = "e4x-attr";
 	
+	public static const E4X_DESCENDENT:String = "e4x-descendent";
+	
 	public static const E4X_FILTER:String = "e4x-filter";
 	
 	public static const E4X_STAR:String = "e4x-star";

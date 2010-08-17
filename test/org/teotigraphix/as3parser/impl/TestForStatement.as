@@ -61,8 +61,17 @@ public class TestForStatement extends AbstractStatementTest
 			+ "<in line=\"1\" column=\"18\"><primary line=\"1\" column=\"18\">list</primary>"
 			+ "</in><block line=\"1\" column=\"25\"></block></foreach>" );
 		
-		// assertStatement(
-		// "", "for each (var a:XML in classInfo..accessor) {}", "" );
+		assertStatement("3", 
+			"for each (var a:XML in xml.classInfo..accessor) {}",
+			"<foreach line=\"1\" column=\"11\"><var line=\"1\" " +
+			"column=\"11\"><name-type-init line=\"1\" column=\"15\"><name line=\"1\" " +
+			"column=\"15\">a</name><type line=\"1\" column=\"17\">XML</type>" +
+			"</name-type-init></var><in line=\"1\" column=\"24\"><dot line=\"1\" " +
+			"column=\"28\"><primary line=\"1\" column=\"24\">xml</primary>" +
+			"<e4x-descendent line=\"1\" column=\"39\"><primary line=\"1\" " +
+			"column=\"28\">classInfo</primary><primary line=\"1\" column=\"39\">" +
+			"accessor</primary></e4x-descendent></dot></in><block line=\"1\" " +
+			"column=\"50\"></block></foreach>");
 	}
 	
 	[Test]

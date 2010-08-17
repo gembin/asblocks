@@ -94,7 +94,8 @@ public class TestAS3Scanner
 				"a",
 				"a.b.*",
 				"a.b::c",
-				"a.E"
+				"a.E",
+				"a..E"
 			];
 		
 		scanner.setLines(ASTUtil.toVector(lines));
@@ -115,6 +116,10 @@ public class TestAS3Scanner
 		assertText("\n");
 		assertText("a");
 		assertText(".");
+		assertText("E");
+		assertText("\n");
+		assertText("a");
+		assertText("..");
 		assertText("E");
 	}
 	
