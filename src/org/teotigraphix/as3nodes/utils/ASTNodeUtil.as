@@ -2,16 +2,10 @@ package org.teotigraphix.as3nodes.utils
 {
 
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
-import org.teotigraphix.as3nodes.api.ICommentAware;
-import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
-import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
-import org.teotigraphix.as3nodes.api.IModifierAware;
 import org.teotigraphix.as3nodes.api.INode;
-import org.teotigraphix.as3nodes.api.IParameterAware;
-import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.impl.ParserFactory;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
@@ -34,7 +28,7 @@ public class ASTNodeUtil
 			description = "/**" + description + "*/";
 		
 		// need to append asdoc or create node, asdoc compilation-unit
-		var asdocNode:Node = create(AS3NodeKind.AS_DOC);
+		var asdocNode:IParserNode = create(AS3NodeKind.AS_DOC);
 		var compilationUnit:IParserNode = ParserFactory.instance.
 			asdocParser.buildAst(Vector.<String>(description.split("\n")), "internal");
 		
@@ -66,7 +60,7 @@ public class ASTNodeUtil
 	public static function createEmptyAsDoc():IParserNode
 	{
 		// as-doc
-		var asdocNode:Node = create(AS3NodeKind.AS_DOC);
+		var asdocNode:IParserNode = create(AS3NodeKind.AS_DOC);
 		// as-doc/compilation-unit
 		var compilationUnit:IParserNode = asdocNode.addChild(create(ASDocNodeKind.COMPILATION_UNIT));
 		// as-doc/compilation-unit/content
@@ -85,9 +79,9 @@ public class ASTNodeUtil
 	 * @private
 	 */
 	public static function createDocTag(name:String, 
-										body:String = null):Node
+										body:String = null):IParserNode
 	{
-		var docTag:Node = create(ASDocNodeKind.DOCTAG) as Node;
+		var docTag:IParserNode = create(ASDocNodeKind.DOCTAG);
 		
 		docTag.addChild(createDocTagName(name));
 		if (body)
@@ -101,15 +95,23 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
-	public static function createName(name:String):Node
+	public static function createName(name:String):IParserNode
 	{
-		return createText(ASDocNodeKind.NAME, name);
+		return createText(AS3NodeKind.NAME, name);
 	}
 	
 	/**
 	 * @private
 	 */
-	public static function createDocTagName(name:String):Node
+	public static function createType(name:String):IParserNode
+	{
+		return createText(AS3NodeKind.TYPE, name);
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createDocTagName(name:String):IParserNode
 	{
 		return createName(name);
 	}
@@ -117,9 +119,9 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
-	public static function createDocTagBody(body:String):Node
+	public static function createDocTagBody(body:String):IParserNode
 	{
-		var bodyNode:Node = create(ASDocNodeKind.BODY);
+		var bodyNode:IParserNode = create(ASDocNodeKind.BODY);
 		bodyNode.addChild(createText(ASDocNodeKind.TEXT, body));
 		return bodyNode;
 	}
@@ -131,17 +133,20 @@ public class ASTNodeUtil
 	public static function createMeta(name:String):IParserNode
 	{
 		// meta
-		var meta:Node = create(AS3NodeKind.META);
+		var meta:IParserNode = create(AS3NodeKind.META);
 		// meta/name
 		meta.addChild(createText(AS3NodeKind.NAME, name));
 		
-		return meta as IParserNode;
+		return meta;
 	}
 	
+	/**
+	 * @private
+	 */
 	public static function createModifier(name:String):IParserNode
 	{
 		// mod
-		return createText(AS3NodeKind.MODIFIER, name) as IParserNode;
+		return createText(AS3NodeKind.MODIFIER, name);
 	}
 	
 	/**
@@ -153,10 +158,10 @@ public class ASTNodeUtil
 										  primary:String):IParserNode
 		
 	{
-		var node:Node = create(AS3NodeKind.CONST_LIST);
+		var node:IParserNode = create(AS3NodeKind.CONST_LIST);
 		
 		// parent.node/content/var-list/mod-list
-		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+		var modList:IParserNode = node.addChild(create(AS3NodeKind.MOD_LIST));
 		
 		if (visibility)
 		{
@@ -168,7 +173,7 @@ public class ASTNodeUtil
 		modList.addChild(createText(AS3NodeKind.MODIFIER, Modifier.STATIC.name));
 		
 		// parent.node/content/var-list/name-type-init
-		var nti:Node = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT)) as Node;
+		var nti:IParserNode = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT));
 		// parent.node/content/var-list/name-type-init/name
 		nti.addChild(createText(AS3NodeKind.NAME, name));
 		if (type)
@@ -179,11 +184,11 @@ public class ASTNodeUtil
 		
 		
 		// parent.node/content/var-list/name-type-init/init
-		var initNode:Node = nti.addChild(create(AS3NodeKind.INIT)) as Node;
+		var initNode:IParserNode = nti.addChild(create(AS3NodeKind.INIT));
 		// parent.node/content/var-list/name-type-init/init/primary
 		initNode.addChild(createText(AS3NodeKind.PRIMARY, primary));
 		
-		return node as IParserNode;
+		return node;
 	}
 	
 	/**
@@ -195,18 +200,18 @@ public class ASTNodeUtil
 										   primary:String = null):IParserNode
 		
 	{
-		var node:Node = create(AS3NodeKind.VAR_LIST);
+		var node:IParserNode = create(AS3NodeKind.VAR_LIST);
 		
 		if (visibility)
 		{
 			// parent.node/content/var-list/mod-list
-			var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+			var modList:IParserNode = node.addChild(create(AS3NodeKind.MOD_LIST));
 			// parent.node/content/var-list/mod-list/mod
 			modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
 		}
 		
 		// parent.node/content/var-list/name-type-init
-		var nti:Node = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT)) as Node;
+		var nti:IParserNode = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT));
 		// parent.node/content/var-list/name-type-init/name
 		nti.addChild(createText(AS3NodeKind.NAME, name));
 		if (type)
@@ -218,12 +223,12 @@ public class ASTNodeUtil
 		if (primary)
 		{
 			// parent.node/content/var-list/name-type-init/init
-			var initNode:Node = nti.addChild(create(AS3NodeKind.INIT)) as Node;
+			var initNode:IParserNode = nti.addChild(create(AS3NodeKind.INIT));
 			// parent.node/content/var-list/name-type-init/init/primary
 			initNode.addChild(createText(AS3NodeKind.PRIMARY, primary));
 		}
 		
-		return node as IParserNode;
+		return node;
 	}
 	
 	/**
@@ -235,10 +240,10 @@ public class ASTNodeUtil
 										  type:IIdentifierNode):IParserNode
 		
 	{
-		var node:Node = create(AS3NodeKind.FUNCTION);
+		var node:IParserNode = create(AS3NodeKind.FUNCTION);
 		
 		// parent.node/content/function/mod-list
-		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+		var modList:IParserNode = node.addChild(create(AS3NodeKind.MOD_LIST));
 		// parent.node/content/function/mod-list/mod
 		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
 		// parent.node/content/function/name
@@ -249,7 +254,7 @@ public class ASTNodeUtil
 		// parent.node/content/function/block
 		node.addChild(create(AS3NodeKind.BLOCK));
 		
-		return node as IParserNode;
+		return node;
 	}
 	
 	/**
@@ -260,10 +265,10 @@ public class ASTNodeUtil
 										returnType:IIdentifierNode):IParserNode
 		
 	{
-		var node:Node = create(AS3NodeKind.FUNCTION);
+		var node:IParserNode = create(AS3NodeKind.FUNCTION);
 		
 		// parent.node/content/function/mod-list
-		var modList:Node = node.addChild(create(AS3NodeKind.MOD_LIST)) as Node;
+		var modList:IParserNode = node.addChild(create(AS3NodeKind.MOD_LIST));
 		// parent.node/content/function/mod-list/mod
 		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
 		// parent.node/content/function/name
@@ -274,8 +279,64 @@ public class ASTNodeUtil
 		// parent.node/content/function/block
 		node.addChild(create(AS3NodeKind.BLOCK));
 		
-		return node as IParserNode;
+		return node;
 	}
+	
+	/**
+	 * @private
+	 */
+	public static function createParameter(name:String,  
+										   type:IIdentifierNode,
+										   defaultValue:String = null):IParserNode
+		
+	{
+		// parameter
+		var param:IParserNode = create(AS3NodeKind.PARAMETER);
+		
+		// parameter/name-type-init
+		var nti:IParserNode = param.addChild(create(AS3NodeKind.NAME_TYPE_INIT));
+		
+		// parameter/name-type-init/name
+		nti.addChild(createText(AS3NodeKind.NAME, name));
+		
+		// parameter/name-type-init/type
+		if (type)
+		{
+			nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
+		}
+		
+		if (defaultValue)
+		{
+			// parameter/name-type-init/init
+			var init:IParserNode = nti.addChild(create(AS3NodeKind.INIT));
+			// parameter/name-type-init/init/primary
+			init.addChild(createText(AS3NodeKind.PRIMARY, defaultValue));
+		}
+		
+		return param;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createRestParameter(name:String):IParserNode
+		
+	{
+		// parameter
+		var param:IParserNode = create(AS3NodeKind.PARAMETER);
+		
+		// parameter/rest
+		var rest:IParserNode = param.addChild(createText(AS3NodeKind.REST, name));
+		
+		return param;
+	}
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -291,36 +352,47 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
-	public static function createEmptyClass(uid:IIdentifierNode):Node
+	public static function createEmptyClass(uid:IIdentifierNode):IParserNode
 	{
-		var compilationUnitNode:Node = createCompilationUnit(uid.packageName);
-		var packageContentNode:Node = compilationUnitNode.getChild(0).getLastChild() as Node;
-		var classNode:Node = packageContentNode.addChild(create(AS3NodeKind.CLASS)) as Node;
-		var classNameNode:Node = classNode.addChild(createText(AS3NodeKind.NAME, uid.localName)) as Node;
-		var classContentNode:Node = classNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
+		var compilationUnitNode:IParserNode = createCompilationUnit(uid.packageName);
+		var packageContentNode:IParserNode = compilationUnitNode.getChild(0).getLastChild();
+		var classNode:IParserNode = packageContentNode.addChild(create(AS3NodeKind.CLASS));
+		var classNameNode:IParserNode = classNode.addChild(createText(AS3NodeKind.NAME, uid.localName));
+		var classContentNode:IParserNode = classNode.addChild(create(AS3NodeKind.CONTENT));
 		return compilationUnitNode;
 	}
 	
 	/**
 	 * @private
 	 */
-	public static function createEmptyInterface(uid:IIdentifierNode):Node
+	public static function createClassContent(uid:IIdentifierNode):IParserNode
 	{
-		var compilationUnitNode:Node = createCompilationUnit(uid.packageName);
-		var packageContentNode:Node = compilationUnitNode.getChild(0).getLastChild() as Node;
-		var classNode:Node = packageContentNode.addChild(create(AS3NodeKind.INTERFACE)) as Node;
-		var classNameNode:Node = classNode.addChild(createText(AS3NodeKind.NAME, uid.localName)) as Node;
-		var classContentNode:Node = classNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
+		var classNode:IParserNode = create(AS3NodeKind.CLASS);
+		var classNameNode:IParserNode = classNode.addChild(createText(AS3NodeKind.NAME, uid.localName));
+		var classContentNode:IParserNode = classNode.addChild(create(AS3NodeKind.CONTENT));
+		return classNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createEmptyInterface(uid:IIdentifierNode):IParserNode
+	{
+		var compilationUnitNode:IParserNode = createCompilationUnit(uid.packageName);
+		var packageContentNode:IParserNode = compilationUnitNode.getChild(0).getLastChild();
+		var classNode:IParserNode = packageContentNode.addChild(create(AS3NodeKind.INTERFACE));
+		var classNameNode:IParserNode = classNode.addChild(createText(AS3NodeKind.NAME, uid.localName));
+		var classContentNode:IParserNode = classNode.addChild(create(AS3NodeKind.CONTENT));
 		return compilationUnitNode;
 	}
 	
-	private static function createCompilationUnit(packageName:String):Node
+	private static function createCompilationUnit(packageName:String):IParserNode
 	{
-		var compilationUnitNode:Node = create(AS3NodeKind.COMPILATION_UNIT);
-		var packageNode:Node = compilationUnitNode.addChild(create(AS3NodeKind.PACKAGE)) as Node;
-		var packageNameNode:Node = packageNode.addChild(createText(AS3NodeKind.NAME, packageName)) as Node;
-		var packageContentNode:Node = packageNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
-		var compilationUnitContentNode:Node = compilationUnitNode.addChild(create(AS3NodeKind.CONTENT)) as Node;
+		var compilationUnitNode:IParserNode = create(AS3NodeKind.COMPILATION_UNIT);
+		var packageNode:IParserNode = compilationUnitNode.addChild(create(AS3NodeKind.PACKAGE));
+		var packageNameNode:IParserNode = packageNode.addChild(createText(AS3NodeKind.NAME, packageName));
+		var packageContentNode:IParserNode = packageNode.addChild(create(AS3NodeKind.CONTENT));
+		var compilationUnitContentNode:IParserNode = compilationUnitNode.addChild(create(AS3NodeKind.CONTENT));
 		return compilationUnitNode;
 	}
 	
@@ -432,80 +504,35 @@ public class ASTNodeUtil
 		if (!paramList)
 			paramList = node.addChild(create(AS3NodeKind.PARAMETER_LIST));
 		
-		var param:Node = paramList.addChild(create(AS3NodeKind.PARAMETER)) as Node;
+		var param:IParserNode = paramList.addChild(create(AS3NodeKind.PARAMETER));
 		
 		if (name)
-			param.addChild(createText(AS3NodeKind.NAME, name)) as Node;
+			param.addChild(createText(AS3NodeKind.NAME, name));
 		
 		if (value)
-			param.addChild(createText(AS3NodeKind.VALUE, value)) as Node;
-		
-		return param as IParserNode;
-	}
-	
-	public static function createParameter(aware:IParameterAware,
-										   name:String,  
-										   type:IIdentifierNode,
-										   defaultValue:String = null):IParserNode
-		
-	{
-		var node:IParserNode = INode(aware).node;
-		
-		//var node:Node = create(AS3NodeKind.FUNCTION);
-		var paramList:IParserNode = ASTUtil.getNode(AS3NodeKind.PARAMETER_LIST, node);
-		if (!paramList)
-			paramList = node.addChildAt(create(AS3NodeKind.PARAMETER_LIST), node.numChildren - 1);
-		
-		var param:Node = paramList.addChild(create(AS3NodeKind.PARAMETER)) as Node;
-		// name-type-init
-		var nti:Node = create(AS3NodeKind.NAME_TYPE_INIT);
-		nti.addChild(createText(AS3NodeKind.NAME, name));
-		
-		if (type)
-			nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
-		
-		if (defaultValue)
-		{
-			var init:Node = nti.addChild(create(AS3NodeKind.INIT)) as Node;
-			init.addChild(createText(AS3NodeKind.PRIMARY, defaultValue));
-		}
-		
-		param.addChild(nti);
+			param.addChild(createText(AS3NodeKind.VALUE, value));
 		
 		return param;
 	}
 	
-	public static function createRestParameter(aware:IParameterAware,
-											   name:String):IParserNode
-		
+
+	
+
+	
+	/**
+	 * @private
+	 */
+	public static function create(kind:String):IParserNode
 	{
-		var node:IParserNode = INode(aware).node;
-		
-		//var node:Node = create(AS3NodeKind.FUNCTION);
-		var paramList:IParserNode = ASTUtil.getNode(AS3NodeKind.PARAMETER_LIST, node);
-		if (!paramList)
-			paramList = node.addChildAt(create(AS3NodeKind.PARAMETER_LIST), node.numChildren - 1);
-		
-		var param:Node = paramList.addChild(create(AS3NodeKind.PARAMETER)) as Node;
-		var rest:Node = param.addChild(createText(AS3NodeKind.REST, name)) as Node;
-		
-		return param;
+		return Node.create(kind, -1, -1, null) as IParserNode;
 	}
 	
 	/**
 	 * @private
 	 */
-	public static function create(kind:String):Node
+	public static function createText(kind:String, text:String):IParserNode
 	{
-		return Node.create(kind, -1, -1, null);
-	}
-	
-	/**
-	 * @private
-	 */
-	public static function createText(kind:String, text:String):Node
-	{
-		return Node.create(kind, -1, -1, text);
+		return Node.create(kind, -1, -1, text) as IParserNode;
 	}
 	
 }

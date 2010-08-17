@@ -34,6 +34,8 @@ import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IParameterAware;
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
@@ -165,6 +167,32 @@ public class AS3Factory implements IAS3Factory
 		var method:IMethodNode = NodeFactory.instance.createMethod(ast, parent);
 		parent.addMethod(method);
 		return method;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newParameter()
+	 */
+	public function newParameter(parent:IParameterAware,
+								 name:String, 
+								 type:IIdentifierNode, 
+								 defaultValue:String):IParameterNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createParameter(name, type, defaultValue);
+		var parameter:IParameterNode = NodeFactory.instance.createParameter(ast, parent);
+		parent.addParameter(parameter);
+		return parameter;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newRestParameter()
+	 */
+	public function newRestParameter(parent:IParameterAware,
+									 name:String):IParameterNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createRestParameter(name);
+		var parameter:IParameterNode = NodeFactory.instance.createParameter(ast, parent);
+		parent.addParameter(parameter);
+		return parameter;
 	}
 	
 	/**

@@ -28,16 +28,14 @@ import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
-import org.teotigraphix.as3nodes.api.IIdentifierAware;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
-import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTChangeEvent;
 import org.teotigraphix.as3nodes.utils.ASTChangeKind;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
-import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -61,6 +59,7 @@ public class ASTChangeManager extends EventDispatcher
 		addEventListener(AS3NodeKind.MODIFIER, modifierChangeHandler);
 		addEventListener(AS3NodeKind.META, metaChangeHandler);
 		addEventListener(AS3NodeKind.NAME, nameChangeHandler);
+		addEventListener(AS3NodeKind.TYPE, typeChangeHandler);
 		
 		// members
 		addEventListener(AS3NodeKind.CONST_LIST, constListChangeHandler);
@@ -68,6 +67,7 @@ public class ASTChangeManager extends EventDispatcher
 		addEventListener(AS3NodeKind.GET, getChangeHandler);
 		addEventListener(AS3NodeKind.SET, setChangeHandler);
 		addEventListener(AS3NodeKind.FUNCTION, functionChangeHandler);
+		addEventListener(AS3NodeKind.PARAMETER, parameterChangeHandler);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -272,6 +272,42 @@ public class ASTChangeManager extends EventDispatcher
 	}
 	
 	/**
+	 * Handles the AS3NodeKind.TYPE add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>TODO</code></li>
+	 * <li><strong>event.data</strong> : <code>TODO</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 */
+	protected function typeChangeHandler(event:ASTChangeEvent):void
+	{
+		var idNode:IIdentifierNode = event.data as IIdentifierNode;
+		var node:IParserNode = INode(event.parent).node;
+		var typeNode:IParserNode = node.getKind(AS3NodeKind.TYPE);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!typeNode)
+			{
+				node.addChildAt(ASTNodeUtil.createType(
+					idNode.qualifiedName), node.numChildren - 1);
+			}
+			else
+			{
+				typeNode.stringValue = idNode.qualifiedName;
+			}
+		}
+		else if (event.kind == ASTChangeKind.REMOVE)
+		{
+			node.removeKind(AS3NodeKind.TYPE);
+		}
+	}
+	
+	/**
 	 * Handles the AS3NodeKind.CONST_LIST add/remove.
 	 * 
 	 * <p>
@@ -394,13 +430,46 @@ public class ASTChangeManager extends EventDispatcher
 		if (event.kind == ASTChangeKind.ADD)
 		{
 			if (!content)
-				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+				content = node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
 			
 			content.addChild(functionNode.node);
 		}
 		else if (event.kind == ASTChangeKind.REMOVE && content)
 		{
 			content.removeChild(functionNode.node);
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.PARAMETER add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IParameterAware</code></li>
+	 * <li><strong>event.data</strong> : <code>IParameterNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IParameterAware#parameters
+	 */
+	protected function parameterChangeHandler(event:ASTChangeEvent):void
+	{
+		var parameterNode:IParameterNode = event.data as IParameterNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var parameterList:IParserNode = node.getKind(AS3NodeKind.PARAMETER_LIST);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!parameterList)
+				parameterList = node.addChild(ASTNodeUtil.create(AS3NodeKind.PARAMETER_LIST));
+			
+			parameterList.addChild(parameterNode.node);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && parameterList)
+		{
+			parameterList.removeChild(parameterNode.node);
 		}
 	}
 	

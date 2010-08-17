@@ -53,6 +53,11 @@ public interface IFunctionNode extends IScriptNode, IParameterAware
 	 */
 	function get isOverride():Boolean;
 	
+	/**
+	 * @private
+	 */
+	function set isOverride(value:Boolean):void;
+	
 	//----------------------------------
 	//  isStatic
 	//----------------------------------

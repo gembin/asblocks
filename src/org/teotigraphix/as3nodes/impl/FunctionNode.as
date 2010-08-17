@@ -26,7 +26,6 @@ import org.teotigraphix.as3nodes.api.INameAware;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.Modifier;
-import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -72,6 +71,20 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 		return hasModifier(Modifier.OVERRIDE);
 	}
 	
+	/**
+	 * @private
+	 */	
+	public function set isOverride(value:Boolean):void
+	{
+		if (value && hasModifier(Modifier.OVERRIDE))
+			return;
+		
+		if (value)
+			addModifier(Modifier.OVERRIDE);
+		else
+			removeModifier(Modifier.OVERRIDE);
+	}
+	
 	//----------------------------------
 	//  isStatic
 	//----------------------------------
@@ -82,7 +95,7 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	private var _isStatic:Boolean;
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#isStatic
 	 */
 	public function get isStatic():Boolean
 	{
@@ -99,8 +112,8 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 		
 		if (value)
 			addModifier(Modifier.STATIC);
-//		else
-//			removeModifier(Modifier.STATIC);
+		else
+			removeModifier(Modifier.STATIC);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -124,14 +137,6 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	public function get parameters():Vector.<IParameterNode>
 	{
 		return _parameters;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set parameters(value:Vector.<IParameterNode>):void
-	{
-		_parameters = value;
 	}
 	
 	//----------------------------------
@@ -174,7 +179,13 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	 */	
 	public function set type(value:IIdentifierNode):void
 	{
+		if (_type)
+			dispatchRemoveChange(AS3NodeKind.TYPE, _type);
+		
 		_type = value;
+		
+		if (_type)
+			dispatchAddChange(AS3NodeKind.TYPE, _type);
 	}
 	
 	//----------------------------------
@@ -214,9 +225,6 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	 */
 	public function addReturnDescription(description:String):void
 	{
-		if (!comment || comment is CommentPlaceholderNode)
-			as3Factory.newComment(this);
-		
 		comment.newDocTag("return", description);
 	}
 	
@@ -226,42 +234,88 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	//
 	//--------------------------------------------------------------------------
 	
+	//----------------------------------
+	//  IParameterNode
+	//----------------------------------
+	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#addParameter()
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#hasParameter()
 	 */
-	public function addParameter(name:String, 
-								 type:IIdentifierNode, 
-								 defaultValue:String = null):IParameterNode
+	public function hasParameter(name:String):Boolean
 	{
-		var ast:IParserNode = ASTNodeUtil.createParameter(this, name, type, defaultValue);
-		var parameter:IParameterNode = NodeFactory.instance.createParameter(ast, this);
-		parameter.defaultValue = defaultValue;
-		parameters.push(parameter);
-		return parameter;
+		var len:int = parameters.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (parameters[i].name == name)
+				return true;
+		}
+		return false;
 	}
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#addRestParameter()
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#addParameter()
 	 */
-	public function addRestParameter(name:String):IParameterNode
+	public function addParameter(child:IParameterNode):IParameterNode
 	{
-		var ast:IParserNode = ASTNodeUtil.createRestParameter(this, name);
-		var parameter:IParameterNode = NodeFactory.instance.createParameter(ast, this);
-		parameters.push(parameter);
-		return parameter;
+		if (hasParameter(child.name))
+			return null;
+		
+		parameters.push(child);
+		
+		dispatchAddChange(AS3NodeKind.PARAMETER, child);
+		
+		return child;
 	}
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#getParameter()
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#removeParameter()
+	 */
+	public function removeParameter(child:IParameterNode):IParameterNode
+	{
+		var len:int = parameters.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IParameterNode = parameters[i] as IParameterNode;
+			if (element.name == child.name)
+			{
+				parameters.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.PARAMETER, child);
+				return element;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#getParameter()
 	 */
 	public function getParameter(name:String):IParameterNode
 	{
-		for each (var element:IParameterNode in parameters)
+		var len:int = parameters.length;
+		for (var i:int = 0; i < len; i++)
 		{
-			if (element.name == name)
-				return element;
+			if (parameters[i].name == name)
+				return parameters[i];
 		}
 		return null;
+	}
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IFunctionNode#newParameter()
+	 */
+	public function newParameter(name:String,
+								 type:IIdentifierNode,
+								 defaultValue:String = null):IParameterNode
+	{
+		return as3Factory.newParameter(this, name, type, defaultValue);
+	}
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IFunctionNode#newRestParameter()
+	 */
+	public function newRestParameter(name:String):IParameterNode
+	{
+		return as3Factory.newRestParameter(this, name);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -277,7 +331,7 @@ public class FunctionNode extends ScriptNode implements IFunctionNode
 	{
 		super.compute();
 		
-		parameters = new Vector.<IParameterNode>();
+		_parameters = new Vector.<IParameterNode>();
 		
 		if (node.numChildren == 0)
 			return;

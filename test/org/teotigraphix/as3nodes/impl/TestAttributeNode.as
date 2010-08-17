@@ -8,7 +8,6 @@ import org.teotigraphix.as3parser.api.IParserNode;
 
 public class TestAttributeNode
 {
-	
 	[Test]
 	public function testBasic():void
 	{

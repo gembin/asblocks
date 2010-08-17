@@ -44,11 +44,6 @@ public interface IParameterAware extends INode
 	 */
 	function get parameters():Vector.<IParameterNode>;
 	
-	/**
-	 * @private
-	 */
-	function set parameters(value:Vector.<IParameterNode>):void;
-	
 	//----------------------------------
 	//  hasParameters
 	//----------------------------------
@@ -65,20 +60,35 @@ public interface IParameterAware extends INode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * TODO DOCME
 	 */
-	function addParameter(name:String, 
-						  type:IIdentifierNode, 
+	function hasParameter(name:String):Boolean;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function addParameter(child:IParameterNode):IParameterNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function removeParameter(child:IParameterNode):IParameterNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function getParameter(name:String):IParameterNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newParameter(name:String, 
+						  type:IIdentifierNode,
 						  defaultValue:String = null):IParameterNode;
 	
 	/**
-	 * TODO Docme
+	 * TODO DOCME
 	 */
-	function addRestParameter(name:String):IParameterNode;
-	
-	/**
-	 * TODO Docme
-	 */
-	function getParameter(name:String):IParameterNode;
+	function newRestParameter(name:String):IParameterNode;
 }
 }

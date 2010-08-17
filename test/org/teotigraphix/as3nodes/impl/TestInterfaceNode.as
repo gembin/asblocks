@@ -3,6 +3,7 @@ package org.teotigraphix.as3nodes.impl
 
 import flexunit.framework.Assert;
 
+import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
@@ -145,8 +146,8 @@ public class TestInterfaceNode
 		Assert.assertEquals("property", getters[0].name);
 		Assert.assertEquals("property", setters[0].name);
 		
-		Assert.assertEquals("get", getters[0].access);
-		Assert.assertEquals("set", setters[0].access);
+		Assert.assertEquals(Access.READ, getters[0].access);
+		Assert.assertEquals(Access.WRITE, setters[0].access);
 	}
 	
 	[Test]

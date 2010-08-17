@@ -42,9 +42,9 @@ public interface IAccessorNode extends IFunctionNode
 	/**
 	 * TODO Docme
 	 */
-	function get access():String;
+	function get access():Access;
 	
-	function set access(value:String):void;
+	function set access(value:Access):void;
 	
 	//----------------------------------
 	//  isReadWrite

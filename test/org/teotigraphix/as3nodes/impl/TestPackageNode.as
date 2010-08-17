@@ -2,6 +2,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.flexunit.Assert;
+import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
@@ -280,8 +281,8 @@ public class TestPackageNode
 		Assert.assertEquals("property", getters[0].name);
 		Assert.assertEquals("property", setters[0].name);
 		
-		Assert.assertEquals("get", getters[0].access);
-		Assert.assertEquals("set", setters[0].access);
+		Assert.assertEquals(Access.READ, getters[0].access);
+		Assert.assertEquals(Access.WRITE, setters[0].access);
 	}
 	
 	[Test]

@@ -20,6 +20,7 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -46,12 +47,12 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	/**
 	 * @private
 	 */
-	private var _access:String;
+	private var _access:Access;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IAccessorNode#access
 	 */
-	public function get access():String
+	public function get access():Access
 	{
 		return _access;
 	}
@@ -59,7 +60,7 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	/**
 	 * @private
 	 */	
-	public function set access(value:String):void
+	public function set access(value:Access):void
 	{
 		_access = value;
 	}
@@ -78,7 +79,7 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	 */
 	public function get isReadWrite():Boolean
 	{
-		return _access == "read-write";
+		return _access.equals(Access.READ_WRITE);
 	}
 	
 	//----------------------------------
@@ -95,7 +96,7 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	 */
 	public function get isReadOnly():Boolean
 	{
-		return _access == "read";
+		return _access.equals(Access.READ);
 	}
 	
 	//----------------------------------
@@ -112,7 +113,7 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	 */
 	public function get isWriteOnly():Boolean
 	{
-		return _access == "write";
+		return _access.equals(Access.WRITE);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -174,8 +175,7 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	{
 		super.compute();
 		
-		_access = node.kind;
+		_access = Access.fromKind(node.kind);
 	}
-	
 }
 }

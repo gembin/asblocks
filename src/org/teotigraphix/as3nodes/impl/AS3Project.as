@@ -26,6 +26,7 @@ import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.ISourceFile;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.Node;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.utils.FileUtil;
@@ -205,7 +206,7 @@ public class AS3Project implements IAS3Project
 		var file:AS3SourceFile = new AS3SourceFile(null, code);
 		
 		// The CompilationNode in the file has to be created
-		var compilationUnitNode:Node = ASTNodeUtil.createEmptyClass(uid);
+		var compilationUnitNode:IParserNode = ASTNodeUtil.createEmptyClass(uid);
 		
 		// The PackageNode in the CompilationNode has to be created
 		// The TypeNode in the PackageNode has to be created
@@ -234,7 +235,7 @@ public class AS3Project implements IAS3Project
 		var file:AS3SourceFile = new AS3SourceFile(null, code);
 		
 		// The CompilationNode in the file has to be created
-		var compilationUnitNode:Node = ASTNodeUtil.createEmptyInterface(uid);
+		var compilationUnitNode:IParserNode = ASTNodeUtil.createEmptyInterface(uid);
 		
 		// The PackageNode in the CompilationNode has to be created
 		// The TypeNode in the PackageNode has to be created

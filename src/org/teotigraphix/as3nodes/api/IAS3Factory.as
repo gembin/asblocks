@@ -59,10 +59,10 @@ public interface IAS3Factory
 	 * TODO DOCME
 	 */
 	function newConstant(parent:IClassTypeNode,
-						  name:String, 
-						  visibility:Modifier, 
-						  type:IIdentifierNode,
-						  primaray:String):IConstantNode;
+						 name:String, 
+						 visibility:Modifier, 
+						 type:IIdentifierNode,
+						 primaray:String):IConstantNode;
 	
 	/**
 	 * TODO DOCME
@@ -97,6 +97,19 @@ public interface IAS3Factory
 					   name:String, 
 					   visibility:Modifier, 
 					   returnType:IIdentifierNode):IMethodNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newParameter(parent:IParameterAware,
+						  name:String, 
+						  type:IIdentifierNode, 
+						  defaultValue:String):IParameterNode;
+	/**
+	 * TODO DOCME
+	 */
+	function newRestParameter(parent:IParameterAware,
+							  name:String):IParameterNode;
 	
 	/**
 	 * Creates a new <code>IMetaDataNode</code> on the parent <code>IMetaDataAware</code> 
