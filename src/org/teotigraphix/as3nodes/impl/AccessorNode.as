@@ -24,6 +24,7 @@ import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.KeyWords;
 
 /**
  * TODO DOCME
@@ -63,6 +64,15 @@ public class AccessorNode extends FunctionNode implements IAccessorNode
 	public function set access(value:Access):void
 	{
 		_access = value;
+		
+		if (_access.equals(Access.READ))
+		{
+			
+		}
+		else if (_access.equals(Access.WRITE))
+		{
+			type = IdentifierNode.createType(KeyWords.VOID, this);
+		}
 	}
 	
 	//----------------------------------

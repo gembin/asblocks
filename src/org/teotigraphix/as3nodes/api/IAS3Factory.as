@@ -78,7 +78,7 @@ public interface IAS3Factory
 	function newAccessor(parent:ITypeNode,
 						 name:String, 
 						 visibility:Modifier, 
-						 access:String,
+						 access:Access,
 						 type:IIdentifierNode):IAccessorNode;
 	
 	/**

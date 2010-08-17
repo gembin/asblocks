@@ -140,5 +140,17 @@ public final class Access
 			return WRITE;
 		return null;
 	}
+	
+	/**
+	 * @private
+	 */
+	public static function toKind(kind:Access):String
+	{
+		if (kind.equals(READ))
+			return AS3NodeKind.GET;
+		if (kind.equals(WRITE))
+			return AS3NodeKind.SET;
+		return null;
+	}
 }
 }

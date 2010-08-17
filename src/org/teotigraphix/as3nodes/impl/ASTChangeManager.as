@@ -23,6 +23,7 @@ package org.teotigraphix.as3nodes.impl
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
 
+import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
@@ -388,6 +389,22 @@ public class ASTChangeManager extends EventDispatcher
 	 */
 	protected function getChangeHandler(event:ASTChangeEvent):void
 	{
+		var functionNode:IAccessorNode = event.data as IAccessorNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				content = node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(functionNode.node);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(functionNode.node);
+		}
 	}
 	
 	/**
@@ -405,6 +422,22 @@ public class ASTChangeManager extends EventDispatcher
 	 */
 	protected function setChangeHandler(event:ASTChangeEvent):void
 	{
+		var functionNode:IAccessorNode = event.data as IAccessorNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				content = node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(functionNode.node);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(functionNode.node);
+		}
 	}
 	
 	/**

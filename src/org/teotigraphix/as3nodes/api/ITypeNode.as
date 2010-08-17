@@ -127,7 +127,7 @@ public interface ITypeNode extends INode, IScriptNode,
 	 */
 	function newAccessor(name:String, 
 						 visibility:Modifier, 
-						 access:String,
+						 access:Access,
 						 type:IIdentifierNode):IAccessorNode;
 	
 	//----------------------------------

@@ -20,6 +20,7 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAS3Factory;
 import org.teotigraphix.as3nodes.api.IAS3Project;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
@@ -146,12 +147,21 @@ public class AS3Factory implements IAS3Factory
 	public function newAccessor(parent:ITypeNode,
 								name:String, 
 								visibility:Modifier,
-								access:String,
+								access:Access,
 								type:IIdentifierNode):IAccessorNode
 	{
 		var ast:IParserNode = ASTNodeUtil.createAccessor(name, visibility, access, type);
 		var accessor:IAccessorNode = NodeFactory.instance.createAccessor(ast, parent);
 		parent.addAccessor(accessor);
+		if (access.equals(Access.READ))
+		{
+			
+		}
+		else if (access.equals(Access.WRITE))
+		{
+			accessor.newParameter("value", type);
+			accessor.type = IdentifierNode.createType("void");
+		}
 		return accessor;
 	}
 	

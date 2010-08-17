@@ -20,6 +20,7 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
@@ -178,12 +179,13 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	 */
 	public function addAccessor(child:IAccessorNode):IAccessorNode
 	{
-		if (hasAccessor(child.name))
-			return null;
+		//if (hasAccessor(child.name))
+		//	return null;
 		
 		accessors.push(child);
 		
-//		dispatchAddChange(AS3NodeKind.FUNCTION, child);
+		if (Access.toKind(child.access))
+			dispatchAddChange(Access.toKind(child.access), child);
 		return child;
 	}
 	
@@ -199,7 +201,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 			if (element.name == child.name)
 			{
 				accessors.splice(i, 1);
-//				dispatchRemoveChange(AS3NodeKind.FUNCTION, child);
+				dispatchRemoveChange(Access.toKind(child.access), child);
 				return element;
 			}
 		}
@@ -225,7 +227,7 @@ public class TypeNode extends ScriptNode implements ITypeNode
 	 */
 	public function newAccessor(name:String, 
 								visibility:Modifier, 
-								access:String,
+								access:Access,
 								type:IIdentifierNode):IAccessorNode
 	{
 		return as3Factory.newAccessor(this, name, visibility, access, type);

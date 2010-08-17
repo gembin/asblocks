@@ -1,6 +1,7 @@
 package org.teotigraphix.as3nodes.utils
 {
 
+import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
@@ -236,11 +237,11 @@ public class ASTNodeUtil
 	 */
 	public static function createAccessor(name:String, 
 										  visibility:Modifier,
-										  access:String,
+										  access:Access,
 										  type:IIdentifierNode):IParserNode
 		
 	{
-		var node:IParserNode = create(AS3NodeKind.FUNCTION);
+		var node:IParserNode = create(Access.toKind(access));
 		
 		// parent.node/content/function/mod-list
 		var modList:IParserNode = node.addChild(create(AS3NodeKind.MOD_LIST));
@@ -252,9 +253,22 @@ public class ASTNodeUtil
 		if (type)
 			node.addChild(createText(AS3NodeKind.TYPE, type.localName));
 		// parent.node/content/function/block
-		node.addChild(create(AS3NodeKind.BLOCK));
+		var block:IParserNode = create(AS3NodeKind.BLOCK);
+		node.addChild(block);
+		
+		if (access.equals(Access.READ))
+		{
+			block.addChild(createReturn("null"));
+		}
 		
 		return node;
+	}
+	
+	public static function createReturn(primary:String):IParserNode
+	{
+		var re:IParserNode = create("return");
+		re.addChild(createText("primary", primary));
+		return re;
 	}
 	
 	/**
