@@ -144,6 +144,22 @@ public class ASTNodeUtil
 	}
 	
 	/**
+	 * @private
+	 */
+	public static function createInclude(filePath:String):IParserNode
+	{
+		return createText(AS3NodeKind.INCLUDE, filePath);
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createUse(nameSpace:String):IParserNode
+	{
+		return createText(AS3NodeKind.USE, nameSpace);
+	}
+	
+	/**
 	 * Method does NOT add the AST to the parent. IMetaDataAware.addMetaData() will actually
 	 * add the ast to the parent.
 	 */

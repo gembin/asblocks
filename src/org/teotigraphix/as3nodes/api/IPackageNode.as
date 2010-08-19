@@ -77,12 +77,37 @@ public interface IPackageNode extends INode, INameAware, IIdentifierAware,
 	 */
 	function get imports():Vector.<IIdentifierNode>;
 	
+	//----------------------------------
+	//  includes
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function get includes():Vector.<IIncludeNode>;
+	
+	//----------------------------------
+	//  imports
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function get uses():Vector.<IUseNode>;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Methods
 	//
 	//--------------------------------------------------------------------------
 	
+	//----------------------------------
+	//  IImportNode
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
 	function hasImport(qualifiedName:String):Boolean;
 	
 	/**
@@ -108,6 +133,72 @@ public interface IPackageNode extends INode, INameAware, IIdentifierAware,
 	 * TODO DOCME
 	 */
 	function newImport(name:String):IIdentifierNode;
+	
+	//----------------------------------
+	//  IIncludeNode
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function hasInclude(filePath:String):Boolean;
+	
+	/**
+	 * Adds an include node to the package node.
+	 * 
+	 * @param node The <code>IIncludeNode</code> node.
+	 */
+	function addInclude(node:IIncludeNode):IIncludeNode;
+	
+	/**
+	 * Removes an include node from the package node.
+	 * 
+	 * @param node The <code>IIdentifierNode</code> node.
+	 */
+	function removeInclude(node:IIncludeNode):IIncludeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function getInclude(filePath:String):IIncludeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newInclude(filePath:String):IIncludeNode;
+	
+	//----------------------------------
+	//  IUseNode
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function hasUse(nameSpace:String):Boolean;
+	
+	/**
+	 * Adds an use node to the package node.
+	 * 
+	 * @param node The <code>IUseNode</code> node.
+	 */
+	function addUse(node:IUseNode):IUseNode;
+	
+	/**
+	 * Removes an use node from the package node.
+	 * 
+	 * @param node The <code>IUseNode</code> node.
+	 */
+	function removeUse(node:IUseNode):IUseNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function getUse(nameSpace:String):IUseNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newUse(nameSpace:String):IUseNode;
 	
 	//----------------------------------
 	//  Factory

@@ -33,11 +33,13 @@ import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IIncludeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
+import org.teotigraphix.as3nodes.api.IUseNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTChangeEvent;
 import org.teotigraphix.as3nodes.utils.ASTChangeKind;
@@ -63,6 +65,8 @@ public class ASTChangeManager extends EventDispatcher
 		super();
 		
 		addEventListener(AS3NodeKind.IMPORT, importChangeHandler);
+		addEventListener(AS3NodeKind.INCLUDE, includeChangeHandler);
+		addEventListener(AS3NodeKind.USE, useChangeHandler);
 		
 		addEventListener(AS3NodeKind.AS_DOC, asDocChangeHandler);
 		addEventListener(ASDocNodeKind.DOCTAG, docTagChangeHandler);
@@ -107,6 +111,80 @@ public class ASTChangeManager extends EventDispatcher
 	protected function importChangeHandler(event:ASTChangeEvent):void
 	{
 		var uidNode:IIdentifierNode = event.data as IIdentifierNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				content = node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChildAt(uidNode.node, content.numChildren - 1);
+			
+			setParent(uidNode, event.parent);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE)
+		{
+			node.removeChild(uidNode.node);
+			
+			unsetParent(uidNode);
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.INCLUDE add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IPackageNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IIncludeNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IPackageNode#includes
+	 */
+	protected function includeChangeHandler(event:ASTChangeEvent):void
+	{
+		var uidNode:IIncludeNode = event.data as IIncludeNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				content = node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChildAt(uidNode.node, content.numChildren - 1);
+			
+			setParent(uidNode, event.parent);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE)
+		{
+			node.removeChild(uidNode.node);
+			
+			unsetParent(uidNode);
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.USE add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IPackageNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IUseNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IPackageNode#uses
+	 */
+	protected function useChangeHandler(event:ASTChangeEvent):void
+	{
+		var uidNode:IUseNode = event.data as IUseNode;
 		var node:IParserNode = INode(event.parent).node;
 		
 		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);

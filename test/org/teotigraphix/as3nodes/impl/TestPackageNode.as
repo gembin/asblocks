@@ -10,10 +10,12 @@ import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IIncludeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.IUseNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
@@ -156,6 +158,34 @@ public class TestPackageNode
 	}
 	
 	[Test]
+	public function test_hasInclude():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var include1:IIncludeNode = element.newInclude("../my/domain/Include.as");
+		Assert.assertNotNull(include1);
+		
+		Assert.assertEquals(1, element.includes.length);
+		Assert.assertTrue(element.hasInclude("../my/domain/Include.as"));
+		Assert.assertFalse(element.hasInclude("../my/domain/Include2.as"));
+	}
+	
+	[Test]
+	public function test_hasUse():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var use1:IUseNode = element.newUse("mx_internal");
+		Assert.assertNotNull(use1);
+		
+		Assert.assertEquals(1, element.uses.length);
+		Assert.assertTrue(element.hasUse("mx_internal"));
+		Assert.assertFalse(element.hasUse("flash_proxy"));
+	}
+	
+	[Test]
 	public function test_addImport():void
 	{
 		var element:PackageNode = createPackage("my.domain");
@@ -185,6 +215,22 @@ public class TestPackageNode
 	}
 	
 	[Test]
+	public function test_addInclude():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+	}
+	
+	[Test]
+	public function test_addUse():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+	}
+	
+	[Test]
 	public function test_removeImport():void
 	{
 		var element:PackageNode = createPackage("my.domain");
@@ -209,6 +255,46 @@ public class TestPackageNode
 		Assert.assertNull(import1.parent);
 		Assert.assertNull(import2.parent);
 		Assert.assertNull(import3.parent);
+	}
+	
+	[Test]
+	public function test_removeInclude():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var include1:IIncludeNode = element.newInclude("../my/domain/Include1.as");
+		var include2:IIncludeNode = element.newInclude("../my/domain/Include2.as");
+		
+		Assert.assertEquals(2, element.includes.length);
+		
+		Assert.assertNotNull(element.removeInclude(include1));
+		Assert.assertNotNull(element.removeInclude(include2));
+		
+		Assert.assertEquals(0, element.includes.length);
+		
+		Assert.assertNull(include1.parent);
+		Assert.assertNull(include2.parent);
+	}
+	
+	[Test]
+	public function test_removeUse():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var uses1:IUseNode = element.newUse("mx_internal");
+		var uses2:IUseNode = element.newUse("flash_proxy");
+		
+		Assert.assertEquals(2, element.uses.length);
+		
+		Assert.assertNotNull(element.removeUse(uses1));
+		Assert.assertNotNull(element.removeUse(uses2));
+		
+		Assert.assertEquals(0, element.uses.length);
+		
+		Assert.assertNull(uses2.parent);
+		Assert.assertNull(uses2.parent);
 	}
 	
 	[Test]

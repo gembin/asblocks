@@ -31,6 +31,7 @@ import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IIncludeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -40,6 +41,7 @@ import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.ISourceFile;
+import org.teotigraphix.as3nodes.api.IUseNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
 import org.teotigraphix.as3parser.core.SourceCode;
@@ -164,6 +166,30 @@ public class NodeFactory
 									 parent:INode):IIdentifierNode
 	{
 		return new IdentifierNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IIncludeNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createInclude(node:IParserNode, 
+								  parent:INode):IIncludeNode
+	{
+		return new IncludeNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IUseNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createUse(node:IParserNode, 
+							  parent:INode):IUseNode
+	{
+		return new UseNode(node, parent);
 	}
 	
 	/**

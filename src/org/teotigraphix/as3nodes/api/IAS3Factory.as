@@ -52,6 +52,18 @@ public interface IAS3Factory
 	/**
 	 * TODO DOCME
 	 */
+	function newInclude(parent:IPackageNode, 
+						filePath:String):IIncludeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newUse(parent:IPackageNode, 
+					nameSpace:String):IUseNode;
+	
+	/**
+	 * TODO DOCME
+	 */
 	function newClass(parent:IPackageNode, 
 					  name:String):IClassTypeNode;
 	

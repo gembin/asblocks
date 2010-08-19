@@ -24,10 +24,12 @@ import org.teotigraphix.as3nodes.api.IBlockCommentNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IIncludeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.IUseNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
@@ -185,6 +187,40 @@ public class PackageNode extends NodeBase implements IPackageNode
 		return _imports;
 	}
 	
+	//----------------------------------
+	//  includes
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected var _includes:Vector.<IIncludeNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#includes
+	 */
+	public function get includes():Vector.<IIncludeNode>
+	{
+		return _includes;
+	}
+	
+	//----------------------------------
+	//  uses
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected var _uses:Vector.<IUseNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#uses
+	 */
+	public function get uses():Vector.<IUseNode>
+	{
+		return _uses;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  IBlockCommentAware API :: Properties
@@ -241,6 +277,10 @@ public class PackageNode extends NodeBase implements IPackageNode
 	//  IPackageNode API :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	// IImportNode
+	//----------------------------------
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#hasImport()
@@ -305,10 +345,6 @@ public class PackageNode extends NodeBase implements IPackageNode
 		return null;
 	}
 	
-	//----------------------------------
-	//  Factory
-	//----------------------------------
-	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newImport()
 	 */
@@ -316,6 +352,160 @@ public class PackageNode extends NodeBase implements IPackageNode
 	{
 		return as3Factory.newImport(this, name);
 	}
+	
+	//----------------------------------
+	// IIncludeNode
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#hasInclude()
+	 */
+	public function hasInclude(filePath:String):Boolean
+	{
+		var len:int = includes.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (includes[i].filePath == filePath)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#addInclude()
+	 */
+	public function addInclude(element:IIncludeNode):IIncludeNode
+	{
+		if (hasInclude(element.filePath))
+			return null;
+		
+		includes.push(element);
+		
+		dispatchAddChange(AS3NodeKind.INCLUDE, element);
+		
+		return element;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#removeInclude()
+	 */
+	public function removeInclude(element:IIncludeNode):IIncludeNode
+	{
+		var len:int = includes.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (includes[i] === element 
+				&& includes[i].filePath == element.filePath)
+			{
+				includes.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.INCLUDE, element);
+				return element;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#getInclude()
+	 */
+	public function getInclude(filePath:String):IIncludeNode
+	{
+		var len:int = includes.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (includes[i].filePath == filePath)
+				return includes[i];
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newInclude()
+	 */
+	public function newInclude(filePath:String):IIncludeNode
+	{
+		return as3Factory.newInclude(this, filePath);
+	}
+	
+	//----------------------------------
+	// IUseNode
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#hasUse()
+	 */
+	public function hasUse(nameSpace:String):Boolean
+	{
+		var len:int = uses.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (uses[i].nameSpace == nameSpace)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#addUse()
+	 */
+	public function addUse(element:IUseNode):IUseNode
+	{
+		if (hasUse(element.nameSpace))
+			return null;
+		
+		uses.push(element);
+		
+		dispatchAddChange(AS3NodeKind.USE, element);
+		
+		return element;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#removeUse()
+	 */
+	public function removeUse(element:IUseNode):IUseNode
+	{
+		var len:int = uses.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (uses[i] === element 
+				&& uses[i].nameSpace == element.nameSpace)
+			{
+				uses.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.USE, element);
+				return element;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#getUse()
+	 */
+	public function getUse(nameSpace:String):IUseNode
+	{
+		var len:int = uses.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (uses[i].nameSpace == nameSpace)
+				return uses[i];
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newUse()
+	 */
+	public function newUse(nameSpace:String):IUseNode
+	{
+		return as3Factory.newUse(this, nameSpace);
+	}
+	
+	//----------------------------------
+	//  Factory
+	//----------------------------------
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newClass()
@@ -368,6 +558,8 @@ public class PackageNode extends NodeBase implements IPackageNode
 	override protected function compute():void
 	{
 		_imports = new Vector.<IIdentifierNode>();
+		_includes = new Vector.<IIncludeNode>();
+		_uses = new Vector.<IUseNode>();
 		
 		NodeUtil.computeImports(this, node.getLastChild());
 		

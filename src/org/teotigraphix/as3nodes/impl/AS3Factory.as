@@ -34,6 +34,7 @@ import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IIncludeNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
@@ -43,6 +44,7 @@ import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IParameterAware;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.IUseNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -96,6 +98,30 @@ public class AS3Factory implements IAS3Factory
 		var uidNode:IIdentifierNode = NodeFactory.instance.createIdentifier(ast, parent);
 		parent.addImport(uidNode);
 		return uidNode;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newInclude()
+	 */
+	public function newInclude(parent:IPackageNode, 
+							   filePath:String):IIncludeNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createInclude(filePath);
+		var includeNode:IIncludeNode = NodeFactory.instance.createInclude(ast, parent);
+		parent.addInclude(includeNode);
+		return includeNode;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newUse()
+	 */
+	public function newUse(parent:IPackageNode, 
+						   nameSpace:String):IUseNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createUse(nameSpace);
+		var useNode:IUseNode = NodeFactory.instance.createUse(ast, parent);
+		parent.addUse(useNode);
+		return useNode;
 	}
 	
 	/**
