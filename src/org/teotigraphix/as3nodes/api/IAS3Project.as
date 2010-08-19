@@ -123,7 +123,7 @@ public interface IAS3Project
 	 * @param qualifiedName A String indicating the full name of the class.
 	 * IE <code>my.domain.Class</code>.
 	 */
-	function newClass(qualifiedName:String):ISourceFile
+	function newClass(qualifiedName:String):ISourceFile;
 	
 	/**
 	 * Creates and returns a new <code>ISourceFile</code> instance.
@@ -139,6 +139,22 @@ public interface IAS3Project
 	 * @param qualifiedName A String indicating the full name of the class.
 	 * IE <code>my.domain.IInterface</code>.
 	 */
-	function newInterface(qualifiedName:String):ISourceFile
+	function newInterface(qualifiedName:String):ISourceFile;
+	
+	/**
+	 * Creates and returns a new <code>ISourceFile</code> instance.
+	 * 
+	 * <p>The instance will have the <code>packageNode</code> set to an
+	 * <code>IPackageNode</code> and the <code>typeNode</code> set to an
+	 * <code>IFunctionTypeNode</code>.</p>
+	 * 
+	 * <p>If the qualifiedName is <code>my.domain.myFunction</code>, the node during
+	 * writ will be written to <code>project/my/domain/myFunction.as</code> 
+	 * location.</p>
+	 * 
+	 * @param qualifiedName A String indicating the full name of the class.
+	 * IE <code>my.domain.myFunction</code>.
+	 */
+	function newFunction(qualifiedName:String):ISourceFile;
 }
 }

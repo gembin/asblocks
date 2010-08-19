@@ -21,7 +21,10 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -33,6 +36,91 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public class FunctionTypeNode extends TypeNode implements IFunctionTypeNode
 {
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IParameterAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  parameters
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected var _parameters:Vector.<IParameterNode>;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#parameters
+	 */
+	public function get parameters():Vector.<IParameterNode>
+	{
+		return _parameters;
+	}
+	
+	//----------------------------------
+	//  hasParameters
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IParameterAware#hasParameters
+	 */
+	public function get hasParameters():Boolean
+	{
+		return _parameters && _parameters.length > 0;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IFunctionNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _type:IIdentifierNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#hasParameters
+	 */
+	public function get type():IIdentifierNode
+	{
+		return _type;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set type(value:IIdentifierNode):void
+	{
+		if (_type)
+			dispatchRemoveChange(AS3NodeKind.TYPE, _type);
+		
+		_type = value;
+		
+		if (_type)
+			dispatchAddChange(AS3NodeKind.TYPE, _type);
+	}
+	
+	//----------------------------------
+	//  hasType
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#hasType
+	 */
+	public function get hasType():Boolean
+	{
+		return type != null;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -45,6 +133,169 @@ public class FunctionTypeNode extends TypeNode implements IFunctionTypeNode
 	public function FunctionTypeNode(node:IParserNode, parent:INode)
 	{
 		super(node, parent);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IParameterAware API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#addReturnDescription()
+	 */
+	public function addReturnDescription(description:String):void
+	{
+		comment.newDocTag("return", description);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IParameterAware API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  IParameterNode
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#hasParameter()
+	 */
+	public function hasParameter(name:String):Boolean
+	{
+		var len:int = parameters.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (parameters[i].name == name)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#addParameter()
+	 */
+	public function addParameter(child:IParameterNode):IParameterNode
+	{
+		if (hasParameter(child.name))
+			return null;
+		
+		parameters.push(child);
+		
+		dispatchAddChange(AS3NodeKind.PARAMETER, child);
+		
+		return child;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#removeParameter()
+	 */
+	public function removeParameter(child:IParameterNode):IParameterNode
+	{
+		var len:int = parameters.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IParameterNode = parameters[i] as IParameterNode;
+			if (element.name == child.name)
+			{
+				parameters.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.PARAMETER, child);
+				return element;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IFunctionNode#getParameter()
+	 */
+	public function getParameter(name:String):IParameterNode
+	{
+		var len:int = parameters.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (parameters[i].name == name)
+				return parameters[i];
+		}
+		return null;
+	}
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IFunctionNode#newParameter()
+	 */
+	public function newParameter(name:String,
+								 type:IIdentifierNode,
+								 defaultValue:String = null):IParameterNode
+	{
+		return as3Factory.newParameter(this, name, type, defaultValue);
+	}
+	
+	/**
+	 * @see org.teotigraphix.as3nodes.api.IFunctionNode#newRestParameter()
+	 */
+	public function newRestParameter(name:String):IParameterNode
+	{
+		return as3Factory.newRestParameter(this, name);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function compute():void
+	{
+		super.compute();
+		
+		_parameters = new Vector.<IParameterNode>();
+		
+		if (node.numChildren == 0)
+			return;
+		
+		for each (var child:IParserNode in node.children)
+		{
+			if (child.isKind(AS3NodeKind.PARAMETER_LIST))
+			{
+				computeParameterList(child);
+			}
+			else if (child.isKind(AS3NodeKind.TYPE))
+			{
+				computeType(child);
+			}
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function computeParameterList(child:IParserNode):void
+	{
+		var len:int = child.numChildren;
+		for (var i:int = 0; i < len; i++)
+		{
+			_parameters.push(NodeFactory.instance.
+				createParameter(child.children[i], this));
+		}
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function computeType(child:IParserNode):void
+	{
+		if (child && child.stringValue != "")
+			type = NodeFactory.instance.createIdentifier(child, this);
 	}
 }
 }

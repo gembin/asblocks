@@ -454,6 +454,20 @@ public class ASTNodeUtil
 		return compilationUnitNode;
 	}
 	
+	/**
+	 * @private
+	 */
+	public static function createEmptyFunction(uid:IIdentifierNode):IParserNode
+	{
+		var compilationUnitNode:IParserNode = createCompilationUnit(uid.packageName);
+		var packageContentNode:IParserNode = compilationUnitNode.getChild(0).getLastChild();
+		var functionNode:IParserNode = packageContentNode.addChild(create(AS3NodeKind.FUNCTION));
+		var functionNameNode:IParserNode = functionNode.addChild(createText(AS3NodeKind.NAME, uid.localName));
+		var blockNode:IParserNode = functionNode.addChild(create(AS3NodeKind.BLOCK));
+		return compilationUnitNode;
+	}
+	
+	
 	private static function createCompilationUnit(packageName:String):IParserNode
 	{
 		var compilationUnitNode:IParserNode = create(AS3NodeKind.COMPILATION_UNIT);

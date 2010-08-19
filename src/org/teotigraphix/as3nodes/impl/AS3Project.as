@@ -22,6 +22,7 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IAS3Project;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
+import org.teotigraphix.as3nodes.api.IFunctionNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.ISourceFile;
 import org.teotigraphix.as3nodes.api.Modifier;
@@ -248,6 +249,41 @@ public class AS3Project implements IAS3Project
 		
 		// add public modifier
 		compilationNode.typeNode.addModifier(Modifier.PUBLIC);
+		
+		return file;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Project#newInterface()
+	 */
+	public function newFunction(qualifiedName:String):ISourceFile
+	{
+		var uid:IIdentifierNode = IdentifierNode.createName(qualifiedName);
+		
+		var source:String = "";
+		var name:String = uid.localName + ".as";
+		var path:String = output + "/src";
+		
+		var code:SourceCode = new SourceCode(source, name, path);
+		// An .as SourceFile has to be returned
+		var file:AS3SourceFile = new AS3SourceFile(null, code);
+		
+		// The CompilationNode in the file has to be created
+		var compilationUnitNode:IParserNode = ASTNodeUtil.createEmptyFunction(uid);
+		
+		// The PackageNode in the CompilationNode has to be created
+		// The TypeNode in the PackageNode has to be created
+		var compilationNode:ICompilationNode = new CompilationNode(compilationUnitNode, file);
+		AS3SourceFile(file).compilationNode = compilationNode;
+		
+		// add empty comment
+		compilationNode.typeNode.setComment(NodeFactory.instance.
+			createComment(null, compilationNode.typeNode));
+		
+		// add public modifier
+		compilationNode.typeNode.addModifier(Modifier.PUBLIC);
+		// add default void type
+		IFunctionNode(compilationNode.typeNode).type = IdentifierNode.createType("void");
 		
 		return file;
 	}
