@@ -272,7 +272,7 @@ public class PackageNode extends NodeBase implements IPackageNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newClass()
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newImport()
 	 */
 	public function newImport(name:String):IIdentifierNode
 	{

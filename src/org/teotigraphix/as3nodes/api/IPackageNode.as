@@ -100,6 +100,8 @@ public interface IPackageNode extends INode, INameAware, IIdentifierAware
 	
 	function getImport(qualifiedName:String):IIdentifierNode;
 	
+	function newImport(name:String):IIdentifierNode;
+	
 	//----------------------------------
 	//  Factory
 	//----------------------------------

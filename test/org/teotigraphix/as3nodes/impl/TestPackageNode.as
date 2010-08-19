@@ -83,12 +83,16 @@ public class TestPackageNode
 		
 		var import1:IIdentifierNode = element.newImport("my.domain.Test1");
 		Assert.assertNotNull(import1);
+		Assert.assertTrue(import1.node.isKind(AS3NodeKind.IMPORT));
 		var import2:IIdentifierNode = element.newImport("my.domain.Test2");
 		Assert.assertNotNull(import2);
+		Assert.assertTrue(import2.node.isKind(AS3NodeKind.IMPORT));
 		var import3:IIdentifierNode = element.newImport("my.domain.Test3");
 		Assert.assertNotNull(import3);
+		Assert.assertTrue(import3.node.isKind(AS3NodeKind.IMPORT));
 		var import4:IIdentifierNode = element.newImport("my.domain.Test4");
 		Assert.assertNotNull(import4);
+		Assert.assertTrue(import4.node.isKind(AS3NodeKind.IMPORT));
 		
 		Assert.assertEquals(4, element.imports.length);
 		

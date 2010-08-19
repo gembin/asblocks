@@ -90,7 +90,7 @@ public class AS3Factory implements IAS3Factory
 	public function newImport(parent:IPackageNode, 
 							  name:String):IIdentifierNode
 	{
-		var ast:IParserNode = ASTNodeUtil.createName(name);
+		var ast:IParserNode = ASTNodeUtil.createImport(name);
 		var uidNode:IIdentifierNode = NodeFactory.instance.createIdentifier(ast, parent);
 		parent.addImport(uidNode);
 		return uidNode;

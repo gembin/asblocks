@@ -128,6 +128,14 @@ public class ASTNodeUtil
 	}
 	
 	/**
+	 * @private
+	 */
+	public static function createImport(name:String):IParserNode
+	{
+		return createText(AS3NodeKind.IMPORT, name);
+	}
+	
+	/**
 	 * Method does NOT add the AST to the parent. IMetaDataAware.addMetaData() will actually
 	 * add the ast to the parent.
 	 */
