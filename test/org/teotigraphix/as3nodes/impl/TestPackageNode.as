@@ -15,6 +15,7 @@ import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -191,7 +192,10 @@ public class TestPackageNode
 		var element:PackageNode = createPackage("my.domain");
 		var typeNode:ITypeNode = element.newClass("TestClass");
 		
+		Assert.assertEquals(AS3NodeKind.CLASS, typeNode.node.kind);
+		
 		Assert.assertNotNull(typeNode);
+		Assert.assertTrue(typeNode.isPublic);
 		Assert.assertEquals("TestClass", typeNode.name);
 		Assert.assertEquals("my.domain", typeNode.packageName);
 		Assert.assertEquals("my.domain.TestClass", typeNode.qualifiedName);
@@ -210,13 +214,53 @@ public class TestPackageNode
 	[Test]
 	public function test_newInterface():void
 	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newInterface("ITestInterface");
 		
+		Assert.assertEquals(AS3NodeKind.INTERFACE, typeNode.node.kind);
+		
+		Assert.assertNotNull(typeNode);
+		Assert.assertTrue(typeNode.isPublic);
+		Assert.assertEquals("ITestInterface", typeNode.name);
+		Assert.assertEquals("my.domain", typeNode.packageName);
+		Assert.assertEquals("my.domain.ITestInterface", typeNode.qualifiedName);
+		
+		Assert.assertStrictlyEquals(element, typeNode.parent);
+		
+		element = createPackage("");
+		typeNode = element.newClass("ITestTopLevelInterface");
+		
+		Assert.assertNotNull(typeNode);
+		Assert.assertEquals("ITestTopLevelInterface", typeNode.name);
+		Assert.assertEquals("", typeNode.packageName);
+		Assert.assertEquals("ITestTopLevelInterface", typeNode.qualifiedName);
 	}
 	
 	[Test]
 	public function test_newFunction():void
 	{
+		// TODO Need top check the children of this since it's actually
+		// a function node with no CONTENT only a BLOCK
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newFunction("myGlobalFunction");
 		
+		Assert.assertEquals(AS3NodeKind.FUNCTION, typeNode.node.kind);
+		
+		Assert.assertNotNull(typeNode);
+		Assert.assertTrue(typeNode.isPublic);
+		Assert.assertEquals("myGlobalFunction", typeNode.name);
+		Assert.assertEquals("my.domain", typeNode.packageName);
+		Assert.assertEquals("my.domain.myGlobalFunction", typeNode.qualifiedName);
+		
+		Assert.assertStrictlyEquals(element, typeNode.parent);
+		
+		element = createPackage("");
+		typeNode = element.newClass("myGlobalFunction");
+		
+		Assert.assertNotNull(typeNode);
+		Assert.assertEquals("myGlobalFunction", typeNode.name);
+		Assert.assertEquals("", typeNode.packageName);
+		Assert.assertEquals("myGlobalFunction", typeNode.qualifiedName);
 	}
 	
 	[Before]

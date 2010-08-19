@@ -30,7 +30,9 @@ import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTagNode;
+import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
@@ -106,6 +108,29 @@ public class AS3Factory implements IAS3Factory
 		return classType;
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newInterface()
+	 */
+	public function newInterface(parent:IPackageNode, 
+								 name:String):IInterfaceTypeNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createInterface(IdentifierNode.createName(name));
+		var interfaceType:IInterfaceTypeNode = NodeFactory.instance.createInterfaceType(ast, parent);
+		parent.typeNode = interfaceType;
+		return interfaceType;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newFunction()
+	 */
+	public function newFunction(parent:IPackageNode, 
+								name:String):IFunctionTypeNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createFunction(IdentifierNode.createName(name));
+		var functionType:IFunctionTypeNode = NodeFactory.instance.createFunctionType(ast, parent);
+		parent.typeNode = functionType;
+		return functionType;
+	}
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newComment()

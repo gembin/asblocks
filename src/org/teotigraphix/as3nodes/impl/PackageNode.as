@@ -294,7 +294,9 @@ public class PackageNode extends NodeBase implements IPackageNode
 	 */
 	public function newInterface(name:String):IInterfaceTypeNode
 	{
-		return null;
+		var interfaceType:IInterfaceTypeNode = as3Factory.newInterface(this, name);
+		interfaceType.addModifier(Modifier.PUBLIC);
+		return interfaceType;
 	}
 	
 	/**
@@ -302,7 +304,9 @@ public class PackageNode extends NodeBase implements IPackageNode
 	 */
 	public function newFunction(name:String):IFunctionTypeNode
 	{
-		return null;
+		var functionType:IFunctionTypeNode = as3Factory.newFunction(this, name);
+		functionType.addModifier(Modifier.PUBLIC);
+		return functionType;
 	}
 	
 	//--------------------------------------------------------------------------

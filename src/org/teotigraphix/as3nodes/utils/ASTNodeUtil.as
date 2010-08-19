@@ -398,6 +398,28 @@ public class ASTNodeUtil
 	/**
 	 * @private
 	 */
+	public static function createInterface(uid:IIdentifierNode):IParserNode
+	{
+		var interfaceNode:IParserNode = create(AS3NodeKind.INTERFACE);
+		var interfaceNameNode:IParserNode = interfaceNode.addChild(createText(AS3NodeKind.NAME, uid.localName));
+		var interfaceContentNode:IParserNode = interfaceNode.addChild(create(AS3NodeKind.CONTENT));
+		return interfaceNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createFunction(uid:IIdentifierNode):IParserNode
+	{
+		var functionNode:IParserNode = create(AS3NodeKind.FUNCTION);
+		var functionNameNode:IParserNode = functionNode.addChild(createText(AS3NodeKind.NAME, uid.localName));
+		var functionContentNode:IParserNode = functionNode.addChild(create(AS3NodeKind.CONTENT));
+		return functionNode;
+	}
+	
+	/**
+	 * @private
+	 */
 	public static function createEmptyClass(uid:IIdentifierNode):IParserNode
 	{
 		var compilationUnitNode:IParserNode = createCompilationUnit(uid.packageName);

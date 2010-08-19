@@ -30,9 +30,12 @@ import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTagNode;
 import org.teotigraphix.as3nodes.api.IFunctionNode;
+import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTChangeEvent;
@@ -69,6 +72,7 @@ public class ASTChangeManager extends EventDispatcher
 		
 		// types
 		addEventListener(AS3NodeKind.CLASS, classChangeHandler);
+		addEventListener(AS3NodeKind.INTERFACE, interfaceChangeHandler);
 		
 		// members
 		addEventListener(AS3NodeKind.CONST_LIST, constListChangeHandler);
@@ -372,7 +376,7 @@ public class ASTChangeManager extends EventDispatcher
 		var node:IParserNode = INode(event.parent).node;
 		
 		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
-		// TODO check for existing class|interface|function nodes on content node
+		// TODO check for existing class node on content node
 		
 		if (event.kind == ASTChangeKind.ADD)
 		{
@@ -380,10 +384,86 @@ public class ASTChangeManager extends EventDispatcher
 				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
 			
 			content.addChild(classNode.node);
+			setParent(classNode, event.parent);
 		}
 		else if (event.kind == ASTChangeKind.REMOVE && content)
 		{
 			content.removeChild(classNode.node);
+			unsetParent(classNode);
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.INTERFACE add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IPackageNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IInterfaceTypeNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IPackageNode#typeNode
+	 */
+	protected function interfaceChangeHandler(event:ASTChangeEvent):void
+	{
+		var interfaceNode:IInterfaceTypeNode = event.data as IInterfaceTypeNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		// TODO check for existing interface node on content node
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(interfaceNode.node);
+			setParent(interfaceNode, event.parent);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(interfaceNode.node);
+			unsetParent(interfaceNode);
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.FUNCTION (global) add/remove.
+	 * 
+	 * <p>Called from <code>functionChangeHandler()</code>.</p>
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IPackageNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IFunctionTypeNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IPackageNode#typeNode
+	 */
+	protected function functionTypeChangeHandler(event:ASTChangeEvent):void
+	{
+		var functionNode:IFunctionTypeNode = event.data as IFunctionTypeNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		// TODO check for existing interface node on content node
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(functionNode.node);
+			setParent(functionNode, event.parent);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(functionNode.node);
+			unsetParent(functionNode);
 		}
 	}
 	
@@ -534,6 +614,12 @@ public class ASTChangeManager extends EventDispatcher
 	 */
 	protected function functionChangeHandler(event:ASTChangeEvent):void
 	{
+		if (event.data is IFunctionTypeNode)
+		{
+			functionTypeChangeHandler(event);
+			return;
+		}
+		
 		var functionNode:IFunctionNode = event.data as IFunctionNode;
 		var node:IParserNode = INode(event.parent).node;
 		
