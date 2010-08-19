@@ -43,5 +43,10 @@ public interface INestedNode
 	 * TODO Docme
 	 */
 	function get parent():INode;
+	
+	/**
+	 * @private
+	 */
+	function set parent(value:INode):void;
 }
 }

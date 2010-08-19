@@ -373,6 +373,27 @@ public class ASTNodeUtil
 	
 	
 	
+	/**
+	 * @private
+	 */
+	public static function createPackage(uid:IIdentifierNode):IParserNode
+	{
+		var packageNode:IParserNode = create(AS3NodeKind.PACKAGE);
+		var packageNameNode:IParserNode = packageNode.addChild(createText(AS3NodeKind.NAME, uid.qualifiedName));
+		var packageContentNode:IParserNode = packageNode.addChild(create(AS3NodeKind.CONTENT));
+		return packageNode;
+	}
+	
+	/**
+	 * @private
+	 */
+	public static function createClass(uid:IIdentifierNode):IParserNode
+	{
+		var classNode:IParserNode = create(AS3NodeKind.CLASS);
+		var classNameNode:IParserNode = classNode.addChild(createText(AS3NodeKind.NAME, uid.localName));
+		var classContentNode:IParserNode = classNode.addChild(create(AS3NodeKind.CONTENT));
+		return classNode;
+	}
 	
 	/**
 	 * @private

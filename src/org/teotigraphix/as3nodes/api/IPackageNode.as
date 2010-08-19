@@ -20,8 +20,12 @@
 package org.teotigraphix.as3nodes.api
 {
 
+// TODO add includes Vector and implementation
+// TODO add uses Vector and implementation
+
 /**
- * TODO DOCME
+ * The <strong>IPackageNode</strong> is the toplevel public element in an
+ * <code>ICompilationNode</code> container.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -40,16 +44,25 @@ public interface IPackageNode extends INode, INameAware, IIdentifierAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The <code>IClassTypeNode</code>, <code>IInterfaceTypeNode</code> or
+	 * <code>IFunctionTypeNode</code> found within this public package definition.
 	 */
 	function get typeNode():ITypeNode;
+	
+	/**
+	 * @private
+	 */
+	function set typeNode(value:ITypeNode):void;
 	
 	//----------------------------------
 	//  qualifiedName
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The qualifiedName of the child <code>typeNode</code> element.
+	 * 
+	 * <p>If the child <code>typeNode</code> was a <code>IClassTypeNode</code>
+	 * this value could be <strong>my.domain.TestClass</strong>.</p>
 	 */
 	function get qualifiedName():String;
 	
@@ -58,7 +71,8 @@ public interface IPackageNode extends INode, INameAware, IIdentifierAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The package imports, imports found withing the class or interface will
+	 * be merged into this Vector during proccessing.
 	 */
 	function get imports():Vector.<IIdentifierNode>;
 	
@@ -68,18 +82,29 @@ public interface IPackageNode extends INode, INameAware, IIdentifierAware
 	//
 	//--------------------------------------------------------------------------
 	
+	function hasImport(qualifiedName:String):Boolean;
+	
 	/**
 	 * Adds an import node to the package node.
 	 * 
-	 * @param node The IIdentifierNode node.
+	 * @param node The <code>IIdentifierNode</code> node.
 	 */
-	function addImport(node:IIdentifierNode):void;
+	function addImport(node:IIdentifierNode):IIdentifierNode;
 	
 	/**
 	 * Removes an import node from the package node.
 	 * 
-	 * @param node The IIdentifierNode node.
+	 * @param node The <code>IIdentifierNode</code> node.
 	 */
-	function removeImport(node:IIdentifierNode):void;
+	function removeImport(node:IIdentifierNode):IIdentifierNode;
+	
+	function getImport(qualifiedName:String):IIdentifierNode;
+	
+	//----------------------------------
+	//  Factory
+	//----------------------------------
+	
+	function newClass(name:String):IClassTypeNode;
+	
 }
 }

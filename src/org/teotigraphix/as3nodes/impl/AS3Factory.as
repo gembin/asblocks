@@ -35,6 +35,7 @@ import org.teotigraphix.as3nodes.api.IMetaDataAware;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.IParameterAware;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
@@ -80,6 +81,31 @@ public class AS3Factory implements IAS3Factory
 		project.output = output;
 		return project;
 	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newImport()
+	 */
+	public function newImport(parent:IPackageNode, 
+							  name:String):IIdentifierNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createName(name);
+		var uidNode:IIdentifierNode = NodeFactory.instance.createIdentifier(ast, parent);
+		parent.addImport(uidNode);
+		return uidNode;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newClass()
+	 */
+	public function newClass(parent:IPackageNode, 
+							 name:String):IClassTypeNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createClass(IdentifierNode.createName(name));
+		var classType:IClassTypeNode = NodeFactory.instance.createClassType(ast, parent);
+		parent.typeNode = classType;
+		return classType;
+	}
+	
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newComment()

@@ -327,9 +327,9 @@ public class ClassTypeNode extends TypeNode implements IClassTypeNode
 	 * @see org.teotigraphix.as3nodes.api.IClassTypeNode#newConstant()
 	 */
 	public function newConstant(name:String, 
-								 visibility:Modifier, 
-								 type:IIdentifierNode,
-								 primary:String):IConstantNode
+								visibility:Modifier, 
+								type:IIdentifierNode,
+								primary:String):IConstantNode
 	{
 		return as3Factory.newConstant(this, name, visibility, type, primary);
 	}

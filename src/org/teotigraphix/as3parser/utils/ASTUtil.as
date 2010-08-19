@@ -76,7 +76,11 @@ public class ASTUtil
 	
 	public static function getTypeFromPackage(node:IParserNode):IParserNode
 	{
-		return node.getLastChild().getLastChild();
+		var child:IParserNode = node.getLastChild();
+		if (!child)
+			return null;
+		
+		return child.getLastChild();
 	}
 	
 	public static function getTypeContent(unit:IParserNode):IParserNode

@@ -8,13 +8,18 @@ import org.teotigraphix.as3nodes.api.IAttributeNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
+import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
+import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.Modifier;
+import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.utils.ASTUtil;
+
+// TODO The tests in this file do not belong, need to only test package specific traits
 
 public class TestPackageNode
 {
@@ -25,6 +30,194 @@ public class TestPackageNode
 	private var compilationNode:CompilationNode;
 	
 	private var packageNode:PackageNode;
+	
+	[Test]
+	public function test_typeNode():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		
+		Assert.assertNull(element.typeNode);
+		
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		Assert.assertNotNull(typeNode);
+		Assert.assertNotNull(element.typeNode);
+		Assert.assertStrictlyEquals(element.typeNode, typeNode);
+		
+		Assert.assertEquals("my.domain", element.name);
+		Assert.assertEquals("my.domain.TestClass", element.qualifiedName);
+		Assert.assertEquals("my.domain", element.typeNode.packageName);
+		Assert.assertEquals("my.domain.TestClass", element.typeNode.qualifiedName);
+		
+		Assert.assertTrue(typeNode.isPublic);
+	}
+	
+	[Test]
+	public function test_qualifiedName():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		Assert.assertNotNull(typeNode);
+		
+		Assert.assertEquals("my.domain.TestClass", element.qualifiedName);
+	}
+	
+	[Test]
+	public function test_imports():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		Assert.assertNotNull(typeNode);
+		Assert.assertNotNull(element.imports);
+		Assert.assertEquals(0, element.imports.length);
+	}
+	
+	[Test]
+	public function test_newImport():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var import1:IIdentifierNode = element.newImport("my.domain.Test1");
+		Assert.assertNotNull(import1);
+		var import2:IIdentifierNode = element.newImport("my.domain.Test2");
+		Assert.assertNotNull(import2);
+		var import3:IIdentifierNode = element.newImport("my.domain.Test3");
+		Assert.assertNotNull(import3);
+		var import4:IIdentifierNode = element.newImport("my.domain.Test4");
+		Assert.assertNotNull(import4);
+		
+		Assert.assertEquals(4, element.imports.length);
+		
+		// test duplicate rejections
+		var import5:IIdentifierNode = element.newImport("my.domain.Test4");
+		Assert.assertNotNull(import5);
+		
+		Assert.assertEquals(4, element.imports.length);
+	}
+	
+	private function createPackage(name:String):PackageNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createPackage(
+			IdentifierNode.createType(name));
+		var element:PackageNode = new PackageNode(ast, null);
+		return element;
+	}
+	
+	[Test]
+	public function test_hasImport():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var import1:IIdentifierNode = element.newImport("my.domain.Test1");
+		Assert.assertNotNull(import1);
+		var import2:IIdentifierNode = element.newImport("my.domain.Test2");
+		Assert.assertNotNull(import2);
+		var import3:IIdentifierNode = element.newImport("my.domain.Test3");
+		Assert.assertNotNull(import3);
+		var import4:IIdentifierNode = element.newImport("my.domain.Test4");
+		Assert.assertNotNull(import4);
+		
+		Assert.assertEquals(4, element.imports.length);
+		Assert.assertTrue(element.hasImport("my.domain.Test1"));
+		Assert.assertTrue(element.hasImport("my.domain.Test2"));
+		Assert.assertTrue(element.hasImport("my.domain.Test3"));
+		Assert.assertTrue(element.hasImport("my.domain.Test4"));
+		Assert.assertFalse(element.hasImport("my.domain.Test5"));
+	}
+	
+	[Test]
+	public function test_addImport():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var import1:IIdentifierNode = NodeFactory.instance.
+			createIdentifier(ASTNodeUtil.createName("my.domain.Test1"), null);
+		var import2:IIdentifierNode = NodeFactory.instance.
+			createIdentifier(ASTNodeUtil.createName("my.domain.Test2"), null);
+		var import3:IIdentifierNode = NodeFactory.instance.
+			createIdentifier(ASTNodeUtil.createName("my.domain.Test3"), null);
+		
+		Assert.assertNotNull(element.addImport(import1));
+		Assert.assertNotNull(element.addImport(import2));
+		Assert.assertNull(element.addImport(import2));
+		Assert.assertNotNull(element.addImport(import3));
+		Assert.assertNull(element.addImport(import3));
+		
+		Assert.assertStrictlyEquals(import1.parent, element);
+		Assert.assertStrictlyEquals(import2.parent, element);
+		Assert.assertStrictlyEquals(import3.parent, element);
+		
+		Assert.assertEquals(3, element.imports.length);
+		Assert.assertTrue(element.hasImport("my.domain.Test1"));
+		Assert.assertTrue(element.hasImport("my.domain.Test2"));
+		Assert.assertTrue(element.hasImport("my.domain.Test3"));
+	}
+	
+	[Test]
+	public function test_removeImport():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var element2:PackageNode = createPackage("my.domain2");
+		
+		var import1:IIdentifierNode = element.newImport("my.domain.Test1");
+		var import2:IIdentifierNode = element.newImport("my.domain.Test2");
+		var import3:IIdentifierNode = element.newImport("my.domain.Test3");
+		var import4:IIdentifierNode = element2.newImport("my.domain.Test4");
+		
+		Assert.assertEquals(3, element.imports.length);
+		
+		Assert.assertNotNull(element.removeImport(import1));
+		Assert.assertNotNull(element.removeImport(import2));
+		Assert.assertNotNull(element.removeImport(import3));
+		Assert.assertNull(element.removeImport(import4));
+		
+		Assert.assertEquals(0, element.imports.length);
+		
+		Assert.assertNull(import1.parent);
+		Assert.assertNull(import2.parent);
+		Assert.assertNull(import3.parent);
+	}
+	
+	[Test]
+	public function test_newClass():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		Assert.assertNotNull(typeNode);
+		Assert.assertEquals("TestClass", typeNode.name);
+		Assert.assertEquals("my.domain", typeNode.packageName);
+		Assert.assertEquals("my.domain.TestClass", typeNode.qualifiedName);
+		
+		Assert.assertStrictlyEquals(element, typeNode.parent);
+		
+		element = createPackage("");
+		typeNode = element.newClass("TestTopLevelClass");
+		
+		Assert.assertNotNull(typeNode);
+		Assert.assertEquals("TestTopLevelClass", typeNode.name);
+		Assert.assertEquals("", typeNode.packageName);
+		Assert.assertEquals("TestTopLevelClass", typeNode.qualifiedName);
+	}
+	
+	[Test]
+	public function test_newInterface():void
+	{
+		
+	}
+	
+	[Test]
+	public function test_newFunction():void
+	{
+		
+	}
 	
 	[Before]
 	public function setUp():void
@@ -213,7 +406,7 @@ public class TestPackageNode
 		Assert.assertTrue(constants[0].hasModifier(Modifier.STATIC));
 		
 		Assert.assertTrue(constants[0].isPublic);
-//		Assert.assertTrue(constants[0].isStatic);
+		//		Assert.assertTrue(constants[0].isStatic);
 		Assert.assertTrue(ConstantNode(constants[0]).isBindable);
 		
 		Assert.assertEquals("NAME", constants[0].name);
@@ -244,7 +437,7 @@ public class TestPackageNode
 		Assert.assertTrue(attributes[1].hasModifier(Modifier.PUBLIC));
 		
 		Assert.assertTrue(attributes[0].isPublic);
-//		Assert.assertFalse(attributes[0].isStatic);
+		//		Assert.assertFalse(attributes[0].isStatic);
 		Assert.assertFalse(AttributeNode(attributes[0]).isBindable);
 		
 		Assert.assertEquals("variable", attributes[0].name);

@@ -46,6 +46,18 @@ public interface IAS3Factory
 	/**
 	 * TODO DOCME
 	 */
+	function newImport(parent:IPackageNode, 
+					   name:String):IIdentifierNode
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newClass(parent:IPackageNode, 
+					  name:String):IClassTypeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
 	function newComment(parent:ICommentAware, 
 						description:String = null):ICommentNode;
 	

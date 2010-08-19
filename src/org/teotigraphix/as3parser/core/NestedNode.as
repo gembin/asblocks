@@ -215,6 +215,9 @@ public class NestedNode
 	 */
 	public function getLastChild():IParserNode
 	{
+		if (_children == null || _children.length == 0)
+			return null;
+		
 		return _children[_children.length - 1];
 	}
 	

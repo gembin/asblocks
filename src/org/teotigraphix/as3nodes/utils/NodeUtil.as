@@ -69,7 +69,7 @@ public class NodeUtil
 			var element:IParserNode = child.children[i] as IParserNode;
 			if (element.isKind(AS3NodeKind.IMPORT))
 			{
-				node.addImport(new IdentifierNode(element, node));
+				node.imports.push(new IdentifierNode(element, node));
 			}
 		}
 	}

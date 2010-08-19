@@ -20,10 +20,14 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IClassTypeNode;
+import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
+import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
+import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.NodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
@@ -88,16 +92,6 @@ public class PackageNode extends NodeBase implements IPackageNode
 	public function set uid(value:IIdentifierNode):void
 	{
 		_uid = value;
-		if (_uid)
-		{
-			var packageName:String = "";
-			if(_uid.qualifiedName != null)
-				packageName = _uid.qualifiedName;
-			if (_typeNode && (packageName != ""))
-				_qualifiedName = packageName + "." + _typeNode.uid.localName;
-			else if (_typeNode)
-				_qualifiedName = _typeNode.uid.localName;
-		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -128,7 +122,13 @@ public class PackageNode extends NodeBase implements IPackageNode
 	 */	
 	public function set typeNode(value:ITypeNode):void
 	{
+		if (_typeNode)
+			dispatchRemoveChange(_typeNode.node.kind, _typeNode);
+		
 		_typeNode = value;
+		
+		if (_typeNode)
+			dispatchAddChange(_typeNode.node.kind, _typeNode);
 	}
 	
 	//----------------------------------
@@ -145,6 +145,17 @@ public class PackageNode extends NodeBase implements IPackageNode
 	 */
 	public function get qualifiedName():String
 	{
+		if (_uid)
+		{
+			var packageName:String = "";
+			if(_uid.qualifiedName != null)
+				packageName = _uid.qualifiedName;
+			if (_typeNode && (packageName != ""))
+				_qualifiedName = packageName + "." + _typeNode.uid.localName;
+			else if (_typeNode)
+				_qualifiedName = _typeNode.uid.localName;
+		}
+		
 		return _qualifiedName;
 	}
 	
@@ -163,7 +174,7 @@ public class PackageNode extends NodeBase implements IPackageNode
 	/**
 	 * @private
 	 */
-	private var _imports:Vector.<IIdentifierNode>;
+	protected var _imports:Vector.<IIdentifierNode>;
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#imports
@@ -171,14 +182,6 @@ public class PackageNode extends NodeBase implements IPackageNode
 	public function get imports():Vector.<IIdentifierNode>
 	{
 		return _imports;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set imports(value:Vector.<IIdentifierNode>):void
-	{
-		_imports = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -202,29 +205,104 @@ public class PackageNode extends NodeBase implements IPackageNode
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#hasImport()
+	 */
+	public function hasImport(qualifiedName:String):Boolean
+	{
+		var len:int = imports.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (imports[i].qualifiedName == qualifiedName)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#addImport()
 	 */
-	public function addImport(node:IIdentifierNode):void
+	public function addImport(element:IIdentifierNode):IIdentifierNode
 	{
-		_imports.push(node);
+		if (hasImport(element.qualifiedName))
+			return null;
+		
+		imports.push(element);
+		
+		dispatchAddChange(AS3NodeKind.IMPORT, element);
+		
+		return element;
 	}
 	
 	/**
 	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#removeImport()
 	 */
-	public function removeImport(node:IIdentifierNode):void
+	public function removeImport(element:IIdentifierNode):IIdentifierNode
 	{
-		var len:int = _imports.length;
+		var len:int = imports.length;
 		for (var i:int = 0; i < len; i++)
 		{
-			var element:IIdentifierNode = _imports[i];
-			if (element.qualifiedName == node.qualifiedName)
+			if (imports[i] === element 
+				&& imports[i].qualifiedName == element.qualifiedName)
 			{
-				_imports.splice(i, 1);
-				break;
+				imports.splice(i, 1);
+				dispatchRemoveChange(AS3NodeKind.IMPORT, element);
+				return element;
 			}
 		}
-		_imports.push(node);
+		
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#getImport()
+	 */
+	public function getImport(qualifiedName:String):IIdentifierNode
+	{
+		var len:int = imports.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (imports[i].qualifiedName == qualifiedName)
+				return imports[i];
+		}
+		return null;
+	}
+	
+	//----------------------------------
+	//  Factory
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newClass()
+	 */
+	public function newImport(name:String):IIdentifierNode
+	{
+		return as3Factory.newImport(this, name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newClass()
+	 */
+	public function newClass(name:String):IClassTypeNode
+	{
+		var classType:IClassTypeNode = as3Factory.newClass(this, name);
+		classType.addModifier(Modifier.PUBLIC);
+		return classType;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newInterface()
+	 */
+	public function newInterface(name:String):IInterfaceTypeNode
+	{
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newFunction()
+	 */
+	public function newFunction(name:String):IFunctionTypeNode
+	{
+		return null;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -240,7 +318,13 @@ public class PackageNode extends NodeBase implements IPackageNode
 	{
 		_imports = new Vector.<IIdentifierNode>();
 		
+		NodeUtil.computeImports(this, node.getLastChild());
+		
+		uid = NodeFactory.instance.createIdentifier(node.getKind(AS3NodeKind.NAME), this);
+		
 		var type:IParserNode = ASTUtil.getTypeFromPackage(node);
+		if (!type)
+			return;
 		
 		if (type.isKind(AS3NodeKind.CLASS))
 		{
@@ -254,10 +338,6 @@ public class PackageNode extends NodeBase implements IPackageNode
 		{
 			_typeNode = NodeFactory.instance.createFunctionType(type, this);
 		}
-		
-		NodeUtil.computeImports(this, node.getLastChild());
-		
-		uid = NodeFactory.instance.createIdentifier(node.getKind(AS3NodeKind.NAME), this);
 	}
 }
 }

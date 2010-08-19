@@ -25,6 +25,7 @@ import flash.events.IEventDispatcher;
 
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
 import org.teotigraphix.as3nodes.api.IDocTagNode;
@@ -42,6 +43,8 @@ import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
+// FIXME implement setParent() and unsetParent() in relevent methods
+
 /**
  * TODO DOCME
  * 
@@ -55,12 +58,17 @@ public class ASTChangeManager extends EventDispatcher
 	{
 		super();
 		
+		addEventListener(AS3NodeKind.IMPORT, importChangeHandler);
+		
 		addEventListener(AS3NodeKind.AS_DOC, asDocChangeHandler);
 		addEventListener(ASDocNodeKind.DOCTAG, docTagChangeHandler);
 		addEventListener(AS3NodeKind.MODIFIER, modifierChangeHandler);
 		addEventListener(AS3NodeKind.META, metaChangeHandler);
 		addEventListener(AS3NodeKind.NAME, nameChangeHandler);
 		addEventListener(AS3NodeKind.TYPE, typeChangeHandler);
+		
+		// types
+		addEventListener(AS3NodeKind.CLASS, classChangeHandler);
 		
 		// members
 		addEventListener(AS3NodeKind.CONST_LIST, constListChangeHandler);
@@ -76,6 +84,43 @@ public class ASTChangeManager extends EventDispatcher
 	//  Protected AST :: Handlers
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * Handles the AS3NodeKind.IMPORT add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IPackageNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IIdentifierNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IPackageNode#imports
+	 */
+	protected function importChangeHandler(event:ASTChangeEvent):void
+	{
+		var uidNode:IIdentifierNode = event.data as IIdentifierNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				content = node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChildAt(uidNode.node, content.numChildren - 1);
+			
+			setParent(uidNode, event.parent);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE)
+		{
+			node.removeChild(uidNode.node);
+			
+			unsetParent(uidNode);
+		}
+	}
 	
 	/**
 	 * Handles the AS3NodeKind.AS_DOC add/remove.
@@ -309,6 +354,40 @@ public class ASTChangeManager extends EventDispatcher
 	}
 	
 	/**
+	 * Handles the AS3NodeKind.CLASS add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IPackageNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IClassTypeNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IPackageNode#typeNode
+	 */
+	protected function classChangeHandler(event:ASTChangeEvent):void
+	{
+		var classNode:IClassTypeNode = event.data as IClassTypeNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		// TODO check for existing class|interface|function nodes on content node
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(classNode.node);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(classNode.node);
+		}
+	}
+	
+	/**
 	 * Handles the AS3NodeKind.CONST_LIST add/remove.
 	 * 
 	 * <p>
@@ -504,6 +583,29 @@ public class ASTChangeManager extends EventDispatcher
 		{
 			parameterList.removeChild(parameterNode.node);
 		}
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function setParent(client:INode, parent:INode):void
+	{
+		if (client.parent != parent)
+			client.parent = parent;
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function unsetParent(client:INode):void
+	{
+		client.parent = null;
 	}
 	
 	//--------------------------------------------------------------------------
