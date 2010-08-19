@@ -31,7 +31,8 @@ package org.teotigraphix.as3nodes.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IPackageNode extends INode, INameAware, IIdentifierAware
+public interface IPackageNode extends INode, INameAware, IIdentifierAware, 
+	IBlockCommentAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -98,15 +99,39 @@ public interface IPackageNode extends INode, INameAware, IIdentifierAware
 	 */
 	function removeImport(node:IIdentifierNode):IIdentifierNode;
 	
+	/**
+	 * TODO DOCME
+	 */
 	function getImport(qualifiedName:String):IIdentifierNode;
 	
+	/**
+	 * TODO DOCME
+	 */
 	function newImport(name:String):IIdentifierNode;
 	
 	//----------------------------------
 	//  Factory
 	//----------------------------------
 	
+	/**
+	 * TODO DOCME
+	 */
 	function newClass(name:String):IClassTypeNode;
 	
+	/**
+	 * TODO DOCME
+	 */
+	function newInterface(name:String):IInterfaceTypeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newFunction(name:String):IFunctionTypeNode;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newBlockComment(comment:String, 
+							 wrap:Boolean = false):IBlockCommentNode;
 }
 }

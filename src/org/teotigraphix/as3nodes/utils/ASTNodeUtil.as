@@ -37,6 +37,14 @@ public class ASTNodeUtil
 		
 		return asdocNode as IParserNode;
 	}
+	/**
+	 * @private
+	 */
+	public static function createBlockComment(description:String):IParserNode
+	{
+		var node:IParserNode = createText(AS3NodeKind.BLOCK_DOC, description);
+		return node;
+	}
 	
 	/**
 	 * @private

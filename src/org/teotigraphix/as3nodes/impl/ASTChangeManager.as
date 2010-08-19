@@ -25,6 +25,7 @@ import flash.events.IEventDispatcher;
 
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IBlockCommentNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
@@ -65,6 +66,7 @@ public class ASTChangeManager extends EventDispatcher
 		
 		addEventListener(AS3NodeKind.AS_DOC, asDocChangeHandler);
 		addEventListener(ASDocNodeKind.DOCTAG, docTagChangeHandler);
+		addEventListener(AS3NodeKind.BLOCK_DOC, blockDocChangeHandler);
 		addEventListener(AS3NodeKind.MODIFIER, modifierChangeHandler);
 		addEventListener(AS3NodeKind.META, metaChangeHandler);
 		addEventListener(AS3NodeKind.NAME, nameChangeHandler);
@@ -201,6 +203,40 @@ public class ASTChangeManager extends EventDispatcher
 					break;
 				}
 			}
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.BLOCK_DOC add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IBlockCommentAware</code></li>
+	 * <li><strong>event.data</strong> : <code>IBlockCommentNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IBlockCommentAware#setBlockComment()
+	 */
+	protected function blockDocChangeHandler(event:ASTChangeEvent):void
+	{
+		var blockCommentNode:IBlockCommentNode = event.data as IBlockCommentNode;
+		var node:IParserNode = INode(event.parent).node;
+		var blockDoc:IParserNode =  ASTUtil.getNode(AS3NodeKind.BLOCK_DOC, node);
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			// if there is an existing block-doc node on node, remove it
+			if (blockDoc)
+				node.removeChild(blockDoc);
+			
+			node.addChildAt(blockCommentNode.node, node.numChildren - 1);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && blockDoc)
+		{
+			if (blockDoc)
+				node.removeChild(blockDoc);
 		}
 	}
 	

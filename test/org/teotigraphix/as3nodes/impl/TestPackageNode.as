@@ -5,6 +5,7 @@ import org.flexunit.Assert;
 import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IBlockCommentNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.IConstantNode;
@@ -62,6 +63,26 @@ public class TestPackageNode
 		Assert.assertNotNull(typeNode);
 		
 		Assert.assertEquals("my.domain.TestClass", element.qualifiedName);
+	}
+	
+	[Test]
+	public function test_blockComment():void
+	{
+		var element:PackageNode = createPackage("my.domain");
+		var typeNode:ITypeNode = element.newClass("TestClass");
+		
+		var blockComment:IBlockCommentNode = element.newBlockComment(
+			"This is a package level block comment.", true);
+		
+		Assert.assertNotNull(element.blockComment);
+		Assert.assertEquals("This is a package level block comment.", element.blockComment.description);
+		Assert.assertTrue(blockComment.wrap);
+		
+		Assert.assertStrictlyEquals(element, blockComment.parent);
+		Assert.assertTrue(element.node.hasKind(AS3NodeKind.BLOCK_DOC));
+		
+		element.setBlockComment(null);
+		Assert.assertFalse(element.node.hasKind(AS3NodeKind.BLOCK_DOC));
 	}
 	
 	[Test]

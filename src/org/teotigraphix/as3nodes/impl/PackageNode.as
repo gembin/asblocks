@@ -20,6 +20,7 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3nodes.api.IBlockCommentNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.IFunctionTypeNode;
 import org.teotigraphix.as3nodes.api.IIdentifierNode;
@@ -186,6 +187,43 @@ public class PackageNode extends NodeBase implements IPackageNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  IBlockCommentAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  blockComment
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _blockComment:IBlockCommentNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IBlockCommentAware#blockComment
+	 */
+	public function get blockComment():IBlockCommentNode
+	{
+		return _blockComment;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IBlockCommentAware#setBlockComment()
+	 */
+	public function setBlockComment(value:IBlockCommentNode):void
+	{
+		if (_blockComment)
+			dispatchRemoveChange(AS3NodeKind.BLOCK_DOC, _blockComment);
+		
+		_blockComment = value;
+		
+		if (_blockComment)
+			dispatchAddChange(AS3NodeKind.BLOCK_DOC, _blockComment);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -307,6 +345,15 @@ public class PackageNode extends NodeBase implements IPackageNode
 		var functionType:IFunctionTypeNode = as3Factory.newFunction(this, name);
 		functionType.addModifier(Modifier.PUBLIC);
 		return functionType;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IPackageNode#newBlockComment()
+	 */
+	public function newBlockComment(comment:String, 
+									wrap:Boolean = false):IBlockCommentNode
+	{
+		return as3Factory.newBlockComment(this, comment, wrap);
 	}
 	
 	//--------------------------------------------------------------------------

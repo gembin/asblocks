@@ -76,6 +76,13 @@ public interface IAS3Factory
 	/**
 	 * TODO DOCME
 	 */
+	function newBlockComment(parent:IBlockCommentAware, 
+							 comment:String, 
+							 wrap:Boolean = false):IBlockCommentNode;
+	
+	/**
+	 * TODO DOCME
+	 */
 	function newDocTag(parent:ICommentNode,
 					   name:String,
 					   body:String = null):IDocTagNode;

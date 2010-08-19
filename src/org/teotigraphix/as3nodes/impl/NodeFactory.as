@@ -23,6 +23,7 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IBlockCommentNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentNode;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
@@ -175,6 +176,18 @@ public class NodeFactory
 								  parent:INode):ICommentNode
 	{
 		return new CommentNode(node, parent);
+	}
+	
+	/**
+	 * Creates an IBlockCommentNode.
+	 * 
+	 * @param node An IParserNode internal node.
+	 * @param parent An INode parent.
+	 */
+	public function createBlockComment(node:IParserNode, 
+									   parent:INode):IBlockCommentNode
+	{
+		return new BlockCommentNode(node, parent);
 	}
 	
 	/**

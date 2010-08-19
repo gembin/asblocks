@@ -55,6 +55,8 @@ public class AS3NodeKind
 	
 	public static const AS_DOC:String = "as-doc"; 
 	
+	public static const BLOCK_DOC:String = "block-doc";
+	
 	public static const ASSIGN:String = "assign";
 	
 	public static const B_AND:String = "b-and"; 

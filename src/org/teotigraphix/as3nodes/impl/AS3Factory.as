@@ -25,6 +25,8 @@ import org.teotigraphix.as3nodes.api.IAS3Factory;
 import org.teotigraphix.as3nodes.api.IAS3Project;
 import org.teotigraphix.as3nodes.api.IAccessorNode;
 import org.teotigraphix.as3nodes.api.IAttributeNode;
+import org.teotigraphix.as3nodes.api.IBlockCommentAware;
+import org.teotigraphix.as3nodes.api.IBlockCommentNode;
 import org.teotigraphix.as3nodes.api.IClassTypeNode;
 import org.teotigraphix.as3nodes.api.ICommentAware;
 import org.teotigraphix.as3nodes.api.ICommentNode;
@@ -145,6 +147,21 @@ public class AS3Factory implements IAS3Factory
 		var ast:IParserNode = ASTNodeUtil.createAsDoc(description);
 		var comment:ICommentNode = NodeFactory.instance.createComment(ast, parent);
 		parent.setComment(comment);
+		
+		return comment;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3Factory#newBlockComment()
+	 */
+	public function newBlockComment(parent:IBlockCommentAware, 
+									description:String,
+									wrap:Boolean = false):IBlockCommentNode
+	{
+		var ast:IParserNode = ASTNodeUtil.createBlockComment(description);
+		var comment:IBlockCommentNode = NodeFactory.instance.createBlockComment(ast, parent);
+		comment.wrap = wrap;
+		parent.setBlockComment(comment);
 		
 		return comment;
 	}
