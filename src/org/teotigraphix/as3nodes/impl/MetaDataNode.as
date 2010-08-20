@@ -69,6 +69,11 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	public function setComment(value:ICommentNode):void
 	{
 		_comment = value;
+		
+		if (_comment)
+			dispatchAddChange(AS3NodeKind.AS_DOC, _comment);
+		else
+			dispatchRemoveChange(AS3NodeKind.AS_DOC, null);
 	}
 	
 	//----------------------------------
@@ -95,8 +100,8 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	{
 		_description = value;
 		
-		var asdoc:IParserNode = ASTNodeUtil.createAsDoc(_description);
-		setComment(new CommentNode(asdoc.getLastChild(), this));
+		// will call setComment() and update the AST
+		as3Factory.newComment(this, _description);
 	}
 	
 	//----------------------------------
@@ -111,6 +116,9 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 		return comment.hasDescription;
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ICommentAware#newDocTag()
+	 */
 	public function newDocTag(name:String, body:String = null):IDocTagNode
 	{
 		return comment.newDocTag(name, body);
@@ -379,6 +387,11 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 				_name = child.stringValue;
 			}
 		}
+		
+		// special case; for now all script nodes have a 
+		// comment so they are not null
+		//if (!comment)
+		//.	as3Factory.newComment(this);
 		
 		var data:String = node.stringValue;
 		

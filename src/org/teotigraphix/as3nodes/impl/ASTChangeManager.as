@@ -79,6 +79,7 @@ public class ASTChangeManager extends EventDispatcher
 		// types
 		addEventListener(AS3NodeKind.CLASS, classChangeHandler);
 		addEventListener(AS3NodeKind.INTERFACE, interfaceChangeHandler);
+		addEventListener(AS3NodeKind.EXTENDS, extendsChangeHandler);
 		
 		// members
 		addEventListener(AS3NodeKind.CONST_LIST, constListChangeHandler);
@@ -462,7 +463,8 @@ public class ASTChangeManager extends EventDispatcher
 			}
 			else
 			{
-				typeNode.stringValue = idNode.qualifiedName;
+				//typeNode.stringValue = idNode.qualifiedName;
+				typeNode.stringValue = idNode.localName;
 			}
 		}
 		else if (event.kind == ASTChangeKind.REMOVE)
@@ -521,6 +523,42 @@ public class ASTChangeManager extends EventDispatcher
 	 * @see org.teotigraphix.as3nodes.api.IPackageNode#typeNode
 	 */
 	protected function interfaceChangeHandler(event:ASTChangeEvent):void
+	{
+		var interfaceNode:IInterfaceTypeNode = event.data as IInterfaceTypeNode;
+		var node:IParserNode = INode(event.parent).node;
+		
+		var content:IParserNode = node.getKind(AS3NodeKind.CONTENT);
+		// TODO check for existing interface node on content node
+		
+		if (event.kind == ASTChangeKind.ADD)
+		{
+			if (!content)
+				node.addChild(ASTNodeUtil.create(AS3NodeKind.CONTENT));
+			
+			content.addChild(interfaceNode.node);
+			setParent(interfaceNode, event.parent);
+		}
+		else if (event.kind == ASTChangeKind.REMOVE && content)
+		{
+			content.removeChild(interfaceNode.node);
+			unsetParent(interfaceNode);
+		}
+	}
+	
+	/**
+	 * Handles the AS3NodeKind.EXTENDS add/remove.
+	 * 
+	 * <p>
+	 * <ul>
+	 * <li><strong>event.parent</strong> : <code>IPackageNode</code></li>
+	 * <li><strong>event.data</strong> : <code>IInterfaceTypeNode</code></li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param event The ASTChangeEvent event.
+	 * @see org.teotigraphix.as3nodes.api.IPackageNode#superClass
+	 */
+	protected function extendsChangeHandler(event:ASTChangeEvent):void
 	{
 		var interfaceNode:IInterfaceTypeNode = event.data as IInterfaceTypeNode;
 		var node:IParserNode = INode(event.parent).node;
