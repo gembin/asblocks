@@ -113,6 +113,8 @@ public class Operators
 	
 	public static const QUESTION_MARK:String = "?";
 	
+	public static const QUOTE:String = "\"";
+	
 	public static const REST_PARAMETERS:String = "...";
 	
 	public static const RIGHT_CURLY_BRACKET:String = "}";
