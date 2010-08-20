@@ -83,12 +83,12 @@ public interface ISourceCode
 	/**
 	 * The String file name identifier.
 	 */
-	function get fileName():String;
+	function get filePath():String;
 	
 	/**
 	 * @private
 	 */
-	function set fileName(value:String):void;
+	function set filePath(value:String):void;
 	
 	//----------------------------------
 	//  classPath

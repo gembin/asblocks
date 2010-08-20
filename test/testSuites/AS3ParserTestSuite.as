@@ -1,6 +1,7 @@
 package testSuites
 {
 
+import org.teotigraphix.as3parser.core.TestSourceCode;
 import org.teotigraphix.as3parser.impl.TestAS3Scanner;
 import org.teotigraphix.as3parser.impl.TestAS3Tokenizer;
 import org.teotigraphix.as3parser.impl.TestClass;
@@ -28,6 +29,8 @@ import org.teotigraphix.as3parser.utils.TestASTUtil;
 [RunWith("org.flexunit.runners.Suite")]
 public class AS3ParserTestSuite
 {
+	public var testSourceCode:TestSourceCode;
+	
 	// TestAS3Parser
 	public var testAS3Scanner:TestAS3Scanner;
 	public var testClass:TestClass;

@@ -65,7 +65,7 @@ public class MXMLSourceFile extends AS3SourceFile implements IMXMLSourceFile
 		
 		var unit:IParserNode = parser.buildAst(
 			Vector.<String>(sourceCode.code.split("\n")), 
-			sourceCode.fileName);
+			sourceCode.filePath);
 		
 		compilationNode = NodeFactory.instance.createCompilation(unit, this);
 		

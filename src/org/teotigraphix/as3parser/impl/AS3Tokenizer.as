@@ -86,7 +86,7 @@ public class AS3Tokenizer implements ITokenizer
 							inSkipLine = 0;
 							tokenEntries.add(new TokenEntry(
 								currentTokenText,
-								tokens.fileName,
+								tokens.filePath,
 								currentTokenLine));
 						}
 					}

@@ -31,6 +31,8 @@ import org.teotigraphix.as3parser.api.ISourceCode;
  */
 public class SourceCode implements ISourceCode
 {
+	private var _basePath:String;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public :: Properties
@@ -47,7 +49,7 @@ public class SourceCode implements ISourceCode
 	private var _code:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#code
+	 * @copy org.teotigraphix.as3parser.api.ISourceCode#code
 	 */
 	public function get code():String
 	{
@@ -72,7 +74,7 @@ public class SourceCode implements ISourceCode
 	private var _extension:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#extension
+	 * @copy org.teotigraphix.as3parser.api.ISourceCode#extension
 	 */
 	public function get extension():String
 	{
@@ -89,7 +91,7 @@ public class SourceCode implements ISourceCode
 	private var _name:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#name
+	 * @copy org.teotigraphix.as3parser.api.ISourceCode#name
 	 */
 	public function get name():String
 	{
@@ -106,7 +108,7 @@ public class SourceCode implements ISourceCode
 	private var _packageName:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#packageName
+	 * @copy org.teotigraphix.as3parser.api.ISourceCode#packageName
 	 */
 	public function get packageName():String
 	{
@@ -123,7 +125,7 @@ public class SourceCode implements ISourceCode
 	private var _qualifiedName:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#qualifiedName
+	 * @copy org.teotigraphix.as3parser.api.ISourceCode#qualifiedName
 	 */
 	public function get qualifiedName():String
 	{
@@ -131,28 +133,28 @@ public class SourceCode implements ISourceCode
 	}
 	
 	//----------------------------------
-	//  fileName
+	//  filePath
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	private var _fileName:String;
+	private var _filePath:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#fileName
+	 * @copy org.teotigraphix.as3parser.api.ISourceCode#filePath
 	 */
-	public function get fileName():String
+	public function get filePath():String
 	{
-		return _fileName;
+		return _filePath;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set fileName(value:String):void
+	public function set filePath(value:String):void
 	{
-		_fileName = value;
+		_filePath = value;
 	}
 	
 	//----------------------------------
@@ -165,7 +167,7 @@ public class SourceCode implements ISourceCode
 	private var _classPath:String;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceCode#classPath
+	 * @copy org.teotigraphix.as3parser.api.ISourceCode#classPath
 	 */
 	public function get classPath():String
 	{
@@ -190,55 +192,25 @@ public class SourceCode implements ISourceCode
 	 * Constructor.
 	 * 
 	 * @param code The String data.
-	 * @param fileName The String file name identifier.
+	 * @param filePath The String file name identifier.
 	 * @param classPath The String file classPath identifier.
 	 */
-	public function SourceCode(code:String, fileName:String, classPath:String)
+	public function SourceCode(code:String, 
+							   filePath:String = null, 
+							   classPath:String = null)
 	{
-		// for now this seems like a good place to normalize newlines
-		// FIXME what a mess and stick in as3 file
-		if (code)
-			_code = code.replace(/\r\n/g, "\n");
+		_code = cleanCode(code);
+		// /home/user/src/my/domain/Test.as
+		_filePath = cleanPath(filePath);
+		// /home/user/src
+		_classPath = cleanPath(classPath);
 		
-		_fileName = fileName.replace(/\\/g, "/");
-		
-		if (!classPath)
-			classPath = "";
-		
-		_classPath = classPath.replace(/\\/g, "/");
-		
-		var base:String = _fileName.replace(_classPath, "");
-		
-		var split:Array = base.split(".");
-		_extension = split.pop();
-		
-		_qualifiedName = split[0];
-		if (_qualifiedName)
-		{
-			_qualifiedName = _qualifiedName.replace(_classPath, "").split("/").join(".");
-			if (_qualifiedName.charAt(0) == ".")
-				_qualifiedName = _qualifiedName.substr(1, _qualifiedName.length);
-			_packageName = _qualifiedName;
-			var packageSplit:Array = _qualifiedName.split(".");
-			if (packageSplit.length > 1)
-			{
-				packageSplit.pop();
-				_packageName = packageSplit.join(".");
-			}
-			else
-			{
-				//_packageName = "toplevel"; // toplevel
-				_packageName = "";
-			}
-		}
-		
-		if (split.length > 0)
-			_name = split[0].split("/").pop();
+		compute();
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Public :: Methods
+	//  ISourceCode API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
@@ -247,7 +219,99 @@ public class SourceCode implements ISourceCode
 	 */
 	public function getSlice(startLine:int, endLine:int):String
 	{
+		// TODO implement getSlice()
+		if (code == null)
+			return null;
+		
 		return null;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Computes the file pieces.
+	 */
+	protected function compute():void
+	{
+		// PS I hate string mangling, anyone have better ideas, let me know
+		if (_filePath && _classPath)
+		{
+			// /my/domain/Test.as
+			_basePath = _filePath.replace(_classPath, "");
+		}
+		else
+		{
+			_basePath = "";
+		}
+		
+		if (_filePath)
+		{
+			var split:Array = (_basePath == "") 
+				? _filePath.split(".") 
+				: _basePath.split(".");
+			_extension = split.pop();
+			
+			// /my/domain/Test
+			_qualifiedName = split.pop();
+			// remove first slash
+			if (_qualifiedName.indexOf("/") == 0)
+				_qualifiedName = _qualifiedName.substring(1, _qualifiedName.length);
+			
+			if (_qualifiedName)
+			{
+				_packageName = ""; // toplevel
+				// my.domain.Test
+				_qualifiedName = _qualifiedName.split("/").join(".");
+				
+				var dot:int = _qualifiedName.lastIndexOf(".");
+				if (dot != -1)
+				{
+					_packageName = _qualifiedName.substring(0, dot);
+				}
+			}
+			
+			var last:int = _qualifiedName.lastIndexOf(".");
+			if (last != -1)
+			{
+				_name = _qualifiedName.substring(last + 1, _qualifiedName.length);
+			}
+			else
+			{
+				_name = _qualifiedName;
+			}
+		}
+	}
+	
+	/**
+	 * Cleans the code by default, removes the \r\n and replaces them with \n.
+	 * 
+	 * @param code A String to clean.
+	 * @return The cleaned String.
+	 */
+	protected function cleanCode(code:String):String
+	{
+		if (!code)
+			return null;
+		
+		return code.replace(/\r\n/g, "\n");
+	}
+	
+	/**
+	 * Cleans a path by default, removes the \ and replaces them with /.
+	 * 
+	 * @param path A String to clean.
+	 * @return The cleaned String.
+	 */
+	protected function cleanPath(path:String):String
+	{
+		if (path == null)
+			return null;
+		
+		return path.replace(/\\/g, "/");
 	}
 }
 }

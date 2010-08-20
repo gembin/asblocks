@@ -90,7 +90,7 @@ public class SourceFile extends NodeBase implements ISourceFile
 	{
 		if (!_sourceCode)
 			return null;
-		return _sourceCode.fileName;
+		return _sourceCode.filePath;
 	}
 	
 	//----------------------------------

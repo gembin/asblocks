@@ -23,6 +23,8 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IPackageNode;
+import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
@@ -41,6 +43,34 @@ public class AS3SourceFile extends SourceFile implements IAS3SourceFile
 	//  IAS3SourceFile API :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  packageNode
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3SourceFile#packageNode
+	 */
+	public function get packageNode():IPackageNode
+	{
+		if (!compilationNode)
+			return null;
+		return compilationNode.packageNode;
+	}
+	
+	//----------------------------------
+	//  typeNode
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.IAS3SourceFile#typeNode
+	 */
+	public function get typeNode():ITypeNode
+	{
+		if (!compilationNode)
+			return null;
+		return compilationNode.typeNode;
+	}
 	
 	//----------------------------------
 	//  packageName
@@ -113,7 +143,7 @@ public class AS3SourceFile extends SourceFile implements IAS3SourceFile
 		
 		var unit:IParserNode = parser.buildAst(
 			Vector.<String>(sourceCode.code.split("\n")), 
-			sourceCode.fileName);
+			sourceCode.filePath);
 		
 		compilationNode = NodeFactory.instance.createCompilation(unit, this);
 		

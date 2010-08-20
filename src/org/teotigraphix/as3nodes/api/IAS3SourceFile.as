@@ -36,6 +36,24 @@ public interface IAS3SourceFile extends ISourceFile
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  compilationNode
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get packageNode():IPackageNode;
+	
+	//----------------------------------
+	//  compilationNode
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get typeNode():ITypeNode;
+	
+	//----------------------------------
 	//  packageName
 	//----------------------------------
 	

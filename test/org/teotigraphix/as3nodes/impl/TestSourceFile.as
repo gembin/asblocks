@@ -5,12 +5,20 @@ import org.flexunit.Assert;
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
+import org.teotigraphix.as3parser.core.SourceCode;
 
 public class TestSourceFile
 {
 	[Before]
 	public function setUp():void
 	{
+	}
+	
+	[Test]
+	public function testBasic():void
+	{
+		//var code:SourceCode = new SourceCode("");
+		//var file:SourceFile = new SourceFile(null, code);
 	}
 	
 	[Test]
@@ -30,7 +38,7 @@ public class TestSourceFile
 		
 		Assert.assertEquals(source, sourceFile.sourceCode.code);
 		Assert.assertEquals("/home/src/my/domain/internal.as", sourceFile.fileName);
-		Assert.assertEquals("/home/src/my/domain/internal.as", sourceFile.sourceCode.fileName);
+		Assert.assertEquals("/home/src/my/domain/internal.as", sourceFile.sourceCode.filePath);
 		
 		Assert.assertNotNull(compilationNode);
 		Assert.assertStrictlyEquals(sourceFile, compilationNode.parent);
@@ -86,7 +94,7 @@ public class TestSourceFile
 		
 		Assert.assertEquals(source, sourceFile.sourceCode.code);
 		Assert.assertEquals("/home/src/my/domain/TestMXML.mxml", sourceFile.fileName);
-		Assert.assertEquals("/home/src/my/domain/TestMXML.mxml", sourceFile.sourceCode.fileName);
+		Assert.assertEquals("/home/src/my/domain/TestMXML.mxml", sourceFile.sourceCode.filePath);
 		
 		Assert.assertNotNull(compilationNode);
 		Assert.assertStrictlyEquals(sourceFile, compilationNode.parent);

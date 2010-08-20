@@ -36,6 +36,15 @@ public class TestPackageNode
 	private var packageNode:PackageNode;
 	
 	[Test]
+	public function test_packageNameChange():void
+	{
+		//var element:PackageNode = createPackage("my.domain");
+		//Assert.assertEquals("my.domain", element.name);
+		//element.name = "my.new.domain";
+		//Assert.assertEquals("my.new.domain", element.name);
+	}
+	
+	[Test]
 	public function test_typeNode():void
 	{
 		var element:PackageNode = createPackage("my.domain");
