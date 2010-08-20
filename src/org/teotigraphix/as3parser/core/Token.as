@@ -31,6 +31,8 @@
 package org.teotigraphix.as3parser.core
 {
 
+import org.teotigraphix.as3parser.api.IToken;
+
 /**
  * A Token represents a piece of text in a string of data with location
  * properties.
@@ -41,7 +43,7 @@ package org.teotigraphix.as3parser.core
  * @author Michael Schmalle
  * @productversion 1.0
  */
-public final class Token
+public class Token implements IToken
 {
 	//--------------------------------------------------------------------------
 	//
@@ -59,11 +61,19 @@ public final class Token
 	private var _column:int;
 	
 	/**
-	 * The token's column.
+	 * @copy org.teotigraphix.as3parser.api.IToken#column
 	 */
 	public function get column():int
 	{
 		return _column;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set column(value:int):void
+	{
+		_column = value;
 	}
 	
 	//----------------------------------
@@ -76,11 +86,19 @@ public final class Token
 	private var _line:int;
 	
 	/**
-	 * The token's line.
+	 * @copy org.teotigraphix.as3parser.api.IToken#line
 	 */
 	public function get line():int
 	{
 		return _line;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set line(value:int):void
+	{
+		_line = value;
 	}
 	
 	//----------------------------------
@@ -93,11 +111,19 @@ public final class Token
 	private var _text:String;
 	
 	/**
-	 * The token's text.
+	 * @copy org.teotigraphix.as3parser.api.IToken#text
 	 */
 	public function get text():String
 	{
 		return _text;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set text(value:String):void
+	{
+		_text = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -109,7 +135,7 @@ public final class Token
 	/**
 	 * @private
 	 */
-	public function Token(text:String, line:int, column:int)
+	public function Token(text:String, line:int = -1, column:int = -1)
 	{
 		_text = text;
 		_line = line + 1;
@@ -130,7 +156,9 @@ public final class Token
 	 * @param column The column the Token starts at.
 	 * @return A new Token instance.
 	 */
-	public static function create(text:String, line:int, column:int):Token
+	public static function create(text:String, 
+								  line:int = -1, 
+								  column:int = -1):Token
 	{
 		return new Token(text, line, column);
 	}
