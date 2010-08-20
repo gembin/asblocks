@@ -21,12 +21,11 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3nodes.api.ICompilationNode;
-import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.ISourceFile;
 import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
- * TODO DOCME
+ * Concrete implementation of the <code>ISourceFile</code> api.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -70,27 +69,99 @@ public class SourceFile extends NodeBase implements ISourceFile
 	//----------------------------------
 	
 	/**
+	 * @private
+	 */
+	private var _name:String;
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#name
 	 */
 	public function get name():String
 	{
-		if (!_sourceCode)
-			return null;
-		return _sourceCode.name;
+		return _name;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set name(value:String):void
+	{
+		_name = value;
 	}
 	
 	//----------------------------------
-	//  fileName
+	//  extension
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#fileName
+	 * @private
 	 */
-	public function get fileName():String
+	private var _extension:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#extension
+	 */
+	public function get extension():String
 	{
-		if (!_sourceCode)
-			return null;
-		return _sourceCode.filePath;
+		return _extension;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set extension(value:String):void
+	{
+		_extension = value;
+	}
+	
+	//----------------------------------
+	//  filePath
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _filePath:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#filePath
+	 */
+	public function get filePath():String
+	{
+		return _filePath;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set filePath(value:String):void
+	{
+		_filePath = value;
+	}
+	
+	//----------------------------------
+	//  classPath
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _classPath:String;
+	
+	/**
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#classPath
+	 */
+	public function get classPath():String
+	{
+		return _classPath;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set classPath(value:String):void
+	{
+		_classPath = value;
 	}
 	
 	//----------------------------------
@@ -103,7 +174,7 @@ public class SourceFile extends NodeBase implements ISourceFile
 	private var _sourceCode:ISourceCode;
 	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#code
+	 * @copy org.teotigraphix.as3nodes.api.ISourceFile#sourceCode
 	 */
 	public function get sourceCode():ISourceCode
 	{
@@ -126,12 +197,50 @@ public class SourceFile extends NodeBase implements ISourceFile
 	
 	/**
 	 * Constructor.
+	 * 
+	 * @param sourceCode A <code>ISourceCode</code> instance holding the String
+	 * data that will be parsed.
+	 * @param classPath A <code>String</code> locating the root of the source file.
 	 */
-	public function SourceFile(parent:INode, sourceCode:ISourceCode)
+	public function SourceFile(sourceCode:ISourceCode, classPath:String)
 	{
 		super(null, parent);
 		
-		_sourceCode = sourceCode;
+		this.sourceCode = sourceCode;
+		
+		// /home/user/src/my/domain/Test.as
+		this.filePath = cleanPath(sourceCode.filePath);
+		// /home/user/src
+		this.classPath = cleanPath(classPath);
+		
+		computeParts();
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Computes the file pieces.
+	 */
+	protected function computeParts():void
+	{
+	}
+	
+	/**
+	 * Cleans a path by default, removes the \ and replaces them with /.
+	 * 
+	 * @param path A String to clean.
+	 * @return The cleaned String.
+	 */
+	protected function cleanPath(path:String):String
+	{
+		if (path == null)
+			return null;
+		
+		return path.replace(/\\/g, "/");
 	}
 	
 	//--------------------------------------------------------------------------
@@ -145,7 +254,7 @@ public class SourceFile extends NodeBase implements ISourceFile
 	 */
 	public function toLink():String
 	{
-		return fileName;
+		return filePath;
 	}
 	
 	//--------------------------------------------------------------------------

@@ -91,15 +91,15 @@ public class NodeFactory
 									 filePath:String,
 									 classPath:String):ISourceFile
 	{
-		var sourceCode:ISourceCode = new SourceCode(data, filePath, classPath);
+		var sourceCode:ISourceCode = new SourceCode(data, filePath);
 		
 		if (filePath.indexOf(".as") != -1)
 		{
-			return new AS3SourceFile(null, sourceCode);
+			return new AS3SourceFile(sourceCode, classPath);
 		}
 		else if (filePath.indexOf(".mxml") != -1)
 		{
-			return new MXMLSourceFile(null, sourceCode);
+			return new MXMLSourceFile(sourceCode, classPath);
 		}
 		
 		// TODO throw Error?

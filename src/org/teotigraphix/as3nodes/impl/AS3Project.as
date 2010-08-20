@@ -200,11 +200,11 @@ public class AS3Project implements IAS3Project
 		
 		var source:String = "";
 		var name:String = uid.localName + ".as";
-		var path:String = output + "/src";
+		var classPath:String = output + "/src";
 		
-		var code:SourceCode = new SourceCode(source, name, path);
+		var code:SourceCode = new SourceCode(source, name);
 		// An .as SourceFile has to be returned
-		var file:AS3SourceFile = new AS3SourceFile(null, code);
+		var file:AS3SourceFile = new AS3SourceFile(code, classPath);
 		
 		// The CompilationNode in the file has to be created
 		var compilationUnitNode:IParserNode = ASTNodeUtil.createEmptyClass(uid);
@@ -229,11 +229,11 @@ public class AS3Project implements IAS3Project
 		
 		var source:String = "";
 		var name:String = uid.localName + ".as";
-		var path:String = output + "/src";
+		var classPath:String = output + "/src";
 		
-		var code:SourceCode = new SourceCode(source, name, path);
+		var code:SourceCode = new SourceCode(source, name);
 		// An .as SourceFile has to be returned
-		var file:AS3SourceFile = new AS3SourceFile(null, code);
+		var file:AS3SourceFile = new AS3SourceFile(code, classPath);
 		
 		// The CompilationNode in the file has to be created
 		var compilationUnitNode:IParserNode = ASTNodeUtil.createEmptyInterface(uid);
@@ -262,11 +262,11 @@ public class AS3Project implements IAS3Project
 		
 		var source:String = "";
 		var name:String = uid.localName + ".as";
-		var path:String = output + "/src";
+		var classPath:String = output + "/src";
 		
-		var code:SourceCode = new SourceCode(source, name, path);
+		var code:SourceCode = new SourceCode(source, name);
 		// An .as SourceFile has to be returned
-		var file:AS3SourceFile = new AS3SourceFile(null, code);
+		var file:AS3SourceFile = new AS3SourceFile(code, classPath);
 		
 		// The CompilationNode in the file has to be created
 		var compilationUnitNode:IParserNode = ASTNodeUtil.createEmptyFunction(uid);

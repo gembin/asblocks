@@ -22,7 +22,6 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.IAS3SourceFile;
 import org.teotigraphix.as3nodes.api.ICompilationNode;
-import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3nodes.api.IPackageNode;
 import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3parser.api.IParser;
@@ -30,7 +29,7 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
- * TODO DOCME
+ * Concrete implementation of the <code>IAS3SourceFile</code> api.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -77,13 +76,24 @@ public class AS3SourceFile extends SourceFile implements IAS3SourceFile
 	//----------------------------------
 	
 	/**
+	 * @private
+	 */
+	private var _packageName:String;
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.IAS3SourceFile#packageName
 	 */
 	public function get packageName():String
 	{
-		if (!sourceCode)
-			return null;
-		return sourceCode.packageName;
+		return _packageName;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set packageName(value:String):void
+	{
+		_packageName = value;
 	}
 	
 	//----------------------------------
@@ -91,27 +101,24 @@ public class AS3SourceFile extends SourceFile implements IAS3SourceFile
 	//----------------------------------
 	
 	/**
+	 * @private
+	 */
+	private var _qualifiedName:String;
+	
+	/**
 	 * @copy org.teotigraphix.as3nodes.api.IAS3SourceFile#qualifiedName
 	 */
 	public function get qualifiedName():String
 	{
-		if (!sourceCode)
-			return null;
-		return sourceCode.qualifiedName;
+		return _qualifiedName;
 	}
 	
-	//----------------------------------
-	//  classPath
-	//----------------------------------
-	
 	/**
-	 * @copy org.teotigraphix.as3nodes.api.IAS3SourceFile#classPath
-	 */
-	public function get classPath():String
+	 * @private
+	 */	
+	public function set qualifiedName(value:String):void
 	{
-		if (!sourceCode)
-			return null;
-		return sourceCode.classPath;
+		_qualifiedName = value;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -123,9 +130,12 @@ public class AS3SourceFile extends SourceFile implements IAS3SourceFile
 	/**
 	 * Constructor.
 	 */
-	public function AS3SourceFile(parent:INode, sourceCode:ISourceCode)
+	public function AS3SourceFile(sourceCode:ISourceCode, 
+								  classPath:String = null)
 	{
-		super(parent, sourceCode);
+		super(sourceCode, classPath);
+		
+		computeParts();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -148,6 +158,71 @@ public class AS3SourceFile extends SourceFile implements IAS3SourceFile
 		compilationNode = NodeFactory.instance.createCompilation(unit, this);
 		
 		return compilationNode;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Computes the file pieces.
+	 */
+	override protected function computeParts():void
+	{
+		super.computeParts();
+		
+		var calcName:String;
+		var calcPackageName:String;
+		var calcQualifiedName:String;
+		
+		var head:String = filePath;
+		
+		if (filePath && classPath)
+		{
+			head = filePath.replace(classPath, "");
+		}
+		
+		if (filePath)
+		{
+			var split:Array = head.split(".");
+			
+			extension = split.pop();
+			
+			// /my/domain/Test
+			calcQualifiedName = split.pop();
+			// remove first slash
+			if (calcQualifiedName.indexOf("/") == 0)
+				calcQualifiedName = calcQualifiedName.substring(1, calcQualifiedName.length);
+			
+			if (calcQualifiedName)
+			{
+				calcPackageName = ""; // toplevel
+				// my.domain.Test
+				calcQualifiedName = calcQualifiedName.split("/").join(".");
+				
+				var dot:int = calcQualifiedName.lastIndexOf(".");
+				if (dot != -1)
+				{
+					calcPackageName = calcQualifiedName.substring(0, dot);
+				}
+			}
+			
+			var last:int = calcQualifiedName.lastIndexOf(".");
+			if (last != -1)
+			{
+				calcName = calcQualifiedName.substring(last + 1, calcQualifiedName.length);
+			}
+			else
+			{
+				calcName = calcQualifiedName;
+			}
+		}
+		
+		name = calcName;
+		packageName = calcPackageName;
+		qualifiedName = calcQualifiedName;
 	}
 }
 }

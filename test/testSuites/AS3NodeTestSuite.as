@@ -11,7 +11,7 @@ import org.teotigraphix.as3nodes.impl.TestInterfaceNode;
 import org.teotigraphix.as3nodes.impl.TestMethodNode;
 import org.teotigraphix.as3nodes.impl.TestPackageNode;
 import org.teotigraphix.as3nodes.impl.TestScriptNode;
-import org.teotigraphix.as3nodes.impl.TestSourceFile;
+import org.teotigraphix.as3nodes.impl.TestAS3SourceFile;
 import org.teotigraphix.as3nodes.impl.TestSourceFilePackage;
 
 [Suite]
@@ -19,7 +19,7 @@ import org.teotigraphix.as3nodes.impl.TestSourceFilePackage;
 public class AS3NodeTestSuite
 {
 	public var testSourceFileCollection:TestSourceFilePackage;
-	public var testSourceFile:TestSourceFile;
+	public var testSourceFile:TestAS3SourceFile;
 	public var testCompilationNode:TestCompilationNode;
 	public var testPackageNode:TestPackageNode;
 	public var testScriptNode:TestScriptNode;

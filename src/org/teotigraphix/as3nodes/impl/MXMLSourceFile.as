@@ -22,13 +22,12 @@ package org.teotigraphix.as3nodes.impl
 
 import org.teotigraphix.as3nodes.api.ICompilationNode;
 import org.teotigraphix.as3nodes.api.IMXMLSourceFile;
-import org.teotigraphix.as3nodes.api.INode;
 import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
- * TODO DOCME
+ * Concrete implementation of the <code>IMXMLSourceFile</code> api.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -45,9 +44,10 @@ public class MXMLSourceFile extends AS3SourceFile implements IMXMLSourceFile
 	/**
 	 * Constructor.
 	 */
-	public function MXMLSourceFile(parent:INode, sourceCode:ISourceCode)
+	public function MXMLSourceFile(sourceCode:ISourceCode, 
+								   classPath:String = null)
 	{
-		super(parent, sourceCode);
+		super(sourceCode, classPath);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ public class MXMLSourceFile extends AS3SourceFile implements IMXMLSourceFile
 		
 		var unit:IParserNode = parser.buildAst(
 			Vector.<String>(sourceCode.code.split("\n")), 
-			sourceCode.filePath);
+			filePath);
 		
 		compilationNode = NodeFactory.instance.createCompilation(unit, this);
 		

@@ -70,14 +70,5 @@ public interface IAS3SourceFile extends ISourceFile
 	 * TODO Docme
 	 */
 	function get qualifiedName():String;
-	
-	//----------------------------------
-	//  classPath
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get classPath():String;
 }
 }

@@ -23,7 +23,7 @@ package org.teotigraphix.as3nodes.api
 import org.teotigraphix.as3parser.api.ISourceCode;
 
 /**
- * TODO DOCME
+ * An abstract source file containing source code and a file path location.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -42,16 +42,25 @@ public interface ISourceFile extends INode, ISeeLinkAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The file's root compilation node.
 	 */
 	function get compilationNode():ICompilationNode;
+	
+	//----------------------------------
+	//  extension
+	//----------------------------------
+	
+	/**
+	 * The file name extension such as; <strong>as</strong> or <strong>mxml</strong>.
+	 */
+	function get extension():String;
 	
 	//----------------------------------
 	//  name
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The file name; <code>MyFile</code>.
 	 */
 	function get name():String;
 	
@@ -60,23 +69,27 @@ public interface ISourceFile extends INode, ISeeLinkAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The file path; <code>/home/user/src/my/domain/MyFile.as</code>.
 	 */
-	function get fileName():String;
+	function get filePath():String;
+	
+	//----------------------------------
+	//  classPath
+	//----------------------------------
+	
+	/**
+	 * The file base path; <code>/home/user/src</code>.
+	 */
+	function get classPath():String;
 	
 	//----------------------------------
 	//  sourceCode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The file's source code.
 	 */
 	function get sourceCode():ISourceCode;
-	
-	/**
-	 * @private
-	 */
-	function set sourceCode(value:ISourceCode):void;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -85,7 +98,15 @@ public interface ISourceFile extends INode, ISeeLinkAware
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Builds the file's AST based on the subclass implementation.
+	 * 
+	 * <p>When the <code>extension</code> is <strong>.as</strong>, the AST
+	 * will be build with the <code>AS3Parser</code>, when the <code>extension</code> 
+	 * is <strong>.mxml</strong> the AST will be build with the 
+	 * <code>MXMLParser</code>.</p>
+	 * 
+	 * @param Returns a <code>ICompilationNode</code> wrapping the file's AST
+	 * root <strong>compilation-unit</strong> parser node.
 	 */
 	function buildAst():ICompilationNode;
 }

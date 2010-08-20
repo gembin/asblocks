@@ -17,8 +17,8 @@ public class TestCompilationNode
 		var name:String = "Test.as";
 		var path:String = "c://project/src";
 		
-		var code:SourceCode = new SourceCode(source, name, path);
-		var file:AS3SourceFile = new AS3SourceFile(null, code);
+		var code:SourceCode = new SourceCode(source, name + "/" + path);
+		var file:AS3SourceFile = new AS3SourceFile(code, path);
 		file.buildAst();
 		
 		Assert.assertNotNull(file.compilationNode.node);
