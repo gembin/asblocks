@@ -240,11 +240,11 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		}
 		if (currentCharacter == '&')
 		{
-			return scanCharacterSequence(currentCharacter, ["&&", "&="]);
+			return scanCharacterSequence(currentCharacter, ["&&=", "&&", "&="]);
 		}
 		if (currentCharacter == '|')
 		{
-			return scanCharacterSequence(currentCharacter, ["||", "|="]);
+			return scanCharacterSequence(currentCharacter, ["||=", "||", "|="]);
 		}
 		if (currentCharacter == '^')
 		{

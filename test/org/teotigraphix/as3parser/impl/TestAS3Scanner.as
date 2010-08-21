@@ -63,17 +63,126 @@ public class TestAS3Scanner
 		}
 	}
 	
+	[Test]
+	public function testAssignment():void
+	{
+		var lines:Array =
+			[
+				"="
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		assertText(lines[0]);
+	}
 	
+	[Test]
+	public function testBitwise():void
+	{
+		var lines:Array =
+			[
+				"&",
+				"<<",
+				"<<<", // missing from the docs?
+				"~",
+				"|",
+				">>",
+				">>>"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		for (var i:int = 0; i < lines.length; i++)
+		{
+			assertText(lines[i]);
+			assertText("\n");
+		}
+	}
 	
+	[Test]
+	public function testBitwiseCompundAssignment():void
+	{
+		var lines:Array =
+			[
+				"&=",
+				"<<=",
+				"|=",
+				">>=",
+				">>>=",
+				"^="
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		for (var i:int = 0; i < lines.length; i++)
+		{
+			assertText(lines[i]);
+			assertText("\n");
+		}
+	}
 	
+	[Test]
+	public function testComment():void
+	{
+		var lines:Array =
+			[
+				"/* block comment. */",
+				"// line comment"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		for (var i:int = 0; i < lines.length; i++)
+		{
+			assertText(lines[i]);
+			assertText("\n");
+		}
+	}
 	
+	[Test]
+	public function testComparison():void
+	{
+		var lines:Array =
+			[
+				"==",
+				">",
+				">=",
+				"!=",
+				"<",
+				"<=",
+				"===",
+				"!=="
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		for (var i:int = 0; i < lines.length; i++)
+		{
+			assertText(lines[i]);
+			assertText("\n");
+		}
+	}
 	
-	
-	
-	
-	
-	
-	
+	[Test]
+	public function testLogical():void
+	{
+		var lines:Array =
+			[
+				"&&",
+				"&&=",
+				"!",
+				"||",
+				"||="
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		for (var i:int = 0; i < lines.length; i++)
+		{
+			assertText(lines[i]);
+			assertText("\n");
+		}
+	}
 	
 	[Test]
 	public function testAssignments():void
