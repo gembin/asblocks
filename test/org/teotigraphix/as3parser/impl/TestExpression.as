@@ -154,5 +154,20 @@ public class TestExpression extends AbstractStatementTest
 			+ "</primary><op line=\"1\" column=\"2\">&lt;&lt;</op><primary line=\"1\" "
 			+ "column=\"4\">6</primary></shift>" );
 	}
+	
+	[Test]
+	public function testSuperiorInferiorXMLBug():void
+	{
+		assertStatement( "1",
+			"a < 11 && b > 11",
+			"<and line=\"1\" column=\"1\"><relation line=\"1\" column=\"1\">" +
+			"<primary line=\"1\" column=\"1\">a</primary><op line=\"1\" " +
+			"column=\"3\">&lt;</op><primary line=\"1\" column=\"5\">11" +
+			"</primary></relation><op line=\"1\" column=\"8\">&&</op>" +
+			"<relation line=\"1\" column=\"11\"><primary line=\"1\" " +
+			"column=\"11\">b</primary><op line=\"1\" column=\"13\">&gt;" +
+			"</op><primary line=\"1\" column=\"15\">11</primary>" +
+			"</relation></and>" );
+	}
 }
 }

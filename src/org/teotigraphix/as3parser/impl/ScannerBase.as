@@ -173,7 +173,7 @@ public class ScannerBase implements IScanner
 	protected final function nextChar():String
 	{
 		var currentLine:String = lines[line];
-		
+			
 		_offset++;
 		column++;
 		
@@ -251,7 +251,8 @@ public class ScannerBase implements IScanner
 	/**
 	 * Scans until delimiter is found.
 	 */
-	protected final function scanUntilDelimiter(start:String, delimiter:String = null):Token
+	protected final function scanUntilDelimiter(start:String, 
+												delimiter:String = null):Token
 	{
 		if (delimiter == null)
 			delimiter = start;
@@ -266,6 +267,7 @@ public class ScannerBase implements IScanner
 		for ( ;; )
 		{
 			var currentCharacter:String = peekChar(peekPos++);
+			
 			if (currentCharacter == '\n')
 			{
 				return null;

@@ -189,7 +189,7 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		{
 			return scanString(currentCharacter);
 		}
-		//if (currentCharacter == '<' && !inBlock)
+		
 		if (currentCharacter == '<')
 		{
 			return scanXMLOrOperator(currentCharacter);
@@ -461,6 +461,7 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		var level:int = 0;
 		var buffer:String = "";
 		
+		var foundInstruction:Boolean = false;
 		var currentCharacter:String = '<';
 		
 		for ( ;; )
@@ -469,7 +470,27 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 			do
 			{
 				currentToken = scanUntilDelimiter('<', '>');
-				if (currentToken == null)
+				
+				// test that this could actually be a tag
+				// < 11 && b >
+				if (currentToken)
+				{
+					if (!foundInstruction && currentToken.text.indexOf("<?") != 0)
+					{
+						try 
+						{
+							// Error #1090: XML parser failure: element is malformed.
+							var x:XML = new XML(currentToken.text.replace(">", "/>"));
+						}
+						catch (e:Error)
+						{
+							line = currentLine;
+							column = currentColumn;
+							return null;
+						}
+					}
+				}
+				else
 				{
 					line = currentLine;
 					column = currentColumn;
@@ -480,6 +501,8 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 				
 				if (isProcessingInstruction(currentToken.text))
 				{
+					foundInstruction = true;
+					
 					currentCharacter = nextChar();
 					if (currentCharacter == '\n')
 					{
@@ -491,28 +514,41 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 			}
 			while (currentToken == null);
 			
-			// FIXME this might have an error, test it
 			if (currentToken.text.indexOf("</") == 0)
 			{
 				level--;
 			}
-			else if (!(currentToken.text.indexOf("/>") == currentToken.text.length - 2))
+			else if (!(currentToken.text.indexOf("/>") == 
+				currentToken.text.length - 2))
 			{
 				level++;
 			}
 			
 			if (level <= 0)
 			{
-				return new Token(buffer.toString(), line, column);
+				return new Token(buffer, line, column);
 			}
 			
 			for ( ;; )
 			{
-				currentCharacter = nextChar();
+				try
+				{
+					// if for some weird reason the scanner gets passed
+					// a non valid spot and finds the end, do a reset
+					currentCharacter = nextChar();
+				}
+				catch (e:RangeError)
+				{
+					line = currentLine;
+					column = currentColumn;
+					return null;
+				}
+				
 				if (currentCharacter == '<')
 				{
 					break;
 				}
+				
 				buffer += currentCharacter;
 			}
 		}

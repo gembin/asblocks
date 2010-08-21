@@ -1142,7 +1142,8 @@ public class AS3Parser extends ParserBase
 			token.column,
 			parseAdditiveExpression());
 		while (tokIs(Operators.DOUBLE_SHIFT_LEFT)
-			|| tokIs(Operators.TRIPLE_SHIFT_LEFT) || tokIs( Operators.DOUBLE_SHIFT_RIGHT)
+			|| tokIs(Operators.DOUBLE_SHIFT_RIGHT)
+			|| tokIs(Operators.TRIPLE_SHIFT_LEFT)
 			|| tokIs(Operators.TRIPLE_SHIFT_RIGHT))
 		{
 			result.addChild(Node.create(AS3NodeKind.OP,
@@ -1181,7 +1182,8 @@ public class AS3Parser extends ParserBase
 			token.column,
 			parseUnaryExpression());
 		while (tokIs(Operators.TIMES)
-			|| tokIs(Operators.SLASH) || tokIs(Operators.MODULO))
+			|| tokIs(Operators.SLASH) 
+			|| tokIs(Operators.MODULO))
 		{
 			result.addChild(Node.create(AS3NodeKind.OP,
 				token.line,
@@ -1671,7 +1673,7 @@ public class AS3Parser extends ParserBase
 		return result;
 	}
 	
-	private function parseExpressionList():IParserNode
+	internal function parseExpressionList():IParserNode
 	{
 		var result:Node = Node.createChild(AS3NodeKind.EXPR_LIST,
 			token.line,
@@ -2094,7 +2096,7 @@ public class AS3Parser extends ParserBase
 	 * 
 	 * @throws TokenException
 	 */
-	private function parseCondition():Node
+	internal function parseCondition():Node
 	{
 		consume(Operators.LEFT_PARENTHESIS);
 		var result:Node = Node.createChild(AS3NodeKind.CONDITION,
