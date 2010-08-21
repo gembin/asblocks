@@ -64,6 +64,11 @@ public class ScannerBase implements IScanner
 	 */
 	protected var column:int;
 	
+	/**
+	 * The last non whitespace charater scanned.
+	 */
+	protected var lastNonWhiteSpaceCharacter:String;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  IScanner API :: Properties
@@ -146,8 +151,9 @@ public class ScannerBase implements IScanner
 	public function setLines(lines:Vector.<String>):void
 	{
 		this.lines = lines;
-		this.line = 0;
-		this.column = -1;
+		line = 0;
+		column = -1;
+		lastNonWhiteSpaceCharacter = null;
 		
 		_offset = -1;
 	}
@@ -173,7 +179,8 @@ public class ScannerBase implements IScanner
 	protected final function nextChar():String
 	{
 		var currentLine:String = lines[line];
-			
+		var lastColumn:int = column;
+		
 		_offset++;
 		column++;
 		
@@ -182,6 +189,12 @@ public class ScannerBase implements IScanner
 			column = -1;
 			line++;
 			return "\n";
+		}
+		
+		var oldCharacter:String = currentLine.charAt(lastColumn);
+		if (oldCharacter != " " && oldCharacter != "\t")
+		{
+			lastNonWhiteSpaceCharacter = oldCharacter;
 		}
 		
 		var character:String = currentLine.charAt(column);

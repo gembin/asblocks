@@ -163,6 +163,7 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 	override public function nextToken():Token
 	{
 		var currentCharacter:String;
+		var lastCharacter:String;
 		
 		if (lines != null && line < lines.length)
 		{
@@ -217,7 +218,13 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		}
 		if (currentCharacter == '*')
 		{
-			return scanCharacterSequence(currentCharacter, []);
+			// specail case for the atrix type :*
+			if (lastNonWhiteSpaceCharacter == ":")
+			{
+				return new Token(currentCharacter, line, column);
+			}
+			
+			return scanCharacterSequence(currentCharacter, ["*="]);
 		}
 		if (currentCharacter == '+')
 		{
@@ -225,7 +232,7 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		}
 		if (currentCharacter == '-')
 		{
-			return scanCharacterSequence(currentCharacter, ["--", "-="]);
+			return scanCharacterSequence(currentCharacter, ["--", "-=", "-Infinity"]);
 		}
 		if (currentCharacter == '%')
 		{

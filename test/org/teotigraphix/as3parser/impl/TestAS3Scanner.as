@@ -16,6 +16,65 @@ public class TestAS3Scanner
 		scanner = new AS3Scanner();
 	}
 	
+	
+	// from lang ref
+	
+	[Test]
+	public function testArithmetic():void
+	{
+		var lines:Array =
+			[
+				"+",
+				"--",
+				"/",
+				"++",
+				"%",
+				"*",
+				"-"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		for (var i:int = 0; i < lines.length; i++)
+		{
+			assertText(lines[i]);
+			assertText("\n");
+		}
+	}
+	
+	[Test]
+	public function testArithmeticCompoundAssignment():void
+	{
+		var lines:Array =
+			[
+				"+=",
+				"/=",
+				"%=",
+				"*=",
+				"-="
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		for (var i:int = 0; i < lines.length; i++)
+		{
+			assertText(lines[i]);
+			assertText("\n");
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	[Test]
 	public function testAssignments():void
 	{
@@ -355,6 +414,19 @@ public class TestAS3Scanner
 			assertText(lines[i]);
 			assertText("\n");
 		}
+	}
+	
+	[Test]
+	public function testNegativeInfinity():void
+	{
+		var lines:Array =
+			[
+				"-Infinity"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		assertText(lines[0]);
 	}
 	
 	private function assertText(text:String):void
