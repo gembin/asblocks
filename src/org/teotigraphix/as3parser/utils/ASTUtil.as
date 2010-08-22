@@ -304,9 +304,10 @@ public class ASTUtil
 	 * @param ast The <code>IParserNode</code> to convert.
 	 * @return A String XML representation of the <code>IParserNode</code>.
 	 */
-	public static function convert(ast:IParserNode):String
+	public static function convert(ast:IParserNode, 
+								   location:Boolean = true):String
 	{
-		return visitNodes(ast, "", 0);
+		return visitNodes(ast, "", 0, location);
 	}
 	
 	public static function toSourceCode(list:Array):String
@@ -332,17 +333,25 @@ public class ASTUtil
 	 */
 	private static function visitNodes(ast:IParserNode, 
 									   result:String, 
-									   level:int):String
+									   level:int,
+									   location:Boolean = true):String
 	{
-		result += "<" + ast.kind + " line=\"" + 
-			ast.line + "\" column=\"" + ast.column + "\">";
+		if (location)
+		{
+			result += "<" + ast.kind + " line=\"" + 
+				ast.line + "\" column=\"" + ast.column + "\">";
+		}
+		else
+		{
+			result += "<" + ast.kind + ">";
+		}
 		
 		var numChildren:int = ast.numChildren;
 		if (numChildren > 0)
 		{
 			for (var i:int = 0; i < numChildren; i++)
 			{
-				result = visitNodes(ast.getChild(i), result, level + 1);
+				result = visitNodes(ast.getChild(i), result, level + 1, location);
 			}
 		}
 		else if (ast.stringValue != null)
