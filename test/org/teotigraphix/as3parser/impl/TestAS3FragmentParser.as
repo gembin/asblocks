@@ -1,5 +1,6 @@
 package org.teotigraphix.as3parser.impl
 {
+
 import org.flexunit.Assert;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -10,6 +11,97 @@ public class TestAS3FragmentParser
 	public function setUp():void
 	{
 	}
+	
+	[Test]
+	public function test_parseCompilationUnit():void
+	{
+		var ast:IParserNode;
+		var result:String;
+		
+		ast = AS3FragmentParser.parseCompilationUnit("package my.domain{public class " +
+			"Test { } } class InternalClass { }");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<compilation-unit><package><name>my.domain</name>" +
+			"<content><class><name>Test</name><mod-list><mod>public</mod>" +
+			"</mod-list><content></content></class></content></package>" +
+			"<content><class><name>InternalClass</name><content></content>" +
+			"</class></content></compilation-unit>", result);
+	}
+	
+	[Test]
+	public function test_parsePackage():void
+	{
+		var ast:IParserNode;
+		var result:String;
+		
+		ast = AS3FragmentParser.parsePackage("package my.domain{public class Test { } } class InternalClass { }");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<package><name>my.domain</name><content><class>" +
+			"<name>Test</name><mod-list><mod>public</mod></mod-list><content>" +
+			"</content></class></content></package>", result);
+	}
+	
+	[Test]
+	public function test_parsePackageContent():void
+	{
+		var ast:IParserNode;
+		var result:String;
+		
+		ast = AS3FragmentParser.parsePackageContent("public class Test { }");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<content><class><name>Test</name><mod-list>" +
+			"<mod>public</mod></mod-list><content></content></class></content>", result);
+		
+		ast = AS3FragmentParser.parsePackageContent("public interface ITest { }");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<content><interface><name>ITest</name><mod-list>" +
+			"<mod>public</mod></mod-list><content></content></interface></content>", result);
+		
+		ast = AS3FragmentParser.parsePackageContent("public function myGlobalFunction():int { return -1; }");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<content><function><mod-list><mod>public</mod>" +
+			"</mod-list><name>myGlobalFunction</name><parameter-list>" +
+			"</parameter-list><type>int</type><block><return><minus>" +
+			"<primary>1</primary></minus></return></block></function></content>", result);
+	}
+	
+	[Test]
+	public function test_parseClassContent():void
+	{
+		var ast:IParserNode;
+		var result:String;
+		
+		ast = AS3FragmentParser.parseClassContent("private var hello:World = null; " +
+			"flash_proxy function getProperty():Object{return null;}");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<content><var-list><mod-list><mod>private</mod>" +
+			"</mod-list><name-type-init><name>hello</name><type>World</type>" +
+			"<init><primary>null</primary></init></name-type-init></var-list>" +
+			"<function><mod-list><mod>flash_proxy</mod></mod-list><name>" +
+			"getProperty</name><parameter-list></parameter-list><type>Object" +
+			"</type><block><return><primary>null</primary></return></block>" +
+			"</function></content>", result);
+		
+	}
+	
+	[Test]
+	public function test_parseInterfaceContent():void
+	{
+		var ast:IParserNode;
+		var result:String;
+		
+		ast = AS3FragmentParser.parseInterfaceContent("function get hello():World; " +
+			"function recycleWorld():void;");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<content><get><name>hello</name><parameter-list>" +
+			"</parameter-list><type>World</type></get><function><name>" +
+			"recycleWorld</name><parameter-list></parameter-list><type>void" +
+			"</type></function></content>", result);
+		
+	}
+	
+	
+	
 	
 	[Test]
 	public function test_parseStatement():void
@@ -410,21 +502,30 @@ public class TestAS3FragmentParser
 	}
 	
 	[Test]
-	public function test_parseExpressionList():void
-	{
-		
-	}
-	
-	[Test]
 	public function test_parseCondition():void
 	{
-		var ast:IParserNode = AS3FragmentParser.parseCondition("a<11&&b>11");
-		var result:String = ASTUtil.convert(ast, false);
+		var ast:IParserNode;
+		var result:String;
 		
+		ast = AS3FragmentParser.parseCondition("a!=42");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<condition><equality><primary>a</primary>" +
+			"<op>!=</op><primary>42</primary></equality></condition>", result);
+		
+		ast = AS3FragmentParser.parseCondition("a<11&&b>11");
+		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<condition><and><relation><primary>a</primary>" +
 			"<op>&lt;</op><primary>11</primary></relation><op>&&</op>" +
 			"<relation><primary>b</primary><op>&gt;</op><primary>11</primary>" +
 			"</relation></and></condition>", result);
+		
+		ast = AS3FragmentParser.parseCondition("value & uint(1 << posval)");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<condition><b-and><primary>value</primary><op>&" +
+			"</op><call><primary>uint</primary><arguments><shift>" +
+			"<primary>1</primary><op>&lt;&lt;</op><primary>posval</primary>" +
+			"</shift></arguments></call></b-and></condition>", result);
+		
 	}
 }
 }

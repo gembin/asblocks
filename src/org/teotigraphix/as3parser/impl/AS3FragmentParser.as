@@ -42,6 +42,77 @@ public class AS3FragmentParser
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * Parses a <code>AS3NodeKind.COMPILATION_UNIT</code> node.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.COMPILATION_UNIT</code> node.
+	 */
+	public static function parseCompilationUnit(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(source);
+		var node:IParserNode = parser.parseCompilationUnit();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code>AS3NodeKind.PACKAGE</code> node.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.PACKAGE</code> node.
+	 */
+	public static function parsePackage(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(source);
+		parser.nextToken(); // package
+		var node:IParserNode = parser.parsePackage();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code>AS3NodeKind.CONTENT</code> node.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.CONTENT</code> node.
+	 */
+	public static function parsePackageContent(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(source);
+		parser.nextToken(); // package
+		var node:IParserNode = parser.parsePackageContent();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code>AS3NodeKind.CONTENT</code> node.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.CONTENT</code> node.
+	 */
+	public static function parseClassContent(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser("{" + source + "}");
+		parser.nextToken(); // {
+		parser.nextToken(); // into content
+		var node:IParserNode = parser.parseClassContent();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code>AS3NodeKind.CONTENT</code> node.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.CONTENT</code> node.
+	 */
+	public static function parseInterfaceContent(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser("{" + source + "}");
+		parser.nextToken(); // {
+		parser.nextToken(); // into content
+		var node:IParserNode = parser.parseInterfaceContent();
+		return node;
+	}
+	
+	/**
 	 * Parses a <code>AS3NodeKind.STATEMENT</code> node.
 	 * 
 	 * @param statement A String statement to be parsed into AST.
@@ -49,14 +120,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseStatement(statement:String):IParserNode
 	{
-		var parser:AS3Parser = new AS3Parser();
-		
-		var lines:Array = 
-			[
-				statement
-			];
-		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		var parser:AS3Parser = createParser(statement);
 		parser.nextToken();
 		var node:IParserNode = parser.parseStatement();
 		return node;
@@ -70,71 +134,23 @@ public class AS3FragmentParser
 	 */
 	public static function parsePrimaryExpression(expression:String):IParserNode
 	{
-		var parser:AS3Parser = new AS3Parser();
-		
-		var lines:Array = 
-			[
-				expression
-			];
-		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		var parser:AS3Parser = createParser(expression);
 		parser.nextToken();
 		var node:IParserNode = parser.parsePrimaryExpression();
 		return node;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	/**
-	 * Parses a <code>AS3NodeKind.EXPRESSION</code> node.
+	 * Parses a <code></code> node.
 	 * 
 	 * @param statement A String statement to be parsed into AST.
-	 * @return Returns a <code>AS3NodeKind.EXPRESSION</code> node.
+	 * @return Returns a <code></code> node.
 	 */
 	public static function parseExpression(expression:String):IParserNode
 	{
-		var parser:AS3Parser = new AS3Parser();
-		
-		var lines:Array = 
-			[
-				expression
-			];
-		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		var parser:AS3Parser = createParser(expression);
 		parser.nextToken();
 		var node:IParserNode = parser.parseExpression();
-		return node;
-	}
-	
-	/**
-	 * Parses a <code>AS3NodeKind.EXPRESSION_LIST</code> node.
-	 * 
-	 * @param statement A String statement to be parsed into AST.
-	 * @return Returns a <code>AS3NodeKind.EXPRESSION_LIST</code> node.
-	 */
-	public static function parseExpressionList(expression:String):IParserNode
-	{
-		var i:int, j:int
-		
-		var parser:AS3Parser = new AS3Parser();
-		
-		var lines:Array = 
-			[
-				expression
-			];
-		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
-		parser.nextToken();
-		var node:IParserNode = parser.parseExpressionList();
 		return node;
 	}
 	
@@ -146,19 +162,27 @@ public class AS3FragmentParser
 	 */
 	public static function parseCondition(condition:String):IParserNode
 	{
-		var parser:AS3Parser = new AS3Parser();
-		
-		var lines:Array = 
-			[
-				"(" + condition + ")",
-				"__END__"
-			];
-		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		var parser:AS3Parser = createParser("(" + condition + ")");
 		parser.nextToken();
 		// /condition
 		var node:IParserNode = parser.parseCondition();
 		return node;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private Class :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private static function createParser(source:String):AS3Parser
+	{
+		var parser:AS3Parser = new AS3Parser();
+		parser.scanner.setLines(Vector.<String>([source]));
+		return parser
 	}
 }
 }
