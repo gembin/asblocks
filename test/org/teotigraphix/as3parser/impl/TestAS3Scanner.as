@@ -229,6 +229,28 @@ public class TestAS3Scanner
 	}
 	
 	[Test]
+	public function testE4XAttribute():void
+	{
+		var lines:Array =
+			[
+				"myXML.@attributeName",
+				"myXML.@*"
+			];
+		
+		scanner.setLines(ASTUtil.toVector(lines));
+		
+		assertText("myXML");
+		assertText(".");
+		assertText("@");
+		assertText("attributeName");
+		assertText("\n");
+		assertText("myXML");
+		assertText(".");
+		assertText("@");
+		assertText("*");
+	}
+	
+	[Test]
 	public function testComparisonOperators():void
 	{
 		var lines:Array =

@@ -221,7 +221,7 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 			// specail case for the atrix type :*
 			if (lastNonWhiteSpaceCharacter == ":")
 			{
-				return new Token(currentCharacter, line, column);
+				return scanSingleCharacterToken(currentCharacter);
 			}
 			
 			return scanCharacterSequence(currentCharacter, ["*="]);
@@ -269,6 +269,10 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		if (currentCharacter == '!')
 		{
 			return scanCharacterSequence(currentCharacter, ["!==", "!="]);
+		}
+		if (currentCharacter == '@')
+		{
+			return scanSingleCharacterToken(currentCharacter);
 		}
 		
 		return scanWord(currentCharacter);

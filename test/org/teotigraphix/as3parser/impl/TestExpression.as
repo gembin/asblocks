@@ -169,5 +169,28 @@ public class TestExpression extends AbstractStatementTest
 			"</op><primary line=\"1\" column=\"15\">11</primary>" +
 			"</relation></and>" );
 	}
+	
+	[Test]
+	public function testE4XAttribute():void
+	{
+		assertStatement("1",
+			"myXML.attributeName",
+			"<dot line=\"1\" column=\"7\"><primary line=\"1\" " +
+			"column=\"1\">myXML</primary><primary line=\"1\" " +
+			"column=\"7\">attributeName</primary></dot>");
+		
+		assertStatement("2",
+			"myXML.@attributeName",
+			"<dot line=\"1\" column=\"7\"><primary line=\"1\" column=\"1\">" +
+			"myXML</primary><e4x-attr line=\"1\" column=\"8\"><name " +
+			"line=\"1\" column=\"8\">attributeName</name></e4x-attr></dot>");
+		
+		assertStatement("3",
+			"myXML.@*",
+			"<dot line=\"1\" column=\"7\"><primary line=\"1\" column=\"1\">" +
+			"myXML</primary><e4x-attr line=\"1\" column=\"8\"><star line=\"2\" " +
+			"column=\"1\"></star></e4x-attr></dot>");
+
+	}
 }
 }

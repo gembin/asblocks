@@ -1560,10 +1560,15 @@ public class AS3Parser extends ParserBase
 			result.addChild(node);
 			return result;
 		}
-		// else if ( tokIs( Operators.AT ) )
-		// {
-		// return parseE4XAttributeIdentifier();
-		// }
+		else if (tokIs(Operators.AT))
+		{
+			result = Node.create(AS3NodeKind.DOT,
+				token.line,
+				token.column);
+			result.addChild(node);
+			result.addChild(parseE4XAttributeIdentifier());
+			return result;
+		}
 		result = Node.create(AS3NodeKind.DOT,
 			token.line,
 			token.column);
@@ -1599,6 +1604,7 @@ public class AS3Parser extends ParserBase
 				token.column,
 				parseQualifiedName()));
 		}
+		
 		return result;
 	}
 	
