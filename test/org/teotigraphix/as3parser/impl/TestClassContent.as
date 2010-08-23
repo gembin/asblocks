@@ -41,11 +41,12 @@ public class TestClassContent
 		
 		assertClassContent("4",
 			"[Bindable] const a",
-			"<const-list line=\"2\" column=\"18\"><meta-list line=\"2\" column=\"1\">" +
-			"<meta line=\"2\" column=\"1\">Bindable</meta></meta-list>" +
-			"<name-type-init line=\"2\" column=\"18\"><name line=\"2\" " +
-			"column=\"18\">a</name><type line=\"3\" column=\"1\"></type>" +
-			"</name-type-init></const-list>");
+			"<const-list line=\"2\" column=\"18\">" +
+			"<meta-list line=\"2\" column=\"1\"><meta line=\"2\" column=\"1\">" +
+			"<name line=\"2\" column=\"2\">Bindable</name></meta></meta-list>" +
+			"<name-type-init line=\"2\" column=\"18\"><name line=\"2\" column=\"18\">" +
+			"a</name><type line=\"3\" column=\"1\"></type></name-type-init>" +
+			"</const-list>");
 	}
 	
 	[Test]
@@ -141,14 +142,15 @@ public class TestClassContent
 		
 		var result:String = ASTUtil.convert(parser.parseClassContent());
 		
-		Assert.assertEquals("<content line=\"2\" column=\"14\"><function line=\"2\" " +
-			"column=\"55\"><meta-list line=\"2\" column=\"16\"><meta line=\"2\" " +
-			"column=\"16\"><as-doc line=\"2\" column=\"1\">/** Comment */</as-doc>" +
+		Assert.assertEquals("<content line=\"2\" column=\"14\"><function " +
+			"line=\"2\" column=\"55\"><meta-list line=\"2\" column=\"16\">" +
+			"<meta line=\"2\" column=\"16\"><as-doc line=\"2\" column=\"1\">/**" +
+			" Comment */</as-doc><name line=\"2\" column=\"17\">Bindable</name>" +
 			"</meta></meta-list><mod-list line=\"2\" column=\"27\"><mod line=\"2\" " +
 			"column=\"27\">public</mod></mod-list><name line=\"2\" column=\"43\">a" +
-			"</name><parameter-list line=\"2\" column=\"46\"></parameter-list>" +
-			"<type line=\"2\" column=\"50\">void</type><block line=\"2\" " +
-			"column=\"57\"></block></function></content>",
+			"</name><parameter-list line=\"2\" column=\"46\"></parameter-list><type " +
+			"line=\"2\" column=\"50\">void</type><block line=\"2\" column=\"57\"></block>" +
+			"</function></content>",
 			result);
 	}
 	
@@ -195,11 +197,12 @@ public class TestClassContent
 		
 		assertClassContent("4",
 			"[Bindable] var a",
-			"<var-list line=\"2\" column=\"16\"><meta-list line=\"2\" column=\"1\">"
-			+ "<meta line=\"2\" column=\"1\">Bindable</meta></meta-list>"
-			+ "<name-type-init line=\"2\" column=\"16\">"
-			+ "<name line=\"2\" column=\"16\">a</name><type line=\"3\" column=\"1\">"
-			+ "</type></name-type-init></var-list>" );
+			"<var-list line=\"2\" column=\"16\">" +
+			"<meta-list line=\"2\" column=\"1\"><meta line=\"2\" column=\"1\">" +
+			"<name line=\"2\" column=\"2\">Bindable</name></meta></meta-list>" +
+			"<name-type-init line=\"2\" column=\"16\"><name line=\"2\" " +
+			"column=\"16\">a</name><type line=\"3\" column=\"1\"></type>" +
+			"</name-type-init></var-list>" );
 	}
 	
 	private function assertClassContent(message:String, 

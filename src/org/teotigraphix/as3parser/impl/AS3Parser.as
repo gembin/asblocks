@@ -336,41 +336,89 @@ public class AS3Parser extends ParserBase
 		return name;
 	}
 	
-	
-	/**
-	 * token is [ [id] [id ("test")] [id (name="test",type="a.b.c.Event")] exit
-	 * token is the first token after ]
-	 * 
-	 * @throws TokenException
-	 */
 	private function parseMetaData():Node
 	{
-		var buffer:String = "";
-		
-		var line:int = token.line;
-		var column:int = token.column;
-		
-		consume(Operators.LEFT_SQUARE_BRACKET);
-		while (!tokIs(Operators.RIGHT_SQUARE_BRACKET))
-		{
-			if (buffer.length > 0)
-			{
-				buffer += ' ';
-			}
-			buffer += token.text;
-			nextToken();
-		}
-		skip(Operators.RIGHT_SQUARE_BRACKET);
-		var metaDataNode:Node = Node.create(AS3NodeKind.META, 
-			line, column, buffer);
+		var result:Node = Node.create(
+			AS3NodeKind.META, 
+			token.line, 
+			token.column);
 		
 		if (currentAsDoc != null)
 		{
-			metaDataNode.addChild(currentAsDoc);
+			result.addChild(currentAsDoc);
 			currentAsDoc = null;
 		}
 		
-		return metaDataNode;
+		consume(Operators.LEFT_SQUARE_BRACKET);
+		
+		result.addRawChild(AS3NodeKind.NAME, 
+			token.line, token.column, token.text);
+		
+		nextToken(); // name
+		
+		if (tokIs(Operators.LEFT_PARENTHESIS))
+		{
+			result.addChild(parseMetaDataParameterList())
+		}
+		
+		consume(Operators.RIGHT_SQUARE_BRACKET);
+		
+		return result;
+	}
+	
+	private function parseMetaDataParameterList():Node
+	{
+		var result:Node = Node.create(AS3NodeKind.PARAMETER_LIST,
+			token.line,
+			token.column);
+		
+		consume(Operators.LEFT_PARENTHESIS);
+		
+		while (!tokIs(Operators.RIGHT_PARENTHESIS))
+		{
+			result.addChild(parseMetaDataParameter());
+			if (tokIs(Operators.COMMA))
+			{
+				nextToken();
+			}
+			else
+			{
+				break;
+			}
+		}
+		consume(Operators.RIGHT_PARENTHESIS);
+		return result;
+	}
+	
+	/**
+	 * token is the name of a parameter or ...
+	 */
+	private function parseMetaDataParameter():Node
+	{
+		var result:Node = Node.create(AS3NodeKind.PARAMETER,
+			token.line,
+			token.column);
+
+		result.addRawChild(AS3NodeKind.NAME,
+			token.line,
+			token.column,
+			token.text);
+		
+		nextToken(); // = or , or ]
+		
+		if (tokIs(Operators.EQUAL))
+		{
+			consume(Operators.EQUAL);
+			
+			result.addRawChild(AS3NodeKind.VALUE,
+				token.line,
+				token.column,
+				token.text);
+			
+			nextToken(); // , or ]
+		}
+		
+		return result;
 	}
 	
 	/**

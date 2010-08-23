@@ -16,6 +16,7 @@ import org.teotigraphix.as3parser.impl.TestForStatement;
 import org.teotigraphix.as3parser.impl.TestIfStatement;
 import org.teotigraphix.as3parser.impl.TestInterface;
 import org.teotigraphix.as3parser.impl.TestInterfaceContent;
+import org.teotigraphix.as3parser.impl.TestMetaData;
 import org.teotigraphix.as3parser.impl.TestPackageContent;
 import org.teotigraphix.as3parser.impl.TestPrimaryExpression;
 import org.teotigraphix.as3parser.impl.TestReturnStatement;
@@ -47,6 +48,7 @@ public class AS3ParserTestSuite
 	public var testIfStatement:TestIfStatement;
 	public var testInterface:TestInterface;
 	public var testInterfaceContent:TestInterfaceContent;
+	public var testMetaData:TestMetaData;
 	public var testPackageContent:TestPackageContent;
 	public var testPrimaryExpression:TestPrimaryExpression;
 	public var testReturnStatement:TestReturnStatement;

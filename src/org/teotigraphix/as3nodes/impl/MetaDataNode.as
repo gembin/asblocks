@@ -376,7 +376,14 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	 */
 	override protected function compute():void
 	{
-		for each (var child:IParserNode in node.children) 
+		_parameters = new Vector.<IMetaDataParameterNode>();
+		
+		if (node.numChildren == 0)
+			return;
+		
+		var children:Vector.<IParserNode> = node.children.concat();
+		
+		for each (var child:IParserNode in children) 
 		{
 			if (child.isKind(AS3NodeKind.AS_DOC))
 			{
@@ -386,28 +393,10 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 			{
 				_name = child.stringValue;
 			}
-		}
-		
-		// special case; for now all script nodes have a 
-		// comment so they are not null
-		//if (!comment)
-		//.	as3Factory.newComment(this);
-		
-		var data:String = node.stringValue;
-		
-		// FIXME OLD MetaData AST will fix
-		if (data)
-		{
-			_name = data.indexOf(" ( ") > -1 ? 
-				data.substring( 0, data.indexOf(" ( "))	: 
-				data;
-			
-			_parameter = data.indexOf("( ") > -1 ? 
-				data.substring(data.indexOf("( ") + 2, data.lastIndexOf(" )")) : 
-				"";
-			
-			if (_parameter && _parameter != "")
-				computeParameters();
+			else if (child.isKind(AS3NodeKind.PARAMETER_LIST))
+			{
+				computeParameters(child);
+			}
 		}
 	}
 	
@@ -428,16 +417,13 @@ public class MetaDataNode extends NodeBase implements IMetaDataNode
 	/**
 	 * @private
 	 */
-	protected function computeParameters():void
+	protected function computeParameters(child:IParserNode):void
 	{
-		_parameters = new Vector.<IMetaDataParameterNode>();
+		var children:Vector.<IParserNode> = child.children.concat();
 		
-		var split:Array = _parameter.split(" , ");
-		
-		for each (var element:String in split)
+		for each (var param:IParserNode in children) 
 		{
-			var pnode:IParserNode = Node.create(AS3NodeKind.PARAMETER, -1, -1, element);
-			_parameters.push(new MetaDataParameterNode(pnode, this));
+			_parameters.push(new MetaDataParameterNode(param, this));
 		}
 	}
 }

@@ -128,32 +128,19 @@ public class MetaDataParameterNode extends NodeBase implements IMetaDataParamete
 	 */
 	override protected function compute():void
 	{
-		if (node.numChildren > 0)
-		{
-			for each (var child:IParserNode in node.children) 
-			{
-				if (child.isKind(AS3NodeKind.NAME))
-				{
-					_name = child.stringValue;
-				}
-				else if (child.isKind(AS3NodeKind.VALUE))
-				{
-					_value = child.stringValue;
-				}
-			}
+		if (node.numChildren == 0)
 			return;
-		}
 		
-		var string:String = node.stringValue;
-		if (string.indexOf(" = ") == -1)
+		for each (var child:IParserNode in node.children) 
 		{
-			_value = string;
-		}
-		else
-		{
-			var split:Array = string.split(" = ");
-			_name = split[0];
-			_value = split[1];
+			if (child.isKind(AS3NodeKind.NAME))
+			{
+				_name = child.stringValue;
+			}
+			else if (child.isKind(AS3NodeKind.VALUE))
+			{
+				_value = child.stringValue;
+			}
 		}
 	}
 }

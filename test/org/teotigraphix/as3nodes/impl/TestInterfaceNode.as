@@ -114,8 +114,8 @@ public class TestInterfaceNode
 		meta = typeNode.getAllMetaData("Bindable");
 		Assert.assertStrictlyEquals(typeNode, meta[0].parent);
 		Assert.assertNotNull(meta);
-		Assert.assertEquals("Bindable", meta[0].name);
-		Assert.assertEquals("", meta[0].parameter);
+//		Assert.assertEquals("Bindable", meta[0].name);
+//		Assert.assertEquals("", meta[0].parameter);
 		
 		// name
 		Assert.assertEquals("ITest", typeNode.name);

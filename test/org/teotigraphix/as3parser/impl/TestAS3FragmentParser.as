@@ -109,12 +109,12 @@ public class TestAS3FragmentParser
 		ast = AS3FragmentParser.parseConstants("[MetaData]/** My asdoc. */" +
 			"public static const MY_CONSTANT:String = \"me\";");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><const-list><meta-list>" +
-			"<meta>MetaData</meta></meta-list><as-doc>/** My asdoc. */" +
+		Assert.assertEquals("<content><const-list><meta-list><meta>" +
+			"<name>MetaData</name></meta></meta-list><as-doc>/** My asdoc. */" +
 			"</as-doc><mod-list><mod>public</mod><mod>static</mod>" +
-			"</mod-list><name-type-init><name>MY_CONSTANT</name><type>" +
-			"String</type><init><primary>\"me\"</primary></init>" +
-			"</name-type-init></const-list></content>", result);
+			"</mod-list><name-type-init><name>MY_CONSTANT</name><type>String" +
+			"</type><init><primary>\"me\"</primary></init></name-type-init>" +
+			"</const-list></content>", result);
 		
 		ast = AS3FragmentParser.parseConstants(
 			"public static const MY_CONSTANT:String = \"me\";" +
@@ -138,12 +138,11 @@ public class TestAS3FragmentParser
 		ast = AS3FragmentParser.parseVariables("[MetaData]/** My asdoc. */" +
 			"public var myVariable:Object = {};");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><var-list><meta-list><meta>MetaData" +
-			"</meta></meta-list><mod-list><mod>public</mod></mod-list>" +
-			"<name-type-init><name>myVariable</name><type>Object</type>" +
-			"<init><primary><object></object></primary></init>" +
-			"</name-type-init><as-doc>/** My asdoc. */</as-doc>" +
-			"</var-list></content>", result);
+		Assert.assertEquals("<content><var-list><meta-list><meta><name>MetaData" +
+			"</name></meta></meta-list><mod-list><mod>public</mod></mod-list>" +
+			"<name-type-init><name>myVariable</name><type>Object</type><init>" +
+			"<primary><object></object></primary></init></name-type-init>" +
+			"<as-doc>/** My asdoc. */</as-doc></var-list></content>", result);
 	}
 	
 	[Test]
@@ -156,13 +155,13 @@ public class TestAS3FragmentParser
 			"public function myMethod(arg0:int = -1):Object {return null;}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><function><as-doc>/** My asdoc. */" +
-			"</as-doc><meta-list><meta>MetaData</meta></meta-list>" +
-			"<mod-list><mod>public</mod></mod-list><name>myMethod</name>" +
-			"<parameter-list><parameter><name-type-init><name>arg0</name>" +
-			"<type>int</type><init><minus><primary>1</primary></minus></init>" +
-			"</name-type-init></parameter></parameter-list><type>Object</type>" +
-			"<block><return><primary>null</primary></return></block>" +
-			"</function></content>", result);
+			"</as-doc><meta-list><meta><name>MetaData</name></meta>" +
+			"</meta-list><mod-list><mod>public</mod></mod-list><name>" +
+			"myMethod</name><parameter-list><parameter><name-type-init>" +
+			"<name>arg0</name><type>int</type><init><minus><primary>1</primary>" +
+			"</minus></init></name-type-init></parameter></parameter-list>" +
+			"<type>Object</type><block><return><primary>null</primary></return>" +
+			"</block></function></content>", result);
 	}
 	
 	[Test]
@@ -175,11 +174,11 @@ public class TestAS3FragmentParser
 			"public function get myProperty():int {return -1;}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><get><as-doc>/** My asdoc. */</as-doc>" +
-			"<meta-list><meta>MetaData</meta></meta-list><mod-list>" +
-			"<mod>public</mod></mod-list><name>myProperty</name>" +
+			"<meta-list><meta><name>MetaData</name></meta></meta-list>" +
+			"<mod-list><mod>public</mod></mod-list><name>myProperty</name>" +
 			"<parameter-list></parameter-list><type>int</type><block>" +
-			"<return><minus><primary>1</primary></minus></return>" +
-			"</block></get></content>", result);
+			"<return><minus><primary>1</primary></minus></return></block>" +
+			"</get></content>", result);
 	}
 	
 	[Test]
