@@ -7,12 +7,14 @@ import org.teotigraphix.as3nodes.api.IIdentifierNode;
 import org.teotigraphix.as3nodes.api.IInterfaceTypeNode;
 import org.teotigraphix.as3nodes.api.IMetaDataNode;
 import org.teotigraphix.as3nodes.api.INode;
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.impl.ParserFactory;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.Node;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class ASTNodeUtil
@@ -165,12 +167,25 @@ public class ASTNodeUtil
 	 */
 	public static function createMeta(name:String):IParserNode
 	{
-		// meta
 		var meta:IParserNode = create(AS3NodeKind.META);
 		// meta/name
 		meta.addChild(createText(AS3NodeKind.NAME, name));
 		
 		return meta;
+		// FIXME it's time to writ enew AST for meta data 
+		// meta-list
+		// meta-list/meta
+		// meta-list/meta/name
+		// meta-list/meta/parameter-list
+		// meta-list/meta/parameter-list/parmameter
+		// meta-list/meta/parameter-list/parmameter/name
+		// meta-list/meta/parameter-list/parmameter/value
+		var source:String = "[" + name + "]";
+		
+		var content:IParserNode = AS3FragmentParser.parseMetaData(source);
+		var node:IParserNode = content.getChild(0);
+		
+		return node;
 	}
 	
 	/**
@@ -191,35 +206,17 @@ public class ASTNodeUtil
 										  primary:String):IParserNode
 		
 	{
-		var node:IParserNode = create(AS3NodeKind.CONST_LIST);
-		
-		// parent.node/content/var-list/mod-list
-		var modList:IParserNode = node.addChild(create(AS3NodeKind.MOD_LIST));
+		var source:String = " static const " + name;
 		
 		if (visibility)
-		{
-			// parent.node/content/var-list/mod-list/mod
-			modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
-		}
-		
-		// parent.node/content/var-list/mod-list/mod
-		modList.addChild(createText(AS3NodeKind.MODIFIER, Modifier.STATIC.name));
-		
-		// parent.node/content/var-list/name-type-init
-		var nti:IParserNode = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT));
-		// parent.node/content/var-list/name-type-init/name
-		nti.addChild(createText(AS3NodeKind.NAME, name));
+			source = visibility + source;
 		if (type)
-		{
-			// parent.node/content/var-list/name-type-init/type
-			nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
-		}
+			source = source + ":" + type.localName;
+		if (primary)
+			source = source + "=" + primary;
 		
-		
-		// parent.node/content/var-list/name-type-init/init
-		var initNode:IParserNode = nti.addChild(create(AS3NodeKind.INIT));
-		// parent.node/content/var-list/name-type-init/init/primary
-		initNode.addChild(createText(AS3NodeKind.PRIMARY, primary));
+		var content:IParserNode = AS3FragmentParser.parseConstants(source);
+		var node:IParserNode = content.getChild(0);
 		
 		return node;
 	}
@@ -233,33 +230,17 @@ public class ASTNodeUtil
 										   primary:String = null):IParserNode
 		
 	{
-		var node:IParserNode = create(AS3NodeKind.VAR_LIST);
+		var source:String = " var " + name;
 		
 		if (visibility)
-		{
-			// parent.node/content/var-list/mod-list
-			var modList:IParserNode = node.addChild(create(AS3NodeKind.MOD_LIST));
-			// parent.node/content/var-list/mod-list/mod
-			modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
-		}
-		
-		// parent.node/content/var-list/name-type-init
-		var nti:IParserNode = node.addChild(create(AS3NodeKind.NAME_TYPE_INIT));
-		// parent.node/content/var-list/name-type-init/name
-		nti.addChild(createText(AS3NodeKind.NAME, name));
+			source = visibility + source;
 		if (type)
-		{
-			// parent.node/content/var-list/name-type-init/type
-			nti.addChild(createText(AS3NodeKind.TYPE, type.localName));
-		}
-		
+			source = source + ":" + type.localName;
 		if (primary)
-		{
-			// parent.node/content/var-list/name-type-init/init
-			var initNode:IParserNode = nti.addChild(create(AS3NodeKind.INIT));
-			// parent.node/content/var-list/name-type-init/init/primary
-			initNode.addChild(createText(AS3NodeKind.PRIMARY, primary));
-		}
+			source = source + "=" + primary;
+		
+		var content:IParserNode = AS3FragmentParser.parseVariables(source);
+		var node:IParserNode = content.getChild(0);
 		
 		return node;
 	}
@@ -273,22 +254,26 @@ public class ASTNodeUtil
 										  type:IIdentifierNode):IParserNode
 		
 	{
-		var node:IParserNode = create(Access.toKind(access));
+		var kind:String = Access.toKind(access);
+		var source:String = " function " + kind + " " + name ;
 		
-		// parent.node/content/function/mod-list
-		var modList:IParserNode = node.addChild(create(AS3NodeKind.MOD_LIST));
-		// parent.node/content/function/mod-list/mod
-		modList.addChild(createText(AS3NodeKind.MODIFIER, visibility.name));
-		// parent.node/content/function/name
-		node.addChild(createText(AS3NodeKind.NAME, name));
-		// parent.node/content/function/type
-		if (type)
-			node.addChild(createText(AS3NodeKind.TYPE, type.localName));
-		// parent.node/content/function/block
-		var block:IParserNode = create(AS3NodeKind.BLOCK);
-		node.addChild(block);
+		if (visibility)
+			source = visibility + source;
 		
-		if (access.equals(Access.READ))
+		if (kind == AS3NodeKind.GET)
+		{
+			if (type)
+				source = source + "():" + type.localName;
+		}
+		else if (kind == AS3NodeKind.SET)
+		{
+			if (type)
+				source = source + "(value:" + type.localName + "):void";
+		}
+		
+		source = source + "{";
+			
+		if (kind == AS3NodeKind.GET)
 		{
 			var retrn:String = "null";
 			if (type)
@@ -300,18 +285,20 @@ public class ASTNodeUtil
 					retrn = "-1";
 				}
 			}
-
-			block.addChild(createReturn(retrn));
+			source = source + "return " + retrn;
 		}
+		
+		source = source + "}";
+		
+		var content:IParserNode = AS3FragmentParser.parseMethods(source);
+		var node:IParserNode = content.getChild(0);
 		
 		return node;
 	}
 	
 	public static function createReturn(primary:String):IParserNode
 	{
-		var re:IParserNode = create("return");
-		re.addChild(createText("primary", primary));
-		return re;
+		return AS3FragmentParser.parseStatement("return " + primary);
 	}
 	
 	/**

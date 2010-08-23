@@ -113,6 +113,75 @@ public class AS3FragmentParser
 	}
 	
 	/**
+	 * Parses a <code>AS3NodeKind.META_LIST</code> node.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.META_LIST</code> node.
+	 */
+	public static function parseMetaData(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(source);
+		parser.nextToken();
+		var node:IParserNode = parser.parseMetaDatas();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code>AS3NodeKind.CONTENT</code> list of 
+	 * <code>AS3NodeKind.CONST</code> nodes.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.CONTENT</code> node of
+	 * <code>AS3NodeKind.CONST</code> nodes.
+	 */
+	public static function parseConstants(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(source);
+		parser.nextToken();
+		var node:IParserNode = parser.parseConstants();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code>AS3NodeKind.CONTENT</code> list of 
+	 * <code>AS3NodeKind.VAR</code> nodes.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.CONTENT</code> node of
+	 * <code>AS3NodeKind.VAR</code> nodes.
+	 */
+	public static function parseVariables(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(source);
+		parser.nextToken();
+		var node:IParserNode = parser.parseVariables();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code>AS3NodeKind.CONTENT</code> list of 
+	 * <code>AS3NodeKind.FUNCTION</code>, <code>AS3NodeKind.GET</code>
+	 * or <code>AS3NodeKind.SET</code> nodes.
+	 * 
+	 * <p>The result depends on the source passed to the parser. If get 
+	 * and set accessors are all you want in this list just pass either
+	 * get, set or get and set property definitions. Otherwise, just pas
+	 * methods that will be returned as <code>FUNCTION</code>.</p>
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.CONTENT</code> node of
+	 * <code>AS3NodeKind.FUNCTION</code>, <code>AS3NodeKind.GET</code>
+	 * or <code>AS3NodeKind.SET</code> nodes.
+	 */
+	public static function parseMethods(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(source);
+		parser.nextToken();
+		var node:IParserNode = parser.parseMethods();
+		return node;
+	}
+	
+	/**
 	 * Parses a <code>AS3NodeKind.STATEMENT</code> node.
 	 * 
 	 * @param statement A String statement to be parsed into AST.

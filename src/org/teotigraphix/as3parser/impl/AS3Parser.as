@@ -162,9 +162,8 @@ public class AS3Parser extends ParserBase
 	 * 
 	 * @throws UnExpectedTokenException
 	 */
-	private function parsePackage():Node
+	internal function parsePackage():Node
 	{
-		
 		var end:int = -1;
 		
 		var result:Node = Node.create(
@@ -2332,6 +2331,112 @@ public class AS3Parser extends ParserBase
 			Operators.SEMI_COLUMN);
 		nextToken();
 		return result;
+	}
+	
+	internal function parseMetaDatas():IParserNode
+	{
+		var result:Node = Node.create(
+			AS3NodeKind.META_LIST, 
+			token.line,
+			token.column);
+		
+		while (!tokIs(ScannerBase.END))
+		{
+			if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+			{
+				result.addChild(parseMetaData());
+			}
+			else if (tokenStartsWith("/**"))
+			{
+				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
+					ISourceCodeScanner(scanner).commentLine,
+					ISourceCodeScanner(scanner).commentColumn,
+					token.text);
+				ISourceCodeScanner(scanner).commentLine = -1;
+				ISourceCodeScanner(scanner).commentColumn = -1;
+				currentAsDoc.start = scanner.offset - token.text.length;
+				currentAsDoc.end = scanner.offset;
+				nextToken();
+			}
+			else if (tokenStartsWith("/*")) // junk comment
+			{
+				nextToken();
+			}
+			else
+			{
+				nextTokenIgnoringAsDoc();
+			}
+		}
+		
+		return result;
+	}
+	
+	internal function parseMembers(kind:String):IParserNode
+	{
+		var result:Node = Node.create(
+			AS3NodeKind.CONTENT,
+			token.line,
+			token.column);
+		
+		var modifiers:Vector.<Token> = new Vector.<Token>();
+		var meta:Vector.<Node> = new Vector.<Node>();
+		
+		while (!tokIs(ScannerBase.END))
+		{
+			if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+			{
+				meta.push(parseMetaData());
+			}
+			else if (tokIs(KeyWords.CONST) && kind == AS3NodeKind.CONST)
+			{
+				parseClassConstant(result, modifiers, meta);
+			}
+			else if (tokIs(KeyWords.VAR) && kind == AS3NodeKind.VAR)
+			{
+				parseClassField(result, modifiers, meta);
+			}
+			else if (tokIs(KeyWords.FUNCTION) && kind == AS3NodeKind.FUNCTION)
+			{
+				parseClassFunctions(result, modifiers, meta);
+			}
+			else if (tokenStartsWith("/**"))
+			{
+				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
+					ISourceCodeScanner(scanner).commentLine,
+					ISourceCodeScanner(scanner).commentColumn,
+					token.text);
+				ISourceCodeScanner(scanner).commentLine = -1;
+				ISourceCodeScanner(scanner).commentColumn = -1;
+				currentAsDoc.start = scanner.offset - token.text.length;
+				currentAsDoc.end = scanner.offset;
+				nextToken();
+			}
+			else if (tokenStartsWith("/*")) // junk comment
+			{
+				nextToken();
+			}
+			else
+			{
+				modifiers.push(token);
+				nextTokenIgnoringAsDoc();
+			}
+		}
+		return result;
+	}
+	
+	internal function parseConstants():IParserNode
+	{
+		return parseMembers(AS3NodeKind.CONST);
+	}
+	
+	internal function parseVariables():IParserNode
+	{
+		return parseMembers(AS3NodeKind.VAR);
+	}
+	
+	internal function parseMethods():IParserNode
+	{
+		return parseMembers(AS3NodeKind.FUNCTION);
 	}
 }
 }
