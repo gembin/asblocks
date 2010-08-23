@@ -99,7 +99,7 @@ public class SourceCode implements ISourceCode
 	 * @param code The String data.
 	 * @param filePath The String file name identifier.
 	 */
-	public function SourceCode(code:String, 
+	public function SourceCode(code:String = null, 
 							   filePath:String = null)
 	{
 		this.code = code;

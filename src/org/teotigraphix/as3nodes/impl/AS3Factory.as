@@ -20,6 +20,10 @@
 package org.teotigraphix.as3nodes.impl
 {
 
+import org.teotigraphix.as3blocks.api.IArrayAccessExpressionNode;
+import org.teotigraphix.as3blocks.api.IExpressionNode;
+import org.teotigraphix.as3blocks.impl.ArrayAccessExpressionNode;
+import org.teotigraphix.as3blocks.impl.ExpressionBuilder;
 import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAS3Factory;
 import org.teotigraphix.as3nodes.api.IAS3Project;
@@ -47,7 +51,9 @@ import org.teotigraphix.as3nodes.api.ITypeNode;
 import org.teotigraphix.as3nodes.api.IUseNode;
 import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 /**
  * TODO DOCME
@@ -316,6 +322,67 @@ public class AS3Factory implements IAS3Factory
 		// return the node
 		return node;
 	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * 
+	 * @throws SyntaxException if the given string is not a vaild
+	 *         ActionScript 3 expression.
+	 */
+	public function newExpression(expression:String):IExpressionNode
+	{
+		var ast:IParserNode = AS3FragmentParser.parseExpression(expression);
+//		ast.parent = null;
+		return ExpressionBuilder.build(ast);
+	}
+	/**
+	 * TODO DOCME
+	 */
+	public function newArrayAccessExpression(target:IExpressionNode, 
+											 subscript:IExpressionNode):IArrayAccessExpressionNode
+	{
+		/*
+		LinkedListTree ast = ASTUtils.newImaginaryAST(AS3Parser.ARRAY_ACC);
+		LinkedListTree targetExpr = ast(target);
+		ASTBuilder.assertNoParent("target expression", targetExpr);
+		// TODO: recursively check the given subexpression
+		ast.addChildWithTokens(targetExpr);
+		ast.appendToken(TokenBuilder.newLBrack());
+		LinkedListTree subscriptExpr = ast(subscript);
+		ASTBuilder.assertNoParent("subscript expression", subscriptExpr);
+		ast.addChildWithTokens(subscriptExpr);
+		ast.appendToken(TokenBuilder.newRBrack());
+		ASTASArrayAccessExpression result = new ASTASArrayAccessExpression(ast);
+		return result;
+		
+		
+		var ast:IParserNode = ASTNodeUtil.create(AS3NodeKind.ARRAY_ACCESSOR);
+		
+		var targetAST:IParserNode = target.node;
+		ast.addChild(targetAST);
+		
+		ast.appendToken(TokenBuilder.newLeftBracket());
+		var subscriptAST:IParserNode = subscript.node;
+		ast.addChild(subscriptAST);
+		ast.appendToken(TokenBuilder.newRightBracket());
+		
+		var result:ArrayAccessExpressionNode = new ArrayAccessExpressionNode(ast);
+		*/
+		
+		//var source:String = 
+		var ast:IParserNode = ASTNodeUtil.create(AS3NodeKind.ARRAY_ACCESSOR);
+		ast.addChild(target.node);
+		ast.addChild(subscript.node);
+		var result:ArrayAccessExpressionNode = new ArrayAccessExpressionNode(ast);
+		
+		return result;
+	}
+
+	
 	
 	//--------------------------------------------------------------------------
 	//

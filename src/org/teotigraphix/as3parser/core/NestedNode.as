@@ -52,6 +52,31 @@ public class NestedNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  parent
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _parent:IParserNode;
+	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#parent
+	 */
+	public function get parent():IParserNode
+	{
+		return _parent;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set parent(value:IParserNode):void
+	{
+		_parent = value;
+	}
+	
+	//----------------------------------
 	//  kind
 	//----------------------------------
 	
@@ -211,6 +236,17 @@ public class NestedNode
 	}
 	
 	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#getFirstChild()
+	 */
+	public function getFirstChild():IParserNode
+	{
+		if (_children == null || _children.length == 0)
+			return null;
+		
+		return _children[0];
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3parser.api.IParserNode#getLastChild()
 	 */
 	public function getLastChild():IParserNode
@@ -233,6 +269,12 @@ public class NestedNode
 			_children = new Vector.<IParserNode>();
 		
 		_children.push(child);
+		
+		if (child)
+			child.parent = this as IParserNode;
+		
+		if (tokenListUpdater)
+			tokenListUpdater.addedChild(this as IParserNode, child);
 		
 		return child;
 	}
@@ -311,6 +353,31 @@ public class NestedNode
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#getChildIndex()
+	 */
+	public function getChildIndex(child:IParserNode):int
+	{
+		if (numChildren == 0)
+			return -1;
+		
+		var len:int = children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (children[i] === child)
+				return i;
+		}
+		
+		return -1;
+	}
+	
+	public var tokenListUpdater:TokenListUpdateDelegate;
+	
+	public function appendToken(token:LinkedListToken):void
+	{
+		tokenListUpdater.appendToken(IParserNode(this), token);
 	}
 }
 }

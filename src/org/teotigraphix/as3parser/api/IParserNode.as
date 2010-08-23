@@ -30,6 +30,7 @@
  */
 package org.teotigraphix.as3parser.api
 {
+import org.teotigraphix.as3parser.core.LinkedListToken;
 
 
 
@@ -50,6 +51,20 @@ public interface IParserNode
 	//  Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  parent
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get parent():IParserNode;
+	
+	/**
+	 * @private
+	 */
+	function set parent(value:IParserNode):void;
 	
 	//----------------------------------
 	//  kind
@@ -125,6 +140,36 @@ public interface IParserNode
 	 */
 	function get numChildren():int;
 	
+	//----------------------------------
+	//  stopToken
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get stopToken():LinkedListToken;
+	
+	/**
+	 * @private
+	 */
+	function set stopToken(value:LinkedListToken):void;
+	
+	//----------------------------------
+	//  startToken
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get startToken():LinkedListToken;
+	
+	/**
+	 * @private
+	 */
+	function set startToken(value:LinkedListToken):void;
+	
+
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Methods
@@ -196,5 +241,18 @@ public interface IParserNode
 	 * @return A Boolean indicating whether the node was removed from the parser node.
 	 */
 	function removeChild(node:IParserNode):IParserNode;
+	
+	
+	
+	function getChildIndex(node:IParserNode):int;
+	
+	function appendToken(token:LinkedListToken):void;
+	
+	/**
+	 * Returns the first <code>IParserNode</code> child.
+	 * 
+	 * @return The first <code>IParserNode</code> or <code>null</code>.
+	 */
+	function getFirstChild():IParserNode;
 }
 }

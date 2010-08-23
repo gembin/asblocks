@@ -167,7 +167,14 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		
 		if (lines != null && line < lines.length)
 		{
-			currentCharacter = nextNonWhitespaceCharacter();
+			if (allowWhiteSpace)
+			{
+				currentCharacter = nextChar();
+			}
+			else
+			{
+				currentCharacter = nextNonWhitespaceCharacter();
+			}
 		}
 		else
 		{

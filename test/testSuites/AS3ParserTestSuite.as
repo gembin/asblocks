@@ -1,6 +1,7 @@
 package testSuites
 {
 
+import org.teotigraphix.as3parser.core.TestLinkedListToken;
 import org.teotigraphix.as3parser.core.TestSourceCode;
 import org.teotigraphix.as3parser.impl.TestAS3FragmentParser;
 import org.teotigraphix.as3parser.impl.TestAS3Scanner;
@@ -31,6 +32,8 @@ import org.teotigraphix.as3parser.utils.TestASTUtil;
 [RunWith("org.flexunit.runners.Suite")]
 public class AS3ParserTestSuite
 {
+	public var yestLinkedListToken:TestLinkedListToken;
+	
 	public var testSourceCode:TestSourceCode;
 	
 	// TestAS3Parser
