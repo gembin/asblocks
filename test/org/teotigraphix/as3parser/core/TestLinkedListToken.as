@@ -49,7 +49,12 @@ public class TestLinkedListToken
 				"\t",
 				"\t[Style( name = \"myStyle\" , type = \"Number\" )]",
 				"\t",
-				"\tpublic final class HelloWorld {",
+				"\t/**",
+				"\t * A class document comment.",
+				"\t */",
+				"\tpublic final class HelloWorld extends NewWorld",
+				"\t\timplements IInterface1, IInterface2",
+				"\t{",
 				"\t}",
 				"}"
 			];
@@ -65,10 +70,11 @@ public class TestLinkedListToken
 		printer.print(ast);
 		
 		Assert.assertEquals("package my.domain {\n\t\n\timport my.domain.Class;" +
-			"\n\timport my.domain.IClass;\n\t\n\tuse " +
-			"namespace flash_proxy;\n\t\n\t[Style( name = \"myStyle\" , " +
-			"type = \"Number\" )]\n\t\n\tpublic final class " +
-			"HelloWorld {\n\t}\n}\n", 
+			"\n\timport my.domain.IClass;\n\t\n\tuse namespace " +
+			"flash_proxy;\n\t\n\t[Style( name = \"myStyle\" , " +
+			"type = \"Number\" )]\n\t\n\tpublic final class HelloWorld " +
+			"extends NewWorld\n\t\timplements IInterface1 " +
+			"IInterface2\n\t{\n\t}\n}\n", 
 			printer.toString());
 	}
 	

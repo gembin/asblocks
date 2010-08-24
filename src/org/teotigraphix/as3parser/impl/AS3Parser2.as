@@ -127,7 +127,7 @@ public class AS3Parser2 extends ParserBase
 		consume(KeyWords.PACKAGE, result);
 		
 		// FIXME impl append
-		consumeComment();// added 
+//		consumeComment();// added 
 		
 		var line:int = token.line;
 		var column:int = token.column;
@@ -237,7 +237,7 @@ public class AS3Parser2 extends ParserBase
 			else if (tokenStartsWith("/**"))
 			{
 				currentAsDoc = createASDoc();
-				nextTokenConsumeWhitespace(result);
+				nextTokenConsumeWhitespace(currentAsDoc);
 			}
 			//else if (tokenStartsWith("/*")) // junk comment
 			//{
@@ -452,7 +452,7 @@ public class AS3Parser2 extends ParserBase
 		
 		consume(KeyWords.CLASS, result);
 		// FIXME impl append
-		consumeComment();
+//		consumeComment();
 		
 		result.addChild(adapter.create(
 			AS3NodeKind.NAME,
@@ -462,13 +462,14 @@ public class AS3Parser2 extends ParserBase
 		
 		nextTokenConsumeWhitespace(result); // name
 		// FIXME impl append
-		consumeComment();
+//		consumeComment();
 		
 		while (!tokIs(Operators.LEFT_CURLY_BRACKET))
 		{
 			if (tokIs(KeyWords.EXTENDS))
 			{
-				nextTokenConsumeWhitespace(result); // extends
+				consume(KeyWords.EXTENDS, result);
+				
 				result.addChild(adapter.create(
 					AS3NodeKind.EXTENDS,
 					parseQualifiedName(), 
@@ -477,7 +478,7 @@ public class AS3Parser2 extends ParserBase
 			}
 			else if (tokIs(KeyWords.IMPLEMENTS))
 			{
-//				result.addChild(parseImplementsList());
+				result.addChild(parseImplementsList());
 			}
 			else if (tokenStartsWith("/*")) // junk comment
 			{
@@ -493,6 +494,35 @@ public class AS3Parser2 extends ParserBase
 		consume(Operators.LEFT_CURLY_BRACKET, result);
 		result.addChild(parseClassContent());
 		consume(Operators.RIGHT_CURLY_BRACKET, result);
+		
+		return result;
+	}
+	
+	private function parseImplementsList():Node
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.IMPLEMENTS_LIST,
+			null, 
+			token.line, 
+			token.column);
+		
+		consume(KeyWords.IMPLEMENTS, result);
+		
+		result.addChild(adapter.create(
+			AS3NodeKind.IMPLEMENTS,
+			parseQualifiedName(), 
+			token.line, 
+			token.column));
+		
+		while (tokIs(Operators.COMMA))
+		{
+			nextTokenConsumeWhitespace(result);
+			result.addChild(adapter.create(
+				AS3NodeKind.IMPLEMENTS,
+				parseQualifiedName(), 
+				token.line, 
+				token.column));
+		}
 		
 		return result;
 	}
@@ -730,13 +760,13 @@ public class AS3Parser2 extends ParserBase
 		}
 	}
 	
-	private function consumeComment():void
-	{
-		while (tokenStartsWith(MULTIPLE_LINES_COMMENT))
-		{
-			nextToken();
-		}
-	}
+	//private function consumeComment():void
+	//{
+	//	while (tokenStartsWith(MULTIPLE_LINES_COMMENT))
+	//	{
+	//		nextToken();
+	//	}
+	//}
 	
 	
 	private function convertMeta(metas:Vector.<TokenNode>):TokenNode
