@@ -185,6 +185,14 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 		{
 			return new Token("\n", line, column);
 		}
+		if (currentCharacter == " ")
+		{
+			return new Token(" ", line, column);
+		}
+		if (currentCharacter == "\t")
+		{
+			return new Token("\t", line, column);
+		}
 		if (currentCharacter == '/')
 		{
 			return scanCommentRegExpOrOperator();

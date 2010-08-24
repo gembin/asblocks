@@ -16,10 +16,10 @@ public class TestLinkedListToken
 	[Test]
 	public function testDefaultPackage():void
 	{
+		//package my.domain \n{\n\t\n}\n
 		var lines:Array =
 			[
-				"package my.domain { } ",
-				"__END__"
+				"package my.domain \n{\n\t\n}"
 			];
 		
 		parser.scanner.setLines(ASTUtil.toVector(lines));
@@ -32,14 +32,47 @@ public class TestLinkedListToken
 		var printer:ASTPrinter = new ASTPrinter(sourceCode);
 		printer.print(ast);
 		
-		//Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
-		//	"column=\"1\"><name line=\"1\" column=\"9\"></name><content line=\"1\" " +
-		//	"column=\"11\"><class line=\"1\" column=\"17\"><name line=\"1\" column=\"17\">" +
-		////	"A</name><content line=\"1\" column=\"20\"></content></class></content>" +
-		//	"</package><content line=\"2\" column=\"1\"></content></compilation-unit>",
-		//	result);
+		Assert.assertEquals("package my.domain \n{\n\t\n}\n", printer.toString());
 	}
 	
+	[Test]
+	public function testPackageClass():void
+	{
+		var lines:Array =
+			[
+				"package my.domain {",
+				"\t",
+				"\timport my.domain.Class;",
+				"\timport my.domain.IClass;",
+				"\t",
+				"\tuse namespace flash_proxy;",
+				"\t",
+				"\t[Style( name = \"myStyle\" , type = \"Number\" )]",
+				"\t",
+				"\tpublic final class HelloWorld {",
+				"\t}",
+				"}"
+			];
+		
+		parser.scanner.setLines(ASTUtil.toVector(lines));
+		
+		var ast:IParserNode = parser.parseCompilationUnit();
+		var result:String = ASTUtil.convert(ast);
+		
+		var sourceCode:SourceCode = new SourceCode();
+		sourceCode.code = "";
+		var printer:ASTPrinter = new ASTPrinter(sourceCode);
+		printer.print(ast);
+		
+		Assert.assertEquals("package my.domain {\n\t\n\timport my.domain.Class;" +
+			"\n\timport my.domain.IClass;\n\t\n\tuse " +
+			"namespace flash_proxy;\n\t\n\t[Style( name = \"myStyle\" , " +
+			"type = \"Number\" )]\n\t\n\tpublic final class " +
+			"HelloWorld {\n\t}\n}\n", 
+			printer.toString());
+	}
+	
+
 	
 	[Test]
 	public function testIt():void

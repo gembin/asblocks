@@ -23,7 +23,9 @@ package org.teotigraphix.as3parser.impl
 import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
+import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
 import org.teotigraphix.as3parser.core.Token;
+import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.errors.NullTokenError;
 import org.teotigraphix.as3parser.errors.Position;
 import org.teotigraphix.as3parser.errors.UnExpectedTokenError;
@@ -233,6 +235,19 @@ public class ParserBase implements IParser
 		}
 	}
 	
+	protected function nextTokenConsumeWhitespace(node:TokenNode):void
+	{
+		if (!consumeWhitespace(node))
+		{
+			nextToken();
+			
+			if (tokIs(" ") || tokIs("\t") || tokIs("\n"))
+			{
+				nextTokenConsumeWhitespace(node);
+			}
+		}
+	}
+	
 	/**
 	 * Allows whitespace tokens to be retireved from the scanner.
 	 */
@@ -254,12 +269,21 @@ public class ParserBase implements IParser
 	 * 
 	 * @param text The String to skip.
 	 */
-	final protected function skip(text:String):void
+	final protected function skip(text:String, node:TokenNode = null):void
 	{
+		consumeWhitespace(node);
+		
 		if (tokIs(text))
 		{
+			if (node && node.stringValue != text)
+			{
+				append(node);
+			}
+			
 			nextToken();
 		}
+		
+		consumeWhitespace(node);
 	}
 	
 	/**
@@ -296,8 +320,10 @@ public class ParserBase implements IParser
 	 * @param text The text String to consume.
 	 * @throws UnExpectedTokenError
 	 */
-	final protected function consume(text:String):void
+	final protected function consume(text:String, node:TokenNode = null):void
 	{
+		consumeWhitespace(node);
+		
 		if (!tokIs(text))
 		{
 			throw new UnExpectedTokenError(
@@ -306,6 +332,101 @@ public class ParserBase implements IParser
 				new Position(token.line, token.column, -1), 
 				fileName);
 		}
+		
+		if (node && node.stringValue != text)
+		{
+			append(node);
+		}
+		
+		nextToken();
+		
+		consumeWhitespace(node);
+	}
+	
+	protected var adapter:LinkedListTreeAdaptor = new LinkedListTreeAdaptor();
+	
+	protected function consumeWhitespace(node:TokenNode):Boolean
+	{
+		if (!node)
+		{
+			return false;
+		}
+		
+		var advanced:Boolean = false;
+		
+		while (tokIs(" ") || tokIs("\t") || tokIs("\n"))
+		{
+			if (tokIs(" "))
+			{
+				appendSpace(node);
+			}
+			else if (tokIs("\t"))
+			{
+				appendTab(node);
+			}
+			else if (tokIs("\n"))
+			{
+				appendNewline(node);
+			}
+			
+			advanced = true;
+		}
+		
+		return advanced;
+	}
+	
+	protected function append(node:TokenNode):void
+	{
+		if (!node)
+			return;
+		
+		node.appendToken(
+			adapter.createToken(token.text, token.text,
+				token.line, token.column));
+	}
+	
+	protected function appendSpace(node:TokenNode):void
+	{
+		if (!node || !scanner.allowWhiteSpace)
+			return;
+		
+		if (node)
+		{
+			node.appendToken(
+				adapter.createToken(" ", " ",
+					token.line, token.column));
+		}
+		
+		nextToken();
+	}
+	
+	protected function appendTab(node:TokenNode):void
+	{
+		if (!node || !scanner.allowWhiteSpace)
+			return;
+		
+		if (node)
+		{
+			node.appendToken(
+				adapter.createToken("\t", "\t",
+					token.line, token.column));
+		}
+		
+		nextToken();
+	}
+	
+	protected function appendNewline(node:TokenNode):void
+	{
+		if (!node || !scanner.allowWhiteSpace)
+			return;
+		
+		if (node)
+		{
+			node.appendToken(
+				adapter.createToken("\n", "\n",
+					token.line, token.column));
+		}
+		
 		nextToken();
 	}
 	

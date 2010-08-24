@@ -4,11 +4,11 @@ import org.teotigraphix.as3parser.api.IParserNode;
 
 public class ASTPrinter
 {
-	private var code:SourceCode;
+	private var sourceCode:SourceCode;
 	
-	public function ASTPrinter(code:SourceCode)
+	public function ASTPrinter(sourceCode:SourceCode)
 	{
-		this.code = code;
+		this.sourceCode = sourceCode;
 	}
 	
 	public function print(ast:IParserNode):void
@@ -32,16 +32,21 @@ public class ASTPrinter
 	
 	private function printLn(token:LinkedListToken):void
 	{
-		if (!code.code)
-			code.code = "";
+		if (!sourceCode.code)
+			sourceCode.code = "";
 		
 		if (token.text != null)
-			code.code += token.text;
+			sourceCode.code += token.text;
 	}
 	
 	private function viable(token:LinkedListToken):Boolean
 	{
 		return token != null && token.kind != "__END__";
+	}
+	
+	public function toString():String
+	{
+		return sourceCode.code;
 	}
 }
 }

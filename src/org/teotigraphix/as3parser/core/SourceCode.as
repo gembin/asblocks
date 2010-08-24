@@ -139,7 +139,7 @@ public class SourceCode implements ISourceCode
 	 */
 	protected function cleanCode(code:String):String
 	{
-		if (!code)
+		if (code == null)
 			return null;
 		
 		return code.replace(/\r\n/g, "\n");

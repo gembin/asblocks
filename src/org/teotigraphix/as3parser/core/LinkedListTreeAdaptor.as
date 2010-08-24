@@ -11,15 +11,32 @@ public class LinkedListTreeAdaptor
 	
 	private var delegate:TokenListUpdateDelegate = new TokenListUpdateDelegate();
 	
-	public function create(kind:String, 
-						   text:String = null,
-						   line:int = -1, 
-						   column:int = -1):TokenNode 
+	public function createToken(kind:String, 
+								text:String = null,
+								line:int = -1, 
+								column:int = -1):LinkedListToken 
 	{
 		var token:LinkedListToken = new LinkedListToken(kind, text);
 		token.line = line;
 		token.column = column;
-		return createNode(token);
+		return token;
+	}
+	
+	public function create(kind:String, 
+						   text:String = null,
+						   line:int = -1, 
+						   column:int = -1,
+						   child:IParserNode = null):TokenNode 
+	{
+		var token:LinkedListToken = new LinkedListToken(kind, text);
+		token.line = line;
+		token.column = column;
+		var node:TokenNode = createNode(token);
+		if (child)
+		{
+			node.addChild(child);
+		}
+		return node;
 	}
 	
 	public function createNode(payload:LinkedListToken):TokenNode 
