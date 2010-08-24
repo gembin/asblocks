@@ -188,7 +188,6 @@ public class AS3Parser2 extends ParserBase
 		
 		result.start = scanner.offset;
 		
-		//var modifiers:Vector.<Token> = new Vector.<Token>();
 		var modifiers:TokenNode = adapter.create(
 			AS3NodeKind.MOD_LIST,
 			null, 
@@ -245,7 +244,6 @@ public class AS3Parser2 extends ParserBase
 			//}
 			else
 			{
-//				modifiers.push(token);
 				modifiers.addChild(adapter.create(
 					AS3NodeKind.MODIFIER,
 					token.text, 
@@ -535,7 +533,12 @@ public class AS3Parser2 extends ParserBase
 			token.line, 
 			token.column);
 		
-		var modifiers:Vector.<Token> = new Vector.<Token>();
+		var modifiers:TokenNode = adapter.create(
+			AS3NodeKind.MOD_LIST,
+			null, 
+			token.line, 
+			token.column);
+		
 		var meta:Vector.<TokenNode> = new Vector.<TokenNode>();
 		
 		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
@@ -554,7 +557,7 @@ public class AS3Parser2 extends ParserBase
 			}
 			else if (tokIs(KeyWords.CONST))
 			{
-//				parseClassConstant(result, modifiers, meta);
+				parseClassConstant(result, modifiers, meta);
 			}
 			else if (tokIs(KeyWords.IMPORT))
 			{
@@ -579,31 +582,159 @@ public class AS3Parser2 extends ParserBase
 			}
 			else
 			{
-				modifiers.push(token);
-				nextTokenIgnoringAsDoc(result);
+				modifiers.addChild(adapter.create(
+					AS3NodeKind.MODIFIER,
+					token.text, 
+					token.line, 
+					token.column));
+				nextTokenIgnoringAsDoc(modifiers);
 			}
 		}
 		
 		return result;
 	}
 	
+	private function parseClassConstant(result:TokenNode, 
+										modifiers:TokenNode, 
+										meta:Vector.<TokenNode>):void
+	{
+		result.addChild(parseConstList(modifiers, meta));
+		skip(Operators.SEMI_COLUMN, result);
+		
+		meta.length = 0;
+	}
 	
+	private function parseConstList(modifiers:TokenNode, 
+									meta:Vector.<TokenNode>):Node
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.CONST_LIST,
+			null, 
+			token.line, 
+			token.column);
+		
+		result.addChild(convertMeta(meta));
+		
+		addAsDoc(result);
+		
+		result.addChild(modifiers);
+		
+		consume(KeyWords.CONST, result);
+		
+		collectVarListContent(result);
+		
+		return result;
+	}
 	
+	private function collectVarListContent(result:TokenNode):TokenNode
+	{
+		result.addChild(parseNameTypeInit());
+		while (tokIs(Operators.COMMA))
+		{
+			nextTokenConsumeWhitespace(result);
+			result.addChild(parseNameTypeInit());
+		}
+		return result;
+	}
 	
+	private function parseNameTypeInit():TokenNode
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.NAME_TYPE_INIT,
+			null, 
+			token.line, 
+			token.column);
+		
+		result.addChild(adapter.create(
+			AS3NodeKind.NAME,
+			token.text,
+			token.line,
+			token.column));
+		
+		nextTokenConsumeWhitespace(result); // name
+		
+		result.addChild(parseOptionalType(result));
+		nextTokenConsumeWhitespace(result);
+		result.addChild(parseOptionalInit(result));
+		
+		return result;
+	}
 	
+	private function parseOptionalType(node:TokenNode):TokenNode
+	{
+		var result:TokenNode;
+		
+		if (tokIs(Operators.COLUMN))
+		{
+			consume(":", node); // :
+			result = parseType();
+		}
+		
+		// FIXME should be nextTokenIgnoringAsdoc(), test
+		if (tokenStartsWith("/*"))
+		{
+			nextTokenConsumeWhitespace(result); // garbage
+		}
+		
+		return result;
+	}
 	
+	private function parseType():TokenNode
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.TYPE,
+			parseQualifiedName(), 
+			token.line, 
+			token.column);
+		
+		if (token.text == VECTOR)
+		{
+			result = parseVector();
+		}
+		
+		return result;
+	}
 	
+	private function parseVector():TokenNode
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.VECTOR,
+			null, 
+			token.line, 
+			token.column);
+		
+		nextTokenConsumeWhitespace(result);
+		consume(Operators.VECTOR_START, result);
+		
+		result.addChild(parseType());
+		
+		consume(Operators.SUPERIOR, result);
+		
+		return result;
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	private function parseOptionalInit(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = null;
+		if (tokenStartsWith("/*"))
+		{
+			nextTokenConsumeWhitespace(node); // garbage
+		}
+		if (tokIs(Operators.EQUAL))
+		{
+			consume(Operators.EQUAL, node);
+			result = adapter.create(
+				AS3NodeKind.INIT,
+				null, 
+				token.line, 
+				token.column);
+//			result = Node.createChild(AS3NodeKind.INIT,
+//				token.line,
+//				token.column,
+//				parseExpression());
+		}
+		return result;
+	}
 	
 	
 	

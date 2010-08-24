@@ -47,6 +47,9 @@ public class TestLinkedListToken
 				"\t",
 				"\tuse namespace flash_proxy;",
 				"\t",
+				"\t/**",
+				"\t * A meta style document comment.",
+				"\t */",
 				"\t[Style( name = \"myStyle\" , type = \"Number\" )]",
 				"\t",
 				"\t/**",
@@ -55,6 +58,10 @@ public class TestLinkedListToken
 				"\tpublic final class HelloWorld extends NewWorld",
 				"\t\timplements IInterface1, IInterface2",
 				"\t{",
+				"\t\t/**",
+				"\t\t * A const document comment.",
+				"\t\t */",
+				"\t\tpublic static const MY_CONSTANT:String = ;",
 				"\t}",
 				"}"
 			];
