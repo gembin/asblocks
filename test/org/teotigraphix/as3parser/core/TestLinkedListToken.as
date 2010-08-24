@@ -61,7 +61,7 @@ public class TestLinkedListToken
 				"\t\t/**",
 				"\t\t * A const document comment.",
 				"\t\t */",
-				"\t\tpublic static const MY_CONSTANT:String = ;",
+				"\t\tpublic static const MY_CONSTANT:String = 42;",
 				"\t}",
 				"}"
 			];
