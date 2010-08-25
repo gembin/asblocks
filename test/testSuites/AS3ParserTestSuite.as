@@ -20,6 +20,7 @@ import org.teotigraphix.as3parser.impl.TestInterfaceContent;
 import org.teotigraphix.as3parser.impl.TestMetaData;
 import org.teotigraphix.as3parser.impl.TestPackageContent;
 import org.teotigraphix.as3parser.impl.TestPrimaryExpression;
+import org.teotigraphix.as3parser.impl.TestPrimaryExpression2;
 import org.teotigraphix.as3parser.impl.TestReturnStatement;
 import org.teotigraphix.as3parser.impl.TestSwitchStatement;
 import org.teotigraphix.as3parser.impl.TestTryCatchFinallyStatement;
@@ -32,7 +33,9 @@ import org.teotigraphix.as3parser.utils.TestASTUtil;
 [RunWith("org.flexunit.runners.Suite")]
 public class AS3ParserTestSuite
 {
-	public var yestLinkedListToken:TestLinkedListToken;
+	public var testPrimaryExpression2:TestPrimaryExpression2;
+	
+	//public var yestLinkedListToken:TestLinkedListToken;
 	
 	public var testSourceCode:TestSourceCode;
 	

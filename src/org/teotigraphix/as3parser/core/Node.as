@@ -117,6 +117,14 @@ public class Node extends NestedNode implements IParserNode
 		return _column;
 	}
 	
+	/**
+	 * @private
+	 */
+	public function set column(value:int):void
+	{
+		_column = value;
+	}
+	
 	//----------------------------------
 	//  line
 	//----------------------------------
@@ -132,6 +140,14 @@ public class Node extends NestedNode implements IParserNode
 	public function get line():int
 	{
 		return _line;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set line(value:int):void
+	{
+		_line = value;
 	}
 	
 	//----------------------------------

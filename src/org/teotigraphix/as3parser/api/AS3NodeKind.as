@@ -213,6 +213,8 @@ public class AS3NodeKind
 	
 	public static const SWITCH_BLOCK:String = "switch-block";
 	
+	public static const THROW:String = "throw";
+	
 	public static const TRY:String = "try";
 	
 	public static const TYPE:String = "type";

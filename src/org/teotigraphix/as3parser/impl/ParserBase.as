@@ -297,6 +297,11 @@ public class ParserBase implements IParser
 		return token.text == text;
 	}
 	
+	final protected function tokIsWhitespace():Boolean
+	{
+		return token.text == "\n" || token.text == "\t" || token.text == " ";
+	}
+	
 	/**
 	 * Returns whether the token starts with the String value.
 	 * 

@@ -181,6 +181,10 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 			return new Token(END, line, column);
 		}
 		
+		if (currentCharacter == END)
+		{
+			return new Token(END, line, column);
+		}
 		if (currentCharacter == "\n")
 		{
 			return new Token("\n", line, column);

@@ -84,6 +84,9 @@ public interface IParserNode
 	 */
 	function get stringValue():String;
 	
+	/**
+	 * @private
+	 */
 	function set stringValue(value:String):void;
 	
 	//----------------------------------
@@ -95,6 +98,11 @@ public interface IParserNode
 	 */
 	function get line():int;
 	
+	/**
+	 * @private
+	 */
+	function set line(value:int):void;
+	
 	//----------------------------------
 	//  column
 	//----------------------------------
@@ -103,6 +111,11 @@ public interface IParserNode
 	 * The column the parser node starts at.
 	 */
 	function get column():int;
+	
+	/**
+	 * @private
+	 */
+	function set column(value:int):void;
 	
 	//----------------------------------
 	//  start

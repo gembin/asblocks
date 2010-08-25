@@ -121,6 +121,8 @@ public class KeyWords
 	
 	public static const SWITCH:String = "switch";
 	
+	public static const THROW:String = "throw";
+	
 	public static const TRY:String = "try";
 	
 	public static const TYPEOF:String = "typeof";
