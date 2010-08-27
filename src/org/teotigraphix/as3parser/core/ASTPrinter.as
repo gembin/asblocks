@@ -44,6 +44,13 @@ public class ASTPrinter
 		return token != null && token.kind != "__END__";
 	}
 	
+	public function flush():String
+	{
+		var result:String = toString();
+		sourceCode.code = null;
+		return result;
+	}
+	
 	public function toString():String
 	{
 		return sourceCode.code;

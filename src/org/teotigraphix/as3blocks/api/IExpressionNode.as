@@ -23,8 +23,7 @@ package org.teotigraphix.as3blocks.api
 import org.teotigraphix.as3nodes.api.IScriptNode;
 
 /**
- * The supertype for all interfaces which represent 
- * ActionScript 3 expressions. 
+ * The supertype for all interfaces which represent expressions. 
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

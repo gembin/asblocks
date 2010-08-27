@@ -6,6 +6,36 @@ import flash.errors.IllegalOperationError;
 public class LinkedListToken extends Token
 {
 	//----------------------------------
+	//  channel
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _channel:String;
+	
+	/**
+	 * doc
+	 */
+	public function get channel():String
+	{
+		if (_channel == null)
+		{
+			if (text == "\n" || text == "\n" || text == " ")
+				return "hidden";
+		}
+		return _channel;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set channel(value:String):void
+	{
+		_channel = value;
+	}
+	
+	//----------------------------------
 	//  kind
 	//----------------------------------
 	
@@ -110,11 +140,11 @@ public class LinkedListToken extends Token
 		if (insert.next)
 			throw new IllegalOperationError("afterInsert(" + next + ") : previous was not null");
 		
-		insert.next = _next;
-		insert.previous = this;
+		insert._next = _next;
+		insert._previous = this;
 		
 		if (_next)
-			_next.previous = insert;
+			_next._previous = insert;
 		
 		_next = insert;
 	}
@@ -127,11 +157,11 @@ public class LinkedListToken extends Token
 		if (insert.next)
 			throw new IllegalOperationError("afterInsert(" + next + ") : previous was not null");
 		
-		insert.previous = _previous;
-		insert.next = this;
+		insert._previous = _previous;
+		insert._next = this;
 		
 		if (_previous)
-			_previous.next = insert;
+			_previous._next = insert;
 		
 		_previous = insert;
 	}
@@ -139,9 +169,9 @@ public class LinkedListToken extends Token
 	public function remove():void
 	{
 		if (_previous)
-			_previous.next = _next;
+			_previous._next = _next;
 		if (_next)
-			_next.previous = _previous;
+			_next._previous = _previous;
 		
 		_next = null;
 		_previous = null;

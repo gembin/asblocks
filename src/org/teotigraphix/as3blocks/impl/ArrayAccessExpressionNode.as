@@ -6,7 +6,7 @@ import org.teotigraphix.as3blocks.api.IExpressionNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * TODO DOCME
+ * The <code>IArrayAccessExpressionNode</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -26,12 +26,11 @@ public class ArrayAccessExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.as3blocks.api.IArrayAccessExpressionNode#target
 	 */
 	public function get target():IExpressionNode
 	{
-		//return ExpressionBuilder.build(node.getFirstChild());
-		return ExpressionBuilder.build(node.getChild(0));
+		return ExpressionBuilder.build(node.getFirstChild());
 	}
 	
 	/**
@@ -39,8 +38,7 @@ public class ArrayAccessExpressionNode extends ExpressionNode
 	 */	
 	public function set target(value:IExpressionNode):void
 	{
-		var ast:IParserNode = ExpressionNode(value).node
-		//node.setChildWithTokens(0, ast);
+		node.setChildAt(value.node, 0);
 	}
 	
 	//----------------------------------
@@ -48,7 +46,7 @@ public class ArrayAccessExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.as3blocks.api.IArrayAccessExpressionNode#subscript
 	 */
 	public function get subscript():IExpressionNode
 	{
@@ -60,10 +58,18 @@ public class ArrayAccessExpressionNode extends ExpressionNode
 	 */	
 	public function set subscript(value:IExpressionNode):void
 	{
-		var ast:IParserNode = ExpressionNode(value).node
-		//node.setChildWithTokens(1, ast);
+		node.setChildAt(value.node, 1);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 */
 	public function ArrayAccessExpressionNode(node:IParserNode)
 	{
 		super(node);

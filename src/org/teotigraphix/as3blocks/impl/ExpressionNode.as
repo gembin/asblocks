@@ -23,6 +23,13 @@ package org.teotigraphix.as3blocks.impl
 import org.teotigraphix.as3blocks.api.IExpressionNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 
+/**
+ * The base class for all <code>IExpressionNode</code>.
+ * 
+ * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
+ * @productversion 1.0
+ */
 public class ExpressionNode extends ScriptFragmentNode 
 	implements IExpressionNode
 {
@@ -40,6 +47,18 @@ public class ExpressionNode extends ScriptFragmentNode
 		super(node);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Returns whether this node equals the other node.
+	 * 
+	 * @param o The other node.
+	 * @return A Boolean indicating whether the two nodes are the same reference.
+	 */
 	public function equals(o:Object):Boolean
 	{
 		//if (!(o is this))

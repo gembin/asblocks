@@ -69,6 +69,8 @@ public class KeyWords
 	
 	public static const EXTENDS:String = "extends";
 	
+	public static const FALSE:String = "false";
+	
 	public static const FINAL:String = "final";
 	
 	public static const FINALLY:String = "finally";
@@ -101,6 +103,8 @@ public class KeyWords
 	
 	public static const NEW:String = "new";
 	
+	public static const NULL:String = "null";
+	
 	public static const OVERRIDE:String = "override";
 	
 	public static const PACKAGE:String = "package";
@@ -123,9 +127,13 @@ public class KeyWords
 	
 	public static const THROW:String = "throw";
 	
+	public static const TRUE:String = "true";
+	
 	public static const TRY:String = "try";
 	
 	public static const TYPEOF:String = "typeof";
+	
+	public static const UNDEFINED:String = "undefined";
 	
 	public static const USE:String = "use";
 	

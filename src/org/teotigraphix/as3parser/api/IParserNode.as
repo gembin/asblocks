@@ -75,6 +75,11 @@ public interface IParserNode
 	 */
 	function get kind():String;
 	
+	/**
+	 * @private
+	 */
+	function set kind(value:String):void;
+	
 	//----------------------------------
 	//  stringValue
 	//----------------------------------
@@ -181,7 +186,33 @@ public interface IParserNode
 	 */
 	function set startToken(value:LinkedListToken):void;
 	
-
+	//----------------------------------
+	//  initialInsertionAfter
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get initialInsertionAfter():LinkedListToken;
+	
+	/**
+	 * @private
+	 */
+	function set initialInsertionAfter(value:LinkedListToken):void;
+	
+	//----------------------------------
+	//  initialInsertionBefore
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get initialInsertionBefore():LinkedListToken;
+	
+	/**
+	 * @private
+	 */
+	function set initialInsertionBefore(value:LinkedListToken):void;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -255,9 +286,13 @@ public interface IParserNode
 	 */
 	function removeChild(node:IParserNode):IParserNode;
 	
+	function removeChildAt(index:int):IParserNode;
 	
+	function setChildAt(child:IParserNode, index:int):IParserNode;
 	
 	function getChildIndex(node:IParserNode):int;
+	
+	function addTokenAt(token:LinkedListToken, index:int):void;
 	
 	function appendToken(token:LinkedListToken):void;
 	

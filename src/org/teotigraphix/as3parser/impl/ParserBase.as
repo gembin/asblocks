@@ -20,9 +20,11 @@
 package org.teotigraphix.as3parser.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
 import org.teotigraphix.as3parser.core.Token;
 import org.teotigraphix.as3parser.core.TokenNode;
@@ -235,7 +237,7 @@ public class ParserBase implements IParser
 		}
 	}
 	
-	protected function nextTokenConsumeWhitespace(node:TokenNode):void
+	protected function nextNonWSToken(node:TokenNode):void
 	{
 		if (!consumeWhitespace(node))
 		{
@@ -243,7 +245,7 @@ public class ParserBase implements IParser
 			
 			if (tokIs(" ") || tokIs("\t") || tokIs("\n"))
 			{
-				nextTokenConsumeWhitespace(node);
+				nextNonWSToken(node);
 			}
 		}
 	}
@@ -325,8 +327,10 @@ public class ParserBase implements IParser
 	 * @param text The text String to consume.
 	 * @throws UnExpectedTokenError
 	 */
-	final protected function consume(text:String, node:TokenNode = null):void
+	final protected function consume(text:String, node:TokenNode = null):LinkedListToken
 	{
+		var consumed:LinkedListToken;
+		
 		consumeWhitespace(node);
 		
 		if (!tokIs(text))
@@ -340,7 +344,27 @@ public class ParserBase implements IParser
 		
 		if (node && node.stringValue != text)
 		{
-			append(node);
+			consumed = append(node);
+		}
+		
+		nextToken();
+		
+		consumeWhitespace(node);
+		
+		return consumed;
+	}
+	
+	final protected function consumeWS(text:String, node:TokenNode = null):void
+	{
+		consumeWhitespace(node);
+		
+		if (!tokIs(text))
+		{
+			throw new UnExpectedTokenError(
+				text, 
+				token.text, 
+				new Position(token.line, token.column, -1), 
+				fileName);
 		}
 		
 		nextToken();
@@ -380,14 +404,18 @@ public class ParserBase implements IParser
 		return advanced;
 	}
 	
-	protected function append(node:TokenNode):void
+	protected function append(node:TokenNode):LinkedListToken
 	{
 		if (!node)
-			return;
+			return null;
 		
-		node.appendToken(
-			adapter.createToken(token.text, token.text,
-				token.line, token.column));
+		var token:LinkedListToken = adapter.createToken(
+			token.text, token.text,
+			token.line, token.column);
+		
+		node.appendToken(token);
+		
+		return token;
 	}
 	
 	protected function appendSpace(node:TokenNode):void
@@ -398,7 +426,7 @@ public class ParserBase implements IParser
 		if (node)
 		{
 			node.appendToken(
-				adapter.createToken(" ", " ",
+				adapter.createToken(AS3NodeKind.SPACE, " ",
 					token.line, token.column));
 		}
 		
@@ -413,7 +441,7 @@ public class ParserBase implements IParser
 		if (node)
 		{
 			node.appendToken(
-				adapter.createToken("\t", "\t",
+				adapter.createToken(AS3NodeKind.TAB, "\t",
 					token.line, token.column));
 		}
 		
@@ -425,14 +453,20 @@ public class ParserBase implements IParser
 		if (!node || !scanner.allowWhiteSpace)
 			return;
 		
+		var tok:LinkedListToken;
+		
 		if (node)
 		{
-			node.appendToken(
-				adapter.createToken("\n", "\n",
-					token.line, token.column));
+			tok = adapter.createToken(AS3NodeKind.NL, "\n", 
+				token.line, token.column);
 		}
 		
 		nextToken();
+		
+		if (tok && !tokIs("__END__"))
+		{
+			node.appendToken(tok);
+		}
 	}
 	
 	/**

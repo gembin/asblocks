@@ -1,6 +1,7 @@
 package org.teotigraphix.as3parser.core
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 public class LinkedListTreeAdaptor
@@ -17,6 +18,12 @@ public class LinkedListTreeAdaptor
 								column:int = -1):LinkedListToken 
 	{
 		var token:LinkedListToken = new LinkedListToken(kind, text);
+		if (kind == AS3NodeKind.SPACE 
+			|| kind == AS3NodeKind.TAB 
+			|| kind == AS3NodeKind.NL)
+		{
+			token.channel = AS3NodeKind.HIDDEN;
+		}
 		token.line = line;
 		token.column = column;
 		return token;
@@ -50,6 +57,25 @@ public class LinkedListTreeAdaptor
 		TokenNode(result).token = payload;
 		
 		TokenNode(result).tokenListUpdater = delegate;
+		
+		if (payload.kind == AS3NodeKind.ARRAY
+			/*|| payload.kind == AS3NodeKind.ARRAY_ACCESSOR*/)
+		{
+			TokenNode(result).tokenListUpdater = 
+				new ParentheticListUpdateDelegate(AS3NodeKind.LBRACKET, AS3NodeKind.RBRACKET);
+		}
+		else if (payload.kind == AS3NodeKind.OBJECT
+			|| payload.kind == AS3NodeKind.BLOCK)
+		{
+			TokenNode(result).tokenListUpdater = 
+				new ParentheticListUpdateDelegate(AS3NodeKind.LCURLY, AS3NodeKind.RCURLY);
+		}
+		else if (payload.kind == AS3NodeKind.PARAMETER_LIST
+			|| payload.kind == AS3NodeKind.ARGUMENTS)
+		{
+			TokenNode(result).tokenListUpdater = 
+				new ParentheticListUpdateDelegate(AS3NodeKind.LPAREN, AS3NodeKind.RPAREN);
+		}
 		
 		if (payload is LinkedListToken) 
 		{

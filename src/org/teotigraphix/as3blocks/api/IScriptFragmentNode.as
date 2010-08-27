@@ -23,7 +23,7 @@ package org.teotigraphix.as3blocks.api
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * TODO DOCME
+ * Base interface for all script fragments.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -31,6 +31,19 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public interface IScriptFragmentNode
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  node
+	//----------------------------------
+	
+	/**
+	 * The AST node.
+	 */
 	function get node():IParserNode;
 }
 }

@@ -43,6 +43,30 @@ package org.teotigraphix.as3parser.api
  */
 public class AS3NodeKind
 {
+	public static const LBRACKET:String = "lbracket";
+	
+	public static const LCURLY:String = "lcurly";
+	
+	public static const RBRACKET:String = "rbracket";
+	
+	public static const RCURLY:String = "rcurly";
+	
+	public static const RPAREN:String = "rparen";
+	
+	public static const LPAREN:String = "lparen";
+	
+	public static const HIDDEN:String = "hidden";
+	
+	public static const WS:String = "ws";
+	
+	public static const NL:String = "nl";
+	
+	public static const SPACE:String = "space";
+	
+	public static const TAB:String = "tab";
+	
+	//--------------------------------------------------------------------------
+	
 	public static const ADD:String = "add";
 	
 	public static const AND:String = "and";
@@ -113,9 +137,13 @@ public class AS3NodeKind
 	
 	public static const EQUALITY:String = "equality";
 	
+	public static const EXPR_STMNT:String = "expr-stmnt";
+	
 	public static const EXPR_LIST:String = "expr-list";
 	
 	public static const EXTENDS:String = "extends";
+	
+	public static const FALSE:String = "false";
 
 	public static const FINALLY:String = "finally";
 	
@@ -169,6 +197,10 @@ public class AS3NodeKind
 	
 	public static const NOT:String = "not";
 	
+	public static const NULL:String = "null";
+	
+	public static const NUMBER:String = "number";
+	
 	public static const OBJECT:String = "object";
 	
 	public static const OP:String = "op";
@@ -195,6 +227,8 @@ public class AS3NodeKind
 	
 	public static const PROP:String = "prop";
 	
+	public static const REG_EXP:String = "reg-exp";
+	
 	public static const RELATION:String = "relation";
 	
 	public static const REST:String = "rest";
@@ -209,11 +243,15 @@ public class AS3NodeKind
 	
 	public static const STMT_EMPTY:String = "stmt-empty";
 	
+	public static const STRING:String = "string";
+	
 	public static const SWITCH:String = "switch";
 	
 	public static const SWITCH_BLOCK:String = "switch-block";
 	
 	public static const THROW:String = "throw";
+	
+	public static const TRUE:String = "true";
 	
 	public static const TRY:String = "try";
 	
@@ -222,6 +260,8 @@ public class AS3NodeKind
 	public static const TYPEOF:String = "typeof";
 	
 	public static const USE:String = "use";
+	
+	public static const UNDEFINED:String = "undefined";
 	
 	public static const VALUE:String = "value";
 	
@@ -234,5 +274,7 @@ public class AS3NodeKind
 	public static const VOID:String = "void";
 	
 	public static const WHILE:String = "while";
+	
+	public static const XML:String = "xml";
 }
 }

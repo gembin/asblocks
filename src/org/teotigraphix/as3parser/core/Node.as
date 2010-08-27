@@ -229,6 +229,56 @@ public class Node extends NestedNode implements IParserNode
 		_stopToken = value;
 	}
 	
+	//----------------------------------
+	//  initialInsertionAfter
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _initialInsertionAfter:LinkedListToken;
+	
+	/**
+	 * doc
+	 */
+	public function get initialInsertionAfter():LinkedListToken
+	{
+		return _initialInsertionAfter;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set initialInsertionAfter(value:LinkedListToken):void
+	{
+		_initialInsertionAfter = value;
+	}
+	
+	//----------------------------------
+	//  initialInsertionBefore
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _initialInsertionBefore:LinkedListToken;
+	
+	/**
+	 * doc
+	 */
+	public function get initialInsertionBefore():LinkedListToken
+	{
+		return _initialInsertionBefore;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set initialInsertionBefore(value:LinkedListToken):void
+	{
+		_initialInsertionBefore = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

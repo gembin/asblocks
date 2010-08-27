@@ -31,7 +31,9 @@
 package org.teotigraphix.as3parser.core
 {
 
+import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.ITokenListUpdateDelegate;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
@@ -45,6 +47,8 @@ import org.teotigraphix.as3parser.utils.ASTUtil;
  */
 public class NestedNode
 {
+	public var noUpdate:Boolean = false;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public :: Properties
@@ -232,6 +236,9 @@ public class NestedNode
 		if (_children == null || _children.length == 0)
 			return null;
 		
+		if (index < 0 || index > _children.length - 1)
+			return null;
+		
 		return _children[index];
 	}
 	
@@ -273,8 +280,10 @@ public class NestedNode
 		if (child)
 			child.parent = this as IParserNode;
 		
-		if (tokenListUpdater)
+		if (!noUpdate && tokenListUpdater)
+		{
 			tokenListUpdater.addedChild(this as IParserNode, child);
+		}
 		
 		return child;
 	}
@@ -294,6 +303,11 @@ public class NestedNode
 			_children = new Vector.<IParserNode>();
 		
 		_children.splice(index, 0, child);
+		
+		if (!noUpdate && tokenListUpdater)
+		{
+			tokenListUpdater.addedChildAt(this as IParserNode, index, child);
+		}
 		
 		return child;
 	}
@@ -348,11 +362,35 @@ public class NestedNode
 			if (children[i] === node)
 			{
 				children.splice(i, 1);
+				
+				if (!noUpdate && tokenListUpdater)
+				{
+					tokenListUpdater.deletedChild(this as IParserNode, i, node);
+					node.parent = null
+				}
 				return node;
 			}
 		}
 		
 		return null;
+	}
+	
+	
+	public function removeChildAt(index:int):IParserNode
+	{
+		if (numChildren == 0)
+			return null;
+		
+		var old:IParserNode = getChild(index);
+		children.splice(index, 1);
+		
+		if (!noUpdate && tokenListUpdater)
+		{
+			tokenListUpdater.deletedChild(this as IParserNode, index, old);
+			old.parent = null
+		}
+		
+		return old;
 	}
 	
 	/**
@@ -373,11 +411,41 @@ public class NestedNode
 		return -1;
 	}
 	
-	public var tokenListUpdater:TokenListUpdateDelegate;
+	public function setChildAt(child:IParserNode, index:int):IParserNode
+	{
+		if (child == null)
+			return null;
+		
+		if (index > numChildren)
+			index = numChildren;
+		
+		if (_children == null)
+			_children = new Vector.<IParserNode>();
+		
+		var old:IParserNode = getChild(index);
+		_children.splice(index, 1, child) as IParserNode;
+		
+		if (!noUpdate && tokenListUpdater)
+		{
+			tokenListUpdater.replacedChild(IParserNode(this), index, child, old);
+		}
+		
+		return old;
+	}
+	
+	public var tokenListUpdater:ITokenListUpdateDelegate;
+	
+	public function addTokenAt(token:LinkedListToken, index:int):void
+	{
+		tokenListUpdater.addToken(IParserNode(this), index, token);
+	}
 	
 	public function appendToken(token:LinkedListToken):void
 	{
-		tokenListUpdater.appendToken(IParserNode(this), token);
+		if (!noUpdate && tokenListUpdater)
+		{
+			tokenListUpdater.appendToken(IParserNode(this), token);
+		}
 	}
 }
 }

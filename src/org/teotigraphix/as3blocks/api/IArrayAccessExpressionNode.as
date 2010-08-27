@@ -21,8 +21,7 @@ package org.teotigraphix.as3blocks.api
 {
 
 /**
- * Array access; <code>foo["bar"]</code> - 
- * <code>target</code>[<code>subscript</code>].
+ * Array access; <code>foo["bar"]</code> - <code>target</code>[<code>subscript</code>].
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -42,7 +41,8 @@ public interface IArrayAccessExpressionNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The target expression occurs before the <code>[</code> -
+	 * <code>target</code>[<code>subscript</code>].
 	 */
 	function get target():IExpressionNode;
 	
@@ -51,13 +51,13 @@ public interface IArrayAccessExpressionNode
 	 */
 	function set target(value:IExpressionNode):void;
 	
-	
 	//----------------------------------
 	//  subscript
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The subscript expression occurs after the <code>[</code> -
+	 * <code>target</code>[<code>subscript</code>].
 	 */
 	function get subscript():IExpressionNode;
 	

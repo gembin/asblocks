@@ -22,6 +22,7 @@ package org.teotigraphix.as3parser.utils
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 
 /**
  * A utility class for dealing with scanners, parsers and parser node ast.
@@ -322,6 +323,58 @@ public class ASTUtil
 		return code;
 	}
 	
+	public static function decodeStringLiteral(string:String):String
+	{
+		var result:String = "";
+		
+		if (string.indexOf('"') != 0 && string.indexOf("'") != 0)
+		{
+			// SyntaxException
+			throw new Error("Invalid delimiter at position 0: " + string[0]);
+		}
+		
+		var chars:Array = string.split("");
+		
+		var delimiter:String = chars[0];
+		var end:int = chars.length - 1;
+		for (var i:int = 1; i < end; i++) 
+		{
+			var c:String = chars[i];
+			switch (c) 
+			{
+				case '\\':
+					
+					c = chars[++i];
+					switch (c) 
+					{
+						case 'n':
+							result += '\n';
+							break;
+						case 't':
+							result += '\t';
+							break;
+						case '\\':
+							result += '\\';
+							break;
+						default:
+							result += c;
+					}
+					break;
+				
+				default:
+					result += c;
+			}
+		}
+		
+		if (chars[end] != delimiter) 
+		{
+			// SyntaxException
+			throw new Error("End delimiter doesn't match " + delimiter + " at position " + end);
+		}
+		
+		return result;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Private Class :: Methods
@@ -437,5 +490,71 @@ public class ASTUtil
 		
 		return result;
 	}
+	
+	
+	
+	
+	
+	/**
+	 * Deletes any whitespace tokens following (but not including) the given
+	 * token up to a comma token, and then deletes the comma token too.
+	 * 
+	 * Used when removing elements from comma-seperated lists.
+	 */
+	public static function removeTrailingWhitespaceAndComma(stopToken:LinkedListToken):void
+	{
+		for (var tok:LinkedListToken = stopToken.previous; tok != null; tok = tok.next)
+		{
+			if (tok.channel == AS3NodeKind.HIDDEN) 
+			{
+				tok.remove();
+				continue;
+			} 
+			else if (tok.kind == "comma")
+			{
+				tok.remove();
+				break;
+			}
+			else
+			{
+				// SyntaxException
+				throw new Error("Unexpected token: "+ tok);
+			}
+		}
+	}
+	
+	
+	public static function removePreceedingWhitespaceAndComma(startToken:LinkedListToken):void
+	{
+		for (var tok:LinkedListToken = startToken.previous; tok != null; tok = tok.previous)
+		{
+			if (tok.channel == AS3NodeKind.HIDDEN) 
+			{
+				var del:LinkedListToken = tok;
+				tok = tok.next;
+				del.remove();
+				continue;
+			} 
+			else if (tok.kind == "comma")
+			{
+				tok.remove();
+				break;
+			}
+			else
+			{
+				// SyntaxException
+				throw new Error("Unexpected token: "+tok);
+			}
+		}
+	}
+
+	
+	
+	
+	public static function tokenName(kind:String):String
+	{
+		return kind;
+	}
+	
 }
 }

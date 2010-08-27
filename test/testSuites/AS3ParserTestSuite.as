@@ -1,6 +1,7 @@
 package testSuites
 {
 
+import org.teotigraphix.as3blocks.impl.TestExpressionNodes;
 import org.teotigraphix.as3parser.core.TestLinkedListToken;
 import org.teotigraphix.as3parser.core.TestSourceCode;
 import org.teotigraphix.as3parser.impl.TestAS3FragmentParser;
@@ -33,9 +34,10 @@ import org.teotigraphix.as3parser.utils.TestASTUtil;
 [RunWith("org.flexunit.runners.Suite")]
 public class AS3ParserTestSuite
 {
+	public var testExpressionNodes:TestExpressionNodes;
 	public var testPrimaryExpression2:TestPrimaryExpression2;
 	
-	//public var yestLinkedListToken:TestLinkedListToken;
+	//public var testLinkedListToken:TestLinkedListToken;
 	
 	public var testSourceCode:TestSourceCode;
 	

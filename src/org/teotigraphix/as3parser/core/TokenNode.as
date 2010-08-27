@@ -7,10 +7,15 @@ public class TokenNode extends Node
 {
 	public var token:LinkedListToken;
 	
-	
-	
-
-	
+	override public function set stringValue(value:String):void
+	{
+		super.stringValue = value;
+		
+		if (token)
+		{
+			token.text = value;
+		}
+	}
 
 	
 	public function TokenNode(kind:String,
@@ -49,7 +54,8 @@ public class TokenNode extends Node
 												 newStop:LinkedListToken):void
 	{
 		// TODO: maybe move to delegates
-		if (isLast(child) && (isSameStopToken(child) || isNoStopToken(child))) {
+		if (isLast(child) && (isSameStopToken(child) || isNoStopToken(child)))
+		{
 			stopToken = newStop;
 		}
 	}

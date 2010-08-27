@@ -25,7 +25,7 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
- * TODO DOCME
+ * The <code>IScriptFragmentNode</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -49,7 +49,7 @@ public class ScriptFragmentNode implements IScriptFragmentNode
 	private var _node:IParserNode;
 	
 	/**
-	 * TODO DOCME
+	 * @copy org.teotigraphix.as3blocks.api.IScriptFragmentNode#node
 	 */
 	public function get node():IParserNode
 	{
