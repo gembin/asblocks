@@ -887,11 +887,6 @@ public class AS3Parser2 extends ParserBase
 		if (tokIs(Operators.EQUAL))
 		{
 			consume(Operators.EQUAL, node);
-			//result = adapter.create(
-			//	AS3NodeKind.INIT,
-			//	null, 
-			//	token.line, 
-			//	token.column);
 			result = adapter.create(
 				AS3NodeKind.INIT,
 				null, 
@@ -923,10 +918,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseAssignmentExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.ASSIGN,
-		//	token.line,
-		//	token.column,
-		//	parseConditionalExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.ASSIGN,
 			null, 
@@ -939,10 +930,6 @@ public class AS3Parser2 extends ParserBase
 			|| tokIs(Operators.MODULO_EQUAL) || tokIs(Operators.AND_EQUAL) 
 			|| tokIs(Operators.OR_EQUAL) || tokIs(Operators.XOR_EQUAL))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text, 
@@ -959,10 +946,6 @@ public class AS3Parser2 extends ParserBase
 		var result:TokenNode = parseOrExpression() as TokenNode;
 		if (tokIs(Operators.QUESTION_MARK))
 		{
-			//var conditional:Node = Node.createChild(AS3NodeKind.CONDITIONAL,
-			//	token.line,
-			//	token.column,
-			//	result);
 			var conditional:TokenNode = adapter.create(
 				AS3NodeKind.CONDITIONAL,
 				null, 
@@ -982,10 +965,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseOrExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.OR,
-		//	token.line,
-		//	token.column,
-		//	parseAndExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.OR,
 			null, 
@@ -1007,10 +986,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseAndExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.AND,
-		//	token.line,
-		//	token.column,
-		//	parseBitwiseOrExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.AND,
 			null, 
@@ -1019,10 +994,6 @@ public class AS3Parser2 extends ParserBase
 			parseBitwiseOrExpression());
 		while (tokIs(Operators.AND))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1036,10 +1007,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseBitwiseOrExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.B_OR,
-		//	token.line,
-		//	token.column,
-		//	parseBitwiseXorExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.B_OR,
 			null, 
@@ -1048,10 +1015,6 @@ public class AS3Parser2 extends ParserBase
 			parseBitwiseXorExpression());
 		while (tokIs(Operators.B_OR))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1065,10 +1028,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseBitwiseXorExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.B_XOR,
-		//	token.line,
-		//	token.column,
-		//	parseBitwiseAndExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.B_XOR,
 			null, 
@@ -1077,10 +1036,6 @@ public class AS3Parser2 extends ParserBase
 			parseBitwiseAndExpression());
 		while (tokIs(Operators.B_XOR))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1094,10 +1049,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseBitwiseAndExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.B_AND,
-		//	token.line,
-		//	token.column,
-		//	parseEqualityExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.B_AND,
 			null, 
@@ -1106,10 +1057,6 @@ public class AS3Parser2 extends ParserBase
 			parseEqualityExpression());
 		while (tokIs(Operators.B_AND))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1123,10 +1070,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseEqualityExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.EQUALITY,
-		//	token.line,
-		//	token.column,
-		//	parseRelationalExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.EQUALITY,
 			null, 
@@ -1137,10 +1080,6 @@ public class AS3Parser2 extends ParserBase
 			|| tokIs(Operators.STRICTLY_EQUAL) || tokIs(Operators.NON_EQUAL)
 			|| tokIs(Operators.NON_STRICTLY_EQUAL))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1154,10 +1093,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseRelationalExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.RELATION,
-		//	token.line,
-		//	token.column,
-		//	parseShiftExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.RELATION,
 			null, 
@@ -1169,10 +1104,6 @@ public class AS3Parser2 extends ParserBase
 			|| tokIs(Operators.SUPERIOR_OR_EQUAL) || tokIs(KeyWords.IS) || tokIs(KeyWords.IN)
 			&& !isInFor || tokIs( KeyWords.AS) || tokIs(KeyWords.INSTANCE_OF))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1186,10 +1117,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseShiftExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.SHIFT,
-		//	token.line,
-		//	token.column,
-		//	parseAdditiveExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.SHIFT,
 			null, 
@@ -1201,10 +1128,6 @@ public class AS3Parser2 extends ParserBase
 			|| tokIs(Operators.TRIPLE_SHIFT_LEFT)
 			|| tokIs(Operators.TRIPLE_SHIFT_RIGHT))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1218,10 +1141,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseAdditiveExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.ADD,
-		//	token.line,
-		//	token.column,
-		//	parseMultiplicativeExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.ADD,
 			null, 
@@ -1231,10 +1150,6 @@ public class AS3Parser2 extends ParserBase
 		while (tokIs(Operators.PLUS)
 			|| tokIs(Operators.MINUS))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1248,10 +1163,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseMultiplicativeExpression():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.MULTIPLICATION,
-		//	token.line,
-		//	token.column,
-		//	parseUnaryExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.MULTIPLICATION,
 			null, 
@@ -1262,10 +1173,6 @@ public class AS3Parser2 extends ParserBase
 			|| tokIs(Operators.SLASH) 
 			|| tokIs(Operators.MODULO))
 		{
-			//result.addChild(Node.create(AS3NodeKind.OP,
-			//	token.line,
-			//	token.column,
-			//	token.text));
 			result.addChild(adapter.create(
 				AS3NodeKind.OP,
 				token.text,
@@ -1484,6 +1391,10 @@ public class AS3Parser2 extends ParserBase
 			{
 				result.kind = AS3NodeKind.REG_EXP;
 			}
+			else if (token.text.indexOf("<") == 0)
+			{
+				result.kind = AS3NodeKind.XML;
+			}
 			else
 			{
 				if (tokIs(KeyWords.TRUE))
@@ -1694,7 +1605,7 @@ public class AS3Parser2 extends ParserBase
 			nextTokenIgnoringAsDoc(result); // /* ... */
 		}
 		
-		consume(Operators.LEFT_CURLY_BRACKET, result);
+		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
 		
 		ISourceCodeScanner(scanner).inBlock = true;
 		
@@ -1729,7 +1640,7 @@ public class AS3Parser2 extends ParserBase
 			}
 		}
 		
-		consume(Operators.RIGHT_CURLY_BRACKET, result);
+		consumeWS(Operators.RIGHT_CURLY_BRACKET, result);
 		
 		ISourceCodeScanner(scanner).inBlock = false;
 		
@@ -2130,10 +2041,6 @@ public class AS3Parser2 extends ParserBase
 			
 			nextNonWSToken(node);
 		}
-		//result.addNodeChild(AS3NodeKind.IN,
-		//	token.line,
-		//	token.column,
-		//	parseExpression());
 		var ini:TokenNode = adapter.create(
 			AS3NodeKind.IN,
 			null, 
@@ -2159,10 +2066,6 @@ public class AS3Parser2 extends ParserBase
 		{
 			if (tokIs(KeyWords.VAR))
 			{
-				//result.addNodeChild(AS3NodeKind.INIT,
-				//	token.line,
-				//	token.column,
-				//	parseVarList(null, null));
 				init = adapter.create(
 					AS3NodeKind.INIT,
 					null, 
@@ -2174,10 +2077,6 @@ public class AS3Parser2 extends ParserBase
 			else
 			{
 				isInFor = true;
-				//result.addNodeChild(AS3NodeKind.INIT,
-				//	token.line,
-				//	token.column,
-				//	parseExpression());
 				init = adapter.create(
 					AS3NodeKind.INIT,
 					null, 
@@ -2195,10 +2094,6 @@ public class AS3Parser2 extends ParserBase
 		consume(Operators.SEMI_COLUMN, node);
 		if (!tokIs(Operators.SEMI_COLUMN))
 		{
-			//result.addNodeChild(AS3NodeKind.COND,
-			//	token.line,
-			//	token.column,
-			//	parseExpression());
 			var cond:TokenNode = adapter.create(
 				AS3NodeKind.COND,
 				null, 
@@ -2210,10 +2105,6 @@ public class AS3Parser2 extends ParserBase
 		consume(Operators.SEMI_COLUMN, node);
 		if (!tokIs(Operators.RIGHT_PARENTHESIS))
 		{
-			//result.addNodeChild(AS3NodeKind.ITER,
-			//	token.line,
-			//	token.column,
-			//	parseExpressionList());
 			var iter:TokenNode = adapter.create(
 				AS3NodeKind.ITER,
 				null, 
@@ -2230,11 +2121,6 @@ public class AS3Parser2 extends ParserBase
 	
 	private function parseForIn(node:TokenNode):TokenNode
 	{
-		
-		//result.addNodeChild(AS3NodeKind.IN,
-		//	token.line,
-		//	token.column,
-		//	parseExpression());
 		var ini:TokenNode = adapter.create(
 			AS3NodeKind.IN,
 			null, 
@@ -2279,11 +2165,6 @@ public class AS3Parser2 extends ParserBase
 		
 		consume(KeyWords.IF, result);
 		result.addChild(parseCondition());
-		//var result:Node = Node.createChild(AS3NodeKind.IF,
-		//	token.line,
-		//	token.column,
-		//	parseCondition());
-		
 		result.addChild(parseStatement());
 		if (tokIs(KeyWords.ELSE))
 		{
@@ -2295,10 +2176,6 @@ public class AS3Parser2 extends ParserBase
 	
 	internal function parseCondition():IParserNode
 	{
-		//var result:Node = Node.createChild(AS3NodeKind.CONDITION,
-		//	token.line,
-		//	token.column,
-		//	parseExpression());
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.CONDITION,
 			null, 
