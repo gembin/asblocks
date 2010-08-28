@@ -779,6 +779,25 @@ public class AS3Parser2 extends ParserBase
 	/**
 	 * @private
 	 */
+	private function parseVarList(meta:Vector.<TokenNode>, 
+								  modifiers:TokenNode):TokenNode
+	{
+		var result:TokenNode = adapter.copy(
+			AS3NodeKind.VAR_LIST, token);
+		
+		result.addChild(convertMeta(meta));
+		addAsDoc(result);
+		result.addChild(modifiers);
+		
+		consume(KeyWords.VAR, result);
+		collectVarListContent(result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
 	private function collectVarListContent(result:TokenNode):TokenNode
 	{
 		result.addChild(parseNameTypeInit());
@@ -1903,13 +1922,13 @@ public class AS3Parser2 extends ParserBase
 		return result;
 	}
 	
+	/**
+	 * @private
+	 */
 	private function parseFor():TokenNode
 	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.FOR,
-			null, 
-			token.line, 
-			token.column);
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.FOR, token);
 		
 		consume(KeyWords.FOR, result);
 		
@@ -1924,17 +1943,17 @@ public class AS3Parser2 extends ParserBase
 		}
 	}
 	
+	/**
+	 * @private
+	 */
 	private function parseForEach(node:TokenNode):TokenNode
 	{
 		consume(Operators.LEFT_PARENTHESIS, node);
 		
 		if (tokIs(KeyWords.VAR))
 		{
-			var variable:TokenNode = adapter.create(
-				AS3NodeKind.VAR,
-				null, 
-				token.line, 
-				token.column);
+			var variable:TokenNode = adapter.empty(
+				AS3NodeKind.VAR, token);
 			
 			consume(KeyWords.VAR, node);
 			variable.addChild(parseNameTypeInit());
@@ -1942,21 +1961,15 @@ public class AS3Parser2 extends ParserBase
 		}
 		else
 		{
-			var name:TokenNode = adapter.create(
-				AS3NodeKind.NAME,
-				token.text, 
-				token.line, 
-				token.column);
-			
+			var name:TokenNode = adapter.copy(
+				AS3NodeKind.NAME, token);
 			node.addChild(name);
 			
 			nextNonWhiteSpaceToken(node);
 		}
-		var ini:TokenNode = adapter.create(
-			AS3NodeKind.IN,
-			null, 
-			token.line, 
-			token.column);
+		var ini:TokenNode = adapter.empty(
+			AS3NodeKind.IN, token);
+		
 		consume(KeyWords.IN, node);
 		ini.addChild(parseExpression());
 		node.addChild(ini);
@@ -1967,6 +1980,9 @@ public class AS3Parser2 extends ParserBase
 		return node;
 	}
 	
+	/**
+	 * @private
+	 */
 	private function parseTraditionalFor(node:TokenNode):TokenNode
 	{
 		consume(Operators.LEFT_PARENTHESIS, node);
@@ -1977,22 +1993,16 @@ public class AS3Parser2 extends ParserBase
 		{
 			if (tokIs(KeyWords.VAR))
 			{
-				init = adapter.create(
-					AS3NodeKind.INIT,
-					null, 
-					token.line, 
-					token.column);
+				init = adapter.empty(
+					AS3NodeKind.INIT, token);
 				init.addChild(parseVarList(null, null));
 				node.addChild(init);
 			}
 			else
 			{
 				isInFor = true;
-				init = adapter.create(
-					AS3NodeKind.INIT,
-					null, 
-					token.line, 
-					token.column);
+				init = adapter.empty(
+					AS3NodeKind.INIT, token);
 				init.addChild(parseExpression());
 				node.addChild(init);
 				isInFor = false;
@@ -2005,22 +2015,16 @@ public class AS3Parser2 extends ParserBase
 		consume(Operators.SEMI_COLUMN, node);
 		if (!tokIs(Operators.SEMI_COLUMN))
 		{
-			var cond:TokenNode = adapter.create(
-				AS3NodeKind.COND,
-				null, 
-				token.line, 
-				token.column);
+			var cond:TokenNode = adapter.empty(
+				AS3NodeKind.COND, token);
 			cond.addChild(parseExpression());
 			node.addChild(cond);
 		}
 		consume(Operators.SEMI_COLUMN, node);
 		if (!tokIs(Operators.RIGHT_PARENTHESIS))
 		{
-			var iter:TokenNode = adapter.create(
-				AS3NodeKind.ITER,
-				null, 
-				token.line, 
-				token.column);
+			var iter:TokenNode = adapter.empty(
+				AS3NodeKind.ITER, token);
 			iter.addChild(parseExpressionList());
 			node.addChild(iter);
 		}
@@ -2030,41 +2034,30 @@ public class AS3Parser2 extends ParserBase
 		return node;
 	}
 	
+	/**
+	 * @private
+	 */
 	private function parseForIn(node:TokenNode):TokenNode
 	{
-		var ini:TokenNode = adapter.create(
-			AS3NodeKind.IN,
-			null, 
-			token.line, 
-			token.column);
+		var ini:TokenNode = adapter.empty(
+			AS3NodeKind.IN, token);
+		
 		consume(KeyWords.IN, node);
 		ini.addChild(parseExpression());
 		node.addChild(ini);
 		node.kind = AS3NodeKind.FORIN;
 		consume(Operators.RIGHT_PARENTHESIS, node);
+		
 		node.addChild(parseStatement());
 		return node;
 	}
 	
-	private function parseVarList(meta:Vector.<TokenNode>, 
-								  modifiers:TokenNode):TokenNode
-	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.VAR_LIST,
-			null, 
-			token.line, 
-			token.column);
-		
-		result.addChild(convertMeta(meta));
-		
-		result.addChild(modifiers);
-		
-		consume(KeyWords.VAR, result);
-		
-		collectVarListContent(result);
-		
-		return result;
-	}
+	
+	
+	
+	
+	
+	
 	
 	private function parseIf():TokenNode
 	{
