@@ -257,6 +257,8 @@ public class AS3NodeKind
 	
 	public static const TYPE:String = "type";
 	
+	public static const TYPE_SPEC:String = "type-spec";
+	
 	public static const TYPEOF:String = "typeof";
 	
 	public static const USE:String = "use";

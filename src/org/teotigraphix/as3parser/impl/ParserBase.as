@@ -237,7 +237,7 @@ public class ParserBase implements IParser
 		}
 	}
 	
-	protected function nextNonWSToken(node:TokenNode):void
+	protected function nextNonWhiteSpaceToken(node:TokenNode):void
 	{
 		if (!consumeWhitespace(node))
 		{
@@ -245,7 +245,7 @@ public class ParserBase implements IParser
 			
 			if (tokIs(" ") || tokIs("\t") || tokIs("\n"))
 			{
-				nextNonWSToken(node);
+				nextNonWhiteSpaceToken(node);
 			}
 		}
 	}

@@ -29,6 +29,33 @@ public class LinkedListTreeAdaptor
 		return token;
 	}
 	
+	
+	public function empty(kind:String, token:Token, child:IParserNode = null):TokenNode 
+	{
+		var result:LinkedListToken = new LinkedListToken(kind, null);
+		result.line = token.line;
+		result.column = token.column;
+		var node:TokenNode = createNode(result);
+		if (child)
+		{
+			node.addChild(child);
+		}
+		return node;
+	}
+	
+	public function copy(kind:String, token:Token, child:IParserNode = null):TokenNode 
+	{
+		var result:LinkedListToken = new LinkedListToken(kind, token.text);
+		result.line = token.line;
+		result.column = token.column;
+		var node:TokenNode = createNode(result);
+		if (child)
+		{
+			node.addChild(child);
+		}
+		return node;
+	}
+	
 	public function create(kind:String, 
 						   text:String = null,
 						   line:int = -1, 
@@ -59,7 +86,7 @@ public class LinkedListTreeAdaptor
 		TokenNode(result).tokenListUpdater = delegate;
 		
 		if (payload.kind == AS3NodeKind.ARRAY
-			/*|| payload.kind == AS3NodeKind.ARRAY_ACCESSOR*/)
+		/*|| payload.kind == AS3NodeKind.ARRAY_ACCESSOR*/)
 		{
 			TokenNode(result).tokenListUpdater = 
 				new ParentheticListUpdateDelegate(AS3NodeKind.LBRACKET, AS3NodeKind.RBRACKET);

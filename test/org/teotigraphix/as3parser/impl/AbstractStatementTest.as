@@ -1,33 +1,48 @@
 package org.teotigraphix.as3parser.impl
 {
+
 import flexunit.framework.Assert;
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.ASTPrinter;
+import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class AbstractStatementTest
 {
-	protected var parser:AS3Parser;
+	protected var parser:AS3Parser2;
 	
 	[Before]
 	public function setUp():void
 	{
-		parser = new AS3Parser();
+		parser = new AS3Parser2();
 	}
 	
-	protected function assertStatement(message:String, input:String, expected:String):void
+	protected function assertStatementPrint(input:String):void
 	{
-		var lines:Array = 
-			[
-				input,
-				"__END__"
-			];
-		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
-		
-		parser.nextToken();
-		
-		var result:String = ASTUtil.convert(parser.parseStatement());
+		var printer:ASTPrinter = createPrinter();
+		printer.print(parseStatement(input));
+		Assert.assertEquals(input, printer.flush());
+	}
+	
+	protected function assertStatement(message:String, 
+									   input:String, 
+									   expected:String):void
+	{
+		var result:String = ASTUtil.convert(parseStatement(input));
 		Assert.assertEquals(message, expected, result);
+	}
+	
+	protected function parseStatement(input:String):IParserNode
+	{
+		parser.scanner.setLines(Vector.<String>([input]));
+		parser.nextToken(); // first call
+		return parser.parseStatement();
+	}
+	
+	protected function createPrinter():ASTPrinter
+	{
+		return new ASTPrinter(new SourceCode());
 	}
 }
 }
