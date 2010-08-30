@@ -1,81 +1,106 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.as3parser.impl
 {
+
+/**
+ * A <code>if(){}</code>, <code>if(){}else{}</code> and 
+ * <code>if(){}else if(){}else{}</code> 
+ * statement unit test.
+ * 
+ * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
+ * @productversion 1.0
+ */
 public class TestIfStatement extends AbstractStatementTest
 {
 	[Test]
 	public function testIf():void
 	{
-		assertStatement( "1",
-			"if( true ){ trace( true ); }",
-			"<if line=\"1\" column=\"3\">"
-			+ "<condition line=\"1\" column=\"5\">"
-			+ "<primary line=\"1\" column=\"5\">true</primary></condition>"
-			+ "<block line=\"1\" column=\"13\"><call line=\"1\" column=\"18\">"
-			+ "<primary line=\"1\" column=\"13\">trace"
-			+ "</primary><arguments line=\"1\" column=\"20\">"
-			+ "<primary line=\"1\" column=\"20\">true</primary>"
-			+ "</arguments></call></block></if>" );
+		var input:String = "if( true ){ trace( true ); }";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\">" +
+			"<true line=\"1\" column=\"5\">true</true></condition><block " +
+			"line=\"1\" column=\"11\"><call line=\"1\" column=\"18\"><primary " +
+			"line=\"1\" column=\"13\">trace</primary><arguments line=\"1\" " +
+			"column=\"18\"><true line=\"1\" column=\"20\">true</true></arguments>" +
+			"</call></block></if>");
 		
-		assertStatement( "1",
-			"if( \"i\" in oaderContext ){ }",
-			"<if line=\"1\" column=\"3\"><condition line=\"1\" column=\"5\">"
-			+ "<relation line=\"1\" column=\"5\"><primary line=\"1\" column=\"5\">"
-			+ "\"i\"</primary><op line=\"1\" column=\"9\">in</op>"
-			+ "<primary line=\"1\" column=\"12\">oaderContext</primary>"
-			+ "</relation></condition><block line=\"1\" column=\"28\"></block></if>" );
+		input = "if( \"property\" in object ){ }";
+		assertStatementPrint(input);
+		assertStatement("2", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\">" +
+			"<relation line=\"1\" column=\"5\"><string line=\"1\" column=\"5\">" +
+			"\"property\"</string><op line=\"1\" column=\"16\">in</op><primary " +
+			"line=\"1\" column=\"19\">object</primary></relation></condition>" +
+			"<block line=\"1\" column=\"27\"></block></if>");
 		
-		assertStatement( "internal",
-			"if (col.mx_internal::contentSize) {col.mx_internal::_width = NaN;}",
-			"<if line=\"1\" column=\"4\"><condition line=\"1\" column=\"5\">"
-			+ "<dot line=\"1\" column=\"9\"><primary line=\"1\" column=\"5\">col"
-			+ "</primary><dot line=\"1\" column=\"22\"><primary line=\"1\" column=\"9\">"
-			+ "mx_internal</primary><primary line=\"1\" column=\"22\">contentSize"
-			+ "</primary></dot></dot></condition><block line=\"1\" column=\"36\">"
-			+ "<dot line=\"1\" column=\"40\"><primary line=\"1\" column=\"36\">col"
-			+ "</primary><dot line=\"1\" column=\"53\"><primary line=\"1\" column=\"40\">"
-			+ "mx_internal</primary><assign line=\"1\" column=\"53\">"
-			+ "<primary line=\"1\" column=\"53\">_width</primary>"
-			+ "<op line=\"1\" column=\"60\">=</op><primary line=\"1\" column=\"62\">"
-			+ "NaN</primary></assign></dot></dot></block></if>" );
+		input = "if (obj.my_namespace::namespaceProperty) {obj.my_namespace::_prop = NaN;}";
+		assertStatementPrint(input);
+		assertStatement("3", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\">" +
+			"<dot line=\"1\" column=\"8\"><primary line=\"1\" column=\"5\">obj" +
+			"</primary><double-column line=\"1\" column=\"21\"><primary line=\"1\" " +
+			"column=\"9\">my_namespace</primary><primary line=\"1\" column=\"23\">" +
+			"namespaceProperty</primary></double-column></dot></condition><block " +
+			"line=\"1\" column=\"42\"><dot line=\"1\" column=\"46\"><primary line=\"1\" " +
+			"column=\"43\">obj</primary><double-column line=\"1\" column=\"59\">" +
+			"<primary line=\"1\" column=\"47\">my_namespace</primary><assign line=\"1\" " +
+			"column=\"61\"><primary line=\"1\" column=\"61\">_prop</primary><op " +
+			"line=\"1\" column=\"67\">=</op><primary line=\"1\" column=\"69\">NaN</primary>" +
+			"</assign></double-column></dot></block></if>");
 	}
 	
 	[Test]
 	public function testIfElse():void
 	{
-		assertStatement( "1",
-			"if( true ){ trace( true ); } else { trace( false )}",
-			"<if line=\"1\" column=\"3\"><condition line=\"1\" column=\"5\">"
-			+ "<primary line=\"1\" column=\"5\">true"
-			+ "</primary></condition><block line=\"1\" column=\"13\">"
-			+ "<call line=\"1\" column=\"18\"><primary line=\"1\" column=\"13\">trace"
-			+ "</primary><arguments line=\"1\" column=\"20\">"
-			+ "<primary line=\"1\" column=\"20\">true</primary></arguments>"
-			+ "</call></block><block line=\"1\" column=\"37\">"
-			+ "<call line=\"1\" column=\"42\">"
-			+ "<primary line=\"1\" column=\"37\">trace</primary>"
-			+ "<arguments line=\"1\" column=\"44\">"
-			+ "<primary line=\"1\" column=\"44\">false</primary>"
-			+ "</arguments></call></block></if>" );
+		var input:String = "if( true ){ trace( true ); } else { trace( false )}";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\">" +
+			"<true line=\"1\" column=\"5\">true</true></condition><block " +
+			"line=\"1\" column=\"11\"><call line=\"1\" column=\"18\"><primary " +
+			"line=\"1\" column=\"13\">trace</primary><arguments line=\"1\" " +
+			"column=\"18\"><true line=\"1\" column=\"20\">true</true></arguments>" +
+			"</call></block><block line=\"1\" column=\"35\"><call line=\"1\" " +
+			"column=\"42\"><primary line=\"1\" column=\"37\">trace</primary>" +
+			"<arguments line=\"1\" column=\"42\"><false line=\"1\" column=\"44\">" +
+			"false</false></arguments></call></block></if>");
 	}
 	
 	[Test]
 	public function testIfWithArrayAccessor():void
 	{
-		assertStatement( "",
-			"if ( chart.getItemAt( 0 )[ xField ] > targetXFieldValue ){}",
-			"<if line=\"1\" column=\"4\"><condition line=\"1\" column=\"6\"><dot line=\"1\""
-			+ " column=\"12\"><primary line=\"1\" "
-			+ "column=\"6\">chart</primary><relation line=\"1\" "
-			+ "column=\"12\"><call line=\"1\" column=\"21\"><primary line=\"1\" "
-			+ "column=\"12\">getItemAt</primary><arguments line=\"1\" "
-			+ "column=\"23\"><primary line=\"1\" "
-			+ "column=\"23\">0</primary></arguments><array line=\"1\" "
-			+ "column=\"26\"><primary line=\"1\" "
-			+ "column=\"28\">xField</primary></array></call><op line=\"1\" "
-			+ "column=\"37\">&gt;</op><primary "
-			+ "line=\"1\" column=\"39\">targetXFieldValue</primary>"
-			+ "</relation></dot></condition><block line=\"1\" "
-			+ "column=\"59\"></block></if>" );
+		var input:String = "if ( chart.getItemAt( 0 )[ xField ] [ xy ] > targetXFieldValue ){}";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\">" +
+			"<true line=\"1\" column=\"5\">true</true></condition><block " +
+			"line=\"1\" column=\"11\"><call line=\"1\" column=\"18\"><primary " +
+			"line=\"1\" column=\"13\">trace</primary><arguments line=\"1\" " +
+			"column=\"18\"><true line=\"1\" column=\"20\">true</true></arguments>" +
+			"</call></block><block line=\"1\" column=\"35\"><call line=\"1\" " +
+			"column=\"42\"><primary line=\"1\" column=\"37\">trace</primary>" +
+			"<arguments line=\"1\" column=\"42\"><false line=\"1\" column=\"44\">" +
+			"false</false></arguments></call></block></if>");
 	}
 	
 	[Test]

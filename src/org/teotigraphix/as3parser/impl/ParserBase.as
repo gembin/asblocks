@@ -327,7 +327,9 @@ public class ParserBase implements IParser
 	 * @param text The text String to consume.
 	 * @throws UnExpectedTokenError
 	 */
-	final protected function consume(text:String, node:TokenNode = null):LinkedListToken
+	final protected function consume(text:String, 
+									 node:TokenNode = null, 
+									 trim:Boolean = true):LinkedListToken
 	{
 		var consumed:LinkedListToken;
 		
@@ -349,12 +351,17 @@ public class ParserBase implements IParser
 		
 		nextToken();
 		
-		consumeWhitespace(node);
+		if (trim)
+		{
+			consumeWhitespace(node);
+		}
 		
 		return consumed;
 	}
 	
-	final protected function consumeWS(text:String, node:TokenNode = null):void
+	final protected function consumeWS(text:String, 
+									   node:TokenNode = null, 
+									   trim:Boolean = true):void
 	{
 		consumeWhitespace(node);
 		
@@ -369,7 +376,10 @@ public class ParserBase implements IParser
 		
 		nextToken();
 		
-		consumeWhitespace(node);
+		if (trim)
+		{
+			consumeWhitespace(node);
+		}
 	}
 	
 	protected var adapter:LinkedListTreeAdaptor = new LinkedListTreeAdaptor();

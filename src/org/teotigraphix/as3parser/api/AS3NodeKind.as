@@ -117,6 +117,8 @@ public class AS3NodeKind
 	
 	public static const CONTENT:String = "content";
 	
+	public static const DOUBLE_COLUMN:String = "double-column";
+	
 	public static const DEFAULT:String = "default";
 	
 	public static const DELETE:String = "delete";
