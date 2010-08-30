@@ -89,58 +89,78 @@ public class TestIfStatement extends AbstractStatementTest
 	[Test]
 	public function testIfWithArrayAccessor():void
 	{
-		var input:String = "if ( chart.getItemAt( 0 )[ xField ] [ xy ] > targetXFieldValue ){}";
+		var input:String = "if ( a[ xField ] [ xy ] > targetXFieldValue ){}";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\">" +
-			"<true line=\"1\" column=\"5\">true</true></condition><block " +
-			"line=\"1\" column=\"11\"><call line=\"1\" column=\"18\"><primary " +
-			"line=\"1\" column=\"13\">trace</primary><arguments line=\"1\" " +
-			"column=\"18\"><true line=\"1\" column=\"20\">true</true></arguments>" +
-			"</call></block><block line=\"1\" column=\"35\"><call line=\"1\" " +
-			"column=\"42\"><primary line=\"1\" column=\"37\">trace</primary>" +
-			"<arguments line=\"1\" column=\"42\"><false line=\"1\" column=\"44\">" +
-			"false</false></arguments></call></block></if>");
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\">" +
+			"<relation line=\"1\" column=\"6\"><arr-acc line=\"1\" column=\"7\">" +
+			"<primary line=\"1\" column=\"6\">a</primary><primary line=\"1\" " +
+			"column=\"9\">xField</primary><primary line=\"1\" column=\"20\">xy" +
+			"</primary></arr-acc><op line=\"1\" column=\"25\">&gt;</op>" +
+			"<primary line=\"1\" column=\"27\">targetXFieldValue</primary>" +
+			"</relation></condition><block line=\"1\" column=\"46\"></block></if>");
+		
+		input = "if ( chart.getItemAt( 0 )[ xField ] [ xy ] > targetXFieldValue ){}";
+		assertStatementPrint(input);
+		assertStatement("2", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\"><dot line=\"1\" " +
+			"column=\"11\"><primary line=\"1\" column=\"6\">chart</primary><relation " +
+			"line=\"1\" column=\"12\"><call line=\"1\" column=\"21\"><primary line=\"1\" " +
+			"column=\"12\">getItemAt</primary><arguments line=\"1\" column=\"21\"><number " +
+			"line=\"1\" column=\"23\">0</number></arguments><array line=\"1\" " +
+			"column=\"26\"><primary line=\"1\" column=\"28\">xField</primary></array>" +
+			"<array line=\"1\" column=\"37\"><primary line=\"1\" column=\"39\">xy" +
+			"</primary></array></call><op line=\"1\" column=\"44\">&gt;</op><primary " +
+			"line=\"1\" column=\"46\">targetXFieldValue</primary></relation></dot>" +
+			"</condition><block line=\"1\" column=\"65\"></block></if>");
 	}
 	
 	[Test]
 	public function testIfWithEmptyStatement():void
 	{
-		assertStatement( "1",
-			"if( i++ ); ",
-			"<if line=\"1\" column=\"3\"><condition line=\"1\" column=\"5\">"
-			+ "<post-inc line=\"1\" column=\"9\"><primary line=\"1\" column=\"5\">"
-			+ "i</primary></post-inc></condition><stmt-empty line=\"1\" column=\"10\">;"
-			+ "</stmt-empty></if>" );
+		var input:String = "if( i++ ); ";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\">" +
+			"<post-inc line=\"1\" column=\"6\"><primary line=\"1\" column=\"5\">" +
+			"i</primary></post-inc></condition><stmt-empty line=\"1\" " +
+			"column=\"10\">;</stmt-empty></if>");
 	}
 	
 	[Test]
 	public function testIfWithoutBlock():void
 	{
-		assertStatement( "1",
-			"if( i++ ) trace( i ); ",
-			"<if line=\"1\" column=\"3\"><condition line=\"1\" column=\"5\">"
-			+ "<post-inc line=\"1\" column=\"9\"><primary line=\"1\" column=\"5\">i"
-			+ "</primary></post-inc></condition><call line=\"1\" column=\"16\">"
-			+ "<primary line=\"1\" column=\"11\">trace</primary><arguments line=\"1\" "
-			+ "column=\"18\"><primary line=\"1\" column=\"18\">i</primary>"
-			+ "</arguments></call></if>" );
+		var input:String = "if( i++ ) trace( i ); ";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\">" +
+			"<post-inc line=\"1\" column=\"6\"><primary line=\"1\" column=\"5\">" +
+			"i</primary></post-inc></condition><call line=\"1\" column=\"16\">" +
+			"<primary line=\"1\" column=\"11\">trace</primary><arguments line=\"1\" " +
+			"column=\"16\"><primary line=\"1\" column=\"18\">i</primary>" +
+			"</arguments></call></if>");
 	}
 	
 	[Test]
 	public function testIfWithReturn():void
 	{
-		assertStatement( "",
-			"if ( true )return;",
-			"<if line=\"1\" column=\"4\"><condition line=\"1\" column=\"6\"><primary line=\"1\" "
-			+ "column=\"6\">true</primary></condition><return line=\"2\" "
-			+ "column=\"1\"></return></if>" );
+		var input:String = "if ( true )return;";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\">" +
+			"<true line=\"1\" column=\"6\">true</true></condition>" +
+			"<return line=\"1\" column=\"12\"></return></if>");
 		
-		assertStatement( "",
-			"if ( true )throw new Error();",
-			"<if line=\"1\" column=\"4\"><condition line=\"1\" column=\"6\"><primary line=\"1\" "
-			+ "column=\"6\">true</primary></condition><primary line=\"1\" column=\"12\">"
-			+ "throw</primary></if>" );
+		input = "if ( true )throw new Error();";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\">" +
+			"<true line=\"1\" column=\"6\">true</true></condition><primary " +
+			"line=\"1\" column=\"12\"><throw line=\"1\" column=\"12\"><primary " +
+			"line=\"1\" column=\"18\"><new line=\"1\" column=\"18\"><call line=\"1\" " +
+			"column=\"27\"><primary line=\"1\" column=\"22\">Error</primary>" +
+			"<arguments line=\"1\" column=\"27\"></arguments></call></new></primary>" +
+			"</throw></primary></if>");
 	}
 }
 }
