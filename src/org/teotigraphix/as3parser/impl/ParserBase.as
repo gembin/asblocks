@@ -243,7 +243,8 @@ public class ParserBase implements IParser
 		{
 			nextToken();
 			
-			if (tokIs(" ") || tokIs("\t") || tokIs("\n"))
+			if (tokIs(" ") || tokIs("\t") || tokIs("\n") || tokenStartsWith("//")
+				|| (tokenStartsWith("/*") && ! tokenStartsWith("/**")))
 			{
 				nextNonWhiteSpaceToken(node);
 			}
@@ -301,7 +302,8 @@ public class ParserBase implements IParser
 	
 	final protected function tokIsWhitespace():Boolean
 	{
-		return token.text == "\n" || token.text == "\t" || token.text == " ";
+		return token.text == "\n" || token.text == "\t" || token.text == " "
+			|| tokenStartsWith("/*") || tokenStartsWith("//");
 	}
 	
 	/**
@@ -386,14 +388,15 @@ public class ParserBase implements IParser
 	
 	protected function consumeWhitespace(node:TokenNode):Boolean
 	{
-		if (!node)
+		if (!node || !token)
 		{
 			return false;
 		}
 		
 		var advanced:Boolean = false;
 		
-		while (tokIs(" ") || tokIs("\t") || tokIs("\n"))
+		while (tokIs(" ") || tokIs("\t") || tokIs("\n") || tokenStartsWith("//")
+			|| (tokenStartsWith("/*") && ! tokenStartsWith("/**")))
 		{
 			if (tokIs(" "))
 			{
@@ -406,6 +409,11 @@ public class ParserBase implements IParser
 			else if (tokIs("\n"))
 			{
 				appendNewline(node);
+			}
+			else if (tokenStartsWith("//") 
+				|| (tokenStartsWith("/*") && ! tokenStartsWith("/**")))
+			{
+				appendComment(node);
 			}
 			
 			advanced = true;
@@ -477,6 +485,21 @@ public class ParserBase implements IParser
 		{
 			node.appendToken(tok);
 		}
+	}
+	
+	protected function appendComment(node:TokenNode):void
+	{
+		if (!node)
+			return;
+		
+		if (node)
+		{
+			node.appendToken(
+				adapter.createToken(AS3NodeKind.COMMENT, token.text,
+					token.line, token.column));
+		}
+		
+		nextToken();
 	}
 	
 	/**

@@ -3,43 +3,53 @@ package org.teotigraphix.as3parser.impl
 
 import flexunit.framework.Assert;
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.ASTPrinter;
+import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class TestPackageContent
 {
-	private var parser:AS3Parser;
+	private var parser:AS3Parser2;
 	
 	[Before]
 	public function setUp():void
 	{
-		parser = new AS3Parser();
+		parser = new AS3Parser2();
+	}
+	
+	[Test]
+	public function testClass_():void
+	{
+		
 	}
 	
 	[Test]
 	public function testClass():void
 	{
-		assertPackageContent( "1",
-			"public class A { }",
-			"<content line=\"2\" column=\"1\"><class line=\"2\" column=\"14\">"
-			+ "<name line=\"2\" column=\"14\">A</name><mod-list line=\"2\" column=\"1\">"
-			+ "<mod line=\"2\" column=\"1\">public</mod>"
-			+ "</mod-list><content line=\"2\" column=\"18\">"
-			+ "</content></class></content>" );
+		var input:String = "public class A { }";
+		assertPackagePrint(input);
+		assertPackageContent("1", input,
+			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"2\">" +
+			"public</mod><class line=\"1\" column=\"9\"><name line=\"1\" " +
+			"column=\"15\">A</name><content line=\"1\" column=\"17\">" +
+			"</content></class></content>");
 	}
 	
 	[Test]
 	public function testClassWithAsDoc():void
 	{
-		assertPackageContent( "1",
-			"/** AsDoc */ public class A { }",
-			"<content line=\"2\" column=\"12\"><class line=\"2\" column=\"27\">"
-			+ "<as-doc line=\"2\" column=\"1\">/** AsDoc */</as-doc><name line=\"2\" "
-			+ "column=\"27\">A</name><mod-list line=\"2\" column=\"14\"><mod line=\"2\" "
-			+ "column=\"14\">public</mod></mod-list><content line=\"2\" column=\"31\">"
-			+ "</content></class></content>" );
+		var input:String = "/** AsDoc */ public class A { }";
+		assertPackagePrint(input);
+		assertPackageContent( "1", input,
+			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"15\">" +
+			"public</mod><class line=\"1\" column=\"22\"><as-doc line=\"1\" " +
+			"column=\"2\">/** AsDoc */</as-doc><name line=\"1\" column=\"28\">" +
+			"A</name><content line=\"1\" column=\"30\"></content></class>" +
+			"</content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithAsDocComplex():void
 	{
 		assertPackageContent( "1",
@@ -73,38 +83,36 @@ public class TestPackageContent
 	[Test]
 	public function testClassWithMetadata():void
 	{
-		assertPackageContent( "1",
-			"[Bindable(name=\"abc\", value=\"123\")] public class A { }",
-			"<content line=\"2\" column=\"1\"><class line=\"2\" " +
-			"column=\"50\"><name line=\"2\" column=\"50\">A</name>" +
-			"<meta-list line=\"2\" column=\"1\"><meta line=\"2\" column=\"1\">" +
-			"<name line=\"2\" column=\"2\">Bindable</name><parameter-list " +
-			"line=\"2\" column=\"10\"><parameter line=\"2\" column=\"11\">" +
-			"<name line=\"2\" column=\"11\">name</name><value line=\"2\" " +
-			"column=\"16\">\"abc\"</value></parameter><parameter line=\"2\" " +
-			"column=\"23\"><name line=\"2\" column=\"23\">value</name><value " +
-			"line=\"2\" column=\"29\">\"123\"</value></parameter></parameter-list>" +
-			"</meta></meta-list><mod-list line=\"2\" column=\"37\"><mod line=\"2\" " +
-			"column=\"37\">public</mod></mod-list><content line=\"2\" column=\"54\">" +
-			"</content></class></content>" );
+		var input:String = "[Bindable(name=\"abc\", value=\"123\")] public class A { }";
+		assertPackagePrint(input);
+		assertPackageContent( "1", input,
+			"<content line=\"1\" column=\"1\"><meta line=\"1\" column=\"2\">" +
+			"<name line=\"1\" column=\"3\">Bindable</name><parameter-list " +
+			"line=\"1\" column=\"11\"><parameter line=\"1\" column=\"12\">" +
+			"<name line=\"1\" column=\"12\">name</name><string line=\"1\" " +
+			"column=\"17\">\"abc\"</string></parameter><parameter line=\"1\" " +
+			"column=\"24\"><name line=\"1\" column=\"24\">value</name><string " +
+			"line=\"1\" column=\"30\">\"123\"</string></parameter></parameter-list>" +
+			"</meta><mod line=\"1\" column=\"38\">public</mod><class line=\"1\" " +
+			"column=\"45\"><name line=\"1\" column=\"51\">A</name><content line=\"1\" " +
+			"column=\"53\"></content></class></content>" );
 	}
 	
 	[Test]
 	public function testClassWithMetadataComment():void
 	{
-		assertPackageContent( "1",
-			"/** Comment */ [Bindable] public class A { }",
-			"<content line=\"2\" column=\"14\"><class line=\"2\" " +
-			"column=\"40\"><name line=\"2\" column=\"40\">A</name>" +
-			"<meta-list line=\"2\" column=\"16\"><meta line=\"2\" " +
-			"column=\"16\"><as-doc line=\"2\" column=\"1\">/** Comment */" +
-			"</as-doc><name line=\"2\" column=\"17\">Bindable</name>" +
-			"</meta></meta-list><mod-list line=\"2\" column=\"27\">" +
-			"<mod line=\"2\" column=\"27\">public</mod></mod-list>" +
-			"<content line=\"2\" column=\"44\"></content></class></content>" );
+		var input:String = "/** Comment */ [Bindable] public class A { }";
+		assertPackagePrint(input);
+		assertPackageContent( "1", input,
+			"<content line=\"1\" column=\"1\"><meta line=\"1\" column=\"17\">" +
+			"<as-doc line=\"1\" column=\"2\">/** Comment */</as-doc><name " +
+			"line=\"1\" column=\"18\">Bindable</name></meta><mod line=\"1\" " +
+			"column=\"28\">public</mod><class line=\"1\" column=\"35\"><name " +
+			"line=\"1\" column=\"41\">A</name><content line=\"1\" column=\"43\">" +
+			"</content></class></content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithSimpleMetadata():void
 	{
 		assertPackageContent( "1",
@@ -117,7 +125,7 @@ public class TestPackageContent
 			"<content line=\"2\" column=\"29\"></content></class></content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testImports():void
 	{
 		assertPackageContent( "1",
@@ -131,7 +139,7 @@ public class TestPackageContent
 			+ "</import><import line=\"2\" column=\"21\">x.y.z</import></content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testInterface():void
 	{
 		assertPackageContent( "1",
@@ -143,7 +151,7 @@ public class TestPackageContent
 			+ "</content></interface></content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testMethodPackages():void
 	{
 		assertPackageContent( "1",
@@ -155,7 +163,7 @@ public class TestPackageContent
 			+ "<block line=\"2\" column=\"30\"></block></function></content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testUse():void
 	{
 		assertPackageContent( "1",
@@ -164,7 +172,7 @@ public class TestPackageContent
 			+ ">myNamespace</use></content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testUseNameSpace():void
 	{
 		assertPackageContent( "1",
@@ -173,26 +181,40 @@ public class TestPackageContent
 			"mx_internal</use></content>" );
 	}
 	
-	private function assertPackageContent(message:String, 
-										  input:String, 
-										  expected:String):void
+	
+	
+	
+	
+	protected function assertPackagePrint(input:String):void
 	{
-		var lines:Array =
-			[
-				"{",
-				input,
-				"}",
-				"__END__"
-			];
-		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
-		
+		var printer:ASTPrinter = createPrinter();
+		printer.print(parsePackageContent(input));
+		var result:String = printer.flush();
+		// remove first and last newline for print purposes
+		result = result.substring(1);
+		result = result.substring(0, result.length - 1);
+		Assert.assertEquals(input, result);
+	}
+	
+	protected function assertPackageContent(message:String, 
+											input:String, 
+											expected:String):void
+	{
+		var result:String = ASTUtil.convert(parsePackageContent(input));
+		Assert.assertEquals(message, expected, result);
+	}
+	
+	protected function parsePackageContent(input:String):IParserNode
+	{
+		parser.scanner.setLines(Vector.<String>(["{" + input + "}"]));
 		parser.nextToken(); // first call
-		parser.nextToken(); // skip {
-		
-		var result:String = ASTUtil.convert(parser.parsePackageContent());
-		
-		Assert.assertEquals(expected, result);
+		//parser.nextToken(); // skip {
+		return parser.parsePackageContent();
+	}
+	
+	protected function createPrinter():ASTPrinter
+	{
+		return new ASTPrinter(new SourceCode());
 	}
 }
 }

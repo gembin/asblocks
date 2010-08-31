@@ -103,6 +103,8 @@ public class AS3NodeKind
 	
 	public static const CLASS:String = "class";
 	
+	public static const COMMENT:String = "comment";
+	
 	public static const COMPILATION_UNIT:String = "compilation-unit";
 	
 	public static const COND:String = "cond";

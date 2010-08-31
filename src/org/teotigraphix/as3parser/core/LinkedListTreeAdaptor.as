@@ -92,7 +92,8 @@ public class LinkedListTreeAdaptor
 				new ParentheticListUpdateDelegate(AS3NodeKind.LBRACKET, AS3NodeKind.RBRACKET);
 		}
 		else if (payload.kind == AS3NodeKind.OBJECT
-			|| payload.kind == AS3NodeKind.BLOCK)
+			|| payload.kind == AS3NodeKind.BLOCK
+			|| payload.kind == AS3NodeKind.CONTENT)
 		{
 			TokenNode(result).tokenListUpdater = 
 				new ParentheticListUpdateDelegate(AS3NodeKind.LCURLY, AS3NodeKind.RCURLY);
