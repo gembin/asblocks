@@ -135,11 +135,11 @@ public class AS3FragmentParser
 	 */
 	public static function parseConstants(source:String):IParserNode
 	{
-	//	var parser:AS3Parser2 = createParser(source);
-	//	parser.nextToken();
-	//	var node:IParserNode = parser.parseConstants();
-	//	return node;
-		return null;
+		//var parser:AS3Parser2 = createParser(source);
+		//parser.nextToken();
+		//var node:IParserNode = parser.parseConstants();
+		//return node;
+		return parseClassContent(source);
 	}
 	
 	/**

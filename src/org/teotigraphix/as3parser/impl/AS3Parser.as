@@ -2534,5 +2534,30 @@ public class AS3Parser extends ParserBase
 		
 		return result;
 	}
+	
+	internal function parseMetaDatas():IParserNode
+	{
+		return parseClassContent();
+	}
+	
+	internal function parseMembers(kind:String):IParserNode
+	{
+		return parseClassContent();
+	}
+	
+	internal function parseConstants():IParserNode
+	{
+		return parseMembers(AS3NodeKind.CONST);
+	}
+	
+	internal function parseVariables():IParserNode
+	{
+		return parseMembers(AS3NodeKind.VAR);
+	}
+	
+	internal function parseMethods():IParserNode
+	{
+		return parseMembers(AS3NodeKind.FUNCTION);
+	}
 }
 }

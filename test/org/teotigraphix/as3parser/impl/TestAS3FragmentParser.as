@@ -96,7 +96,7 @@ public class TestAS3FragmentParser
 			"</type></function></content>", result);
 	}
 	
-//	[Test]
+	[Test]
 	public function test_parseConstants():void
 	{
 		var ast:IParserNode;
@@ -105,23 +105,22 @@ public class TestAS3FragmentParser
 		ast = AS3FragmentParser.parseConstants("[MetaData]/** My asdoc. */" +
 			"public static const MY_CONSTANT:String = \"me\";");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><const-list><meta-list><meta>" +
-			"<name>MetaData</name></meta></meta-list><as-doc>/** My asdoc. */" +
-			"</as-doc><mod-list><mod>public</mod><mod>static</mod>" +
-			"</mod-list><name-type-init><name>MY_CONSTANT</name><type>String" +
-			"</type><init><primary>\"me\"</primary></init></name-type-init>" +
+		Assert.assertEquals("<content><const-list><meta><name>MetaData</name>" +
+			"</meta><as-doc>/** My asdoc. */</as-doc><mod>public</mod><mod>" +
+			"static</mod><name-type-init><name>MY_CONSTANT</name><type>String" +
+			"</type><init><string>\"me\"</string></init></name-type-init>" +
 			"</const-list></content>", result);
 		
 		ast = AS3FragmentParser.parseConstants(
 			"public static const MY_CONSTANT:String = \"me\";" +
 			"public static const YOU_CONSTANT:String = \"you\";");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><const-list><mod-list><mod>public</mod>" +
-			"<mod>static</mod></mod-list><name-type-init><name>MY_CONSTANT</name>" +
-			"<type>String</type><init><primary>\"me\"</primary></init>" +
-			"</name-type-init></const-list><const-list><mod-list><mod>public" +
-			"</mod><mod>static</mod></mod-list><name-type-init><name>YOU_CONSTANT" +
-			"</name><type>String</type><init><primary>\"you\"</primary></init>" +
+		Assert.assertEquals("<content><const-list><mod>public</mod><mod>" +
+			"static</mod><name-type-init><name>MY_CONSTANT</name>" +
+			"<type>String</type><init><string>\"me\"</string></init>" +
+			"</name-type-init></const-list><const-list><mod>public</mod>" +
+			"<mod>static</mod><name-type-init><name>YOU_CONSTANT</name>" +
+			"<type>String</type><init><string>\"you\"</string></init>" +
 			"</name-type-init></const-list></content>", result);
 	}
 	
