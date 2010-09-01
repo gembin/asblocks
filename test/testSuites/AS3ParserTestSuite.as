@@ -43,7 +43,7 @@ public class AS3ParserTestSuite
 	public var testAS3FragmentParser:TestAS3FragmentParser;
 	public var testAS3Scanner:TestAS3Scanner;
 	public var testClass:TestClass;
-//	public var testClassContent:TestClassContent;
+	public var testClassContent:TestClassContent;
 	public var testCompilationUnit:TestCompilationUnit;
 	public var testConstStatement:TestConstStatement;
 	public var testDoStatement:TestDoStatement;
