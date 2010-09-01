@@ -3,20 +3,12 @@ package org.teotigraphix.as3blocks.impl
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3blocks.api.IArrayAccessExpressionNode;
-import org.teotigraphix.as3blocks.api.IArrayLiteralNode;
 import org.teotigraphix.as3blocks.api.IAssignmentExpressionNode;
-import org.teotigraphix.as3blocks.api.IBooleanLiteralNode;
+import org.teotigraphix.as3blocks.api.IBinaryExpressionNode;
 import org.teotigraphix.as3blocks.api.IExpressionNode;
 import org.teotigraphix.as3blocks.api.IFunctionLiteralNode;
-import org.teotigraphix.as3blocks.api.INullLiteralNode;
-import org.teotigraphix.as3blocks.api.INumberLiteralNode;
-import org.teotigraphix.as3blocks.api.IObjectLiteralNode;
-import org.teotigraphix.as3blocks.api.IPropertyFieldNode;
 import org.teotigraphix.as3blocks.api.ISimpleNameExpressionNode;
-import org.teotigraphix.as3blocks.api.IStringLiteralNode;
-import org.teotigraphix.as3blocks.api.IUndefinedLiteralNode;
 import org.teotigraphix.as3nodes.impl.AS3Factory2;
-import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.core.ASTPrinter;
 import org.teotigraphix.as3parser.core.SourceCode;
 
@@ -31,183 +23,6 @@ public class TestExpressionNodes
 	{
 		printer = new ASTPrinter(new SourceCode());
 		factory = new AS3Factory2();
-	}
-	
-	[Test]
-	public function testNumberLiteralNode():void
-	{
-		var expression:INumberLiteralNode = factory.newNumberLiteral(42);
-		
-		Assert.assertEquals(42, expression.value);
-		Assert.assertTrue(expression.node.isKind(AS3NodeKind.NUMBER));
-		assertPrintExpression("42", expression);
-	}
-	
-	[Test]
-	public function testNullLiteralNode():void
-	{
-		var expression:INullLiteralNode = factory.newNullLiteral();
-		
-		Assert.assertTrue(expression.node.isKind(AS3NodeKind.NULL));
-		assertPrintExpression("null", expression);
-	}
-	
-	[Test]
-	public function testUndefinedLiteralNode():void
-	{
-		var expression:IUndefinedLiteralNode = factory.newUndefinedLiteral();
-		
-		Assert.assertTrue(expression.node.isKind(AS3NodeKind.UNDEFINED));
-		assertPrintExpression("undefined", expression);
-	}
-	
-	[Test]
-	public function testBooleanLiteralNode():void
-	{
-		var trueExpression:IBooleanLiteralNode = factory.newBooleanLiteral(true);
-		var falseExpression:IBooleanLiteralNode = factory.newBooleanLiteral(false);
-		
-		Assert.assertTrue(trueExpression.node.isKind(AS3NodeKind.TRUE));
-		assertPrintExpression("true", trueExpression);
-		
-		Assert.assertTrue(falseExpression.node.isKind(AS3NodeKind.FALSE));
-		assertPrintExpression("false", falseExpression);
-		
-		// change the value
-		trueExpression.value = false;
-		Assert.assertTrue(trueExpression.node.isKind(AS3NodeKind.FALSE));
-		assertPrintExpression("false", trueExpression);
-	}
-	
-	[Test]
-	public function testStringLiteralNode():void
-	{
-		var expression:IStringLiteralNode = factory.newStringLiteral("hello world");
-		
-		Assert.assertEquals("hello world", expression.value);
-		Assert.assertTrue(expression.node.isKind(AS3NodeKind.STRING));
-		assertPrintExpression("\"hello world\"", expression);
-	}
-	
-	[Test]
-	public function testArrayLiteralNode():void
-	{
-		var expression:IArrayLiteralNode = factory.newArrayLiteral();
-		
-		expression.add(factory.newSimpleNameExpression("a"));
-		expression.add(factory.newSimpleNameExpression("b"));
-		expression.add(factory.newSimpleNameExpression("c"));
-		
-		assertPrintExpression("[a, b, c]", expression);
-		
-		expression.remove(2);
-		
-		var expression2:IArrayLiteralNode = factory.newArrayLiteral();
-		
-		expression2.add(factory.newNullLiteral());
-		expression2.add(factory.newSimpleNameExpression("foo"));
-		expression2.add(factory.newStringLiteral("Hello World"));
-		expression2.add(factory.newBooleanLiteral(true));
-		
-		expression.add(factory.newArrayAccessExpression(
-			factory.newSimpleNameExpression("abc"),
-			factory.newNumberLiteral(0)));
-		
-		expression.add(expression2);
-		
-		assertPrintExpression("[a, b, abc[0], [null, foo, \"Hello World\", true]]", expression);
-	}
-	
-	[Test]
-	public function testObjectLiteralNode():void
-	{
-		var expression:IObjectLiteralNode = factory.newObjectLiteral();
-		
-		expression.newField("a", factory.newNumberLiteral(0));
-		expression.newField("b", factory.newNumberLiteral(1));
-		expression.newField("c", factory.newNumberLiteral(2));
-		
-		var fields:Vector.<IPropertyFieldNode> = expression.fields;
-		Assert.assertNotNull(fields);
-		Assert.assertEquals(3, fields.length);
-		
-		Assert.assertEquals(0, INumberLiteralNode(fields[0].value).value);
-		Assert.assertEquals(1, INumberLiteralNode(fields[1].value).value);
-		Assert.assertEquals(2, INumberLiteralNode(fields[2].value).value);
-		
-		assertPrintExpression("{\n\ta: 0,\n\tb: 1,\n\tc: 2\n}", expression);
-		
-		// add a sub object
-		
-		var expression2:IObjectLiteralNode = factory.newObjectLiteral();
-		
-		expression2.newField("d", factory.newNumberLiteral(3));
-		expression2.newField("e", factory.newNumberLiteral(4));
-		expression2.newField("f", factory.newNumberLiteral(5));
-		
-		expression.newField("sub", expression2);
-		
-		fields = expression.fields;
-		Assert.assertNotNull(fields);
-		Assert.assertEquals(4, fields.length);
-		Assert.assertTrue(fields[3].value is IObjectLiteralNode);
-		
-		assertPrintExpression("{\n\ta: 0,\n\tb: 1,\n\tc: 2,\n\tsub: {\n\t\td: " +
-			"3,\n\t\te: 4,\n\t\tf: 5\n\t}\n}", expression);
-	}
-	
-	[Test]
-	public function testFunctionLiteralNode():void
-	{
-		var expression:IFunctionLiteralNode = factory.newFunctionLiteral();
-		
-		expression.type = "my.domain.Type";
-		expression.addParameter("arg0", "String");
-		expression.addParameter("arg1", "int", "0");
-		
-		expression.newExpressionStatement("trace('Hello World')");
-		
-		assertPrintExpression("function(arg0:String, arg1:int = 0):my.domain.Type " +
-			"{\n\ttrace('Hello World');\n}", expression);
-		
-		var left:IExpressionNode = factory.newExpression("myObject");
-		var right:IExpressionNode = factory.newExpression("{a:1,b:2c:3}");
-		
-		var arrexpression:IAssignmentExpressionNode = 
-			factory.newAssignmentExpression(left, right);
-		
-		expression.addStatement("myObject = {a:1,b:2,c:3}");
-		
-		assertPrintExpression("function(arg0:String, arg1:int = 0):my.domain.Type " +
-			"{\n\ttrace('Hello World');\n\tmyObject = {a:1,b:2,c:3};\n}", expression);
-	}
-	
-	[Test]
-	public function testAssignmentExpressionNode():void
-	{
-		var left:IExpressionNode = factory.newExpression("myAnswer");
-		var right:IExpressionNode = factory.newExpression("4");
-		
-		var expression:IAssignmentExpressionNode = 
-			factory.newAssignmentExpression(left, right);
-		
-		assertPrintExpression("myAnswer = 4", expression);
-		
-		// change right expression
-		expression.rightExpression = factory.newExpression("otherAnswer = 4");
-		
-		assertPrintExpression("myAnswer = otherAnswer = 4", expression);
-		
-		// change left expression to an array access
-		var target:IExpressionNode = factory.newExpression("myObject[42]");
-		var subscript:IExpressionNode = factory.newExpression("2");
-		
-		var arrayAccessExpression:IArrayAccessExpressionNode = 
-			factory.newArrayAccessExpression(target, subscript);
-		
-		expression.leftExpression = arrayAccessExpression;
-		
-		assertPrintExpression("myObject[42][2] = otherAnswer = 4", expression);
 	}
 	
 	[Test]
@@ -243,6 +58,242 @@ public class TestExpressionNodes
 	}
 	
 	[Test]
+	public function testAssignmentExpressionNode():void
+	{
+		var left:IExpressionNode = factory.newExpression("myAnswer");
+		var right:IExpressionNode = factory.newExpression("4");
+		
+		var expression:IAssignmentExpressionNode = 
+			factory.newAssignmentExpression(left, right);
+		
+		assertPrintExpression("myAnswer = 4", expression);
+		
+		// change right expression
+		expression.rightExpression = factory.newExpression("otherAnswer = 4");
+		
+		assertPrintExpression("myAnswer = otherAnswer = 4", expression);
+		
+		// change left expression to an array access
+		var target:IExpressionNode = factory.newExpression("myObject[42]");
+		var subscript:IExpressionNode = factory.newExpression("2");
+		
+		var arrayAccessExpression:IArrayAccessExpressionNode = 
+			factory.newArrayAccessExpression(target, subscript);
+		
+		expression.leftExpression = arrayAccessExpression;
+		
+		assertPrintExpression("myObject[42][2] = otherAnswer = 4", expression);
+	}
+	
+	[Test]
+	public function testBinaryExpressionNode():void
+	{
+		var left:IExpressionNode;
+		var right:IExpressionNode;
+		
+		var expression:IBinaryExpressionNode;
+		
+		// ADD
+		expression = factory.newAddExpression(
+			factory.newNumberLiteral(4),
+			factory.newNumberLiteral(2));
+		
+		assertPrintExpression("4 + 2", expression);
+		
+		// AND
+		expression = factory.newAndExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a && b", expression);
+		
+		// BITAND
+		expression = factory.newBitAndExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a & b", expression);
+		
+		// BITOR
+		expression = factory.newBitOrExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a | b", expression);
+		
+		// BITXOR
+		expression = factory.newBitXorExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a ^ b", expression);
+		
+		// DIV
+		expression = factory.newDivisionExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a / b", expression);
+		
+		// EQ
+		expression = factory.newEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a = b", expression);
+		
+		// GE
+		expression = factory.newGreaterEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a >= b", expression);
+		
+		// GT
+		expression = factory.newGreaterThanExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a > b", expression);
+		
+		// LE
+		expression = factory.newLessEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a <= b", expression);
+		
+		// LT
+		expression = factory.newLessThanExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a < b", expression);
+		
+		// MOD
+		expression = factory.newModuloExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a % b", expression);
+		
+		// MUL
+		expression = factory.newMultiplyExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a * b", expression);
+		
+		// NE
+		expression = factory.newNotEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a != b", expression);
+		
+		// OR
+		expression = factory.newOrExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a || b", expression);
+		
+		// SL
+		expression = factory.newShiftLeftExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a << b", expression);
+		
+		// SR
+		expression = factory.newShiftRightExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a >> b", expression);
+		
+		// SRU
+		expression = factory.newShiftRightUnsignedExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a >>> b", expression);
+		
+		// SUB
+		expression = factory.newSubtractExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a - b", expression);
+	}
+	
+	[Test]
+	public function testConditionalExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testDescendentExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testExpressionAttrbuteNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testFieldAccessExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testFilterExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testFunctionExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testInvocationExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testNewExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testPostfixExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testPrefixExpressionNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testPropertyAttributeNode():void
+	{
+		
+	}
+	
+	[Test]
 	public function testSimpleNameExpressionNode():void
 	{
 		var expression:ISimpleNameExpressionNode = 
@@ -257,6 +308,18 @@ public class TestExpressionNodes
 		
 		Assert.assertEquals("myOtherObject", expression.name);
 		assertPrintExpression("myOtherObject", expression);
+	}
+	
+	[Test]
+	public function testStarAttributeNode():void
+	{
+		
+	}
+	
+	[Test]
+	public function testAttributeExpressionNode():void
+	{
+		
 	}
 	
 	

@@ -4,6 +4,7 @@ package org.teotigraphix.as3nodes.impl
 import org.teotigraphix.as3blocks.api.IArrayAccessExpressionNode;
 import org.teotigraphix.as3blocks.api.IArrayLiteralNode;
 import org.teotigraphix.as3blocks.api.IAssignmentExpressionNode;
+import org.teotigraphix.as3blocks.api.IBinaryExpressionNode;
 import org.teotigraphix.as3blocks.api.IBooleanLiteralNode;
 import org.teotigraphix.as3blocks.api.IExpressionNode;
 import org.teotigraphix.as3blocks.api.IFunctionLiteralNode;
@@ -101,7 +102,124 @@ public class AS3Factory2
 	{
 		return ASTBuilder.newAssignmentExpression(TokenBuilder.newAssign(), left, right);
 	}
-
+	
+	//----------------------------------
+	// IBinaryExpressionNode
+	//----------------------------------
+	
+	public function newAddExpression(left:IExpressionNode, 
+									 right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newPlus(), left, right);
+	}
+	
+	public function newAndExpression(left:IExpressionNode, 
+									 right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newAnd(), left, right);
+	}
+	
+	public function newBitAndExpression(left:IExpressionNode, 
+										right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newBitAnd(), left, right);
+	}
+	
+	public function newBitOrExpression(left:IExpressionNode, 
+									   right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newBitOr(), left, right);
+	}
+	
+	public function newBitXorExpression(left:IExpressionNode, 
+										right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newBitXor(), left, right);
+	}
+	
+	public function newDivisionExpression(left:IExpressionNode, 
+										  right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newDiv(), left, right);
+	}
+	
+	public function newEqualsExpression(left:IExpressionNode, 
+										right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newEquals(), left, right);
+	}
+	
+	public function newGreaterEqualsExpression(left:IExpressionNode, 
+											   right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newGreaterEquals(), left, right);
+	}
+	
+	public function newGreaterThanExpression(left:IExpressionNode, 
+											 right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newGreater(), left, right);
+	}
+	
+	public function newLessEqualsExpression(left:IExpressionNode, 
+											right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newLessEquals(), left, right);
+	}
+	
+	public function newLessThanExpression(left:IExpressionNode, 
+										  right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newLess(), left, right);
+	}
+	
+	public function newModuloExpression(left:IExpressionNode, 
+										right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newModulo(), left, right);
+	}
+	
+	public function newMultiplyExpression(left:IExpressionNode, 
+										  right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newMult(), left, right);
+	}
+	
+	public function newNotEqualsExpression(left:IExpressionNode, 
+										   right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newNotEquals(), left, right);
+	}
+	
+	public function newOrExpression(left:IExpressionNode, 
+									right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newOr(), left, right);
+	}
+	
+	public function newShiftLeftExpression(left:IExpressionNode, 
+										   right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newShiftLeft(), left, right);
+	}
+	
+	public function newShiftRightExpression(left:IExpressionNode, 
+											right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newShiftRight(), left, right);
+	}
+	
+	public function newShiftRightUnsignedExpression(left:IExpressionNode, 
+													right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newShiftRightUnsigned(), left, right);
+	}
+	
+	public function newSubtractExpression(left:IExpressionNode, 
+										  right:IExpressionNode):IBinaryExpressionNode
+	{
+		return ASTBuilder.newBinaryExpression(TokenBuilder.newMinus(), left, right);
+	}
 	
 	
 	
@@ -117,14 +235,6 @@ public class AS3Factory2
 	
 	
 	
-
-	
-
-	
-
-	
-	
-
 	
 	
 	
@@ -136,18 +246,6 @@ public class AS3Factory2
 	
 	
 	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	
-
 	
 	
 	

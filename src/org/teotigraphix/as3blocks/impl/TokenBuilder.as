@@ -28,6 +28,101 @@ public class TokenBuilder
 		return newToken("space", " ");
 	}
 	
+	public static function newPlus():LinkedListToken
+	{
+		return newToken("add", "+");
+	}
+	
+	public static function newAnd():LinkedListToken
+	{
+		return newToken("and", "&&");
+	}
+	
+	public static function newBitAnd():LinkedListToken
+	{
+		return newToken("bitand", "&");
+	}
+	
+	public static function newBitOr():LinkedListToken
+	{
+		return newToken("bitor", "|");
+	}
+	
+	public static function newBitXor():LinkedListToken
+	{
+		return newToken("bitxor", "^");
+	}
+	
+	public static function newDiv():LinkedListToken
+	{
+		return newToken("div", "/");
+	}
+	
+	public static function newEquals():LinkedListToken
+	{
+		return newToken("eq", "=");
+	}
+	
+	public static function newGreaterEquals():LinkedListToken
+	{
+		return newToken("ge", ">=");
+	}
+	
+	public static function newGreater():LinkedListToken
+	{
+		return newToken("gt", ">");
+	}
+	
+	public static function newLessEquals():LinkedListToken
+	{
+		return newToken("le", "<=");
+	}
+	
+	public static function newLess():LinkedListToken
+	{
+		return newToken("lt", "<");
+	}
+	
+	public static function newModulo():LinkedListToken
+	{
+		return newToken("mod", "%");
+	}
+	
+	public static function newMult():LinkedListToken
+	{
+		return newToken("mul", "*");
+	}
+	
+	public static function newNotEquals():LinkedListToken
+	{
+		return newToken("ne", "!=");
+	}
+	
+	public static function newOr():LinkedListToken
+	{
+		return newToken("or", "||");
+	}
+	
+	public static function newShiftLeft():LinkedListToken
+	{
+		return newToken("sl", "<<");
+	}
+	
+	public static function newShiftRight():LinkedListToken
+	{
+		return newToken("sr", ">>");
+	}
+	
+	public static function newShiftRightUnsigned():LinkedListToken
+	{
+		return newToken("sru", ">>>");
+	}
+	
+	public static function newMinus():LinkedListToken
+	{
+		return newToken("sub", "-");
+	}
+	
 	public static function newFunction():LinkedListToken
 	{
 		return newToken(AS3NodeKind.FUNCTION, KeyWords.FUNCTION);

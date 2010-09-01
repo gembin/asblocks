@@ -2,6 +2,7 @@ package org.teotigraphix.as3blocks.impl
 {
 
 import org.teotigraphix.as3blocks.api.IAssignmentExpressionNode;
+import org.teotigraphix.as3blocks.api.IBinaryExpressionNode;
 import org.teotigraphix.as3blocks.api.IExpressionNode;
 import org.teotigraphix.as3blocks.utils.ASTUtil2;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
@@ -118,6 +119,41 @@ public class ASTBuilder
 		spaceEitherSide(op);
 		
 		return new AssignmentExpressionNode(ast);
+	}
+	
+	
+	public static function newBinaryExpression(op:LinkedListToken, 
+											   left:IExpressionNode,
+											   right:IExpressionNode):IBinaryExpressionNode
+	{
+		var ast:IParserNode = ASTUtil2.newAST(AS3NodeKind.OP, op.text);
+		
+		var leftExpr:IParserNode = left.node;
+		var rightExpr:IParserNode = right.node;
+		
+		if (precidence(ast) < precidence(leftExpr))
+		{
+			leftExpr = parenthise(leftExpr);
+		}
+		if (precidence(ast) < precidence(rightExpr))
+		{
+			rightExpr = parenthise(rightExpr);
+		}
+		
+		TokenNode(ast).noUpdate = true;
+		ast.addChild(leftExpr);
+		ast.addChild(rightExpr);
+		TokenNode(ast).noUpdate = false;
+		
+		leftExpr.stopToken.next = op;
+		rightExpr.startToken.previous = op;
+		
+		ast.startToken = leftExpr.startToken;
+		ast.stopToken = rightExpr.stopToken;
+		
+		spaceEitherSide(op);
+		
+		return new BinaryOperatorNode(ast);
 	}
 	
 	
