@@ -10,7 +10,7 @@ import org.teotigraphix.as3blocks.impl.TokenBuilder;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser2;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.impl.AS3Tokenizer;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -183,7 +183,7 @@ public class TestLinkedListToken
 	
 	public function newExpression(expression:String):IExpressionNode
 	{
-		var ast:IParserNode = AS3FragmentParser2.parseExpression(expression);
+		var ast:IParserNode = AS3FragmentParser.parseExpression(expression);
 		ast.parent = null;
 		return ExpressionBuilder.build(ast);
 	}

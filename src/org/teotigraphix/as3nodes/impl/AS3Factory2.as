@@ -31,7 +31,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.KeyWords;
 import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser2;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 public class AS3Factory2
 {
@@ -175,14 +175,14 @@ public class AS3Factory2
 	 */
 	public function newSimpleNameExpression(name:String):ISimpleNameExpressionNode
 	{
-		var ast:IParserNode = AS3FragmentParser2.parsePrimaryExpression(name);
+		var ast:IParserNode = AS3FragmentParser.parsePrimaryExpression(name);
 		var result:ISimpleNameExpressionNode = new SimpleNameExpressionNode(ast);
 		return result;
 	}
 	
 	public function newExpression(expression:String):IExpressionNode
 	{
-		var ast:IParserNode = AS3FragmentParser2.parseExpression(expression);
+		var ast:IParserNode = AS3FragmentParser.parseExpression(expression);
 		ast.parent = null;
 		return ExpressionBuilder.build(ast);
 	}

@@ -8,7 +8,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser2;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 public class ASTBuilder
 {
@@ -18,7 +18,7 @@ public class ASTBuilder
 										  node:IParserNode):IParserNode
 	{
 		var field:IParserNode = ASTUtil2.newAST(AS3NodeKind.PROP);
-		field.addChild(AS3FragmentParser2.parsePrimaryExpression(name));
+		field.addChild(AS3FragmentParser.parsePrimaryExpression(name));
 		field.appendToken(TokenBuilder.newColumn());
 		field.appendToken(TokenBuilder.newSpace());
 		field.addChild(node);
@@ -74,7 +74,7 @@ public class ASTBuilder
 		ast.addChild(paren);
 		// added, best practices say put :void as default
 		ast.appendToken(TokenBuilder.newColumn());
-		var voidType:IParserNode = AS3FragmentParser2.parseType("void");
+		var voidType:IParserNode = AS3FragmentParser.parseType("void");
 		var nti:IParserNode = ASTUtil2.newAST(AS3NodeKind.NAME_TYPE_INIT);
 		nti.addChild(voidType);
 		ast.addChild(nti);

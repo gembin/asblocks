@@ -53,7 +53,7 @@ import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.as3parser.impl.AS3FragmentParserOLD;
 
 /**
  * TODO DOCME
@@ -335,7 +335,7 @@ public class AS3Factory implements IAS3Factory
 	 */
 	public function newExpression(expression:String):IExpressionNode
 	{
-		var ast:IParserNode = AS3FragmentParser.parseExpression(expression);
+		var ast:IParserNode = AS3FragmentParserOLD.parseExpression(expression);
 //		ast.parent = null;
 		return ExpressionBuilder.build(ast);
 	}

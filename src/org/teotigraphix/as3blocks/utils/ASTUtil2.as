@@ -5,7 +5,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser2;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 public class ASTUtil2
 {
@@ -145,7 +145,7 @@ public class ASTUtil2
 	public static function newInitAST(defaultValue:String):IParserNode
 	{
 		var ast:IParserNode = newAST(AS3NodeKind.INIT);
-		var init:IParserNode = AS3FragmentParser2.parsePrimaryExpression(defaultValue);
+		var init:IParserNode = AS3FragmentParser.parsePrimaryExpression(defaultValue);
 		ast.addChild(init);
 		return ast;
 	}

@@ -25,7 +25,7 @@ import org.teotigraphix.as3blocks.api.IStatementContainer;
 import org.teotigraphix.as3blocks.api.IStatementNode;
 import org.teotigraphix.as3blocks.utils.ASTUtil2;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser2;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 /**
  * The <code>IStatementContainer</code> implementation.
@@ -60,7 +60,7 @@ public class StatementList extends ContainerDelegate
 	 */
 	override public function addStatement(statement:String):IStatementNode
 	{
-		var stmt:IParserNode = AS3FragmentParser2.parseExpressionStatement(statement);
+		var stmt:IParserNode = AS3FragmentParser.parseExpressionStatement(statement);
 		stmt.stopToken.next = null;
 		_addStatement(stmt);
 		return StatementBuilder.build(stmt);
@@ -71,7 +71,7 @@ public class StatementList extends ContainerDelegate
 	 */
 	override public function newExpressionStatement(statement:String):IExpressionStatementNode
 	{
-		var ast:IParserNode = AS3FragmentParser2.parseExpressionStatement(statement);
+		var ast:IParserNode = AS3FragmentParser.parseExpressionStatement(statement);
 		_addStatement(ast);
 		return new ExpressionStatementNode(ast);
 	}

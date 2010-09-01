@@ -18,7 +18,7 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parseCompilationUnit("package my.domain{public class " +
+		ast = AS3FragmentParserOLD.parseCompilationUnit("package my.domain{public class " +
 			"Test { } } class InternalClass { }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<compilation-unit><package><name>my.domain</name>" +
@@ -34,7 +34,7 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parsePackage("package my.domain{public class Test { } } class InternalClass { }");
+		ast = AS3FragmentParserOLD.parsePackage("package my.domain{public class Test { } } class InternalClass { }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<package><name>my.domain</name><content><class>" +
 			"<name>Test</name><mod-list><mod>public</mod></mod-list><content>" +
@@ -47,17 +47,17 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parsePackageContent("public class Test { }");
+		ast = AS3FragmentParserOLD.parsePackageContent("public class Test { }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><class><name>Test</name><mod-list>" +
 			"<mod>public</mod></mod-list><content></content></class></content>", result);
 		
-		ast = AS3FragmentParser.parsePackageContent("public interface ITest { }");
+		ast = AS3FragmentParserOLD.parsePackageContent("public interface ITest { }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><interface><name>ITest</name><mod-list>" +
 			"<mod>public</mod></mod-list><content></content></interface></content>", result);
 		
-		ast = AS3FragmentParser.parsePackageContent("public function myGlobalFunction():int { return -1; }");
+		ast = AS3FragmentParserOLD.parsePackageContent("public function myGlobalFunction():int { return -1; }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><function><mod-list><mod>public</mod>" +
 			"</mod-list><name>myGlobalFunction</name><parameter-list>" +
@@ -71,7 +71,7 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parseClassContent("private var hello:World = null; " +
+		ast = AS3FragmentParserOLD.parseClassContent("private var hello:World = null; " +
 			"flash_proxy function getProperty():Object{return null;}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><var-list><mod-list><mod>private</mod>" +
@@ -90,7 +90,7 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parseInterfaceContent("function get hello():World; " +
+		ast = AS3FragmentParserOLD.parseInterfaceContent("function get hello():World; " +
 			"function recycleWorld():void;");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><get><name>hello</name><parameter-list>" +
@@ -106,7 +106,7 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parseConstants("[MetaData]/** My asdoc. */" +
+		ast = AS3FragmentParserOLD.parseConstants("[MetaData]/** My asdoc. */" +
 			"public static const MY_CONSTANT:String = \"me\";");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><const-list><meta-list><meta>" +
@@ -116,7 +116,7 @@ public class TestAS3FragmentParser
 			"</type><init><primary>\"me\"</primary></init></name-type-init>" +
 			"</const-list></content>", result);
 		
-		ast = AS3FragmentParser.parseConstants(
+		ast = AS3FragmentParserOLD.parseConstants(
 			"public static const MY_CONSTANT:String = \"me\";" +
 			"public static const YOU_CONSTANT:String = \"you\";");
 		result = ASTUtil.convert(ast, false);
@@ -135,7 +135,7 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parseVariables("[MetaData]/** My asdoc. */" +
+		ast = AS3FragmentParserOLD.parseVariables("[MetaData]/** My asdoc. */" +
 			"public var myVariable:Object = {};");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><var-list><meta-list><meta><name>MetaData" +
@@ -151,7 +151,7 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parseMethods("[MetaData]/** My asdoc. */" +
+		ast = AS3FragmentParserOLD.parseMethods("[MetaData]/** My asdoc. */" +
 			"public function myMethod(arg0:int = -1):Object {return null;}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><function><as-doc>/** My asdoc. */" +
@@ -170,7 +170,7 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parseMethods("[MetaData]/** My asdoc. */" +
+		ast = AS3FragmentParserOLD.parseMethods("[MetaData]/** My asdoc. */" +
 			"public function get myProperty():int {return -1;}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><get><as-doc>/** My asdoc. */</as-doc>" +
@@ -191,16 +191,16 @@ public class TestAS3FragmentParser
 		// for()
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("for(;;){}");
+		ast = AS3FragmentParserOLD.parseStatement("for(;;){}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<for><block></block></for>", result);
 		
-		ast = AS3FragmentParser.parseStatement("for(a in obj){}");
+		ast = AS3FragmentParserOLD.parseStatement("for(a in obj){}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<forin><init><primary>a</primary></init><in>" +
 			"<primary>obj</primary></in></forin>", result);
 		
-		ast = AS3FragmentParser.parseStatement("for(i=0;i<len;i--){}");
+		ast = AS3FragmentParserOLD.parseStatement("for(i=0;i<len;i--){}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<for><init><assign><primary>i</primary><op>=</op>" +
 			"<primary>0</primary></assign></init><cond><relation><primary>i" +
@@ -208,7 +208,7 @@ public class TestAS3FragmentParser
 			"</cond><iter><post-dec><primary>i</primary></post-dec></iter>" +
 			"<block></block></for>", result);
 		
-		ast = AS3FragmentParser.parseStatement("for each(a in obj){}");
+		ast = AS3FragmentParserOLD.parseStatement("for each(a in obj){}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<foreach><name>a</name><in><primary>obj</primary>" +
 			"</in><block></block></foreach>", result);
@@ -217,19 +217,19 @@ public class TestAS3FragmentParser
 		// if()
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("if(a){}");
+		ast = AS3FragmentParserOLD.parseStatement("if(a){}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<if><condition><primary>a</primary></condition>" +
 			"<block></block></if>", result);
 		
-		ast = AS3FragmentParser.parseStatement("if(a) trace('') else trace('')");
+		ast = AS3FragmentParserOLD.parseStatement("if(a) trace('') else trace('')");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<if><condition><primary>a</primary></condition>" +
 			"<call><primary>trace</primary><arguments><primary>''</primary>" +
 			"</arguments></call><call><primary>trace</primary><arguments>" +
 			"<primary>''</primary></arguments></call></if>", result);
 		
-		ast = AS3FragmentParser.parseStatement("if(a) trace('') else if(b) else trace('')");
+		ast = AS3FragmentParserOLD.parseStatement("if(a) trace('') else if(b) else trace('')");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<if><condition><primary>a</primary></condition>" +
 			"<call><primary>trace</primary><arguments><primary>''</primary>" +
@@ -240,7 +240,7 @@ public class TestAS3FragmentParser
 		// switch()
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("switch( x ){ case 1 : { trace('one'); " +
+		ast = AS3FragmentParserOLD.parseStatement("switch( x ){ case 1 : { trace('one'); " +
 			"break; } default : trace('unknown'); }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<switch><condition><primary>x</primary>" +
@@ -252,7 +252,7 @@ public class TestAS3FragmentParser
 			"<primary>'unknown'</primary></arguments></call></switch-block>" +
 			"</case></cases></switch>", result);
 		
-		ast = AS3FragmentParser.parseStatement("switch( x ){ case 1 : break; default:}");
+		ast = AS3FragmentParserOLD.parseStatement("switch( x ){ case 1 : break; default:}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<switch><condition><primary>x</primary></condition>" +
 			"<cases><case><primary>1</primary><switch-block><primary>break" +
@@ -263,18 +263,18 @@ public class TestAS3FragmentParser
 		// do
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("do ; while( i++ );");
+		ast = AS3FragmentParserOLD.parseStatement("do ; while( i++ );");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<do><stmt-empty>;</stmt-empty><condition>" +
 			"<post-inc><primary>i</primary></post-inc></condition></do>", result);
 		
-		ast = AS3FragmentParser.parseStatement("do trace( i ); while( i++ );");
+		ast = AS3FragmentParserOLD.parseStatement("do trace( i ); while( i++ );");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<do><call><primary>trace</primary><arguments>" +
 			"<primary>i</primary></arguments></call><condition><post-inc>" +
 			"<primary>i</primary></post-inc></condition></do>", result);
 		
-		ast = AS3FragmentParser.parseStatement("do{ trace( i ); } while( i++ );");
+		ast = AS3FragmentParserOLD.parseStatement("do{ trace( i ); } while( i++ );");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<do><block><call><primary>trace</primary>" +
 			"<arguments><primary>i</primary></arguments></call></block>" +
@@ -285,18 +285,18 @@ public class TestAS3FragmentParser
 		// while()
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("while( i++ );");
+		ast = AS3FragmentParserOLD.parseStatement("while( i++ );");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<while><condition><post-inc><primary>i</primary>" +
 			"</post-inc></condition><stmt-empty>;</stmt-empty></while>", result);
 		
-		ast = AS3FragmentParser.parseStatement("while( i++ ) trace( i );");
+		ast = AS3FragmentParserOLD.parseStatement("while( i++ ) trace( i );");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<while><condition><post-inc><primary>i</primary>" +
 			"</post-inc></condition><call><primary>trace</primary>" +
 			"<arguments><primary>i</primary></arguments></call></while>", result);
 		
-		ast = AS3FragmentParser.parseStatement("while( i++ ){ trace( i ); }");
+		ast = AS3FragmentParserOLD.parseStatement("while( i++ ){ trace( i ); }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<while><condition><post-inc><primary>i</primary>" +
 			"</post-inc></condition><block><call><primary>trace</primary>" +
@@ -307,7 +307,7 @@ public class TestAS3FragmentParser
 		// try
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("try{ trace( true ); }");
+		ast = AS3FragmentParserOLD.parseStatement("try{ trace( true ); }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<try><block><call><primary>trace</primary>" +
 			"<arguments><primary>true</primary></arguments></call>" +
@@ -317,7 +317,7 @@ public class TestAS3FragmentParser
 		// catch
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("catch( e : Error ) {trace( true ); }");
+		ast = AS3FragmentParserOLD.parseStatement("catch( e : Error ) {trace( true ); }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<catch><name>e</name><type>Error</type><block>" +
 			"<call><primary>trace</primary><arguments><primary>true</primary>" +
@@ -327,7 +327,7 @@ public class TestAS3FragmentParser
 		// finally
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("finally {trace( true ); }");
+		ast = AS3FragmentParserOLD.parseStatement("finally {trace( true ); }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<finally><block><call><primary>trace</primary>" +
 			"<arguments><primary>true</primary></arguments></call>" +
@@ -337,7 +337,7 @@ public class TestAS3FragmentParser
 		// block
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("{ method(); {} }");
+		ast = AS3FragmentParserOLD.parseStatement("{ method(); {} }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<block><call><primary>method</primary><arguments>" +
 			"</arguments></call><block></block></block>", result);
@@ -346,33 +346,33 @@ public class TestAS3FragmentParser
 		// var
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("var i;");
+		ast = AS3FragmentParserOLD.parseStatement("var i;");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<var-list><name-type-init><name>i</name><type>" +
 			"</type></name-type-init></var-list>", result);
 		
-		ast = AS3FragmentParser.parseStatement("var i:World = new World();");
+		ast = AS3FragmentParserOLD.parseStatement("var i:World = new World();");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<var-list><name-type-init><name>i</name>" +
 			"<type>World</type><init><new><call><primary>World</primary>" +
 			"<arguments></arguments></call></new></init></name-type-init>" +
 			"</var-list>", result);
 		
-		ast = AS3FragmentParser.parseStatement("var a:World, b:World, c:World;");
+		ast = AS3FragmentParserOLD.parseStatement("var a:World, b:World, c:World;");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<var-list><name-type-init><name>a</name>" +
 			"<type>World</type></name-type-init><name-type-init><name>b" +
 			"</name><type>World</type></name-type-init><name-type-init>" +
 			"<name>c</name><type>World</type></name-type-init></var-list>", result);
 		
-		ast = AS3FragmentParser.parseStatement("var a:Array = [0,1,2];");
+		ast = AS3FragmentParserOLD.parseStatement("var a:Array = [0,1,2];");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<var-list><name-type-init><name>a</name>" +
 			"<type>Array</type><init><primary><array><primary>0" +
 			"</primary><primary>1</primary><primary>2</primary>" +
 			"</array></primary></init></name-type-init></var-list>", result);
 		
-		ast = AS3FragmentParser.parseStatement("var a:Object = {a:1,b:1};");
+		ast = AS3FragmentParserOLD.parseStatement("var a:Object = {a:1,b:1};");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<var-list><name-type-init><name>a</name><type>" +
 			"Object</type><init><primary><object><prop><name>a</name>" +
@@ -380,7 +380,7 @@ public class TestAS3FragmentParser
 			"</name><value><primary>1</primary></value></prop></object>" +
 			"</primary></init></name-type-init></var-list>", result);
 		
-		ast = AS3FragmentParser.parseStatement("var a:Vector.<World> = new World.<World>(255, true);");
+		ast = AS3FragmentParserOLD.parseStatement("var a:Vector.<World> = new World.<World>(255, true);");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<var-list><name-type-init><name>a</name>" +
 			"<vector><type>World</type></vector><init><new><primary>" +
@@ -392,12 +392,12 @@ public class TestAS3FragmentParser
 		// const
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("const i;");
+		ast = AS3FragmentParserOLD.parseStatement("const i;");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<const-list><name-type-init><name>i</name><type>" +
 			"</type></name-type-init></const-list>", result);
 		
-		ast = AS3FragmentParser.parseStatement("const i:int = 42;");
+		ast = AS3FragmentParserOLD.parseStatement("const i:int = 42;");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<const-list><name-type-init><name>i</name><type>" +
 			"int</type><init><primary>42</primary></init></name-type-init>" +
@@ -407,11 +407,11 @@ public class TestAS3FragmentParser
 		// return
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement("return;");
+		ast = AS3FragmentParserOLD.parseStatement("return;");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<return></return>", result);
 		
-		ast = AS3FragmentParser.parseStatement("return [a,b,c];");
+		ast = AS3FragmentParserOLD.parseStatement("return [a,b,c];");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<return><primary><array><primary>a</primary>" +
 			"<primary>b</primary><primary>c</primary></array>" +
@@ -422,7 +422,7 @@ public class TestAS3FragmentParser
 		// empty statement ;
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseStatement(";");
+		ast = AS3FragmentParserOLD.parseStatement(";");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<stmt-empty>;</stmt-empty>", result);
 	}
@@ -437,7 +437,7 @@ public class TestAS3FragmentParser
 		// . identifier
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseExpression("myXML.attributeName");
+		ast = AS3FragmentParserOLD.parseExpression("myXML.attributeName");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<dot><primary>myXML</primary>" +
 			"<primary>attributeName</primary></dot>", result);
@@ -446,7 +446,7 @@ public class TestAS3FragmentParser
 		// @ attribute identifier
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseExpression("myXML.@attributeName");
+		ast = AS3FragmentParserOLD.parseExpression("myXML.@attributeName");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<dot><primary>myXML</primary><e4x-attr>" +
 			"<name>attributeName</name></e4x-attr></dot>", result);
@@ -455,7 +455,7 @@ public class TestAS3FragmentParser
 		// .* identifier
 		//------------------------------
 		
-		ast = AS3FragmentParser.parseExpression("myXML.@*");
+		ast = AS3FragmentParserOLD.parseExpression("myXML.@*");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<dot><primary>myXML</primary><e4x-attr>" +
 			"<star></star></e4x-attr></dot>", result);
@@ -472,11 +472,11 @@ public class TestAS3FragmentParser
 		// Boolean
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("true");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("true");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>true</primary>", result);
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("false");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("false");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>false</primary>", result);
 		
@@ -484,7 +484,7 @@ public class TestAS3FragmentParser
 		// null
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("null");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("null");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>null</primary>", result);
 		
@@ -492,7 +492,7 @@ public class TestAS3FragmentParser
 		// undefined
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("undefined");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("undefined");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>undefined</primary>", result);
 		
@@ -500,7 +500,7 @@ public class TestAS3FragmentParser
 		// Infinity
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("Infinity");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("Infinity");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>Infinity</primary>", result);
 		
@@ -508,7 +508,7 @@ public class TestAS3FragmentParser
 		// -Infinity
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("-Infinity");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("-Infinity");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>-Infinity</primary>", result);
 		
@@ -516,7 +516,7 @@ public class TestAS3FragmentParser
 		// NaN
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("NaN");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("NaN");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>NaN</primary>", result);
 		
@@ -524,15 +524,15 @@ public class TestAS3FragmentParser
 		// Numbers
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("42");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("42");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>42</primary>", result);
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("0x242424");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("0x242424");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>0x242424</primary>", result);
 		
-		ast = AS3FragmentParser.parsePrimaryExpression(".42E2");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression(".42E2");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>.42E2</primary>", result);
 		
@@ -540,11 +540,11 @@ public class TestAS3FragmentParser
 		// Strings
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("'string'");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("'string'");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>'string'</primary>", result);
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("\"string\"");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("\"string\"");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary>\"string\"</primary>", result);
 		
@@ -552,7 +552,7 @@ public class TestAS3FragmentParser
 		// Array literal
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("[a,b,c]");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("[a,b,c]");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary><array><primary>a</primary><primary>b" +
 			"</primary><primary>c</primary></array></primary>", result);
@@ -561,7 +561,7 @@ public class TestAS3FragmentParser
 		// Object literal
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("{a:1,b:1}");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("{a:1,b:1}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary><object><prop><name>a</name><value>" +
 			"<primary>1</primary></value></prop><prop><name>b</name><value>" +
@@ -571,7 +571,7 @@ public class TestAS3FragmentParser
 		// Function literal
 		//------------------------------
 		
-		ast = AS3FragmentParser.parsePrimaryExpression("function(a:Object):void{}");
+		ast = AS3FragmentParserOLD.parsePrimaryExpression("function(a:Object):void{}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<primary><lambda><parameter-list><parameter>" +
 			"<name-type-init><name>a</name><type>Object</type></name-type-init>" +
@@ -585,19 +585,19 @@ public class TestAS3FragmentParser
 		var ast:IParserNode;
 		var result:String;
 		
-		ast = AS3FragmentParser.parseCondition("a!=42");
+		ast = AS3FragmentParserOLD.parseCondition("a!=42");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<condition><equality><primary>a</primary>" +
 			"<op>!=</op><primary>42</primary></equality></condition>", result);
 		
-		ast = AS3FragmentParser.parseCondition("a<11&&b>11");
+		ast = AS3FragmentParserOLD.parseCondition("a<11&&b>11");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<condition><and><relation><primary>a</primary>" +
 			"<op>&lt;</op><primary>11</primary></relation><op>&&</op>" +
 			"<relation><primary>b</primary><op>&gt;</op><primary>11</primary>" +
 			"</relation></and></condition>", result);
 		
-		ast = AS3FragmentParser.parseCondition("value & uint(1 << posval)");
+		ast = AS3FragmentParserOLD.parseCondition("value & uint(1 << posval)");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<condition><b-and><primary>value</primary><op>&" +
 			"</op><call><primary>uint</primary><arguments><shift>" +

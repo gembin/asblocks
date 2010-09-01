@@ -6,7 +6,7 @@ import org.teotigraphix.as3blocks.api.IFunctionCommon;
 import org.teotigraphix.as3blocks.utils.ASTUtil2;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser2;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 public class FunctionCommon implements IFunctionCommon
 {
@@ -67,7 +67,7 @@ public class FunctionCommon implements IFunctionCommon
 			return;
 		}
 		
-		var newType:IParserNode = AS3FragmentParser2.parseType(value);
+		var newType:IParserNode = AS3FragmentParser.parseType(value);
 		if (nameTypeInit == null) // SHOULDN'T BE
 		{
 			

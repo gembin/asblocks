@@ -23,7 +23,7 @@ package org.teotigraphix.as3blocks.impl
 import org.teotigraphix.as3blocks.api.IExpressionNode;
 import org.teotigraphix.as3blocks.api.IExpressionStatementNode;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser2;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 /**
  * The <code>IExpressionStatementNode</code> implementation.
@@ -58,7 +58,7 @@ public class ExpressionStatementNode extends ScriptFragmentNode
 	 */	
 	public function setExpression(expression:String):void
 	{
-		node.setChildAt(AS3FragmentParser2.parseExpression(expression), 0);
+		node.setChildAt(AS3FragmentParser.parseExpression(expression), 0);
 	}
 	
 	//--------------------------------------------------------------------------
