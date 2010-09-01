@@ -7,15 +7,15 @@ import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class TestInterface
 {
-	private var parser:AS3ParserOLD;
+	private var parser:AS3Parser;
 	
 	[Before]
 	public function setUp():void
 	{
-		parser = new AS3ParserOLD();
+		parser = new AS3Parser();
 	}
 	
-	[Test]
+	//[Test]
 	public function testExtends():void
 	{
 		assertPackageContent( "1",
@@ -36,7 +36,7 @@ public class TestInterface
 			+ "</content></interface></content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testInclude():void
 	{
 		assertPackageContent( "1",

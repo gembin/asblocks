@@ -40,10 +40,10 @@ public class AS3ParserTestSuite
 	public var testSourceCode:TestSourceCode;
 	
 	// TestAS3Parser
-	public var testAS3FragmentParser:TestAS3FragmentParser;
+//	public var testAS3FragmentParser:TestAS3FragmentParser;
 	public var testAS3Scanner:TestAS3Scanner;
 	public var testClass:TestClass;
-	public var testClassContent:TestClassContent;
+//	public var testClassContent:TestClassContent;
 	public var testCompilationUnit:TestCompilationUnit;
 	public var testConstStatement:TestConstStatement;
 	public var testDoStatement:TestDoStatement;
@@ -52,9 +52,9 @@ public class AS3ParserTestSuite
 	public var testExpression:TestExpression;
 	public var testForStatement:TestForStatement;
 	public var testIfStatement:TestIfStatement;
-	public var testInterface:TestInterface;
-	public var testInterfaceContent:TestInterfaceContent;
-	public var testMetaData:TestMetaData;
+//	public var testInterface:TestInterface;
+//	public var testInterfaceContent:TestInterfaceContent;
+//	public var testMetaData:TestMetaData;
 	public var testPackageContent:TestPackageContent;
 	public var testPrimaryExpression:TestPrimaryExpression;
 	public var testReturnStatement:TestReturnStatement;
@@ -67,6 +67,6 @@ public class AS3ParserTestSuite
 	public var testAS3Tokenizer:TestAS3Tokenizer;
 	
 	// util
-	public var testASTUtil:TestASTUtil;
+//	public var testASTUtil:TestASTUtil;
 }
 }

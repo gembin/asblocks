@@ -19,16 +19,16 @@ import org.teotigraphix.as3nodes.impl.TestSourceFilePackage;
 public class AS3NodeTestSuite
 {
 	public var testSourceFileCollection:TestSourceFilePackage;
-	public var testSourceFile:TestAS3SourceFile;
+//	public var testSourceFile:TestAS3SourceFile;
 	public var testCompilationNode:TestCompilationNode;
-	public var testPackageNode:TestPackageNode;
+//	public var testPackageNode:TestPackageNode;
 	public var testScriptNode:TestScriptNode;
-	public var testInterfaceNode:TestInterfaceNode;
-	public var testIdentiferNode:TestIdentiferNode;
-	public var testAttributeNode:TestAttributeNode;
-	public var testConstantNode:TestConstantNode;
+//	public var testInterfaceNode:TestInterfaceNode;
+//	public var testIdentiferNode:TestIdentiferNode;
+//	public var testAttributeNode:TestAttributeNode;
+//	public var testConstantNode:TestConstantNode;
 	public var testFunctionNode:TestFunctionNode;
-	public var testAccessorNode:TestAccessorNode;
+//	public var testAccessorNode:TestAccessorNode;
 	public var testMethodNode:TestMethodNode;
 }
 }

@@ -118,13 +118,14 @@ public class AS3FragmentParser
 	 * @param source A String source to be parsed into AST.
 	 * @return Returns a <code>AS3NodeKind.META_LIST</code> node.
 	 */
-	//public static function parseMetaData(source:String):IParserNode
-	//{
+	public static function parseMetaData(source:String):IParserNode
+	{
 	//	var parser:AS3Parser2 = createParser(source);
 	//	parser.nextToken();
 	//	var node:IParserNode = parser.parseMetaDatas();
 	//	return node;
-	//}
+		return null;
+	}
 	
 	/**
 	 * Parses a <code>AS3NodeKind.CONTENT</code> list of 
@@ -134,13 +135,14 @@ public class AS3FragmentParser
 	 * @return Returns a <code>AS3NodeKind.CONTENT</code> node of
 	 * <code>AS3NodeKind.CONST</code> nodes.
 	 */
-	//public static function parseConstants(source:String):IParserNode
-	//{
+	public static function parseConstants(source:String):IParserNode
+	{
 	//	var parser:AS3Parser2 = createParser(source);
 	//	parser.nextToken();
 	//	var node:IParserNode = parser.parseConstants();
 	//	return node;
-	//}
+		return null;
+	}
 	
 	/**
 	 * Parses a <code>AS3NodeKind.CONTENT</code> list of 
@@ -150,13 +152,14 @@ public class AS3FragmentParser
 	 * @return Returns a <code>AS3NodeKind.CONTENT</code> node of
 	 * <code>AS3NodeKind.VAR</code> nodes.
 	 */
-	//public static function parseVariables(source:String):IParserNode
-	//{
+	public static function parseVariables(source:String):IParserNode
+	{
 	//	var parser:AS3Parser2 = createParser(source);
 	//	parser.nextToken();
 	//	var node:IParserNode = parser.parseVariables();
 	//	return node;
-	//}
+		return null;
+	}
 	
 	/**
 	 * Parses a <code>AS3NodeKind.CONTENT</code> list of 
@@ -173,13 +176,14 @@ public class AS3FragmentParser
 	 * <code>AS3NodeKind.FUNCTION</code>, <code>AS3NodeKind.GET</code>
 	 * or <code>AS3NodeKind.SET</code> nodes.
 	 */
-	//public static function parseMethods(source:String):IParserNode
-	//{
+	public static function parseMethods(source:String):IParserNode
+	{
 	//	var parser:AS3Parser2 = createParser(source);
 	//	parser.nextToken();
 	//	var node:IParserNode = parser.parseMethods();
 	//	return node;
-	//}
+		return null;
+	}
 	
 	/**
 	 * Parses a <code>AS3NodeKind.STATEMENT</code> node.

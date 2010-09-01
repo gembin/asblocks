@@ -21,7 +21,7 @@ package org.teotigraphix.as3nodes.impl
 {
 
 import org.teotigraphix.as3parser.api.IParser;
-import org.teotigraphix.as3parser.impl.AS3ParserOLD;
+import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.impl.ASDocParser;
 import org.teotigraphix.as3parser.impl.MXMLParser;
 
@@ -138,7 +138,7 @@ public class ParserFactory
 	 */
 	public function createAS3Parser():IParser
 	{
-		return new AS3ParserOLD();
+		return new AS3Parser();
 	}
 	
 	/**

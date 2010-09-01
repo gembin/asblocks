@@ -14,7 +14,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.Node;
-import org.teotigraphix.as3parser.impl.AS3FragmentParserOLD;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class ASTNodeUtil
@@ -182,7 +182,7 @@ public class ASTNodeUtil
 		// meta-list/meta/parameter-list/parmameter/value
 		var source:String = "[" + name + "]";
 		
-		var content:IParserNode = AS3FragmentParserOLD.parseMetaData(source);
+		var content:IParserNode = AS3FragmentParser.parseMetaData(source);
 		var node:IParserNode = content.getChild(0);
 		
 		return node;
@@ -215,7 +215,7 @@ public class ASTNodeUtil
 		if (primary)
 			source = source + "=" + primary;
 		
-		var content:IParserNode = AS3FragmentParserOLD.parseConstants(source);
+		var content:IParserNode = AS3FragmentParser.parseConstants(source);
 		var node:IParserNode = content.getChild(0);
 		
 		return node;
@@ -239,7 +239,7 @@ public class ASTNodeUtil
 		if (primary)
 			source = source + "=" + primary;
 		
-		var content:IParserNode = AS3FragmentParserOLD.parseVariables(source);
+		var content:IParserNode = AS3FragmentParser.parseVariables(source);
 		var node:IParserNode = content.getChild(0);
 		
 		return node;
@@ -290,7 +290,7 @@ public class ASTNodeUtil
 		
 		source = source + "}";
 		
-		var content:IParserNode = AS3FragmentParserOLD.parseMethods(source);
+		var content:IParserNode = AS3FragmentParser.parseMethods(source);
 		var node:IParserNode = content.getChild(0);
 		
 		return node;
@@ -298,7 +298,7 @@ public class ASTNodeUtil
 	
 	public static function createReturn(primary:String):IParserNode
 	{
-		return AS3FragmentParserOLD.parseStatement("return " + primary);
+		return AS3FragmentParser.parseStatement("return " + primary);
 	}
 	
 	/**

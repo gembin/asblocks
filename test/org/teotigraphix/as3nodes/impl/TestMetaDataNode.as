@@ -8,7 +8,7 @@ import org.teotigraphix.as3nodes.api.IMetaDataParameterNode;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.Node;
-import org.teotigraphix.as3parser.impl.AS3FragmentParserOLD;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 public class TestMetaDataNode
 {
@@ -28,7 +28,7 @@ public class TestMetaDataNode
 	public function testBasic():void
 	{
 		// [Style(name="myStyle",type="Number",inherit="no")]
-		var metaList:IParserNode = AS3FragmentParserOLD.parseMetaData(
+		var metaList:IParserNode = AS3FragmentParser.parseMetaData(
 			"/** My style comment. */[Style(name=\"myStyle\",type=\"Number\",inherit=\"no\")]");
 		var node:IParserNode = metaList.getChild(0);
 		

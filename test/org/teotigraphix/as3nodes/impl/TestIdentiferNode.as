@@ -10,14 +10,14 @@ import org.teotigraphix.as3nodes.api.IMethodNode;
 import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3ParserOLD;
+import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class TestIdentiferNode
 {
 	private var unit:IParserNode;
 	
-	private var parser:AS3ParserOLD;
+	private var parser:AS3Parser;
 	
 	private var compilationNode:CompilationNode;
 	
@@ -26,7 +26,7 @@ public class TestIdentiferNode
 	[Before]
 	public function setUp():void
 	{
-		parser = new AS3ParserOLD();
+		parser = new AS3Parser();
 		
 		var lines:Array =
 			[
