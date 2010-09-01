@@ -28,8 +28,8 @@ import org.teotigraphix.as3parser.api.ISourceCodeScanner;
 import org.teotigraphix.as3parser.api.KeyWords;
 import org.teotigraphix.as3parser.api.Operators;
 import org.teotigraphix.as3parser.core.LinkedListToken;
+import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
 import org.teotigraphix.as3parser.core.Node;
-import org.teotigraphix.as3parser.core.Token;
 import org.teotigraphix.as3parser.core.TokenNode;
 
 /**
@@ -108,6 +108,8 @@ public class AS3Parser extends ParserBase
 	public function AS3Parser()
 	{
 		super();
+		
+		adapter = new LinkedListTreeAdaptor();
 	}
 	
 	//--------------------------------------------------------------------------

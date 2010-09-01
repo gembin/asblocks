@@ -54,6 +54,11 @@ public class ParserBase implements IParser
 	 */
 	protected var token:Token;
 	
+	/**
+	 * The adapter.
+	 */
+	protected var adapter:LinkedListTreeAdaptor;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public :: Properties
@@ -238,6 +243,16 @@ public class ParserBase implements IParser
 		}
 	}
 	
+	/**
+	 * Moves the parser's <code>token</code> to the next scanner Token that
+	 * is not considered whitespace or a comment.
+	 * 
+	 * <p>If the node is not null, the parser will append those whitespace
+	 * tokens to the node.</p>
+	 * 
+	 * @param node A TokenNode to add whitespace tokens to.
+	 * @see #tokIsWhitespace()
+	 */
 	protected function nextNonWhiteSpaceToken(node:TokenNode):void
 	{
 		if (!consumeWhitespace(node))
@@ -245,7 +260,7 @@ public class ParserBase implements IParser
 			nextToken();
 			
 			if (tokIs(" ") || tokIs("\t") || tokIs("\n") || tokenStartsWith("//")
-				|| (tokenStartsWith("/*") && ! tokenStartsWith("/**")))
+				|| (tokenStartsWith("/*") && !tokenStartsWith("/**")))
 			{
 				nextNonWhiteSpaceToken(node);
 			}
@@ -254,6 +269,8 @@ public class ParserBase implements IParser
 	
 	/**
 	 * Allows whitespace tokens to be retireved from the scanner.
+	 * 
+	 * @see #moveToNextToken()
 	 */
 	protected function nextTokenAllowWhiteSpace():void
 	{
@@ -262,18 +279,12 @@ public class ParserBase implements IParser
 		scanner.allowWhiteSpace = false;
 	}
 	
-	//--------------------------------------------------------------------------
-	//
-	//  Protected Final :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
 	/**
 	 * Skips the token if the <code>token.text</code> equals <code>text</code>.
 	 * 
 	 * @param text The String to skip.
 	 */
-	final protected function skip(text:String, node:TokenNode = null):void
+	protected function skip(text:String, node:TokenNode = null):void
 	{
 		consumeWhitespace(node);
 		
@@ -291,32 +302,14 @@ public class ParserBase implements IParser
 	}
 	
 	/**
-	 * Compare the current <code>token.text</code> to <code>text</code>.
+	 * Returns whether the current parser token is whitespace.
 	 * 
-	 * @param text A String to compare.
-	 * @return A Boolean true, if token's text property equals the parameter.
+	 * @return A Boolean indicating if the current token is whitespace.
 	 */
-	final protected function tokIs(text:String):Boolean
-	{
-		return token.text == text;
-	}
-	
-	final protected function tokIsWhitespace():Boolean
+	protected function tokIsWhitespace():Boolean
 	{
 		return token.text == "\n" || token.text == "\t" || token.text == " "
 			|| tokenStartsWith("/*") || tokenStartsWith("//");
-	}
-	
-	/**
-	 * Returns whether the token starts with the String value.
-	 * 
-	 * @param value A String to test.
-	 * @return A Boolean indicating whether the token's text starts with the
-	 * value.
-	 */
-	final protected function tokenStartsWith(value:String):Boolean
-	{
-		return token.text.indexOf(value) == 0;
 	}
 	
 	/**
@@ -328,11 +321,12 @@ public class ParserBase implements IParser
 	 * <p>If the token is consumed, the parser advances to the next token.</p>
 	 * 
 	 * @param text The text String to consume.
+	 * @param node A TokenNode to append tokens to.
 	 * @throws UnExpectedTokenError
 	 */
-	final protected function consume(text:String, 
-									 node:TokenNode = null, 
-									 trim:Boolean = true):LinkedListToken
+	protected function consume(text:String, 
+							   node:TokenNode = null, 
+							   trim:Boolean = true):LinkedListToken
 	{
 		var consumed:LinkedListToken;
 		
@@ -362,9 +356,14 @@ public class ParserBase implements IParser
 		return consumed;
 	}
 	
-	final protected function consumeWS(text:String, 
-									   node:TokenNode = null, 
-									   trim:Boolean = true):void
+	/**
+	 * Checks for token equality and only appends whitespace tokens.
+	 * 
+	 * @param node A TokenNode to append whitespace tokens to.
+	 */
+	protected function consumeWS(text:String, 
+								 node:TokenNode = null, 
+								 trim:Boolean = true):void
 	{
 		consumeWhitespace(node);
 		
@@ -385,8 +384,12 @@ public class ParserBase implements IParser
 		}
 	}
 	
-	protected var adapter:LinkedListTreeAdaptor = new LinkedListTreeAdaptor();
-	
+	/**
+	 * Consumes all whitespace up to a non whitespace token.
+	 * 
+	 * @param node A TokenNode to add whitespace tokens to.
+	 * @return A Boolean indicating if whitespace was consumed.
+	 */
 	protected function consumeWhitespace(node:TokenNode):Boolean
 	{
 		if (!node || !token)
@@ -423,6 +426,49 @@ public class ParserBase implements IParser
 		return advanced;
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected Final :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Compare the current <code>token.text</code> to <code>text</code>.
+	 * 
+	 * @param text A String to compare.
+	 * @return A Boolean true, if token's text property equals the parameter.
+	 */
+	final protected function tokIs(text:String):Boolean
+	{
+		return token.text == text;
+	}
+	
+	/**
+	 * Returns whether the token starts with the String value.
+	 * 
+	 * @param value A String to test.
+	 * @return A Boolean indicating whether the token's text starts with the
+	 * value.
+	 */
+	final protected function tokenStartsWith(value:String):Boolean
+	{
+		return token.text.indexOf(value) == 0;
+	}
+	
+	/**
+	 * Trims quotes off a String.
+	 * 
+	 * @param value A String quoted.
+	 * @return A new String with start and end trimmed.
+	 */
+	final protected function trimQuotes(value:String):String
+	{
+		return value.slice(1, value.length - 1);
+	}
+	
+	/**
+	 * @private
+	 */
 	protected function append(node:TokenNode):LinkedListToken
 	{
 		if (!node)
@@ -437,6 +483,9 @@ public class ParserBase implements IParser
 		return token;
 	}
 	
+	/**
+	 * @private
+	 */
 	protected function appendSpace(node:TokenNode):void
 	{
 		if (!node || !scanner.allowWhiteSpace)
@@ -452,6 +501,9 @@ public class ParserBase implements IParser
 		nextToken();
 	}
 	
+	/**
+	 * @private
+	 */
 	protected function appendTab(node:TokenNode):void
 	{
 		if (!node || !scanner.allowWhiteSpace)
@@ -467,6 +519,9 @@ public class ParserBase implements IParser
 		nextToken();
 	}
 	
+	/**
+	 * @private
+	 */
 	protected function appendNewline(node:TokenNode):void
 	{
 		if (!node || !scanner.allowWhiteSpace)
@@ -488,6 +543,9 @@ public class ParserBase implements IParser
 		}
 	}
 	
+	/**
+	 * @private
+	 */
 	protected function appendComment(node:TokenNode):void
 	{
 		if (!node)
@@ -501,17 +559,6 @@ public class ParserBase implements IParser
 		}
 		
 		nextToken();
-	}
-	
-	/**
-	 * Trims quotes off a String.
-	 * 
-	 * @param value A String quoted.
-	 * @return A new String with start and end trimmed.
-	 */
-	final protected function trimQuotes(value:String):String
-	{
-		return value.slice(1, value.length - 1);
 	}
 }
 }
