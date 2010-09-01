@@ -310,7 +310,7 @@ public class AS3Parser extends ParserBase
 			}
 		}
 		
-		result.addChild(parseClassContent());
+		result.addChild(parseTypeContent());
 		
 		return result;
 	}
@@ -346,7 +346,7 @@ public class AS3Parser extends ParserBase
 			}
 		}
 		
-		result.addChild(parseInterfaceContent());
+		result.addChild(parseTypeContent());
 		
 		return result;
 	}
@@ -354,7 +354,7 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseClassContent():TokenNode
+	internal function parseTypeContent():TokenNode
 	{
 		var result:TokenNode = ASTUtil2.newParentheticAST(
 			AS3NodeKind.CONTENT,
@@ -398,75 +398,6 @@ public class AS3Parser extends ParserBase
 			{
 				result.addChild(parseClassConstant(pendingMember));
 				pendingMember = null;
-			}
-			else if (tokIs(KeyWords.FUNCTION))
-			{
-				result.addChild(parseClassFunction(pendingMember));
-				pendingMember = null;
-			}
-			else
-			{
-				var isWhitespace:Boolean = tokIsWhitespace();
-				if (!isWhitespace)
-				{
-					if (!pendingMember)
-					{
-						pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
-					}
-					
-					addAsDoc(pendingMember);
-					
-					pendingMember.addChild(adapter.copy(
-						AS3NodeKind.MODIFIER, token));
-				}
-				
-				nextNonWhiteSpaceToken(pendingMember);
-			}
-		}
-		
-		consumeWS(Operators.RIGHT_CURLY_BRACKET, result, false);
-		
-		return result;
-	}
-	
-	/**
-	 * @private
-	 * TODO this can be merged into parseClassContent
-	 */
-	internal function parseInterfaceContent():TokenNode
-	{
-		var result:TokenNode = ASTUtil2.newParentheticAST(
-			AS3NodeKind.CONTENT,
-			AS3NodeKind.LCURLY, "{",
-			AS3NodeKind.RCURLY, "}") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
-		
-		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
-		
-		var pendingMember:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
-		
-		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
-		{
-			if (tokenStartsWith(ASDOC_COMMENT))
-			{
-				var current:TokenNode = (pendingMember) ? pendingMember : result;
-				current.appendToken(adapter.createToken(
-					AS3NodeKind.AS_DOC, token.text));
-				currentAsDoc = parseASdoc();
-				nextNonWhiteSpaceToken(current);
-			}
-			else if (tokIs(KeyWords.INCLUDE))
-			{
-				result.addChild(parseInclude());
-			}
-			else if (tokIs(KeyWords.IMPORT))
-			{
-				result.addChild(parseImport());
-			}
-			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-			{
-				pendingMember.addChild(parseMetaData());
 			}
 			else if (tokIs(KeyWords.FUNCTION))
 			{
@@ -2526,12 +2457,12 @@ public class AS3Parser extends ParserBase
 	
 	internal function parseMetaDatas():IParserNode
 	{
-		return parseClassContent();
+		return parseTypeContent();
 	}
 	
 	internal function parseMembers(kind:String):IParserNode
 	{
-		return parseClassContent();
+		return parseTypeContent();
 	}
 	
 	internal function parseConstants():IParserNode

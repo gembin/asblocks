@@ -157,7 +157,7 @@ public class TestClassContent
 		
 		parser.scanner.setLines(ASTUtil.toVector(lines));
 		parser.nextToken(); // first call
-		var result:String = ASTUtil.convert(parser.parseClassContent());
+		var result:String = ASTUtil.convert(parser.parseTypeContent());
 		
 		Assert.assertEquals("<content line=\"1\" column=\"1\">" + 
 			expected + "</content>", result);

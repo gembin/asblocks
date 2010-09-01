@@ -92,7 +92,7 @@ public class AS3FragmentParser
 	{
 		var parser:AS3Parser = createParser("{" + source + "}");
 		parser.nextToken(); // {
-		var node:IParserNode = parser.parseClassContent();
+		var node:IParserNode = parser.parseTypeContent();
 		return node;
 	}
 	
@@ -106,7 +106,7 @@ public class AS3FragmentParser
 	{
 		var parser:AS3Parser = createParser("{" + source + "}");
 		parser.nextToken(); // {
-		var node:IParserNode = parser.parseInterfaceContent();
+		var node:IParserNode = parser.parseTypeContent();
 		return node;
 	}
 	
