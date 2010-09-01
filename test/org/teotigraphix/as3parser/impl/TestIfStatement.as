@@ -65,7 +65,7 @@ public class TestIfStatement extends AbstractStatementTest
 			"column=\"43\">obj</primary><double-column line=\"1\" column=\"59\">" +
 			"<primary line=\"1\" column=\"47\">my_namespace</primary><assign line=\"1\" " +
 			"column=\"61\"><primary line=\"1\" column=\"61\">_prop</primary><op " +
-			"line=\"1\" column=\"67\">=</op><primary line=\"1\" column=\"69\">NaN</primary>" +
+			"line=\"1\" column=\"67\">=</op><number line=\"1\" column=\"69\">NaN</number>" +
 			"</assign></double-column></dot></block></if>");
 	}
 	

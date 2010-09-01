@@ -207,7 +207,12 @@ public class AS3Parser extends ParserBase
 		result.line = token.line;
 		result.column = token.column;
 		
-		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
+		var internalParse:Boolean = tokIs("class") || tokIs("function");
+		
+		if (!internalParse)
+		{
+			consumeWS(Operators.LEFT_CURLY_BRACKET, result);
+		}
 		
 		var pendingType:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
 		
@@ -244,6 +249,10 @@ public class AS3Parser extends ParserBase
 			{
 				result.addChild(parseInterface(pendingType));
 			}
+			else if (tokIs(KeyWords.FUNCTION))
+			{
+				result.addChild(parseClassFunction(pendingType));
+			}
 			else
 			{
 				if (!tokIsWhitespace())
@@ -255,8 +264,11 @@ public class AS3Parser extends ParserBase
 				nextNonWhiteSpaceToken(result);
 			}
 		}
-	
-		consumeWS(Operators.RIGHT_CURLY_BRACKET, result, false);
+		
+		if (!internalParse)
+		{
+			consumeWS(Operators.RIGHT_CURLY_BRACKET, result, false);
+		}
 		
 		return result;
 	}
@@ -829,7 +841,7 @@ public class AS3Parser extends ParserBase
 				{
 					skip(Operators.SEMI_COLUMN, result);
 				}
-				// FIXME 
+					// FIXME 
 				else if (!tokIs(Operators.COMMA)
 					&& !tokIs(Operators.RIGHT_PARENTHESIS))
 				{
@@ -973,7 +985,11 @@ public class AS3Parser extends ParserBase
 		
 		result.addChild(parseBlock());
 		
-		nextNonWhiteSpaceToken(result);
+		// if not a package function, need this to exit package content
+		if (!tokIs(Operators.RIGHT_CURLY_BRACKET))
+		{
+			nextNonWhiteSpaceToken(result);
+		}
 		
 		return result;
 	}
@@ -1387,7 +1403,8 @@ public class AS3Parser extends ParserBase
 				result.kind = AS3NodeKind.STRING;
 			}
 			else if (!isNaN(parseInt(token.text)) 
-				|| !isNaN(parseFloat(token.text)))
+				|| !isNaN(parseFloat(token.text))
+				|| tokIs("NaN"))
 			{
 				result.kind = AS3NodeKind.NUMBER;
 			}
