@@ -1,37 +1,25 @@
-/**
- *    Copyright (c) 2009, Adobe Systems, Incorporated
- *    All rights reserved.
- *
- *    Redistribution  and  use  in  source  and  binary  forms, with or without
- *    modification,  are  permitted  provided  that  the  following  conditions
- *    are met:
- *
- *      * Redistributions  of  source  code  must  retain  the  above copyright
- *        notice, this list of conditions and the following disclaimer.
- *      * Redistributions  in  binary  form  must reproduce the above copyright
- *        notice,  this  list  of  conditions  and  the following disclaimer in
- *        the    documentation   and/or   other  materials  provided  with  the
- *        distribution.
- *      * Neither the name of the Adobe Systems, Incorporated. nor the names of
- *        its  contributors  may be used to endorse or promote products derived
- *        from this software without specific prior written permission.
- *
- *    THIS  SOFTWARE  IS  PROVIDED  BY THE  COPYRIGHT  HOLDERS AND CONTRIBUTORS
- *    "AS IS"  AND  ANY  EXPRESS  OR  IMPLIED  WARRANTIES,  INCLUDING,  BUT NOT
- *    LIMITED  TO,  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- *    PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
- *    OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL,  SPECIAL,
- *    EXEMPLARY,  OR  CONSEQUENTIAL  DAMAGES  (INCLUDING,  BUT  NOT  LIMITED TO,
- *    PROCUREMENT  OF  SUBSTITUTE   GOODS  OR   SERVICES;  LOSS  OF  USE,  DATA,
- *    OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- *    LIABILITY,  WHETHER  IN  CONTRACT,  STRICT  LIABILITY, OR TORT (INCLUDING
- *    NEGLIGENCE  OR  OTHERWISE)  ARISING  IN  ANY  WAY  OUT OF THE USE OF THIS
- *    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.as3parser.core
 {
 
-import org.teotigraphix.as3nodes.api.IParameterNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ITokenListUpdateDelegate;
 import org.teotigraphix.as3parser.utils.ASTUtil;
@@ -48,6 +36,8 @@ import org.teotigraphix.as3parser.utils.ASTUtil;
 public class NestedNode
 {
 	public var noUpdate:Boolean = false;
+	
+	public var tokenListUpdater:ITokenListUpdateDelegate;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -161,6 +151,9 @@ public class NestedNode
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#contains()
+	 */
 	public function contains(node:IParserNode):Boolean
 	{
 		if (numChildren == 0)
@@ -210,6 +203,37 @@ public class NestedNode
 	}
 	
 	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#getChild()
+	 */
+	public function getChild(index:int):IParserNode
+	{
+		if (_children == null || _children.length == 0)
+			return null;
+		
+		if (index < 0 || index > _children.length - 1)
+			return null;
+		
+		return _children[index];
+	}
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#getChildIndex()
+	 */
+	public function getChildIndex(child:IParserNode):int
+	{
+		if (numChildren == 0)
+			return -1;
+		
+		var len:int = children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			if (children[i] === child)
+				return i;
+		}
+		
+		return -1;
+	}
+	
+	/**
 	 * @copy org.teotigraphix.as3parser.api.IParserNode#getKind()
 	 */
 	public function getKind(kind:String):IParserNode
@@ -225,21 +249,6 @@ public class NestedNode
 		}
 		
 		return null;
-	}
-	
-	
-	/**
-	 * @copy org.teotigraphix.as3parser.api.IParserNode#getChild()
-	 */
-	public function getChild(index:int):IParserNode
-	{
-		if (_children == null || _children.length == 0)
-			return null;
-		
-		if (index < 0 || index > _children.length - 1)
-			return null;
-		
-		return _children[index];
 	}
 	
 	/**
@@ -313,26 +322,8 @@ public class NestedNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.as3parser.api.IParserNode#addRawChild()
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#removeKind()
 	 */
-	public function addRawChild(kind:String,
-								line:int,
-								column:int,
-								stringValue:String):IParserNode
-	{
-		return addChild(Node.create(kind, line, column, stringValue));
-	}
-	
-	public function addNodeChild(kind:String,
-								 line:int,
-								 column:int,
-								 sibling:IParserNode):IParserNode
-	{
-		var node:IParserNode = Node.create(kind, line, column, null);
-		node.addChild(sibling);
-		return addChild(node);
-	}
-	
 	public function removeKind(kind:String):Boolean
 	{
 		if (!hasKind(kind))
@@ -351,6 +342,9 @@ public class NestedNode
 		return false;
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#removeChild()
+	 */
 	public function removeChild(node:IParserNode):IParserNode
 	{
 		if (numChildren == 0)
@@ -375,7 +369,9 @@ public class NestedNode
 		return null;
 	}
 	
-	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#removeChildAt()
+	 */
 	public function removeChildAt(index:int):IParserNode
 	{
 		if (numChildren == 0)
@@ -394,23 +390,8 @@ public class NestedNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.as3parser.api.IParserNode#getChildIndex()
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#setChildAt()
 	 */
-	public function getChildIndex(child:IParserNode):int
-	{
-		if (numChildren == 0)
-			return -1;
-		
-		var len:int = children.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			if (children[i] === child)
-				return i;
-		}
-		
-		return -1;
-	}
-	
 	public function setChildAt(child:IParserNode, index:int):IParserNode
 	{
 		if (child == null)
@@ -433,19 +414,49 @@ public class NestedNode
 		return old;
 	}
 	
-	public var tokenListUpdater:ITokenListUpdateDelegate;
-	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#addTokenAt()
+	 */
 	public function addTokenAt(token:LinkedListToken, index:int):void
 	{
 		tokenListUpdater.addToken(IParserNode(this), index, token);
 	}
 	
+	/**
+	 * @copy org.teotigraphix.as3parser.api.IParserNode#appendToken()
+	 */
 	public function appendToken(token:LinkedListToken):void
 	{
 		if (!noUpdate && tokenListUpdater)
 		{
 			tokenListUpdater.appendToken(IParserNode(this), token);
 		}
+	}
+	
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	public function addRawChild(kind:String,
+								line:int,
+								column:int,
+								stringValue:String):IParserNode
+	{
+		return addChild(Node.create(kind, line, column, stringValue));
+	}
+	
+	/**
+	 * @private
+	 */
+	public function addNodeChild(kind:String,
+								 line:int,
+								 column:int,
+								 sibling:IParserNode):IParserNode
+	{
+		var node:IParserNode = Node.create(kind, line, column, null);
+		node.addChild(sibling);
+		return addChild(node);
 	}
 }
 }

@@ -1,42 +1,30 @@
-/**
- *    Copyright (c) 2009, Adobe Systems, Incorporated
- *    All rights reserved.
- *
- *    Redistribution  and  use  in  source  and  binary  forms, with or without
- *    modification,  are  permitted  provided  that  the  following  conditions
- *    are met:
- *
- *      * Redistributions  of  source  code  must  retain  the  above copyright
- *        notice, this list of conditions and the following disclaimer.
- *      * Redistributions  in  binary  form  must reproduce the above copyright
- *        notice,  this  list  of  conditions  and  the following disclaimer in
- *        the    documentation   and/or   other  materials  provided  with  the
- *        distribution.
- *      * Neither the name of the Adobe Systems, Incorporated. nor the names of
- *        its  contributors  may be used to endorse or promote products derived
- *        from this software without specific prior written permission.
- *
- *    THIS  SOFTWARE  IS  PROVIDED  BY THE  COPYRIGHT  HOLDERS AND CONTRIBUTORS
- *    "AS IS"  AND  ANY  EXPRESS  OR  IMPLIED  WARRANTIES,  INCLUDING,  BUT NOT
- *    LIMITED  TO,  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- *    PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
- *    OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL,  SPECIAL,
- *    EXEMPLARY,  OR  CONSEQUENTIAL  DAMAGES  (INCLUDING,  BUT  NOT  LIMITED TO,
- *    PROCUREMENT  OF  SUBSTITUTE   GOODS  OR   SERVICES;  LOSS  OF  USE,  DATA,
- *    OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- *    LIABILITY,  WHETHER  IN  CONTRACT,  STRICT  LIABILITY, OR TORT (INCLUDING
- *    NEGLIGENCE  OR  OTHERWISE)  ARISING  IN  ANY  WAY  OUT OF THE USE OF THIS
- *    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.as3parser.api
 {
+
 import org.teotigraphix.as3parser.core.LinkedListToken;
-
-
 
 /**
  * The <strong>IParserNode</strong> interface marks a class as having the
- * ability to be placed in an AST parse tree.
+ * ability to be placed in an AST parse tree with tokens.
  * 
  * <p>Initial API; Adobe Systems, Incorporated</p>
  * 
@@ -220,6 +208,9 @@ public interface IParserNode
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * TODO Docme
+	 */
 	function contains(other:IParserNode):Boolean;
 	
 	/**
@@ -247,8 +238,22 @@ public interface IParserNode
 	 */
 	function getChild(index:int):IParserNode;
 	
+	/**
+	 * TODO Docme
+	 */
+	function getChildIndex(node:IParserNode):int;
+	
+	/**
+	 * TODO Docme
+	 */
 	function getKind(kind:String):IParserNode;
 	
+	/**
+	 * Returns the first <code>IParserNode</code> child.
+	 * 
+	 * @return The first <code>IParserNode</code> or <code>null</code>.
+	 */
+	function getFirstChild():IParserNode;
 	
 	/**
 	 * Returns the last <code>IParserNode</code> child.
@@ -266,9 +271,22 @@ public interface IParserNode
 	function addChild(node:IParserNode):IParserNode;
 	
 	/**
-	 * 
+	 * TODO Docme
 	 */
 	function addChildAt(node:IParserNode, index:int):IParserNode;
+	
+	/**
+	 * Removes the node.
+	 * 
+	 * @param node An IParserNode parser node.
+	 * @return A Boolean indicating whether the node was removed from the parser node.
+	 */
+	function removeChild(node:IParserNode):IParserNode;
+	
+	/**
+	 * TODO Docme
+	 */
+	function removeChildAt(index:int):IParserNode;
 	
 	/**
 	 * Removes the first <code>kind</code> found.
@@ -279,28 +297,22 @@ public interface IParserNode
 	function removeKind(kind:String):Boolean;
 	
 	/**
-	 * Removes the node.
-	 * 
-	 * @param node An IParserNode parser node.
-	 * @return A Boolean indicating whether the node was removed from the parser node.
+	 * TODO Docme
 	 */
-	function removeChild(node:IParserNode):IParserNode;
-	
-	function removeChildAt(index:int):IParserNode;
-	
 	function setChildAt(child:IParserNode, index:int):IParserNode;
 	
-	function getChildIndex(node:IParserNode):int;
-	
-	function addTokenAt(token:LinkedListToken, index:int):void;
-	
-	function appendToken(token:LinkedListToken):void;
+	//----------------------------------
+	//  Tokens
+	//----------------------------------
 	
 	/**
-	 * Returns the first <code>IParserNode</code> child.
-	 * 
-	 * @return The first <code>IParserNode</code> or <code>null</code>.
+	 * TODO Docme
 	 */
-	function getFirstChild():IParserNode;
+	function addTokenAt(token:LinkedListToken, index:int):void;
+	
+	/**
+	 * TODO Docme
+	 */
+	function appendToken(token:LinkedListToken):void;
 }
 }
