@@ -5,11 +5,11 @@ import flexunit.framework.Assert;
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3Parser;
+import org.teotigraphix.as3parser.impl.AS3ParserOLD;
 
 public class TestASTUtil
 {
-	private var parser:AS3Parser;
+	private var parser:AS3ParserOLD;
 	
 	private var classUnit:IParserNode;
 	
@@ -18,7 +18,7 @@ public class TestASTUtil
 	[Before]
 	public function setUp():void
 	{
-		parser = new AS3Parser();
+		parser = new AS3ParserOLD();
 		
 		var clines:Array =
 			[

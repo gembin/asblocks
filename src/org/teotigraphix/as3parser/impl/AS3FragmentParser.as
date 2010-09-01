@@ -49,7 +49,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseCompilationUnit(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(source);
+		var parser:AS3ParserOLD = createParser(source);
 		var node:IParserNode = parser.parseCompilationUnit();
 		return node;
 	}
@@ -62,7 +62,7 @@ public class AS3FragmentParser
 	 */
 	public static function parsePackage(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(source);
+		var parser:AS3ParserOLD = createParser(source);
 		parser.nextToken(); // package
 		var node:IParserNode = parser.parsePackage();
 		return node;
@@ -76,7 +76,7 @@ public class AS3FragmentParser
 	 */
 	public static function parsePackageContent(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(source);
+		var parser:AS3ParserOLD = createParser(source);
 		parser.nextToken(); // package
 		var node:IParserNode = parser.parsePackageContent();
 		return node;
@@ -90,7 +90,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseClassContent(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser("{" + source + "}");
+		var parser:AS3ParserOLD = createParser("{" + source + "}");
 		parser.nextToken(); // {
 		parser.nextToken(); // into content
 		var node:IParserNode = parser.parseClassContent();
@@ -105,7 +105,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseInterfaceContent(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser("{" + source + "}");
+		var parser:AS3ParserOLD = createParser("{" + source + "}");
 		parser.nextToken(); // {
 		parser.nextToken(); // into content
 		var node:IParserNode = parser.parseInterfaceContent();
@@ -120,7 +120,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseMetaData(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(source);
+		var parser:AS3ParserOLD = createParser(source);
 		parser.nextToken();
 		var node:IParserNode = parser.parseMetaDatas();
 		return node;
@@ -136,7 +136,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseConstants(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(source);
+		var parser:AS3ParserOLD = createParser(source);
 		parser.nextToken();
 		var node:IParserNode = parser.parseConstants();
 		return node;
@@ -152,7 +152,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseVariables(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(source);
+		var parser:AS3ParserOLD = createParser(source);
 		parser.nextToken();
 		var node:IParserNode = parser.parseVariables();
 		return node;
@@ -175,7 +175,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseMethods(source:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(source);
+		var parser:AS3ParserOLD = createParser(source);
 		parser.nextToken();
 		var node:IParserNode = parser.parseMethods();
 		return node;
@@ -189,7 +189,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseStatement(statement:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(statement);
+		var parser:AS3ParserOLD = createParser(statement);
 		parser.nextToken();
 		var node:IParserNode = parser.parseStatement();
 		return node;
@@ -203,7 +203,7 @@ public class AS3FragmentParser
 	 */
 	public static function parsePrimaryExpression(expression:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(expression);
+		var parser:AS3ParserOLD = createParser(expression);
 		parser.nextToken();
 		var node:IParserNode = parser.parsePrimaryExpression();
 		return node;
@@ -217,7 +217,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseExpression(expression:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(expression);
+		var parser:AS3ParserOLD = createParser(expression);
 		parser.nextToken();
 		var node:IParserNode = parser.parseExpression();
 		return node;
@@ -231,7 +231,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseCondition(condition:String):IParserNode
 	{
-		var parser:AS3Parser = createParser("(" + condition + ")");
+		var parser:AS3ParserOLD = createParser("(" + condition + ")");
 		parser.nextToken();
 		// /condition
 		var node:IParserNode = parser.parseCondition();
@@ -247,9 +247,9 @@ public class AS3FragmentParser
 	/**
 	 * @private
 	 */
-	private static function createParser(source:String):AS3Parser
+	private static function createParser(source:String):AS3ParserOLD
 	{
-		var parser:AS3Parser = new AS3Parser();
+		var parser:AS3ParserOLD = new AS3ParserOLD();
 		parser.scanner.setLines(Vector.<String>([source]));
 		return parser
 	}

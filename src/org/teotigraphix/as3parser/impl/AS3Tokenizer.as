@@ -53,7 +53,7 @@ public class AS3Tokenizer implements ITokenizer
 		//IGNORED_TOKENS[Operators.SEMI_COLUMN] = true;
 		//IGNORED_TOKENS[Operators.LEFT_CURLY_BRACKET] = true;
 		//IGNORED_TOKENS[Operators.RIGHT_CURLY_BRACKET] = true;
-		IGNORED_TOKENS[AS3Parser.NEW_LINE] = true;
+		IGNORED_TOKENS[AS3ParserOLD.NEW_LINE] = true;
 		
 		//IGNORING_LINE_TOKENS[KeyWords.IMPORT] = true;
 		//IGNORING_LINE_TOKENS[KeyWords.PACKAGE] = true;
@@ -107,7 +107,7 @@ public class AS3Tokenizer implements ITokenizer
 	protected function initializeScanner(tokens:ISourceCode):IScanner
 	{
 		var scanner:AS3Scanner = new AS3Scanner();
-		scanner.setLines(ASTUtil.toVector(tokens.code.split(AS3Parser.NEW_LINE)));
+		scanner.setLines(ASTUtil.toVector(tokens.code.split(AS3ParserOLD.NEW_LINE)));
 		return scanner;
 	}
 	

@@ -1,52 +1,43 @@
-/**
- *    Copyright (c) 2009, Adobe Systems, Incorporated
- *    All rights reserved.
- *
- *    Redistribution  and  use  in  source  and  binary  forms, with or without
- *    modification,  are  permitted  provided  that  the  following  conditions
- *    are met:
- *
- *      * Redistributions  of  source  code  must  retain  the  above copyright
- *        notice, this list of conditions and the following disclaimer.
- *      * Redistributions  in  binary  form  must reproduce the above copyright
- *        notice,  this  list  of  conditions  and  the following disclaimer in
- *        the    documentation   and/or   other  materials  provided  with  the
- *        distribution.
- *      * Neither the name of the Adobe Systems, Incorporated. nor the names of
- *        its  contributors  may be used to endorse or promote products derived
- *        from this software without specific prior written permission.
- *
- *    THIS  SOFTWARE  IS  PROVIDED  BY THE  COPYRIGHT  HOLDERS AND CONTRIBUTORS
- *    "AS IS"  AND  ANY  EXPRESS  OR  IMPLIED  WARRANTIES,  INCLUDING,  BUT NOT
- *    LIMITED  TO,  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- *    PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
- *    OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL,  SPECIAL,
- *    EXEMPLARY,  OR  CONSEQUENTIAL  DAMAGES  (INCLUDING,  BUT  NOT  LIMITED TO,
- *    PROCUREMENT  OF  SUBSTITUTE   GOODS  OR   SERVICES;  LOSS  OF  USE,  DATA,
- *    OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- *    LIABILITY,  WHETHER  IN  CONTRACT,  STRICT  LIABILITY, OR TORT (INCLUDING
- *    NEGLIGENCE  OR  OTHERWISE)  ARISING  IN  ANY  WAY  OUT OF THE USE OF THIS
- *    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.as3parser.impl
 {
 
+import org.teotigraphix.as3blocks.utils.ASTUtil2;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
 import org.teotigraphix.as3parser.api.ISourceCodeScanner;
 import org.teotigraphix.as3parser.api.KeyWords;
 import org.teotigraphix.as3parser.api.Operators;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.Node;
 import org.teotigraphix.as3parser.core.Token;
-import org.teotigraphix.as3parser.errors.NullTokenError;
+import org.teotigraphix.as3parser.core.TokenNode;
 
 /**
  * A port of the Java PMD de.bokelberg.flex.parser.AS3Parser.
  * 
  * <p>Initial Implementation; Adobe Systems, Incorporated</p>
  * 
- * @author Michael Schmalle
+ * @author Michael Schmalle LinkedList implementation
  */
 public class AS3Parser extends ParserBase
 {
@@ -55,6 +46,8 @@ public class AS3Parser extends ParserBase
 	//  Private :: Constants
 	//
 	//--------------------------------------------------------------------------
+	
+	public static const ASDOC_COMMENT:String = "/**";
 	
 	public static const MULTIPLE_LINES_COMMENT:String = "/*";
 	
@@ -70,11 +63,13 @@ public class AS3Parser extends ParserBase
 	//
 	//--------------------------------------------------------------------------
 	
-	private var currentAsDoc:Node;
+	private var currentAsDoc:TokenNode;
 	
 	private var braceCount:int;
 	
 	private var isInFor:Boolean = false;
+	
+	private var qualifiedNameEnd:int = -1;
 	
 	//----------------------------------
 	//  parseBlocks
@@ -126,7 +121,9 @@ public class AS3Parser extends ParserBase
 	 */
 	override protected function createScanner():IScanner
 	{
-		return new AS3Scanner();
+		var scanner:AS3Scanner = new AS3Scanner();
+		scanner.allowWhiteSpace = true;
+		return scanner;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -140,94 +137,90 @@ public class AS3Parser extends ParserBase
 	 */
 	override public function parseCompilationUnit():IParserNode
 	{
-		var result:Node = Node.create(AS3NodeKind.COMPILATION_UNIT, -1, -1);
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.COMPILATION_UNIT);
 		
-		nextTokenIgnoringAsDoc();
+		// start the parse, eat whitespace up to a '/**' or 'package'
+		nextNonWhiteSpaceToken(result);
+		
+		// if the package has a doc comment, save it
+		if (tokenStartsWith(ASDOC_COMMENT))
+		{
+			result.addChild(createASDoc());
+			nextNonWhiteSpaceToken(result);
+		}
+		
+		// go into package
 		if (tokIs(KeyWords.PACKAGE))
 		{
 			result.addChild(parsePackage());
 		}
-		result.addChild(parsePackageContent());
+		
+		nextNonWhiteSpaceToken(result);
+		
+		if (!tokIs(KeyWords.EOF))
+		{
+			// parse internal classes|functions
+			result.addChild(parsePackageContent());
+		}
+		
+		result.appendToken(adapter.createToken("__END__"));
+		
 		return result;
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Private :: Methods
+	//  Internal :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * token is package
-	 * 
-	 * @throws UnExpectedTokenException
+	 * @private
 	 */
-	internal function parsePackage():Node
+	internal function parsePackage():TokenNode
 	{
-		var end:int = -1;
+		var result:TokenNode = adapter.copy(
+			AS3NodeKind.PACKAGE, token);
 		
-		var result:Node = Node.create(
-			AS3NodeKind.PACKAGE, 
-			token.line, 
-			token.column);
-		result.start = scanner.offset;
-		
-		consume(KeyWords.PACKAGE);
-		
-		consumeComment();// added 
-		
-		var line:int = token.line;
-		var column:int = token.column;
-		
-		var start:int = scanner.offset - token.text.length;
-		
-		qualifiedNameEnd = scanner.offset;
-		var qualifiedName:String = "";
+		consumeWS(KeyWords.PACKAGE, result);
 		
 		if (!tokIs(Operators.LEFT_CURLY_BRACKET))
 		{
-			qualifiedName = parseQualifiedName();
+			result.addChild(parseTypeSpec(AS3NodeKind.NAME));
 		}
 		
-		var name:Node = Node.create(AS3NodeKind.NAME, line, column, qualifiedName);
-		name.start = start;
-		name.end = qualifiedNameEnd;
-		
-		result.addChild(name);
-		
-		consume(Operators.LEFT_CURLY_BRACKET);
 		result.addChild(parsePackageContent());
-		consume(Operators.RIGHT_CURLY_BRACKET);
-		
-		result.end = scanner.offset;
 		
 		return result;
 	}
 	
 	/**
-	 * token is first token of content
-	 * 
-	 * @throws UnExpectedTokenException
+	 * @private
 	 */
 	internal function parsePackageContent():IParserNode
 	{
-		var result:Node = Node.create(AS3NodeKind.CONTENT, 
-			token.line, token.column);
-		result.start = scanner.offset;
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.CONTENT,
+			AS3NodeKind.LCURLY, "{",
+			AS3NodeKind.RCURLY, "}") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
 		
-		var modifiers:Vector.<Token> = new Vector.<Token>();
-		var meta:Vector.<Node> = new Vector.<Node>();
+		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
+		
+		var pendingType:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
 		
 		while (!tokIs(Operators.RIGHT_CURLY_BRACKET)
 			&& !tokIs(KeyWords.EOF))
 		{
-			if (tokIs(KeyWords.IMPORT))
+			if (tokIs(KeyWords.INCLUDE))
+			{
+				result.addChild(parseInclude());
+			}
+			else if (tokIs(KeyWords.IMPORT))
 			{
 				result.addChild(parseImport());
-			}
-			else if (tokIs(KeyWords.INCLUDE))
-			{
-				result.addChild(parseIncludeExpression());
 			}
 			else if (tokIs(KeyWords.USE))
 			{
@@ -235,356 +228,287 @@ public class AS3Parser extends ParserBase
 			}
 			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
 			{
-				meta.push(parseMetaData());
+				result.addChild(parseMetaData());
+			}
+			else if (tokenStartsWith(ASDOC_COMMENT))
+			{
+				currentAsDoc = parseASdoc();
+				result.appendToken(adapter.createToken(
+					AS3NodeKind.AS_DOC, currentAsDoc.token.text));
 			}
 			else if (tokIs(KeyWords.CLASS))
 			{
-				result.addChild(parseClass(meta, modifiers));
-				
-				meta.length = 0;
-				modifiers.length = 0;
+				result.addChild(parseClass(pendingType));
 			}
 			else if (tokIs(KeyWords.INTERFACE))
 			{
-				result.addChild(parseInterface(meta, modifiers));
+				result.addChild(parseInterface(pendingType));
+			}
+			else
+			{
+				if (!tokIsWhitespace())
+				{
+					result.addChild(adapter.copy(
+						AS3NodeKind.MODIFIER, token));
+				}
 				
-				meta.length = 0;
-				modifiers.length = 0;
-			}
-			else if (tokIs(KeyWords.FUNCTION))
-			{
-				parseClassFunctions(result, modifiers, meta);
-			}
-			else if (tokenStartsWith("/**"))
-			{
-				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
-					ISourceCodeScanner(scanner).commentLine,
-					ISourceCodeScanner(scanner).commentColumn,
-					token.text);
-				ISourceCodeScanner(scanner).commentLine = -1;
-				ISourceCodeScanner(scanner).commentColumn = -1;
-				currentAsDoc.start = scanner.offset - token.text.length;
-				currentAsDoc.end = scanner.offset;
-				nextToken();
-			}
-			else if (tokenStartsWith("/*")) // junk comment
-			{
-				nextToken();
-			}
-			else
-			{
-				modifiers.push(token);
-				nextTokenIgnoringAsDoc();
+				nextNonWhiteSpaceToken(result);
 			}
 		}
-		
-		result.end = scanner.offset;
+	
+		consumeWS(Operators.RIGHT_CURLY_BRACKET, result, false);
 		
 		return result;
 	}
 	
 	/**
-	 * token is import
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseImport():Node
+	private function parseClass(result:TokenNode):TokenNode
 	{
-		consume(KeyWords.IMPORT);
-		var result:Node = Node.create(AS3NodeKind.IMPORT, 
-			token.line, token.column, parseImportName());
-		skip(Operators.SEMI_COLUMN);
-		return result;
-	}
-	
-	/**
-	 * token is the first part of a name the last part can be a star exit token is
-	 * the first token, which doesn't belong to the name
-	 * 
-	 * @throws TokenException
-	 */
-	private function parseImportName():String
-	{
-		var result:String = "";
+		result.kind = AS3NodeKind.CLASS;
+		result.stringValue = KeyWords.CLASS;
+		result.line = token.line;
+		result.column = token.column;
 		
-		result += token.text;
-		nextToken();
-		while (tokIs(Operators.DOT))
-		{
-			result += Operators.DOT;
-			nextToken(); // .
-			result += token.text;
-			nextToken(); // part of name
-		}
-		return result.toString();
-	}
-	
-	private function parseUse():Node
-	{
-		consume(KeyWords.USE);
-		consume(KeyWords.NAMESPACE);
-		var result:Node = Node.create(AS3NodeKind.USE,	
-			token.line,token.column, parseNamespaceName());
-		skip(Operators.SEMI_COLUMN);
-		return result;
-	}
-	
-	private function parseNamespaceName():String
-	{
-		var name:String = token.text;
-		nextToken(); // simple name for now
-		return name;
-	}
-	
-	private function parseMetaData():Node
-	{
-		var result:Node = Node.create(
-			AS3NodeKind.META, 
-			token.line, 
-			token.column);
+		addAsDoc(result);
 		
-		if (currentAsDoc != null)
-		{
-			result.addChild(currentAsDoc);
-			currentAsDoc = null;
-		}
+		consumeWS(KeyWords.CLASS, result);
 		
-		consume(Operators.LEFT_SQUARE_BRACKET);
+		result.addChild(adapter.copy(
+			AS3NodeKind.NAME, token));
 		
-		result.addRawChild(AS3NodeKind.NAME, 
-			token.line, token.column, token.text);
+		nextNonWhiteSpaceToken(result);
 		
-		nextToken(); // name
-		
-		if (tokIs(Operators.LEFT_PARENTHESIS))
-		{
-			result.addChild(parseMetaDataParameterList())
-		}
-		
-		consume(Operators.RIGHT_SQUARE_BRACKET);
-		
-		return result;
-	}
-	
-	private function parseMetaDataParameterList():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.PARAMETER_LIST,
-			token.line,
-			token.column);
-		
-		consume(Operators.LEFT_PARENTHESIS);
-		
-		while (!tokIs(Operators.RIGHT_PARENTHESIS))
-		{
-			result.addChild(parseMetaDataParameter());
-			if (tokIs(Operators.COMMA))
-			{
-				nextToken();
-			}
-			else
-			{
-				break;
-			}
-		}
-		consume(Operators.RIGHT_PARENTHESIS);
-		return result;
-	}
-	
-	/**
-	 * token is the name of a parameter or ...
-	 */
-	private function parseMetaDataParameter():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.PARAMETER,
-			token.line,
-			token.column);
-
-		result.addRawChild(AS3NodeKind.NAME,
-			token.line,
-			token.column,
-			token.text);
-		
-		nextToken(); // = or , or ]
-		
-		if (tokIs(Operators.EQUAL))
-		{
-			consume(Operators.EQUAL);
-			
-			result.addRawChild(AS3NodeKind.VALUE,
-				token.line,
-				token.column,
-				token.text);
-			
-			nextToken(); // , or ]
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * token is class
-	 * 
-	 * @param meta Node
-	 * @param modifier Token
-	 * @throws TokenException
-	 */
-	private function parseClass(metas:Vector.<Node>, 
-								modifiers:Vector.<Token>):Node
-	{
-		consume(KeyWords.CLASS);
-		consumeComment();
-		
-		var result:Node = Node.create(AS3NodeKind.CLASS, 
-			token.line, token.column);
-		
-		if (currentAsDoc != null)
-		{
-			result.addChild(currentAsDoc);
-			currentAsDoc = null;
-		}
-		result.addRawChild(AS3NodeKind.NAME, 
-			token.line, token.column ,token.text);
-		nextToken(); // name
-		consumeComment();
-		
-		result.addChild(convertMeta(metas));
-		result.addChild(convertModifiers(modifiers));
-		do
+		while (!tokIs(Operators.LEFT_CURLY_BRACKET))
 		{
 			if (tokIs(KeyWords.EXTENDS))
 			{
-				nextToken(); // extends
-				result.addRawChild(AS3NodeKind.EXTENDS,
-					token.line,
-					token.column,
-					parseQualifiedName());
+				result.addChild(parseExtendsList());
 			}
 			else if (tokIs(KeyWords.IMPLEMENTS))
 			{
 				result.addChild(parseImplementsList());
 			}
-			else if (tokenStartsWith("/*")) // junk comment
+			else
 			{
-				nextToken();
+				nextNonWhiteSpaceToken(result);
 			}
 		}
-		while (!tokIs(Operators.LEFT_CURLY_BRACKET));
-		consume(Operators.LEFT_CURLY_BRACKET);
+		
 		result.addChild(parseClassContent());
-		consume(Operators.RIGHT_CURLY_BRACKET);
+		
 		return result;
 	}
 	
-	
 	/**
-	 * token is interface
-	 * 
-	 * @param meta
-	 * @param modifier
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseInterface(metas:Vector.<Node>, 
-									modifiers:Vector.<Token>):Node
+	private function parseInterface(result:TokenNode):TokenNode
 	{
-		consume(KeyWords.INTERFACE);
-		var result:Node = Node.create(AS3NodeKind.INTERFACE,
-			token.line,
-			token.column);
+		result.kind = AS3NodeKind.INTERFACE;
+		result.stringValue = KeyWords.INTERFACE;
+		result.line = token.line;
+		result.column = token.column;
 		
-		if (currentAsDoc != null)
-		{
-			result.addChild(currentAsDoc);
-			currentAsDoc = null;
-		}
-		result.addRawChild(AS3NodeKind.NAME,
-			token.line,
-			token.column,
-			token.text);
-		nextToken(); // name
-		result.addChild(convertMeta(metas));
-		result.addChild(convertModifiers(modifiers));
+		addAsDoc(result);
 		
-		if (tokIs(KeyWords.EXTENDS))
+		consumeWS(KeyWords.INTERFACE, result);
+		
+		result.addChild(adapter.copy(
+			AS3NodeKind.NAME, token));
+		
+		nextNonWhiteSpaceToken(result);
+		
+		while (!tokIs(Operators.LEFT_CURLY_BRACKET))
 		{
-			nextToken(); // extends
-			result.addRawChild(AS3NodeKind.EXTENDS,
-				token.line,
-				token.column,
-				parseQualifiedName());
+			if (tokIs(KeyWords.EXTENDS))
+			{
+				result.addChild(parseExtendsList());
+			}
+			else
+			{
+				nextNonWhiteSpaceToken(result);
+			}
 		}
-		while (tokIs(Operators.COMMA))
-		{
-			nextTokenIgnoringAsDoc(); // comma
-			result.addRawChild(AS3NodeKind.EXTENDS,
-				token.line,
-				token.column,
-				parseQualifiedName());
-		}
-		consume(Operators.LEFT_CURLY_BRACKET);
+		
 		result.addChild(parseInterfaceContent());
-		consume(Operators.RIGHT_CURLY_BRACKET);
-		return result;
-	}
-	
-	
-	private function convertMeta(metas:Vector.<Node>):Node
-	{
-		if (metas == null || metas.length == 0)
-		{
-			return null;
-		}
-		
-		var meta:Node = metas[0];
-		
-		var result:Node = Node.create(
-			AS3NodeKind.META_LIST, 
-			meta.line, 
-			meta.column);
-		
-		var len:int = metas.length;
-		for (var i:int = 0; i < metas.length; i++)
-		{
-			result.addChild(Node(metas[i]));
-		}
-		
-		return result;
-	}	
-	
-	private function convertModifiers(modifiers:Vector.<Token>):Node
-	{
-		if (modifiers == null || modifiers.length == 0)
-		{
-			return null;
-		}
-		
-		var mod:Token = modifiers[0];
-		
-		var result:Node = Node.create(
-			AS3NodeKind.MOD_LIST, 
-			mod.line, 
-			mod.column);
-		
-		var len:int = modifiers.length;
-		for (var i:int = 0; i < modifiers.length; i++)
-		{
-			mod = modifiers[i];
-			
-			result.addRawChild(
-				AS3NodeKind.MODIFIER,
-				mod.line,
-				mod.column,
-				mod.text);
-		}
 		
 		return result;
 	}
-	
-	private var qualifiedNameEnd:int = -1;
 	
 	/**
-	 * token is first part of the name exit token is the first token after the name
-	 * 
-	 * @throws TokenException
+	 * @private
+	 */
+	internal function parseClassContent():TokenNode
+	{
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.CONTENT,
+			AS3NodeKind.LCURLY, "{",
+			AS3NodeKind.RCURLY, "}") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
+		
+		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
+		
+		var pendingMember:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
+		
+		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
+		{
+			if (tokenStartsWith(ASDOC_COMMENT))
+			{
+				currentAsDoc = parseASdoc();
+				var current:TokenNode = (pendingMember) ? pendingMember : result;
+				current.appendToken(adapter.createToken(
+					AS3NodeKind.AS_DOC, currentAsDoc.token.text));
+			}
+			else if (tokIs(KeyWords.INCLUDE))
+			{
+				result.addChild(parseInclude());
+			}
+			else if (tokIs(KeyWords.IMPORT))
+			{
+				result.addChild(parseImport());
+			}
+			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+			{
+				pendingMember.addChild(parseMetaData());
+			}
+			else if (tokIs(KeyWords.VAR))
+			{
+				result.addChild(parseClassField(pendingMember));
+				pendingMember = null;
+			}
+			else if (tokIs(KeyWords.CONST))
+			{
+				result.addChild(parseClassConstant(pendingMember));
+				pendingMember = null;
+			}
+			else if (tokIs(KeyWords.FUNCTION))
+			{
+				result.addChild(parseClassFunction(pendingMember));
+				pendingMember = null;
+			}
+			else
+			{
+				var isWhitespace:Boolean = tokIsWhitespace();
+				if (!isWhitespace)
+				{
+					if (!pendingMember)
+					{
+						pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
+					}
+					
+					addAsDoc(pendingMember);
+					
+					pendingMember.addChild(adapter.copy(
+						AS3NodeKind.MODIFIER, token));
+				}
+				
+				nextNonWhiteSpaceToken(pendingMember);
+			}
+		}
+		
+		consumeWS(Operators.RIGHT_CURLY_BRACKET, result, false);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 * TODO this can be merged into parseClassContent
+	 */
+	internal function parseInterfaceContent():TokenNode
+	{
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.CONTENT,
+			AS3NodeKind.LCURLY, "{",
+			AS3NodeKind.RCURLY, "}") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
+		
+		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
+		
+		var pendingMember:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
+		
+		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
+		{
+			if (tokenStartsWith(ASDOC_COMMENT))
+			{
+				currentAsDoc = parseASdoc();
+				var current:TokenNode = (pendingMember) ? pendingMember : result;
+				current.appendToken(adapter.createToken(
+					AS3NodeKind.AS_DOC, currentAsDoc.token.text));
+			}
+			else if (tokIs(KeyWords.INCLUDE))
+			{
+				result.addChild(parseInclude());
+			}
+			else if (tokIs(KeyWords.IMPORT))
+			{
+				result.addChild(parseImport());
+			}
+			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+			{
+				pendingMember.addChild(parseMetaData());
+			}
+			else if (tokIs(KeyWords.FUNCTION))
+			{
+				result.addChild(parseClassFunction(pendingMember));
+				pendingMember = null;
+			}
+			else
+			{
+				var isWhitespace:Boolean = tokIsWhitespace();
+				if (!isWhitespace)
+				{
+					if (!pendingMember)
+					{
+						pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
+					}
+					
+					addAsDoc(pendingMember);
+					
+					pendingMember.addChild(adapter.copy(
+						AS3NodeKind.MODIFIER, token));
+				}
+				
+				nextNonWhiteSpaceToken(pendingMember);
+			}
+		}
+		
+		consumeWS(Operators.RIGHT_CURLY_BRACKET, result, false);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseTypeSpec(kind:String):TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			kind, token);
+		
+		var buffer:String = "";
+		consumeWhitespace(result);
+		buffer += token.text;
+		nextNonWhiteSpaceToken(result);
+		while (tokIs(Operators.DOT) || tokIs(Operators.DOUBLE_COLUMN))
+		{
+			buffer += token.text;
+			nextNonWhiteSpaceToken(result);
+			buffer += token.text;
+			nextNonWhiteSpaceToken(result);
+		}
+		
+		result.stringValue = buffer;
+		
+		return result;
+	}
+	
+	/**
+	 * @private
 	 */
 	private function parseQualifiedName():String
 	{
@@ -600,207 +524,1333 @@ public class AS3Parser extends ParserBase
 			qualifiedNameEnd = scanner.offset;
 			nextToken(); // name
 		}
-		return buffer.toString();
+		return buffer;
 	}
 	
 	/**
-	 * token is implements implements a,b,c exit token is the first token after the
-	 * list of qualfied names
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseImplementsList():Node
+	private function parseInclude():TokenNode
 	{
-		consume(KeyWords.IMPLEMENTS);
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.INCLUDE, token);
 		
-		var result:Node = Node.create(AS3NodeKind.IMPLEMENTS_LIST, token.line, token.column);
-		result.addRawChild(AS3NodeKind.IMPLEMENTS,
-			token.line,
-			token.column,
-			parseQualifiedName());
+		consume(KeyWords.INCLUDE, result);
+		result.addChild(parseExpression());
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseImport():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.IMPORT, token);
+		
+		consume(KeyWords.IMPORT, result);
+		
+		result.addChild(parseTypeSpec(AS3NodeKind.TYPE));
+		
+		skip(Operators.SEMI_COLUMN, result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseUse():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.USE, token);
+		
+		consume(KeyWords.USE, result);
+		consume(KeyWords.NAMESPACE, result);
+		
+		result.addChild(parseTypeSpec(AS3NodeKind.NAME));
+		
+		skip(Operators.SEMI_COLUMN, result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseMetaData():Node
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.META, token);
+		
+		addAsDoc(result);
+		
+		consume(Operators.LEFT_SQUARE_BRACKET, result);
+		
+		result.addChild(adapter.copy(
+			AS3NodeKind.NAME, token));
+		
+		nextNonWhiteSpaceToken(result); // name
+		
+		if (tokIs(Operators.LEFT_PARENTHESIS))
+		{
+			result.addChild(parseMetaDataParameterList())
+		}
+		
+		consume(Operators.RIGHT_SQUARE_BRACKET, result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseMetaDataParameterList():Node
+	{
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.PARAMETER_LIST,
+			AS3NodeKind.LPAREN, "(",
+			AS3NodeKind.RPAREN, ")") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
+		
+		consumeWS(Operators.LEFT_PARENTHESIS, result);
+		
+		while (!tokIs(Operators.RIGHT_PARENTHESIS))
+		{
+			result.addChild(parseMetaDataParameter());
+			if (tokIs(Operators.COMMA))
+			{
+				consume(Operators.COMMA, result);
+			}
+			else
+			{
+				break;
+			}
+		}
+		
+		consumeWS(Operators.RIGHT_PARENTHESIS, result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseMetaDataParameter():Node
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.PARAMETER, token);
+		
+		var nameOrValue:TokenNode = adapter.copy(AS3NodeKind.NAME, token);
+		result.addChild(nameOrValue);
+		
+		nextNonWhiteSpaceToken(result); // = or , or ]
+		
+		if (tokIs(Operators.EQUAL))
+		{
+			consume(Operators.EQUAL, result);
+			result.addChild(parseExpression());
+		}
+		else
+		{
+			nameOrValue.kind = AS3NodeKind.VALUE;
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseImplementsList():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.IMPLEMENTS, token);
+		
+		consume(KeyWords.IMPLEMENTS, result);
+		
+		result.addChild(parseTypeSpec(AS3NodeKind.TYPE));
+		
 		while (tokIs(Operators.COMMA))
 		{
-			nextToken();
-			result.addRawChild(AS3NodeKind.IMPLEMENTS,
-				token.line,
+			consume(Operators.COMMA, result);
+			result.addChild(parseTypeSpec(AS3NodeKind.TYPE));
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseExtendsList():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.EXTENDS, token);
+		
+		consume(KeyWords.EXTENDS, result);
+		
+		result.addChild(parseTypeSpec(AS3NodeKind.TYPE));
+		
+		while (tokIs(Operators.COMMA))
+		{
+			consume(Operators.COMMA, result);
+			result.addChild(parseTypeSpec(AS3NodeKind.TYPE));
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseClassField(result:TokenNode):TokenNode
+	{
+		result.kind = AS3NodeKind.VAR_LIST;
+		var mod:LinkedListToken = findToken(result.token, AS3NodeKind.MODIFIER);
+		if (mod)
+		{
+			result.line = mod.line;
+			result.column = mod.column;
+		}
+		result = parseVarList(result);
+		skip(Operators.SEMI_COLUMN, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseClassConstant(result:TokenNode):TokenNode
+	{
+		result.kind = AS3NodeKind.CONST_LIST;
+		var mod:LinkedListToken = findToken(result.token, AS3NodeKind.MODIFIER);
+		if (mod)
+		{
+			result.line = mod.line;
+			result.column = mod.column;
+		}
+		result = parseConstList(result);
+		skip(Operators.SEMI_COLUMN, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseClassFunction(result:TokenNode):TokenNode
+	{
+		if (!result)
+		{
+			result = adapter.copy(AS3NodeKind.FUNCTION, token);
+		}
+		
+		result.kind = AS3NodeKind.FUNCTION;
+		var mod:LinkedListToken = findToken(result.token, AS3NodeKind.MODIFIER);
+		if (mod)
+		{
+			result.line = mod.line;
+			result.column = mod.column;
+		}
+		
+		consume(KeyWords.FUNCTION, result);
+		parseFunction(result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseConstList(result:TokenNode):TokenNode
+	{
+		if (!result)
+		{
+			result = adapter.copy(AS3NodeKind.CONST_LIST, token);
+		}
+		
+		consume(KeyWords.CONST, result);
+		collectVarListContent(result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseVarList(result:TokenNode):TokenNode
+	{
+		if (!result)
+		{
+			result = adapter.copy(AS3NodeKind.VAR_LIST, token);
+		}
+		
+		consume(KeyWords.VAR, result);
+		collectVarListContent(result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function collectVarListContent(result:TokenNode):TokenNode
+	{
+		result.addChild(parseNameTypeInit());
+		while (tokIs(Operators.COMMA))
+		{
+			//nextNonWhiteSpaceToken(result);
+			consume(Operators.COMMA, result);
+			result.addChild(parseNameTypeInit());
+		}
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseNameTypeInit():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.NAME_TYPE_INIT, token);
+		
+		result.addChild(adapter.copy(
+			AS3NodeKind.NAME, token));
+		
+		nextNonWhiteSpaceToken(result);
+		if (tokIs(Operators.COLUMN))
+		{
+			result.addChild(parseOptionalType(result));
+			if (!tokIs(Operators.EQUAL))
+			{
+				if (tokIs(Operators.SEMI_COLUMN))
+				{
+					skip(Operators.SEMI_COLUMN, result);
+				}
+				// FIXME 
+				else if (!tokIs(Operators.COMMA)
+					&& !tokIs(Operators.RIGHT_PARENTHESIS))
+				{
+					nextNonWhiteSpaceToken(result);
+				}
+			}
+			else
+			{
+				skip(Operators.SEMI_COLUMN, result);
+			}
+		}
+		
+		if (tokIs(Operators.EQUAL))
+		{
+			result.addChild(parseOptionalInit(result));
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseOptionalType(node:TokenNode):TokenNode
+	{
+		var result:TokenNode;
+		
+		if (tokIs(Operators.COLUMN))
+		{		
+			consume(Operators.COLUMN, node);
+			result = parseType();
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	internal function parseType():TokenNode
+	{
+		var line:int = token.line;
+		var column:int = token.column;
+		
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.TYPE, token);
+		
+		if (token.text == VECTOR)
+		{
+			result = parseVector();
+		}
+		else
+		{
+			result.stringValue = parseQualifiedName();
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseVector():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.VECTOR, token);
+		
+		consume("Vector", result);
+		consume(Operators.VECTOR_START, result);
+		
+		result.addChild(parseType());
+		
+		consume(Operators.SUPERIOR, result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseOptionalInit(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = null;
+		if (tokIs(Operators.EQUAL))
+		{
+			consume(Operators.EQUAL, node);
+			result = adapter.empty(
+				AS3NodeKind.INIT, token);
+			result.addChild(parseExpression());
+		}
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findToken(token:LinkedListToken, kind:String):LinkedListToken
+	{
+		var next:LinkedListToken = token;
+		while (next)
+		{
+			if (next.kind == kind)
+				return next;
+			
+			next = next.next;
+		}
+		return null;
+	}
+	
+	private function parseFunction(result:TokenNode):TokenNode
+	{
+		if (tokIs(KeyWords.GET) || tokIs(KeyWords.SET))
+		{
+			result.kind = token.text;
+			consume(result.kind, result);
+		}
+		else
+		{
+			result.kind = AS3NodeKind.FUNCTION;
+		}
+		
+		result.addChild(adapter.copy(AS3NodeKind.NAME, token));
+		
+		nextNonWhiteSpaceToken(result);
+		
+		result.addChild(parseParameterList());
+		result.addChild(parseOptionalType(result));
+		
+		if (tokIs(Operators.SEMI_COLUMN))
+		{
+			consume(Operators.SEMI_COLUMN, result);
+			return result;
+		}
+		
+		nextNonWhiteSpaceToken(result);
+		
+		if (!tokIs(Operators.LEFT_CURLY_BRACKET))
+		{
+			return result;
+		}
+		
+		result.addChild(parseBlock());
+		
+		nextNonWhiteSpaceToken(result);
+		
+		return result;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Expression :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	internal function parseExpression():IParserNode
+	{
+		return parseAssignmentExpression();
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseAssignmentExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.ASSIGN, token);
+		
+		result.addChild(parseConditionalExpression());
+		while (tokIs(Operators.EQUAL)
+			|| tokIs(Operators.PLUS_EQUAL) || tokIs(Operators.MINUS_EQUAL)
+			|| tokIs(Operators.TIMES_EQUAL) || tokIs(Operators.DIVIDED_EQUAL)
+			|| tokIs(Operators.MODULO_EQUAL) || tokIs(Operators.AND_EQUAL) 
+			|| tokIs(Operators.OR_EQUAL) || tokIs(Operators.XOR_EQUAL))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseConditionalExpression():TokenNode
+	{
+		var result:TokenNode = parseOrExpression() as TokenNode;
+		if (tokIs(Operators.QUESTION_MARK))
+		{
+			var conditional:TokenNode = adapter.empty(
+				AS3NodeKind.CONDITIONAL, token, result);
+			nextNonWhiteSpaceToken(conditional); // ?
+			conditional.addChild(parseExpression());
+			nextNonWhiteSpaceToken(conditional); // :
+			conditional.addChild(parseExpression());
+			
+			return conditional;
+		}
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseOrExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.OR, token, parseAndExpression());
+		
+		while (tokIs(Operators.LOGICAL_OR))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseAndExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseAndExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.AND, token, parseBitwiseOrExpression());
+		
+		while (tokIs(Operators.AND))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseBitwiseOrExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseBitwiseOrExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.B_OR, token, parseBitwiseXorExpression());
+		
+		while (tokIs(Operators.B_OR))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseBitwiseXorExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseBitwiseXorExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.B_XOR, token, parseBitwiseAndExpression());
+		
+		while (tokIs(Operators.B_XOR))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseBitwiseAndExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseBitwiseAndExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.B_AND, token, parseEqualityExpression());
+		
+		while (tokIs(Operators.B_AND))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseEqualityExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseEqualityExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.EQUALITY, token, parseRelationalExpression());
+		
+		while (tokIs(Operators.DOUBLE_EQUAL)
+			|| tokIs(Operators.STRICTLY_EQUAL) || tokIs(Operators.NON_EQUAL)
+			|| tokIs(Operators.NON_STRICTLY_EQUAL))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseRelationalExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseRelationalExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.RELATION, token, parseShiftExpression());
+		
+		while (tokIs(Operators.INFERIOR )
+			|| tokIs(Operators.INFERIOR_OR_EQUAL) || tokIs(Operators.SUPERIOR)
+			|| tokIs(Operators.SUPERIOR_OR_EQUAL) || tokIs(KeyWords.IS) || tokIs(KeyWords.IN)
+			&& !isInFor || tokIs( KeyWords.AS) || tokIs(KeyWords.INSTANCE_OF))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseShiftExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseShiftExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.SHIFT, token, parseAdditiveExpression());
+		
+		while (tokIs(Operators.DOUBLE_SHIFT_LEFT)
+			|| tokIs(Operators.DOUBLE_SHIFT_RIGHT)
+			|| tokIs(Operators.TRIPLE_SHIFT_LEFT)
+			|| tokIs(Operators.TRIPLE_SHIFT_RIGHT))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseAdditiveExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseAdditiveExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.ADD, token, parseMultiplicativeExpression());
+		
+		while (tokIs(Operators.PLUS)
+			|| tokIs(Operators.MINUS))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseMultiplicativeExpression());
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseMultiplicativeExpression():IParserNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.MULTIPLICATION, token);
+		result.addChild(parseUnaryExpression(result));
+		
+		while (tokIs(Operators.TIMES)
+			|| tokIs(Operators.SLASH) 
+			|| tokIs(Operators.MODULO))
+		{
+			result.addChild(adapter.copy(
+				AS3NodeKind.OP, token));
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseUnaryExpression(result));
+		}
+		return result.numChildren > 1 ? result : result.getChild(0);
+	}
+	
+	/**
+	 * @private
+	 */
+	internal function parseUnaryExpression(node:TokenNode):IParserNode
+	{
+		var result:TokenNode;
+		var line:int = token.line;
+		var column:int = token.column;
+		
+		if (tokIs(Operators.INCREMENT))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.PRE_INC,
+				Operators.INCREMENT, 
+				token.line, 
 				token.column,
-				parseQualifiedName() );
+				parseUnaryExpression(node));
+		}
+		else if (tokIs(Operators.DECREMENT))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.PRE_DEC,
+				Operators.DECREMENT, 
+				line, 
+				column,
+				parseUnaryExpression(node));
+		}
+		else if (tokIs(Operators.MINUS))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.MINUS,
+				Operators.MINUS, 
+				token.line, 
+				token.column,
+				parseUnaryExpression(node));
+		}
+		else if (tokIs(Operators.PLUS))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.PLUS,
+				Operators.PLUS, 
+				token.line, 
+				token.column,
+				parseUnaryExpression(node));
+		}
+		else
+		{
+			result = parseUnaryExpressionNotPlusMinus(node);
 		}
 		return result;
 	}
 	
 	/**
-	 * token is first content token
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	internal function parseClassContent():Node
+	private function parseUnaryExpressionNotPlusMinus(node:TokenNode):TokenNode
 	{
-		var result:Node = Node.create(AS3NodeKind.CONTENT,
-			token.line,
-			token.column);
-		var modifiers:Vector.<Token> = new Vector.<Token>();
-		var meta:Vector.<Node> = new Vector.<Node>();
+		var result:TokenNode;
+		if (tokIs(KeyWords.DELETE))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.DELETE,
+				KeyWords.DELETE, 
+				token.line, 
+				token.column,
+				parseExpression());
+		}
+		else if (tokIs(KeyWords.VOID))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.VOID,
+				KeyWords.VOID, 
+				token.line, 
+				token.column,
+				parseExpression());
+		}
+		else if (tokIs(KeyWords.TYPEOF))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.TYPEOF,
+				KeyWords.TYPEOF, 
+				token.line, 
+				token.column,
+				parseExpression());
+		}
+		else if (tokIs("!"))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.NOT,
+				"!", 
+				token.line, 
+				token.column,
+				parseExpression());
+		}
+		else if (tokIs("~"))
+		{
+			nextNonWhiteSpaceToken(node);
+			result = adapter.create(
+				AS3NodeKind.B_NOT,
+				"~", 
+				token.line, 
+				token.column,
+				parseExpression());
+		}
+		else
+		{
+			result = parseUnaryPostfixExpression(node);
+		}
 		
-		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
-		{
-			if (tokIs(Operators.LEFT_CURLY_BRACKET))
-			{
-				result.addChild(parseBlock());
-			}
-			if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-			{
-				meta.push(parseMetaData());
-			}
-			else if (tokIs(KeyWords.VAR))
-			{
-				parseClassField(result, modifiers, meta);
-			}
-			else if (tokIs(KeyWords.CONST))
-			{
-				parseClassConstant(result, modifiers, meta);
-			}
-			else if (tokIs(KeyWords.IMPORT))
-			{
-				result.addChild(parseImport());
-			}
-			else if (tokIs(KeyWords.INCLUDE))
-			{
-				result.addChild(parseIncludeExpression());
-			}
-			else if (tokIs(KeyWords.FUNCTION))
-			{
-				parseClassFunctions(result, modifiers, meta);
-			}
-			else if (tokenStartsWith("/**"))
-			{
-				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
-					ISourceCodeScanner(scanner).commentLine,
-					ISourceCodeScanner(scanner).commentColumn,
-					token.text);
-				ISourceCodeScanner(scanner).commentLine = -1;
-				ISourceCodeScanner(scanner).commentColumn = -1;
-				currentAsDoc.start = scanner.offset - token.text.length;
-				currentAsDoc.end = scanner.offset;
-				nextToken();
-			}
-			else if (tokenStartsWith("/*")) // junk comment
-			{
-				nextToken();
-			}
-			else
-			{
-				modifiers.push(token);
-				nextTokenIgnoringAsDoc();
-			}
-		}
 		return result;
 	}
 	
 	/**
-	 * token is first content token
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	internal function parseInterfaceContent():IParserNode
+	internal function parsePrimaryExpression():TokenNode
 	{
-		var result:Node = Node.create(AS3NodeKind.CONTENT,
-			token.line,
-			token.column);
-		var meta:Vector.<Node> = new Vector.<Node>();
-		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.PRIMARY, token);
+		
+		if (tokIs(Operators.LEFT_SQUARE_BRACKET))
 		{
-			if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+			result.addChild(parseArrayLiteral());
+		}
+		else if (tokIs(Operators.LEFT_CURLY_BRACKET))
+		{
+			result.addChild(parseObjectLiteral());
+		}
+		else if (tokIs(KeyWords.FUNCTION))
+		{
+			result.addChild(parseLambdaExpression());
+		}
+		else if (tokIs(KeyWords.THROW))
+		{
+			result.addChild(parseThrowExpression());
+		}
+		else if (tokIs(KeyWords.NEW))
+		{
+			result.addChild(parseNewExpression());
+		}
+		else if (tokIs(Operators.LEFT_PARENTHESIS))
+		{
+			result.addChild(parseEncapsulatedExpression());
+		}
+		else
+		{
+			if (token.text.indexOf("\"") == 0 
+				|| token.text.indexOf("'") == 0)
 			{
-				meta.push(parseMetaData());
+				result.kind = AS3NodeKind.STRING;
 			}
-			else if (tokIs(KeyWords.IMPORT))
+			else if (!isNaN(parseInt(token.text)) 
+				|| !isNaN(parseFloat(token.text)))
 			{
-				result.addChild(parseImport());
+				result.kind = AS3NodeKind.NUMBER;
 			}
-			else if (tokIs(KeyWords.FUNCTION))
+			else if (token.text.indexOf("/") == 0)
 			{
-				var func:Node = parseFunctionSignature();
-				func.addChild(convertMeta(meta));
-				result.addChild(func);
-				meta.length = 0;
+				result.kind = AS3NodeKind.REG_EXP;
 			}
-			else if (tokIs(KeyWords.INCLUDE))
+			else if (token.text.indexOf("<") == 0)
 			{
-				result.addChild(parseIncludeExpression());
-			}
-			else if (tokenStartsWith("/**"))
-			{
-				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
-					ISourceCodeScanner(scanner).commentLine,
-					ISourceCodeScanner(scanner).commentColumn,
-					token.text);
-				ISourceCodeScanner(scanner).commentLine = -1;
-				ISourceCodeScanner(scanner).commentColumn = -1;
-				currentAsDoc.start = scanner.offset - token.text.length;
-				currentAsDoc.end = scanner.offset;
-				nextToken();
+				result.kind = AS3NodeKind.XML;
 			}
 			else
 			{
-				nextTokenIgnoringAsDoc();
+				if (tokIs(KeyWords.TRUE))
+				{
+					result.kind = AS3NodeKind.TRUE;
+				}
+				else if (tokIs(KeyWords.FALSE))
+				{
+					result.kind = AS3NodeKind.FALSE;
+				}
+				else if (tokIs(KeyWords.NULL))
+				{
+					result.kind = AS3NodeKind.NULL;
+				}
+				else if (tokIs(KeyWords.UNDEFINED))
+				{
+					result.kind = AS3NodeKind.UNDEFINED;
+				}
 			}
+			
+			result.stringValue = token.text;
+			result.token.text = token.text;
+			
+			nextNonWhiteSpaceToken(result);
 		}
+		
 		return result;
-	}	
+	}
 	
-	private function parseIncludeExpression():IParserNode
+	
+	/**
+	 * @private
+	 */
+	private function parseArrayLiteral():TokenNode
 	{
-		var result:Node = Node.create(AS3NodeKind.INCLUDE,
-			token.line,
-			token.column);
-		consume(KeyWords.INCLUDE);
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.ARRAY,
+			AS3NodeKind.LBRACKET, "[",
+			AS3NodeKind.RBRACKET, "]") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
+		
+		consumeWS(Operators.LEFT_SQUARE_BRACKET, result);
+		while (!tokIs(Operators.RIGHT_SQUARE_BRACKET))
+		{
+			result.addChild(parseExpression());
+			skip(Operators.COMMA, result);
+		}
+		consumeWS(Operators.RIGHT_SQUARE_BRACKET, result, false);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseObjectLiteral():TokenNode
+	{
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.OBJECT,
+			AS3NodeKind.LCURLY, "{",
+			AS3NodeKind.RCURLY, "}") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
+		
+		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
+		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
+		{
+			result.addChild(parseObjectLiteralPropertyDeclaration());
+			skip(Operators.COMMA, result);
+		}
+		consumeWS(Operators.RIGHT_CURLY_BRACKET, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseObjectLiteralPropertyDeclaration():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.PROP, token);
+		
+		result.addChild(adapter.copy(
+			AS3NodeKind.NAME, token));
+		
+		nextNonWhiteSpaceToken(result);
+		
+		consume(Operators.COLUMN, result);
+		var value:TokenNode = adapter.empty(
+			AS3NodeKind.VALUE, token);
+		value.addChild(parseExpression());
+		result.addChild(value);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseLambdaExpression():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.LAMBDA, token);
+		
+		consume(KeyWords.FUNCTION, result);
+		
+		result.addChild(parseParameterList());
+		nextNonWhiteSpaceToken(result);
+		result.addChild(parseOptionalType(result));
+		nextNonWhiteSpaceToken(result);
+		result.addChild(parseBlock());
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseThrowExpression():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.THROW, token);
+		
+		consume(KeyWords.THROW, result);
+		
 		result.addChild(parseExpression());
+		
 		return result;
 	}
 	
 	/**
-	 * token is function exit token is the first token after the optional ;
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseFunctionSignature():Node
+	private function parseNewExpression():TokenNode
 	{
-		var signature:Array = doParseSignature();
-		skip(Operators.SEMI_COLUMN);
-		var result:Node = Node.create(findFunctionTypeFromSignature(signature),
-			token.line,
-			token.column,
-			signature[0].stringValue);
-		if (currentAsDoc != null)
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.NEW, token);
+		
+		consume(KeyWords.NEW, result);
+		
+		result.addChild(parseExpression()); // name
+		
+		if (tokIs(Operators.VECTOR_START))
 		{
-			result.addChild(currentAsDoc);
-			currentAsDoc = null;
-		}      
-		result.addChild(signature[1]);
-		result.addChild(signature[2]);
-		result.addChild(signature[3]);
-		return result;
-	}
-	
-	/**
-	 * token is { exit token is the first token after }
-	 * 
-	 * @throws TokenException
-	 */
-	private function parseBlock():Node
-	{
-		// FIXME Hack
-		if (tokenStartsWith(MULTIPLE_LINES_COMMENT))
-		{
-			nextTokenIgnoringAsDoc(); // /* ... */
+			consume(Operators.VECTOR_START, result);
+			consume(token.text, result);
+			consume(Operators.SUPERIOR, result);
 		}
 		
-		consume(Operators.LEFT_CURLY_BRACKET);
+		if (tokIs(Operators.LEFT_PARENTHESIS))
+		{
+			result.addChild(parseArgumentList());
+		}
 		
-		var result:Node = Node.create(AS3NodeKind.BLOCK,
-			token.line,
-			token.column);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseEncapsulatedExpression():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.ENCAPSULATED, token);
+		
+		consume(Operators.LEFT_PARENTHESIS, result);
+		result.addChild(parseExpressionList());
+		consume(Operators.RIGHT_PARENTHESIS, result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseArgumentList():TokenNode
+	{
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.ARGUMENTS,
+			AS3NodeKind.LPAREN, "(",
+			AS3NodeKind.RPAREN, ")") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
+		
+		consumeWS(Operators.LEFT_PARENTHESIS, result);
+		while (!tokIs(Operators.RIGHT_PARENTHESIS))
+		{
+			result.addChild(parseExpression());
+			skip(Operators.COMMA, result);
+		}
+		consumeWS(Operators.RIGHT_PARENTHESIS, result, false);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseParameterList():TokenNode
+	{
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.PARAMETER_LIST,
+			AS3NodeKind.LPAREN, "(",
+			AS3NodeKind.RPAREN, ")") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
+		
+		consumeWS(Operators.LEFT_PARENTHESIS, result);
+		while (!tokIs(Operators.RIGHT_PARENTHESIS))
+		{
+			result.addChild(parseParameter());
+			if (tokIs(Operators.COMMA))
+			{
+				consume(Operators.COMMA, result);
+			}
+		}
+		consume(Operators.RIGHT_PARENTHESIS);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseParameter():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.PARAMETER, token);
+		
+		if (tokIs(Operators.REST_PARAMETERS))
+		{
+			consume(Operators.REST_PARAMETERS, result);
+			var rest:TokenNode = adapter.copy(
+				AS3NodeKind.REST, token);
+			nextNonWhiteSpaceToken(result);
+			result.addChild(rest);
+		}
+		else
+		{
+			result.addChild(parseNameTypeInit());
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseUnaryPostfixExpression(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = parsePrimaryExpression();
+		
+		if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+		{
+			result = parseArrayAccessor(result);
+		}
+		else if (tokIs(Operators.LEFT_PARENTHESIS))
+		{
+			result = parseFunctionCall(result);
+		}
+		if (tokIs(Operators.INCREMENT))
+		{
+			result = parseIncrement(result);
+		}
+		else if (tokIs(Operators.DECREMENT))
+		{
+			result = parseDecrement(result);
+		}
+		else if (tokIs(Operators.DOT)
+			|| tokIs(Operators.DOUBLE_COLUMN)
+			|| tokIs(Operators.DOUBLE_DOT))
+		{
+			result = parseDot(result);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseArrayAccessor(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.ARRAY_ACCESSOR, token, node);
+		
+		while (tokIs(Operators.LEFT_SQUARE_BRACKET))
+		{
+			consume(Operators.LEFT_SQUARE_BRACKET, result); // [
+			result.addChild(parseExpression());
+			consume(Operators.RIGHT_SQUARE_BRACKET, result);
+		}
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseFunctionCall(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.CALL, token, node);
+		
+		while (tokIs(Operators.LEFT_PARENTHESIS))
+		{
+			result.addChild(parseArgumentList());
+			consumeWhitespace(result);
+		}
+		while (tokIs(Operators.LEFT_SQUARE_BRACKET))
+		{
+			result.addChild(parseArrayLiteral());
+			consumeWhitespace(result);
+		}
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseIncrement(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.POST_INC, token);
+		
+		result.addChild(node);
+		consume(Operators.INCREMENT, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseDecrement(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.POST_DEC, token);
+		
+		result.addChild(node);
+		consume(Operators.DECREMENT, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseDot(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.DOT, token, node);
+		
+		if (tokIs(Operators.DOUBLE_DOT))
+		{
+			result = adapter.empty(
+				AS3NodeKind.E4X_DESCENDENT, token, node);
+			consume(Operators.DOUBLE_DOT, result);
+			result.addChild(parseExpression());
+			return result;
+		}
+		
+		if (tokIs(Operators.DOT))
+		{
+			consume(Operators.DOT, result);
+		}
+		else if (tokIs(Operators.DOUBLE_COLUMN))
+		{
+			consume(Operators.DOUBLE_COLUMN, result);
+			result.kind = AS3NodeKind.DOUBLE_COLUMN;
+		}
+		
+		if (tokIs(Operators.LEFT_PARENTHESIS))
+		{
+			result = ASTUtil2.newParentheticAST(
+				AS3NodeKind.E4X_FILTER,
+				AS3NodeKind.LPAREN, "(",
+				AS3NodeKind.RPAREN, ")") as TokenNode;
+			result.line = token.line;
+			result.column = token.column;
+			consumeWS(Operators.LEFT_PARENTHESIS, result);
+			result.addChild(node);
+			result.addChild(parseExpression());
+			consumeWS(Operators.RIGHT_PARENTHESIS, result);
+			return result;
+		}
+		else if (tokIs(Operators.TIMES))
+		{
+			result = adapter.empty(
+				AS3NodeKind.E4X_STAR, token, node);
+			
+			return result;
+		}
+		else if (tokIs(Operators.AT))
+		{
+			result.addChild(parseE4XAttributeIdentifier());
+			return result;
+		}
+		
+		result.addChild(parseExpression());
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseE4XAttributeIdentifier():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.E4X_ATTR, token);
+		
+		consume(Operators.AT, result);
+		
+		if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+		{
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseExpression());
+			consume(Operators.RIGHT_SQUARE_BRACKET, result);
+		}
+		else if (tokIs(Operators.TIMES))
+		{
+			result.addChild(adapter.create(
+				AS3NodeKind.STAR,
+				token.text, 
+				token.line, 
+				token.column));
+			consumeWS(Operators.TIMES, result);
+		}
+		else
+		{
+			result.addChild(adapter.create(
+				AS3NodeKind.NAME,
+				token.text, 
+				token.line, 
+				token.column));
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseBlock():TokenNode
+	{
+		var result:TokenNode = ASTUtil2.newParentheticAST(
+			AS3NodeKind.BLOCK,
+			AS3NodeKind.LCURLY, "{",
+			AS3NodeKind.RCURLY, "}") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
+		
+		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
 		
 		ISourceCodeScanner(scanner).inBlock = true;
 		
@@ -831,1109 +1881,47 @@ public class AS3Parser extends ParserBase
 					break;
 				}
 				
-				nextTokenIgnoringAsDoc();
+				nextTokenIgnoringAsDoc(result);
 			}
 		}
 		
-		consume(Operators.RIGHT_CURLY_BRACKET);
+		consumeWS(Operators.RIGHT_CURLY_BRACKET, result, false);
 		
 		ISourceCodeScanner(scanner).inBlock = false;
 		
 		return result;
 	}
 	
-	private function parseClassField(result:Node, 
-									 modifiers:Vector.<Token>, 
-									 meta:Vector.<Node>):void
-	{
-		var varList:Node = parseVarList(meta, modifiers);
-		result.addChild(varList);
-		if (currentAsDoc != null)
-		{
-			varList.addChild(currentAsDoc);
-			currentAsDoc = null;
-		}
-		if (tokenStartsWith("/*")) // FIXME
-		{
-			nextToken(); // /* .. bogus comment .. */
-		}
-		if (tokIs(Operators.SEMI_COLUMN))
-		{
-			nextToken();
-		}
-		meta.length = 0;
-		modifiers.length = 0;
-	}
-	
 	/**
-	 * token is var var x, y : String, z : int = 0;
-	 * 
-	 * @param modifiers
-	 * @param meta
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseVarList(meta:Vector.<Node>, 
-								  modifiers:Vector.<Token>):Node
-	{
-		consume(KeyWords.VAR);
-		var result:Node = Node.create(AS3NodeKind.VAR_LIST,
-			token.line,
-			token.column);
-		result.addChild(convertMeta(meta));
-		result.addChild(convertModifiers(modifiers));
-		collectVarListContent(result);
-		return result;
-	}
-	
-	private function collectVarListContent(result:Node):IParserNode
-	{
-		result.addChild(parseNameTypeInit());
-		while (tokIs(Operators.COMMA))
-		{
-			nextToken();
-			result.addChild(parseNameTypeInit());
-		}
-		return result;
-	}
-	
-	private function parseNameTypeInit():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.NAME_TYPE_INIT,
-			token.line,
-			token.column );
-		result.addRawChild(AS3NodeKind.NAME,
-			token.line,
-			token.column,
-			token.text);
-		nextToken(); // name
-		result.addChild(parseOptionalType());
-		result.addChild(parseOptionalInit());
-		return result;
-	}
-	
-	/**
-	 * if token is ":" parse the type otherwise do nothing
-	 * 
-	 * @return
-	 * @throws TokenException
-	 */
-	private function parseOptionalType():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.TYPE,
-			token.line,
-			token.column,
-			"");
-		if (tokIs(Operators.COLUMN))
-		{
-			nextToken(); // :
-			result = parseType();
-		}
-		// FIXME should be nextTokenIgnoringAsdoc(), test
-		if (tokenStartsWith("/*"))
-		{
-			nextToken(); // garbage
-		}		
-		return result;
-	}
-	
-	private function parseType():Node
-	{
-		var result:Node;
-		if (token.text == VECTOR)
-		{
-			result = parseVector();
-		}
-		else
-		{
-			// type could be qualified
-			var buffer:String = "";
-			var line:int = token.line;
-			var column:int = token.column;
-			
-			buffer += token.text;
-			nextToken();
-			while (tokIs(Operators.DOT) || tokIs(Operators.DOUBLE_COLUMN))
-			{
-				buffer += token.text;
-				nextToken();
-				buffer += token.text;
-				nextToken(); // name
-			}
-			
-			result = Node.create(AS3NodeKind.TYPE, line, column, buffer);
-		}
-		return result;
-	}
-	
-	private function parseVector():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.VECTOR,
-			token.line,
-			token.column,
-			"");
-		nextToken();
-		consume(Operators.VECTOR_START);
-		
-		result.addChild(parseType());
-		
-		consume(Operators.SUPERIOR);
-		
-		return result;
-	}
-	
-	/**
-	 * if token is "=" parse the expression otherwise do nothing
-	 * 
-	 * @return
-	 */
-	private function parseOptionalInit():Node
-	{
-		var result:Node = null;
-		if (tokenStartsWith("/*"))
-		{
-			nextToken(); // garbage
-		}
-		if (tokIs(Operators.EQUAL))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.INIT,
-				token.line,
-				token.column,
-				parseExpression());
-		}
-		return result;
-	}
-	
-	internal function parseExpression():IParserNode
-	{
-		return parseAssignmentExpression();
-	}
-	
-	
-	private function parseAssignmentExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.ASSIGN,
-			token.line,
-			token.column,
-			parseConditionalExpression());
-		while (tokIs(Operators.EQUAL)
-			|| tokIs(Operators.PLUS_EQUAL) || tokIs(Operators.MINUS_EQUAL)
-			|| tokIs(Operators.TIMES_EQUAL) || tokIs(Operators.DIVIDED_EQUAL)
-			|| tokIs(Operators.MODULO_EQUAL) || tokIs(Operators.AND_EQUAL) || tokIs(Operators.OR_EQUAL)
-			|| tokIs(Operators.XOR_EQUAL))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseConditionalExpression():IParserNode
-	{
-		var result:IParserNode = parseOrExpression();
-		if (tokIs(Operators.QUESTION_MARK))
-		{
-			var conditional:Node = Node.createChild(AS3NodeKind.CONDITIONAL,
-				token.line,
-				token.column,
-				result);
-			nextToken(); // ?
-			conditional.addChild(parseExpression());
-			nextToken(); // :
-			conditional.addChild(parseExpression());
-			
-			return conditional;
-		}
-		return result;
-	}
-	
-	private function parseOrExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.OR,
-			token.line,
-			token.column,
-			parseAndExpression());
-		while (tokIs(Operators.LOGICAL_OR))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseAndExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseAndExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.AND,
-			token.line,
-			token.column,
-			parseBitwiseOrExpression());
-		while (tokIs(Operators.AND))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseBitwiseOrExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseBitwiseOrExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.B_OR,
-			token.line,
-			token.column,
-			parseBitwiseXorExpression());
-		while (tokIs(Operators.B_OR))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseBitwiseXorExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseBitwiseXorExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.B_XOR,
-			token.line,
-			token.column,
-			parseBitwiseAndExpression());
-		while (tokIs(Operators.B_XOR))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseBitwiseAndExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseBitwiseAndExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.B_AND,
-			token.line,
-			token.column,
-			parseEqualityExpression());
-		while (tokIs(Operators.B_AND))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseEqualityExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseEqualityExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.EQUALITY,
-			token.line,
-			token.column,
-			parseRelationalExpression());
-		while (tokIs(Operators.DOUBLE_EQUAL)
-			|| tokIs(Operators.STRICTLY_EQUAL) || tokIs(Operators.NON_EQUAL)
-			|| tokIs(Operators.NON_STRICTLY_EQUAL))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseRelationalExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseRelationalExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.RELATION,
-			token.line,
-			token.column,
-			parseShiftExpression());
-		while (tokIs(Operators.INFERIOR )
-			|| tokIs(Operators.INFERIOR_OR_EQUAL) || tokIs(Operators.SUPERIOR)
-			|| tokIs(Operators.SUPERIOR_OR_EQUAL) || tokIs(KeyWords.IS) || tokIs(KeyWords.IN)
-			&& !isInFor || tokIs( KeyWords.AS) || tokIs(KeyWords.INSTANCE_OF))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseShiftExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseShiftExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.SHIFT,
-			token.line,
-			token.column,
-			parseAdditiveExpression());
-		while (tokIs(Operators.DOUBLE_SHIFT_LEFT)
-			|| tokIs(Operators.DOUBLE_SHIFT_RIGHT)
-			|| tokIs(Operators.TRIPLE_SHIFT_LEFT)
-			|| tokIs(Operators.TRIPLE_SHIFT_RIGHT))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseAdditiveExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseAdditiveExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.ADD,
-			token.line,
-			token.column,
-			parseMultiplicativeExpression());
-		while (tokIs(Operators.PLUS)
-			|| tokIs(Operators.MINUS))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseMultiplicativeExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	private function parseMultiplicativeExpression():IParserNode
-	{
-		var result:Node = Node.createChild(AS3NodeKind.MULTIPLICATION,
-			token.line,
-			token.column,
-			parseUnaryExpression());
-		while (tokIs(Operators.TIMES)
-			|| tokIs(Operators.SLASH) 
-			|| tokIs(Operators.MODULO))
-		{
-			result.addChild(Node.create(AS3NodeKind.OP,
-				token.line,
-				token.column,
-				token.text));
-			nextToken();
-			result.addChild(parseUnaryExpression());
-		}
-		return result.numChildren > 1 ? result : result.getChild(0);
-	}
-	
-	internal function parseUnaryExpression():IParserNode
-	{
-		var result:Node;
-		if (tokIs(Operators.INCREMENT))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.PRE_INC,
-				token.line,
-				token.column,
-				parseUnaryExpression());
-		}
-		else if (tokIs(Operators.DECREMENT))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.PRE_DEC,
-				token.line,
-				token.column,
-				parseUnaryExpression());
-		}
-		else if (tokIs(Operators.MINUS))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.MINUS,
-				token.line,
-				token.column,
-				parseUnaryExpression());
-		}
-		else if (tokIs(Operators.PLUS))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.PLUS,
-				token.line,
-				token.column,
-				parseUnaryExpression());
-		}
-		else
-		{
-			result = parseUnaryExpressionNotPlusMinus();
-		}
-		return result;
-	}
-	
-	private function parseUnaryExpressionNotPlusMinus():Node
-	{
-		var result:Node;
-		if (tokIs(KeyWords.DELETE))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.DELETE,
-				token.line,
-				token.column,
-				parseExpression());
-		}
-		else if (tokIs(KeyWords.VOID))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.VOID,
-				token.line,
-				token.column,
-				parseExpression());
-		}
-		else if (tokIs(KeyWords.TYPEOF))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.TYPEOF,
-				token.line,
-				token.column,
-				parseExpression());
-		}
-		else if (tokIs("!"))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.NOT,
-				token.line,
-				token.column,
-				parseExpression());
-		}
-		else if (tokIs("~" ))
-		{
-			nextToken();
-			result = Node.createChild(AS3NodeKind.B_NOT,
-				token.line,
-				token.column,
-				parseExpression());
-		}
-		else
-		{
-			result = parseUnaryPostfixExpression();
-		}
-		return result;
-	}
-	
-	private function parseUnaryPostfixExpression():Node
-	{
-		var node:Node = parsePrimaryExpression();
-		
-		if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-		{
-			node = parseArrayAccessor(node);
-		}
-		else if (tokIs(Operators.LEFT_PARENTHESIS))
-		{
-			node = parseFunctionCall(node);
-		}
-		if (tokIs(Operators.INCREMENT))
-		{
-			node = parseIncrement(node);
-		}
-		else if (tokIs(Operators.DECREMENT))
-		{
-			node = parseDecrement(node);
-		}
-		else if (tokIs(Operators.DOT)
-			|| tokIs(Operators.DOUBLE_COLUMN)
-			|| tokIs(Operators.DOUBLE_DOT))
-		{
-			node = parseDot(node);
-		}
-		return node;
-	}
-	
-	internal function parsePrimaryExpression():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.PRIMARY,
-			token.line,
-			token.column,
-			token.text);
-		
-		if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-		{
-			result.addChild(parseArrayLiteral());
-		}
-		else if (tokIs(Operators.LEFT_CURLY_BRACKET))
-		{
-			result.addChild(parseObjectLiteral());
-		}
-		else if (tokIs(KeyWords.FUNCTION))
-		{
-			result.addChild(parseLambdaExpression());
-		}
-		else if (tokIs(KeyWords.NEW))
-		{
-			result = parseNewExpression();
-		}
-		else if (tokIs(Operators.LEFT_PARENTHESIS))
-		{
-			result.addChild(parseEncapsulatedExpression());
-		}
-			// else if ( token.isNum()
-			// || tokIs( KeyWords.TRUE ) || tokIs( KeyWords.FALSE ) || tokIs(
-			// KeyWords.NULL )
-			// || token.text.startsWith( Operators.DOUBLE_QUOTE.toString() )
-			// || token.text.startsWith( Operators.SIMPLE_QUOTE.toString() )
-			// || token.text.startsWith( Operators.SLASH.toString() )
-			// || token.text.startsWith( Operators.INFERIOR.toString() ) || tokIs(
-			// KeyWords.UNDEFINED ) )
-			// {
-			// nextToken();
-			// }
-		else
-		{
-			nextToken();
-		}
-		return result;
-	}
-	
-	/**
-	 * token is [
-	 */
-	private function parseArrayLiteral():IParserNode
-	{
-		var result:Node = Node.create(AS3NodeKind.ARRAY,
-			token.line,
-			token.column);
-		consume(Operators.LEFT_SQUARE_BRACKET);
-		while (!tokIs(Operators.RIGHT_SQUARE_BRACKET))
-		{
-			result.addChild(parseExpression());
-			skip(Operators.COMMA);
-		}
-		consume(Operators.RIGHT_SQUARE_BRACKET);
-		return result;
-	}
-	
-	/**
-	 * token is {
-	 */
-	private function parseObjectLiteral():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.OBJECT,
-			token.line,
-			token.column);
-		consume(Operators.LEFT_CURLY_BRACKET);
-		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
-		{
-			result.addChild(parseObjectLiteralPropertyDeclaration());
-			skip(Operators.COMMA);
-		}
-		consume(Operators.RIGHT_CURLY_BRACKET);
-		return result;
-	}
-	
-	/*
-	* token is name
-	*/
-	private function parseObjectLiteralPropertyDeclaration():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.PROP,
-			token.line,
-			token.column);
-		var name:Node = Node.create(AS3NodeKind.NAME,
-			token.line,
-			token.column,
-			token.text);
-		result.addChild(name);
-		nextToken(); // name
-		consume(Operators.COLUMN);
-		result.addChild(Node.createChild(AS3NodeKind.VALUE,
-			token.line,
-			token.column,
-			parseExpression()));
-		return result;
-	}
-	
-	/**
-	 * token is function
-	 * 
-	 * @throws TokenException
-	 */
-	private function parseLambdaExpression():Node
-	{
-		consume(KeyWords.FUNCTION);
-		var result:Node = Node.create(AS3NodeKind.LAMBDA,
-			token.line,
-			token.column);
-		result.addChild(parseParameterList());
-		result.addChild(parseOptionalType());
-		result.addChild(parseBlock());
-		return result;
-	}
-	
-	private function parseNewExpression():Node
-	{
-		consume(KeyWords.NEW);
-		
-		var result:Node = Node.create(AS3NodeKind.NEW,
-			token.line,
-			token.column);
-		result.addChild(parseExpression()); // name
-		
-		// TODO this should go into the AST, what should it be?
-		// take care of vector int
-		if (tokIs(".<"))
-		{
-			consume(".<");
-			nextToken(); // Vector type declaration on new
-			consume(">");
-		}
-		
-		if (tokIs(Operators.LEFT_PARENTHESIS))
-		{
-			result.addChild(parseArgumentList());
-		}
-		return result;
-	}
-	
-	private function parseEncapsulatedExpression():Node
-	{
-		consume(Operators.LEFT_PARENTHESIS);
-		var result:Node = Node.create(AS3NodeKind.ENCAPSULATED,
-			token.line,
-			token.column);
-		result.addChild(parseExpressionList());
-		
-		consume(Operators.RIGHT_PARENTHESIS);
-		
-		return result;
-	}
-	
-	private function parseArrayAccessor(node:Node):Node
-	{
-		var result:Node = Node.create(AS3NodeKind.ARRAY_ACCESSOR,
-			token.line,
-			token.column);
-		result.addChild(node);
-		while (tokIs(Operators.LEFT_SQUARE_BRACKET))
-		{
-			nextToken(); // [
-			result.addChild(parseExpression());
-			consume(Operators.RIGHT_SQUARE_BRACKET);
-		}
-		return result;
-	}
-	
-	private function parseFunctionCall(node:Node):Node
-	{
-		var result:Node = Node.create(AS3NodeKind.CALL,
-			token.line,
-			token.column);
-		result.addChild(node);
-		while (tokIs(Operators.LEFT_PARENTHESIS))
-		{
-			result.addChild(parseArgumentList());
-		}
-		while (tokIs(Operators.LEFT_SQUARE_BRACKET))
-		{
-			result.addChild(parseArrayLiteral());
-		}
-		
-		return result;
-	}
-	
-	private function parseIncrement(node:Node):Node
-	{
-		nextToken();
-		var result:Node = Node.create(AS3NodeKind.POST_INC,
-			token.line,
-			token.column);
-		result.addChild(node);
-		return result;
-	}
-	
-	private function parseDecrement(node:Node):Node
-	{
-		nextToken();
-		var result:Node = Node.create(AS3NodeKind.POST_DEC,
-			token.line,
-			token.column);
-		result.addChild(node);
-		return result;
-	}
-	
-	private function parseDot(node:Node):Node
-	{
-		var result:Node;
-		if (tokIs(Operators.DOUBLE_DOT))
-		{
-			nextToken();
-			result = Node.create(AS3NodeKind.E4X_DESCENDENT,
-				token.line,
-				token.column);
-			result.addChild(node);
-			result.addChild(parseExpression());
-			return result;
-		}
-		nextToken();
-		if (tokIs(Operators.LEFT_PARENTHESIS))
-		{
-			nextToken();
-			result = Node.create(AS3NodeKind.E4X_FILTER,
-				token.line,
-				token.column);
-			result.addChild(node);
-			result.addChild(parseExpression());
-			consume(Operators.RIGHT_PARENTHESIS);
-			return result;
-		}
-		else if (tokIs(Operators.TIMES))
-		{
-			result = Node.create(AS3NodeKind.E4X_STAR,
-				token.line,
-				token.column);
-			result.addChild(node);
-			return result;
-		}
-		else if (tokIs(Operators.AT))
-		{
-			result = Node.create(AS3NodeKind.DOT,
-				token.line,
-				token.column);
-			result.addChild(node);
-			result.addChild(parseE4XAttributeIdentifier());
-			return result;
-		}
-		result = Node.create(AS3NodeKind.DOT,
-			token.line,
-			token.column);
-		result.addChild(node);
-		result.addChild(parseExpression());
-		return result;
-	}
-	
-	private function parseE4XAttributeIdentifier():Node
-	{
-		consume(Operators.AT);
-		
-		var result:Node = Node.create(AS3NodeKind.E4X_ATTR,
-			token.line,
-			token.column);
-		if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-		{
-			nextToken();
-			result.addChild(parseExpression());
-			consume(Operators.RIGHT_SQUARE_BRACKET);
-		}
-		else if (tokIs(Operators.TIMES))
-		{
-			nextToken();
-			result.addChild(Node.create(AS3NodeKind.STAR,
-				token.line,
-				token.column));
-		}
-		else
-		{
-			result.addChild(Node.create(AS3NodeKind.NAME,
-				token.line,
-				token.column,
-				parseQualifiedName()));
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * token is (
-	 * 
-	 * @throws TokenException
-	 */
-	private function parseParameterList():Node
-	{
-		consume(Operators.LEFT_PARENTHESIS);
-		
-		var result:Node = Node.create(AS3NodeKind.PARAMETER_LIST,
-			token.line,
-			token.column);
-		while (!tokIs(Operators.RIGHT_PARENTHESIS))
-		{
-			result.addChild(parseParameter());
-			if (tokIs(Operators.COMMA))
-			{
-				nextToken();
-			}
-			else
-			{
-				break;
-			}
-		}
-		consume(Operators.RIGHT_PARENTHESIS);
-		return result;
-	}
-	
-	/**
-	 * token is the name of a parameter or ...
-	 */
-	private function parseParameter():Node
-	{
-		var result:Node = Node.create(AS3NodeKind.PARAMETER,
-			token.line,
-			token.column);
-		if (tokIs(Operators.REST_PARAMETERS))
-		{
-			nextToken(); // ...
-			var rest:Node = Node.create(AS3NodeKind.REST,
-				token.line,
-				token.column,
-				token.text);
-			nextToken(); // rest
-			result.addChild(rest);
-		}
-		else
-		{
-			result.addChild(parseNameTypeInit());
-		}
-		return result;
-	}
-	
-	/**
-	 * token is ( exit token is first token after )
-	 */
-	private function parseArgumentList():Node
-	{
-		consume(Operators.LEFT_PARENTHESIS);
-		var result:Node = Node.create(AS3NodeKind.ARGUMENTS,
-			token.line,
-			token.column);
-		while (!tokIs(Operators.RIGHT_PARENTHESIS))
-		{
-			result.addChild(parseExpression());
-			skip(Operators.COMMA);
-		}
-		consume(Operators.RIGHT_PARENTHESIS);
-		return result;
-	}
-	
 	internal function parseExpressionList():IParserNode
 	{
-		var result:Node = Node.createChild(AS3NodeKind.EXPR_LIST,
-			token.line,
-			token.column,
-			parseAssignmentExpression());
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.EXPR_LIST, token);
+		
+		result.addChild(parseAssignmentExpression());
+		
 		while (tokIs(Operators.COMMA))
 		{
-			nextToken();
+			nextNonWhiteSpaceToken(result);
 			result.addChild(parseAssignmentExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
 	}
 	
-	private function parseClassConstant(result:Node, 
-										modifiers:Vector.<Token>, 
-										meta:Vector.<Node>):void
-	{
-		result.addChild(parseConstList(modifiers, meta));
-		if (tokIs(Operators.SEMI_COLUMN))
-		{
-			nextToken();
-		}
-		meta.length = 0;
-		modifiers.length = 0;
-	}
+	//--------------------------------------------------------------------------
+	//
+	//  Statement :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * token is const
-	 * 
-	 * @param modifiers
-	 * @param meta
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseConstList(modifiers:Vector.<Token>, 
-									meta:Vector.<Node>):Node
-	{
-		consume(KeyWords.CONST);
-		var result:Node = Node.create(AS3NodeKind.CONST_LIST,
-			token.line,
-			token.column);
-		result.addChild(convertMeta(meta));
-		if (currentAsDoc != null)
-		{
-			result.addChild(currentAsDoc);
-			currentAsDoc = null;
-		}
-		result.addChild(convertModifiers(modifiers));
-		collectVarListContent(result);
-		return result;
-	}
-	
-	private function parseClassFunctions(result:Node, 
-										 modifiers:Vector.<Token>, 
-										 meta:Vector.<Node>):void
-	{
-		result.addChild(parseFunction(modifiers, meta));
-		meta.length = 0;
-		modifiers.length = 0;
-	}
-	
-	/**
-	 * token is function
-	 * 
-	 * @param modifiers
-	 * @param meta
-	 * @throws TokenException
-	 */
-	private function parseFunction(modifiers:Vector.<Token>, 
-								   meta:Vector.<Node>):Node
-	{
-		var signature:Array = doParseSignature(); // Node
-		var result:Node = Node.create(findFunctionTypeFromSignature(signature),
-			token.line,
-			token.column,
-			signature[0].stringValue);
-		
-		if (currentAsDoc != null)
-		{
-			result.addChild(currentAsDoc);
-			currentAsDoc = null;
-		}
-		result.addChild(convertMeta(meta));
-		result.addChild(convertModifiers( modifiers));
-		result.addChild(signature[1]);
-		result.addChild(signature[2]);
-		result.addChild(signature[3]);
-		result.addChild(parseBlock());
-		return result;
-	}
-	
-	private function doParseSignature():Array // Node
-	{
-		consume(KeyWords.FUNCTION);
-		
-		var type:Node = Node.create(AS3NodeKind.TYPE,
-			token.line,
-			token.column,
-			KeyWords.FUNCTION);
-		if (tokIs(KeyWords.SET) || tokIs(KeyWords.GET))
-		{
-			type = Node.create(AS3NodeKind.TYPE,
-				token.line,
-				token.column,
-				token.text);
-			nextToken(); // set or get
-		}
-		var name:Node = Node.create(AS3NodeKind.NAME,
-			token.line,
-			token.column,
-			token.text);
-		nextToken(); // name
-		var params:Node = parseParameterList();
-		var returnType:Node = parseOptionalType();
-		
-		return [type, name, params, returnType];
-	}
-	
-	private function findFunctionTypeFromSignature(signature:Array):String // AS3NodeKind
-	{
-		for each (var node:Node in signature)
-		{
-			if (node.isKind(AS3NodeKind.TYPE))
-			{
-				if (node.stringValue == "set")
-				{
-					return AS3NodeKind.SET;
-				}
-				if (node.stringValue == "get")
-				{
-					return AS3NodeKind.GET;
-				}
-				return AS3NodeKind.FUNCTION;
-			}
-		}
-		return AS3NodeKind.FUNCTION;
-	}
-	
-	/**
-	 * Get the next token Skip comments and newlines for now In the end we want
-	 * to keep them though.
-	 * 
-	 * @throws TokenException
-	 */
-	override public function nextToken():void
-	{
-		do
-		{
-			nextTokenAllowNewLine();
-		}
-		while (token.text == NEW_LINE);
-	}	
-	
-	/**
-	 * Get the next token Skip comments but keep newlines We need this method for
-	 * beeing able to decide if a returnStatement has an expression
-	 * 
-	 * @throws NullTokenError
-	 */
-	private function nextTokenAllowNewLine():void
-	{
-		do
-		{
-			token = scanner.nextToken();
-			
-			if (token == null)
-			{
-				throw new NullTokenError(fileName);
-			}
-			if (token.text == null)
-			{
-				throw new NullTokenError(fileName);
-			}
-		}
-		while (tokenStartsWith(SINGLE_LINE_COMMENT));
-	}	
-	
-	private function nextTokenIgnoringAsDoc():void
-	{
-		do
-		{
-			nextToken();
-		}
-		while (tokenStartsWith(MULTIPLE_LINES_COMMENT));
-	}
-	
-	private function consumeComment():void
-	{
-		while (tokenStartsWith(MULTIPLE_LINES_COMMENT))
-		{
-			nextToken();
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	//  ADDED statement impl
-	
 	internal function parseStatement():IParserNode
 	{
-		var result:IParserNode;
+		var result:TokenNode;
 		
 		if (tokIs(KeyWords.FOR))
 		{
@@ -1989,256 +1977,320 @@ public class AS3Parser extends ParserBase
 		}
 		else
 		{
-			result = parseExpressionList();
-			skip(Operators.SEMI_COLUMN);
+			result = parseExpressionList() as TokenNode;
+			skip(Operators.SEMI_COLUMN, result);
 		}
 		return result;
 	}
 	
 	/**
-	 * token is for
-	 * 
-	 * @throws TokenError
+	 * @private
 	 */
-	private function parseFor():Node
+	private function parseFor():TokenNode
 	{
-		consume(KeyWords.FOR);
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.FOR, token);
+		
+		consume(KeyWords.FOR, result);
 		
 		if (tokIs(KeyWords.EACH))
 		{
-			nextToken();
-			return parseForEach();
+			consume(KeyWords.EACH, result);
+			return parseForEach(result);
 		}
 		else
 		{
-			return parseTraditionalFor();
+			return parseTraditionalFor(result);
 		}
 	}
 	
 	/**
-	 * token is ( for each( var obj : Type in List )
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseForEach():Node
+	private function parseForEach(node:TokenNode):TokenNode
 	{
-		consume(Operators.LEFT_PARENTHESIS);
+		consume(Operators.LEFT_PARENTHESIS, node);
 		
-		var result:Node = Node.create(AS3NodeKind.FOREACH,
-			token.line,
-			token.column);
 		if (tokIs(KeyWords.VAR))
 		{
-			var variable:Node = Node.create(AS3NodeKind.VAR,
-				token.line,
-				token.column);
-			nextToken();
+			var variable:TokenNode = adapter.empty(
+				AS3NodeKind.VAR, token);
+			
+			consume(KeyWords.VAR, node);
 			variable.addChild(parseNameTypeInit());
-			result.addChild(variable);
+			node.addChild(variable);
 		}
 		else
 		{
-			result.addRawChild(AS3NodeKind.NAME,
-				token.line,
-				token.column,
-				token.text);
-			// names allowed?
-			nextToken();
+			var name:TokenNode = adapter.copy(
+				AS3NodeKind.NAME, token);
+			node.addChild(name);
+			
+			nextNonWhiteSpaceToken(node);
 		}
-		nextToken(); // in
-		result.addNodeChild(AS3NodeKind.IN,
-			token.line,
-			token.column,
-			parseExpression());
-		consume(Operators.RIGHT_PARENTHESIS);
-		result.addChild(parseStatement());
-		return result;
+		var ini:TokenNode = adapter.empty(
+			AS3NodeKind.IN, token);
+		
+		consume(KeyWords.IN, node);
+		ini.addChild(parseExpression());
+		node.addChild(ini);
+		
+		consume(Operators.RIGHT_PARENTHESIS, node);
+		node.addChild(parseStatement());
+		node.kind = AS3NodeKind.FOREACH;
+		return node;
 	}
 	
 	/**
-	 * token is ( for( var x : int = 0; i < length; i++ ) for( var s : String in
-	 * Object )
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseTraditionalFor():Node
+	private function parseTraditionalFor(node:TokenNode):TokenNode
 	{
-		consume(Operators.LEFT_PARENTHESIS);
+		consume(Operators.LEFT_PARENTHESIS, node);
 		
-		var result:Node = Node.create(AS3NodeKind.FOR,
-			token.line,
-			token.column);
+		var init:TokenNode;
+		
 		if (!tokIs(Operators.SEMI_COLUMN))
 		{
 			if (tokIs(KeyWords.VAR))
 			{
-				result.addNodeChild(AS3NodeKind.INIT,
-					token.line,
-					token.column,
-					parseVarList(null, null));
+				init = adapter.empty(
+					AS3NodeKind.INIT, token);
+				init.addChild(parseVarList(null));
+				node.addChild(init);
 			}
 			else
 			{
 				isInFor = true;
-				result.addNodeChild(AS3NodeKind.INIT,
-					token.line,
-					token.column,
-					parseExpression());
+				init = adapter.empty(
+					AS3NodeKind.INIT, token);
+				init.addChild(parseExpression());
+				node.addChild(init);
 				isInFor = false;
 			}
 			if (tokIs(AS3NodeKind.IN))
 			{
-				return parseForIn(result);
+				return parseForIn(node);
 			}
 		}
-		consume(Operators.SEMI_COLUMN);
+		consume(Operators.SEMI_COLUMN, node);
 		if (!tokIs(Operators.SEMI_COLUMN))
 		{
-			result.addNodeChild(AS3NodeKind.COND,
-				token.line,
-				token.column,
-				parseExpression());
+			var cond:TokenNode = adapter.empty(
+				AS3NodeKind.COND, token);
+			cond.addChild(parseExpression());
+			node.addChild(cond);
 		}
-		consume(Operators.SEMI_COLUMN);
+		consume(Operators.SEMI_COLUMN, node);
 		if (!tokIs(Operators.RIGHT_PARENTHESIS))
 		{
-			result.addNodeChild(AS3NodeKind.ITER,
-				token.line,
-				token.column,
-				parseExpressionList());
+			var iter:TokenNode = adapter.empty(
+				AS3NodeKind.ITER, token);
+			iter.addChild(parseExpressionList());
+			node.addChild(iter);
 		}
-		consume(Operators.RIGHT_PARENTHESIS);
-		result.addChild(parseStatement());
-		return result;
-	}
-	
-	private function parseForIn(result:Node):Node
-	{
-		nextToken();
-		result.addNodeChild(AS3NodeKind.IN,
-			token.line,
-			token.column,
-			parseExpression());
-		result.kind = AS3NodeKind.FORIN;
-		return result;
+		consume(Operators.RIGHT_PARENTHESIS, node);
+		node.addChild(parseStatement());
+		node.kind = AS3NodeKind.FOR;
+		return node;
 	}
 	
 	/**
-	 * token is if
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseIf():Node
+	private function parseForIn(node:TokenNode):TokenNode
 	{
-		consume(KeyWords.IF);
-		var result:Node = Node.createChild(AS3NodeKind.IF,
-			token.line,
-			token.column,
-			parseCondition());
+		var ini:TokenNode = adapter.empty(
+			AS3NodeKind.IN, token);
+		
+		consume(KeyWords.IN, node);
+		ini.addChild(parseExpression());
+		node.addChild(ini);
+		node.kind = AS3NodeKind.FORIN;
+		consume(Operators.RIGHT_PARENTHESIS, node);
+		
+		node.addChild(parseStatement());
+		return node;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseIf():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.IF, token);
+		
+		consume(KeyWords.IF, result);
+		result.addChild(parseCondition());
 		result.addChild(parseStatement());
+		nextNonWhiteSpaceToken(result);
 		if (tokIs(KeyWords.ELSE))
 		{
-			nextToken();
+			consume(KeyWords.ELSE, result);
 			result.addChild(parseStatement());
 		}
 		return result;
 	}
 	
 	/**
-	 * token is (
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	internal function parseCondition():Node
+	internal function parseCondition():IParserNode
 	{
-		consume(Operators.LEFT_PARENTHESIS);
-		var result:Node = Node.createChild(AS3NodeKind.CONDITION,
-			token.line,
-			token.column,
-			parseExpression());
-		consume(Operators.RIGHT_PARENTHESIS);
-		return result;
-	}
-	
-	/**
-	 * tok is switch
-	 * 
-	 * @throws TokenException
-	 */
-	private function parseSwitch():Node
-	{
-		consume(KeyWords.SWITCH);
-		var result:Node = Node.createChild(AS3NodeKind.SWITCH,
-			token.line,
-			token.column,
-			parseCondition());
-		if (tokIs(Operators.LEFT_CURLY_BRACKET))
-		{
-			nextToken();
-			result.addChild(parseSwitchCases());
-			consume(Operators.RIGHT_CURLY_BRACKET);
-		}
-		return result;
-	}
-	
-	/**
-	 * tok is { exit tok is }
-	 * 
-	 * @throws TokenException
-	 */
-	private function parseSwitchCases():Node
-	{
-		var caseNode:Node;
-		var result:Node = Node.create(AS3NodeKind.CASES,
-			token.line,
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.CONDITION,
+			null, 
+			token.line, 
 			token.column);
+		consume(Operators.LEFT_PARENTHESIS, result);
+		result.addChild(parseExpression());
+		consume(Operators.RIGHT_PARENTHESIS, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseEmptyStatement():TokenNode
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.STMT_EMPTY,
+			Operators.SEMI_COLUMN, 
+			token.line, 
+			token.column);
+		
+		consume(Operators.SEMI_COLUMN, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseReturnStatement():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.RETURN, token);
+		
+		consume(AS3NodeKind.RETURN, result);
+		if (tokIs(NEW_LINE) || tokIs(Operators.SEMI_COLUMN))
+		{
+			result.stringValue = "";
+			result.token.text = "";
+		}
+		else
+		{
+			result.addChild(parseExpression());
+		}
+		skip(Operators.SEMI_COLUMN, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseSwitch():TokenNode
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.SWITCH,
+			null, 
+			token.line, 
+			token.column);
+		
+		consume(KeyWords.SWITCH, result);
+		
+		result.addChild(parseCondition());
+		result.addChild(parseSwitchCases());
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseSwitchCases():TokenNode
+	{
+		if (!tokIs(Operators.LEFT_CURLY_BRACKET))
+		{
+			return null;
+		}
+		
+		var caseNode:TokenNode;
+		
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.CASES,
+			null, 
+			token.line, 
+			token.column);
+		
+		consume(Operators.LEFT_CURLY_BRACKET, result);
+		
 		for (;;)
 		{
-			if (tokIs(Operators.RIGHT_CURLY_BRACKET))
+			if (tokIs(KeyWords.CASE))
 			{
-				break;
-			}
-			else if (tokIs( KeyWords.CASE))
-			{
-				nextToken(); // case
-				caseNode = Node.createChild(AS3NodeKind.CASE,
-					token.line,
-					token.column,
-					parseExpression());
-				consume(Operators.COLUMN);
+				caseNode = adapter.create(
+					AS3NodeKind.CASE,
+					null, 
+					token.line, 
+					token.column);
+				
+				consume(KeyWords.CASE, result);
+				caseNode.addChild(parseExpression());
+				
+				consume(Operators.COLUMN, caseNode);
+				
 				caseNode.addChild(parseSwitchBlock());
+				
 				result.addChild(caseNode);
 			}
 			else if (tokIs(KeyWords.DEFAULT))
 			{
-				nextToken(); // default
-				consume(Operators.COLUMN);
-				caseNode = Node.createChild(AS3NodeKind.CASE,
-					token.line,
-					token.column,
-					Node.create(AS3NodeKind.DEFAULT,
-						token.line,
-						token.column,
-						KeyWords.DEFAULT));
+				caseNode = adapter.create(
+					AS3NodeKind.CASE,
+					null, 
+					token.line, 
+					token.column);
+				
+				caseNode.addChild(
+					adapter.create(
+						AS3NodeKind.DEFAULT,
+						null, 
+						token.line, 
+						token.column));
+				
+				consume(KeyWords.DEFAULT, result);
+				consume(Operators.COLUMN, result);
+				
 				caseNode.addChild(parseSwitchBlock());
+				
 				result.addChild(caseNode);
 			}
+			else if (tokIs(Operators.RIGHT_CURLY_BRACKET))
+			{
+				break;
+			}
 		}
+		
+		consume(Operators.RIGHT_CURLY_BRACKET, result);
+		
 		return result;
 	}
 	
 	/**
-	 * tok is case, default or the first token of the first statement
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseSwitchBlock():Node
+	private function parseSwitchBlock():TokenNode
 	{
-		var result:Node = Node.create(AS3NodeKind.SWITCH_BLOCK,
-			token.line,
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.SWITCH_BLOCK,
+			null, 
+			token.line, 
 			token.column);
+		
 		while (!tokIs(KeyWords.CASE)
-			&& !tokIs(KeyWords.DEFAULT) && !tokIs(Operators.RIGHT_CURLY_BRACKET))
+			&& !tokIs(KeyWords.DEFAULT) 
+			&& !tokIs(Operators.RIGHT_CURLY_BRACKET))
 		{
 			result.addChild(parseStatement());
 		}
@@ -2246,245 +2298,224 @@ public class AS3Parser extends ParserBase
 	}
 	
 	/**
-	 * tok is do
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseDo():Node
+	private function parseDo():TokenNode
 	{
-		consume(KeyWords.DO);
-		var result:Node = Node.createChild(AS3NodeKind.DO,
-			token.line,
-			token.column,
-			parseStatement());
-		consume(KeyWords.WHILE);
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.DO,
+			null, 
+			token.line, 
+			token.column);
+		
+		consume(KeyWords.DO, result);
+		result.addChild(parseStatement());
+		
+		consume(KeyWords.WHILE, result);
 		result.addChild(parseCondition());
-		if (tokIs(Operators.SEMI_COLUMN))
-		{
-			nextToken();
-		}
+		skip(Operators.SEMI_COLUMN, result);
+		
 		return result;
 	}
 	
 	/**
-	 * tok is while
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseWhile():Node
+	private function parseWhile():TokenNode
 	{
-		consume(KeyWords.WHILE);
-		var result:Node = Node.create(AS3NodeKind.WHILE,
-			token.line,
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.WHILE,
+			null, 
+			token.line, 
 			token.column);
+		
+		consume(KeyWords.WHILE, result);
 		result.addChild(parseCondition());
 		result.addChild(parseStatement());
 		return result;
 	}
 	
-	private function parseTry():Node
-	{
-		nextToken();
-		var result:Node = Node.createChild(AS3NodeKind.TRY,
-			token.line,
-			token.column,
-			parseBlock());
-		return result;
-	}
-	
 	/**
-	 * tok is catch
-	 * 
-	 * @throws TokenException
+	 * @private
 	 */
-	private function parseCatch():Node
+	private function parseTry():TokenNode
 	{
-		consume(KeyWords.CATCH);
-		consume(Operators.LEFT_PARENTHESIS);
-		var result:Node = Node.createChild(AS3NodeKind.CATCH,
-			token.line,
-			token.column,
-			Node.create(AS3NodeKind.NAME,
-				token.line,
-				token.column,
-				token.text));
-		nextToken(); // name
-		if (tokIs(Operators.COLUMN))
-		{
-			nextToken(); // :
-			result.addChild(Node.create(AS3NodeKind.TYPE,
-				token.line,
-				token.column,
-				token.text));
-			nextToken(); // type
-		}
-		consume(Operators.RIGHT_PARENTHESIS);
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.TRY,
+			null, 
+			token.line, 
+			token.column);
+		
+		consume(KeyWords.TRY, result);
 		result.addChild(parseBlock());
 		return result;
 	}
 	
-	private function parseFinally():Node
+	/**
+	 * @private
+	 */
+	private function parseCatch():TokenNode
 	{
-		nextToken();
-		var result:Node = Node.createChild(AS3NodeKind.FINALLY,
-			token.line,
-			token.column,
-			parseBlock());
-		return result;
-	}
-	
-	private function parseVar():Node
-	{
-		var result:Node = parseVarList(null, null);
-		skip(Operators.SEMI_COLUMN);
-		return result;
-	}
-	
-	private function parseConst():Node
-	{
-		var result:Node = parseConstList(null, null);
-		skip(Operators.SEMI_COLUMN);
-		return result;
-	}
-	
-	private function parseReturnStatement():IParserNode
-	{
-		var result:Node;
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.CATCH,
+			null, 
+			token.line, 
+			token.column);
 		
-		nextTokenAllowNewLine();
-		if (tokIs(NEW_LINE) || tokIs(Operators.SEMI_COLUMN))
+		consume(KeyWords.CATCH, result);
+		consume(Operators.LEFT_PARENTHESIS, result);
+		
+		result.addChild(adapter.create(
+			AS3NodeKind.NAME,
+			token.text, 
+			token.line, 
+			token.column))
+		
+		nextNonWhiteSpaceToken(result); // name
+		
+		if (tokIs(Operators.COLUMN))
+		{
+			consume(Operators.COLUMN, result);
+			result.addChild(adapter.create(
+				AS3NodeKind.TYPE,
+				token.text, 
+				token.line, 
+				token.column));
+			nextNonWhiteSpaceToken(result); // name
+		}
+		consume(Operators.RIGHT_PARENTHESIS, result);
+		result.addChild(parseBlock());
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseFinally():TokenNode
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.FINALLY,
+			null, 
+			token.line, 
+			token.column);
+		
+		consume(KeyWords.FINALLY, result);
+		result.addChild(parseBlock());
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseVar():TokenNode
+	{
+		var result:TokenNode = parseVarList(null);
+		skip(Operators.SEMI_COLUMN, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseConst():TokenNode
+	{
+		var result:TokenNode = parseConstList(null);
+		skip(Operators.SEMI_COLUMN, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function nextTokenIgnoringAsDoc(node:TokenNode):void
+	{
+		do
 		{
 			nextToken();
-			result = Node.create(AS3NodeKind.RETURN,
-				token.line,
-				token.column,
-				"");
+			if (tokIs(" "))
+			{
+				appendSpace(node);
+			}
+			else if (tokIs("\t"))
+			{
+				appendTab(node);
+			}
 		}
-		else
+		while (tokenStartsWith(MULTIPLE_LINES_COMMENT));
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseASdoc():TokenNode
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.AS_DOC,
+			token.text, 
+			ISourceCodeScanner(scanner).commentLine,
+			ISourceCodeScanner(scanner).commentColumn);
+		ISourceCodeScanner(scanner).commentLine = -1;
+		ISourceCodeScanner(scanner).commentColumn = -1;
+		result.start = scanner.offset - token.text.length;
+		result.end = scanner.offset;
+		consumeWS(token.text);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function createASDoc():TokenNode
+	{
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.AS_DOC,
+			token.text, 
+			ISourceCodeScanner(scanner).commentLine,
+			ISourceCodeScanner(scanner).commentColumn);
+		ISourceCodeScanner(scanner).commentLine = -1;
+		ISourceCodeScanner(scanner).commentColumn = -1;
+		result.start = scanner.offset - token.text.length;
+		result.end = scanner.offset;
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function addAsDoc(node:TokenNode):void
+	{
+		if (currentAsDoc)
 		{
-			result = Node.createChild(AS3NodeKind.RETURN,
-				token.line,
-				token.column,
-				parseExpression());
-			skip(Operators.SEMI_COLUMN);
+			currentAsDoc.token.text = "";
+			node.addChild(currentAsDoc);
+			currentAsDoc = null;
 		}
-		return result;
 	}
 	
-	private function parseEmptyStatement():Node
+	// AS3FragmentParser
+	/**
+	 * @private
+	 */
+	internal function parseExpressionStatement():IParserNode
 	{
-		var result:Node = Node.create(AS3NodeKind.STMT_EMPTY,
-			token.line,
-			token.column,
-			Operators.SEMI_COLUMN);
-		nextToken();
-		return result;
-	}
-	
-	internal function parseMetaDatas():IParserNode
-	{
-		var result:Node = Node.create(
-			AS3NodeKind.META_LIST, 
-			token.line,
+		var result:TokenNode = adapter.create(
+			AS3NodeKind.EXPR_STMNT,
+			null, 
+			token.line, 
 			token.column);
 		
-		while (!tokIs(ScannerBase.END))
+		result.addChild(parseAssignmentExpression());
+		
+		while (tokIs(Operators.COMMA))
 		{
-			if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-			{
-				result.addChild(parseMetaData());
-			}
-			else if (tokenStartsWith("/**"))
-			{
-				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
-					ISourceCodeScanner(scanner).commentLine,
-					ISourceCodeScanner(scanner).commentColumn,
-					token.text);
-				ISourceCodeScanner(scanner).commentLine = -1;
-				ISourceCodeScanner(scanner).commentColumn = -1;
-				currentAsDoc.start = scanner.offset - token.text.length;
-				currentAsDoc.end = scanner.offset;
-				nextToken();
-			}
-			else if (tokenStartsWith("/*")) // junk comment
-			{
-				nextToken();
-			}
-			else
-			{
-				nextTokenIgnoringAsDoc();
-			}
+			nextNonWhiteSpaceToken(result);
+			result.addChild(parseAssignmentExpression());
 		}
 		
-		return result;
-	}
-	
-	internal function parseMembers(kind:String):IParserNode
-	{
-		var result:Node = Node.create(
-			AS3NodeKind.CONTENT,
-			token.line,
-			token.column);
+		skip(Operators.SEMI_COLUMN, result);
 		
-		var modifiers:Vector.<Token> = new Vector.<Token>();
-		var meta:Vector.<Node> = new Vector.<Node>();
-		
-		while (!tokIs(ScannerBase.END))
-		{
-			if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-			{
-				meta.push(parseMetaData());
-			}
-			else if (tokIs(KeyWords.CONST) && kind == AS3NodeKind.CONST)
-			{
-				parseClassConstant(result, modifiers, meta);
-			}
-			else if (tokIs(KeyWords.VAR) && kind == AS3NodeKind.VAR)
-			{
-				parseClassField(result, modifiers, meta);
-			}
-			else if (tokIs(KeyWords.FUNCTION) && kind == AS3NodeKind.FUNCTION)
-			{
-				parseClassFunctions(result, modifiers, meta);
-			}
-			else if (tokenStartsWith("/**"))
-			{
-				currentAsDoc = Node.create(AS3NodeKind.AS_DOC,
-					ISourceCodeScanner(scanner).commentLine,
-					ISourceCodeScanner(scanner).commentColumn,
-					token.text);
-				ISourceCodeScanner(scanner).commentLine = -1;
-				ISourceCodeScanner(scanner).commentColumn = -1;
-				currentAsDoc.start = scanner.offset - token.text.length;
-				currentAsDoc.end = scanner.offset;
-				nextToken();
-			}
-			else if (tokenStartsWith("/*")) // junk comment
-			{
-				nextToken();
-			}
-			else
-			{
-				modifiers.push(token);
-				nextTokenIgnoringAsDoc();
-			}
-		}
 		return result;
-	}
-	
-	internal function parseConstants():IParserNode
-	{
-		return parseMembers(AS3NodeKind.CONST);
-	}
-	
-	internal function parseVariables():IParserNode
-	{
-		return parseMembers(AS3NodeKind.VAR);
-	}
-	
-	internal function parseMethods():IParserNode
-	{
-		return parseMembers(AS3NodeKind.FUNCTION);
 	}
 }
 }

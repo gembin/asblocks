@@ -20,7 +20,7 @@ import org.teotigraphix.as3nodes.api.Modifier;
 import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3Parser;
+import org.teotigraphix.as3parser.impl.AS3ParserOLD;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 // TODO The tests in this file do not belong, need to only test package specific traits
@@ -29,7 +29,7 @@ public class TestPackageNode
 {
 	private var unit:IParserNode;
 	
-	private var parser:AS3Parser;
+	private var parser:AS3ParserOLD;
 	
 	private var compilationNode:CompilationNode;
 	
@@ -386,7 +386,7 @@ public class TestPackageNode
 	[Before]
 	public function setUp():void
 	{
-		parser = new AS3Parser();
+		parser = new AS3ParserOLD();
 		
 		var lines:Array =
 			[

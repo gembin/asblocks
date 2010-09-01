@@ -11,13 +11,13 @@ import org.teotigraphix.as3nodes.utils.ASTNodeUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser2;
-import org.teotigraphix.as3parser.impl.AS3Parser2;
+import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.impl.AS3Tokenizer;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class TestLinkedListToken
 {
-	private var parser:AS3Parser2 = new AS3Parser2();
+	private var parser:AS3Parser = new AS3Parser();
 
 	
 	

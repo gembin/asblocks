@@ -57,12 +57,12 @@ encapsulated
  */
 public class TestPrimaryExpression
 {
-	private var parser:AS3Parser2;
+	private var parser:AS3Parser;
 	
 	[Before]
 	public function setUp():void
 	{
-		parser = new AS3Parser2();
+		parser = new AS3Parser();
 	}
 	
 	[Test]

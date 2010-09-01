@@ -6,12 +6,12 @@ import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class TestMetaData
 {
-	private var parser:AS3Parser;
+	private var parser:AS3ParserOLD;
 	
 	[Before]
 	public function setUp():void
 	{
-		parser = new AS3Parser();
+		parser = new AS3ParserOLD();
 	}
 	
 	[Test]

@@ -49,7 +49,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parseCompilationUnit(source:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser(source);
+		var parser:AS3Parser = createParser(source);
 		var node:IParserNode = parser.parseCompilationUnit();
 		return node;
 	}
@@ -62,7 +62,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parsePackage(source:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser(source);
+		var parser:AS3Parser = createParser(source);
 		parser.nextToken(); // package
 		var node:IParserNode = parser.parsePackage();
 		return node;
@@ -76,7 +76,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parsePackageContent(source:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser(source);
+		var parser:AS3Parser = createParser(source);
 		parser.nextToken(); // package
 		var node:IParserNode = parser.parsePackageContent();
 		return node;
@@ -90,7 +90,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parseClassContent(source:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser("{" + source + "}");
+		var parser:AS3Parser = createParser("{" + source + "}");
 		parser.nextToken(); // {
 		parser.nextToken(); // into content
 		var node:IParserNode = parser.parseClassContent();
@@ -105,7 +105,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parseInterfaceContent(source:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser("{" + source + "}");
+		var parser:AS3Parser = createParser("{" + source + "}");
 		parser.nextToken(); // {
 		parser.nextToken(); // into content
 		var node:IParserNode = parser.parseInterfaceContent();
@@ -189,7 +189,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parseStatement(statement:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser(statement);
+		var parser:AS3Parser = createParser(statement);
 		parser.nextToken();
 		var node:IParserNode = parser.parseStatement();
 		return node;
@@ -203,7 +203,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parseExpressionStatement(statement:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser(statement + ";");
+		var parser:AS3Parser = createParser(statement + ";");
 		parser.nextToken();
 		var node:IParserNode = parser.parseExpressionStatement();
 		return node;
@@ -217,7 +217,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parsePrimaryExpression(expression:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser(expression);
+		var parser:AS3Parser = createParser(expression);
 		parser.nextToken();
 		var node:IParserNode = parser.parsePrimaryExpression();
 		return node;
@@ -231,7 +231,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parseExpression(expression:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser(expression);
+		var parser:AS3Parser = createParser(expression);
 		parser.nextToken();
 		var node:IParserNode = parser.parseExpression();
 		return node;
@@ -245,7 +245,7 @@ public class AS3FragmentParser2
 	 */
 	public static function parseCondition(condition:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser("(" + condition + ")");
+		var parser:AS3Parser = createParser("(" + condition + ")");
 		parser.nextToken();
 		// /condition
 		var node:IParserNode = parser.parseCondition();
@@ -254,7 +254,7 @@ public class AS3FragmentParser2
 	
 	public static function parseType(typeName:String):IParserNode
 	{
-		var parser:AS3Parser2 = createParser(typeName);
+		var parser:AS3Parser = createParser(typeName);
 		parser.nextToken();
 		var node:IParserNode = parser.parseType();
 		return node;
@@ -269,9 +269,9 @@ public class AS3FragmentParser2
 	/**
 	 * @private
 	 */
-	private static function createParser(source:String):AS3Parser2
+	private static function createParser(source:String):AS3Parser
 	{
-		var parser:AS3Parser2 = new AS3Parser2();
+		var parser:AS3Parser = new AS3Parser();
 		parser.scanner.setLines(Vector.<String>([source]));
 		return parser
 	}
