@@ -8,6 +8,7 @@ import org.teotigraphix.as3parser.api.IScanner;
 import org.teotigraphix.as3parser.api.ISourceCodeScanner;
 import org.teotigraphix.as3parser.api.KeyWords;
 import org.teotigraphix.as3parser.api.Operators;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.Node;
 import org.teotigraphix.as3parser.core.Token;
 import org.teotigraphix.as3parser.core.TokenNode;
@@ -332,26 +333,54 @@ public class AS3Parser2 extends ParserBase
 		
 		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
 		
+		var pendingMember:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
+		
+		/**
+		 * import parseImport()
+		 * include parseInclude()
+		 * 
+		 * { parseBlock()
+		 * [ parseMetaData()
+		 * var parseClassField()
+		 * const parseClassConstant()
+		 * function parseClassFunctions()
+		 */
 		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
 		{
 			if (tokenStartsWith(ASDOC_COMMENT))
 			{
 				currentAsDoc = parseASdoc();
-				result.appendToken(adapter.createToken(
+				var current:TokenNode = (pendingMember) ? pendingMember : result;
+				current.appendToken(adapter.createToken(
 					AS3NodeKind.AS_DOC, currentAsDoc.token.text));
+			}
+			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
+			{
+				pendingMember.addChild(parseMetaData());
+			}
+			else if (tokIs(KeyWords.VAR))
+			{
+				
+				result.addChild(parseClassField(pendingMember));
+				pendingMember = null;
 			}
 			else
 			{
-				if (!tokIsWhitespace())
+				var isWhitespace:Boolean = tokIsWhitespace();
+				if (!isWhitespace)
 				{
-					result.addChild(adapter.create(
-						AS3NodeKind.MODIFIER,
-						token.text, 
-						token.line, 
-						token.column));
+					if (!pendingMember)
+					{
+						pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
+					}
+					
+					addAsDoc(pendingMember);
+					
+					pendingMember.addChild(adapter.copy(
+						AS3NodeKind.MODIFIER, token));
 				}
 				
-				nextNonWhiteSpaceToken(result);
+				nextNonWhiteSpaceToken(pendingMember);
 			}
 		}
 		
@@ -497,85 +526,6 @@ public class AS3Parser2 extends ParserBase
 			nextToken(); // name
 		}
 		return buffer;
-	}
-	
-	//private var pendingType:TokenNode;
-	
-	internal function __parsePackageContent():IParserNode
-	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.CONTENT, token);
-		
-		result.addChild(adapter.empty(
-			AS3NodeKind.META_LIST, token));
-		result.addChild(adapter.empty(
-			AS3NodeKind.AS_DOC, token));
-		result.addChild(adapter.empty(
-			AS3NodeKind.MOD_LIST, token));
-		
-
-		result.start = scanner.offset;
-		
-		while (!tokIs(Operators.RIGHT_CURLY_BRACKET)
-			&& !tokIs(KeyWords.EOF))
-		{
-			if (tokIs(KeyWords.IMPORT))
-			{
-				result.addChild(parseImport());
-			}
-			else if (tokIs(KeyWords.INCLUDE))
-			{
-				result.addChild(parseInclude());
-			}
-			else if (tokIs(KeyWords.USE))
-			{
-				result.addChild(parseUse());
-			}
-			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
-			{
-				//var meta:IParserNode = 
-				//	pendingType.getKind(AS3NodeKind.META_LIST);
-				//meta.addChild(parseMetaData());
-			}
-			else if (tokIs(KeyWords.CLASS))
-			{
-				//pendingType.kind = AS3NodeKind.CLASS;
-				//result.addChild(parseClass());
-			}
-			else if (tokIs(KeyWords.INTERFACE))
-			{
-				//result.addChild(parseInterface(meta, modifiers));
-				
-				//meta.length = 0;
-				//				modifiers.length = 0;
-			}
-			else if (tokIs(KeyWords.FUNCTION))
-			{
-				//parseClassFunctions(result, modifiers, meta);
-			}
-			else if (tokenStartsWith("/**"))
-			{
-				currentAsDoc = createASDoc();
-				nextNonWhiteSpaceToken(currentAsDoc);
-			}
-			else
-			{
-				//var modList:IParserNode = 
-				//	pendingType.getKind(AS3NodeKind.MOD_LIST);
-				
-				//modList.addChild(adapter.create(
-				//	AS3NodeKind.MODIFIER,
-				//	token.text, 
-				//	token.line, 
-				//	token.column));
-				
-				nextNonWhiteSpaceToken(result);
-			}
-		}
-		
-		result.end = scanner.offset;
-		
-		return result;
 	}
 	
 	/**
@@ -952,7 +902,34 @@ public class AS3Parser2 extends ParserBase
 			}
 		}
 		return result;
-	}	
+	}
+	
+	private function parseClassField(result:TokenNode):TokenNode
+	{
+		result.kind = AS3NodeKind.VAR_LIST;
+		var mod:LinkedListToken = findToken(result.token, AS3NodeKind.MODIFIER);
+		if (mod)
+		{
+			result.line = mod.line;
+			result.column = mod.column;
+		}
+		result = parseVarList(result);
+		skip(Operators.SEMI_COLUMN, result);
+		return result;
+	}
+	
+	private function findToken(token:LinkedListToken, kind:String):LinkedListToken
+	{
+		var next:LinkedListToken = token;
+		while (next)
+		{
+			if (next.kind == kind)
+				return next;
+			
+			next = next.next;
+		}
+		return null;
+	}
 	
 	private function parseClassConstant(result:TokenNode, 
 										modifiers:TokenNode, 
@@ -986,15 +963,12 @@ public class AS3Parser2 extends ParserBase
 	/**
 	 * @private
 	 */
-	private function parseVarList(meta:Vector.<TokenNode>, 
-								  modifiers:TokenNode):TokenNode
+	private function parseVarList(result:TokenNode):TokenNode
 	{
-		var result:TokenNode = adapter.copy(
-			AS3NodeKind.VAR_LIST, token);
-		
-		result.addChild(convertMeta(meta));
-		addAsDoc(result);
-		result.addChild(modifiers);
+		if (!result)
+		{
+			result = adapter.copy(AS3NodeKind.VAR_LIST, token);
+		}
 		
 		consume(KeyWords.VAR, result);
 		collectVarListContent(result);
@@ -1128,6 +1102,90 @@ public class AS3Parser2 extends ParserBase
 			result.addChild(parseExpression());
 		}
 		return result;
+	}
+	
+	private function parseClassFunctions(result:Node, 
+										 modifiers:Vector.<Token>, 
+										 meta:Vector.<TokenNode>):void
+	{
+		result.addChild(parseFunction(modifiers, meta));
+		meta.length = 0;
+		modifiers.length = 0;
+	}
+	
+	private function parseFunction(modifiers:Vector.<Token>, 
+								   meta:Vector.<TokenNode>):Node
+	{
+		consume(KeyWords.FUNCTION);
+		
+		var result:Node
+		
+		/*
+		var signature:Array = doParseSignature(); // Node
+		var result:Node = Node.create(findFunctionType(signature),
+			token.line,
+			token.column,
+			signature[0].stringValue);
+		
+		if (currentAsDoc != null)
+		{
+			result.addChild(currentAsDoc);
+			currentAsDoc = null;
+		}
+		result.addChild(convertMeta(meta));
+		result.addChild(convertModifiers( modifiers));
+		result.addChild(signature[1]);
+		result.addChild(signature[2]);
+		result.addChild(signature[3]);
+		result.addChild(parseBlock());
+		*/
+		
+		return result;
+	}
+	
+	private function doParseSignature():Array // Node
+	{
+		var type:Node = Node.create(AS3NodeKind.TYPE,
+			token.line,
+			token.column,
+			KeyWords.FUNCTION);
+		if (tokIs(KeyWords.SET) || tokIs(KeyWords.GET))
+		{
+			type = Node.create(AS3NodeKind.TYPE,
+				token.line,
+				token.column,
+				token.text);
+			nextToken(); // set or get
+		}
+		var name:Node = Node.create(AS3NodeKind.NAME,
+			token.line,
+			token.column,
+			token.text);
+		nextToken(); // name
+		var params:TokenNode = parseParameterList();
+		var returnType:TokenNode = parseOptionalType(null);
+		
+		return [type, name, params, returnType];
+	}
+	
+	private function findFunctionType(signature:Array):String // AS3NodeKind
+	{
+		for each (var node:Node in signature)
+		{
+			if (node.isKind(AS3NodeKind.TYPE))
+			{
+				if (node.stringValue == KeyWords.SET)
+				{
+					return AS3NodeKind.SET;
+				}
+				if (node.stringValue == KeyWords.GET)
+				{
+					return AS3NodeKind.GET;
+				}
+				return AS3NodeKind.FUNCTION;
+			}
+		}
+		return AS3NodeKind.FUNCTION;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -2208,7 +2266,7 @@ public class AS3Parser2 extends ParserBase
 			{
 				init = adapter.empty(
 					AS3NodeKind.INIT, token);
-				init.addChild(parseVarList(null, null));
+				init.addChild(parseVarList(null));
 				node.addChild(init);
 			}
 			else
@@ -2562,7 +2620,7 @@ public class AS3Parser2 extends ParserBase
 	 */
 	private function parseVar():TokenNode
 	{
-		var result:TokenNode = parseVarList(null, null);
+		var result:TokenNode = parseVarList(null);
 		skip(Operators.SEMI_COLUMN, result);
 		return result;
 	}

@@ -41,43 +41,84 @@ public class TestPackageContent
 	{
 		var input:String = "/** AsDoc */ public class A { }";
 		assertPackagePrint(input);
-		assertPackageContent( "1", input,
+		assertPackageContent("1", input,
 			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"15\">" +
 			"public</mod><class line=\"1\" column=\"22\"><as-doc line=\"1\" " +
 			"column=\"2\">/** AsDoc */</as-doc><name line=\"1\" column=\"28\">" +
 			"A</name><content line=\"1\" column=\"30\"></content></class>" +
-			"</content>" );
+			"</content>");
 	}
 	
-	//[Test]
-	public function testClassWithAsDocComplex():void
+	[Test]
+	public function testClassWithFullFeaturedVar():void
 	{
-		assertPackageContent( "1",
-			"/** AsDoc */ public class A { "+ 
-			"/** Member */ " + 
-			"public var tmp : Number; " + 
-			"private var tmp2 : int; " + 
-			"/** Function */ " + 
-			"protected function foo() : void { } }",
-			"<content line=\"2\" column=\"12\"><class line=\"2\" column=\"27\">" +
-			"<as-doc line=\"2\" column=\"1\">/** AsDoc */</as-doc><name line=\"2\" " +
-			"column=\"27\">A</name><mod-list line=\"2\" column=\"14\"><mod line=\"2\" " +
-			"column=\"14\">public</mod></mod-list><content line=\"2\" column=\"43\">" +
-			"<var-list line=\"2\" column=\"56\"><mod-list line=\"2\" column=\"45\">" +
-			"<mod line=\"2\" column=\"45\">public</mod></mod-list><name-type-init line=\"2\" " +
-			"column=\"56\"><name line=\"2\" column=\"56\">tmp</name><type line=\"2\" " +
-			"column=\"62\">Number</type></name-type-init><as-doc line=\"2\" column=\"31\">" +
-			"/** Member */</as-doc></var-list><var-list line=\"2\" column=\"82\">" +
-			"<mod-list line=\"2\" column=\"70\"><mod line=\"2\" column=\"70\">" +
-			"private</mod></mod-list><name-type-init line=\"2\" column=\"82\">" +
-			"<name line=\"2\" column=\"82\">tmp2</name><type line=\"2\" column=\"89\">" +
-			"int</type></name-type-init></var-list><function line=\"2\" column=\"142\">" +
-			"<as-doc line=\"2\" column=\"94\">/** Function */</as-doc><mod-list line=\"2\" " +
-			"column=\"110\"><mod line=\"2\" column=\"110\">protected</mod></mod-list>" +
-			"<name line=\"2\" column=\"129\">foo</name><parameter-list line=\"2\" " +
-			"column=\"133\"></parameter-list><type line=\"2\" column=\"137\">void</type>" +
-			"<block line=\"2\" column=\"144\"></block></function></content>" +
-			"</class></content>" );
+		var input:String = " public class A { public var myVar:int = 42; }";
+		assertPackagePrint(input);
+		assertPackageContent("1", input,
+			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
+			"public</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\">" +
+			"<var-list line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">" +
+			"public</mod><name-type-init line=\"1\" column=\"31\"><name " +
+			"line=\"1\" column=\"31\">myVar</name><type line=\"1\" column=\"37\">" +
+			"int</type><init line=\"1\" column=\"43\"><number line=\"1\" " +
+			"column=\"43\">42</number></init></name-type-init></var-list>" +
+			"</content></class></content>");
+	}
+	
+	[Test]
+	public function testClassWithFullFeaturedVarWithMetaData():void
+	{
+		var input:String = " public class A { [MetaData] public var myVar:int = 42; }";
+		assertPackagePrint(input);
+		assertPackageContent("1", input,
+			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
+			"public</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\"><var-list " +
+			"line=\"1\" column=\"31\"><meta line=\"1\" column=\"20\"><name line=\"1\" " +
+			"column=\"21\">MetaData</name></meta><mod line=\"1\" column=\"31\">" +
+			"public</mod><name-type-init line=\"1\" column=\"42\"><name line=\"1\" " +
+			"column=\"42\">myVar</name><type line=\"1\" column=\"48\">int</type>" +
+			"<init line=\"1\" column=\"54\"><number line=\"1\" column=\"54\">42" +
+			"</number></init></name-type-init></var-list></content>" +
+			"</class></content>");
+	}
+	
+	[Test]
+	public function testClassWithFullFeaturedVarWithAsDoc():void
+	{
+		var input:String = " public class A { /** A var comment. */ public var myVar:int = 42; }";
+		assertPackagePrint(input);
+		assertPackageContent("1", input,
+			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">public" +
+			"</mod><class line=\"1\" column=\"10\"><name line=\"1\" column=\"16\">" +
+			"A</name><content line=\"1\" column=\"18\"><var-list line=\"1\" " +
+			"column=\"42\"><as-doc line=\"1\" column=\"20\">/** A var comment. */" +
+			"</as-doc><mod line=\"1\" column=\"42\">public</mod><name-type-init " +
+			"line=\"1\" column=\"53\"><name line=\"1\" column=\"53\">myVar</name>" +
+			"<type line=\"1\" column=\"59\">int</type><init line=\"1\" column=\"65\">" +
+			"<number line=\"1\" column=\"65\">42</number></init></name-type-init>" +
+			"</var-list></content></class></content>");
+	}
+	
+	[Test]
+	public function testClassWithFullFeaturedVarWithMetaDataAsDocAndAsDoc():void
+	{
+		var input:String = " public class A { /** A metadata comment. */ [MetaData] /** A var comment. */ public var myVar:int = 42; }";
+		assertPackagePrint(input);
+		assertPackageContent("1", input,
+			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
+			"public</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\"><var-list " +
+			"line=\"1\" column=\"80\"><meta line=\"1\" column=\"47\"><as-doc " +
+			"line=\"1\" column=\"20\">/** A metadata comment. */</as-doc><name " +
+			"line=\"1\" column=\"48\">MetaData</name></meta><as-doc line=\"1\" " +
+			"column=\"58\">/** A var comment. */</as-doc><mod line=\"1\" " +
+			"column=\"80\">public</mod><name-type-init line=\"1\" column=\"91\">" +
+			"<name line=\"1\" column=\"91\">myVar</name><type line=\"1\" " +
+			"column=\"97\">int</type><init line=\"1\" column=\"103\"><number " +
+			"line=\"1\" column=\"103\">42</number></init></name-type-init>" +
+			"</var-list></content></class></content>");
 	}
 	
 	[Test]
