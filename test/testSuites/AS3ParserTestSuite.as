@@ -52,8 +52,8 @@ public class AS3ParserTestSuite
 	public var testExpression:TestExpression;
 	public var testForStatement:TestForStatement;
 	public var testIfStatement:TestIfStatement;
-//	public var testInterface:TestInterface;
-//	public var testInterfaceContent:TestInterfaceContent;
+	public var testInterface:TestInterface;
+	public var testInterfaceContent:TestInterfaceContent;
 //	public var testMetaData:TestMetaData;
 	public var testPackageContent:TestPackageContent;
 	public var testPrimaryExpression:TestPrimaryExpression;
