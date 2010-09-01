@@ -41,6 +41,7 @@ public class TestInterfaceContent
 		parser = new AS3Parser();
 	}
 	
+	// FIXME testConditionalCompilation()
 	//[Test]
 	public function testConditionalCompilation():void
 	{

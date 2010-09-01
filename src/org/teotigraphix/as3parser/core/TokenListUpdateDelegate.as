@@ -53,7 +53,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 		if (child.stopToken) {
 			parent.stopToken = child.stopToken;
 		}
-
+		
 	}
 	
 	public function addedChildAt(parent:IParserNode, 
@@ -80,7 +80,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 		
 		insertAfter(target, targetNext,	child.startToken, child.stopToken);
 	}
-
+	
 	
 	protected static function insertAfter(target:LinkedListToken, 
 										  targetNext:LinkedListToken,
@@ -107,7 +107,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 			}
 		}
 	}
-
+	
 	
 	private function isPlaceholder(ast:IParserNode):Boolean
 	{
@@ -181,7 +181,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 			append.previous = parent.stopToken;
 			parent.stopToken = append;
 		}
-
+		
 	}
 	
 	public function addToken(parent:IParserNode, 
@@ -225,7 +225,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 			}
 			insertAfter(target, targetNext, append, append);
 		}
-
+		
 	}
 	
 	public function deletedChild(parent:IParserNode, 
@@ -281,7 +281,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 		// removed token list too,
 		start.previous = null;
 		stop.next = null;
-
+		
 	}
 	
 	public function replacedChild(tree:IParserNode, 
@@ -347,7 +347,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 		}
 		return oldStop.next;
 	}
-
-
+	
+	
 }
 }

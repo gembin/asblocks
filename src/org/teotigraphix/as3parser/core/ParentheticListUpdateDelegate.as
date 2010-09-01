@@ -58,7 +58,7 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		{
 			switch (tok.kind) 
 			{
-				case AS3NodeKind.SPACE:
+				case AS3NodeKind.WS:
 					continue;
 				case AS3NodeKind.NL:
 					return tok;
@@ -69,27 +69,27 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		return target;
 	}
 	
-	protected static function insertAfter(target:LinkedListToken, 
-										  targetNext:LinkedListToken,
-										  start:LinkedListToken, 
-										  stop:LinkedListToken):void
+	protected static function insertAfter(lcurly:LinkedListToken, 
+										  rcurly:LinkedListToken,
+										  startToken:LinkedListToken, 
+										  stopToken:LinkedListToken):void
 	{
-		if (target == null && targetNext == null) 
+		if (lcurly == null && rcurly == null) 
 		{
 			// IllegalArgumentException
 			throw new Error("At least one of target and targetNext must be non-null");
 		}
-		if (start != null) 
+		if (startToken != null) 
 		{
 			// i.e. we're not adding an imaginary node that currently
 			//      has no real children
-			if (target != null) {
-				target.next = start;
+			if (lcurly != null) {
+				lcurly.next = startToken;
 			}
-			stop.next = targetNext;
-			if (targetNext != null) 
+			stopToken.next = rcurly;
+			if (rcurly != null) 
 			{
-				targetNext.previous = stop;
+				rcurly.previous = stopToken;
 			}
 		}
 	}
@@ -113,10 +113,11 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		insertAfter(target, targetNext, child.startToken, child.stopToken);
 	}
 	
-	public function appendToken(parent:IParserNode, append:LinkedListToken):void
+	public function appendToken(parent:IParserNode, 
+								append:LinkedListToken):void
 	{
-		var insert:LinkedListToken = findClose(parent).previous;
-		insertAfter(insert, insert.next, append, append);
+		var close:LinkedListToken = findClose(parent).previous;
+		insertAfter(close, close.next, append, append);
 	}
 	
 	public function addToken(parent:IParserNode, index:int, append:LinkedListToken):void

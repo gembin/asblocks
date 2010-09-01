@@ -35,7 +35,7 @@ public class AS3ParserTestSuite
 {
 	public var testExpressionNodes:TestExpressionNodes;
 	
-	//public var testLinkedListToken:TestLinkedListToken;
+	public var testLinkedListToken:TestLinkedListToken;
 	
 	public var testSourceCode:TestSourceCode;
 	

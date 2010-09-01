@@ -1,9 +1,35 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.as3parser.impl
 {
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
+/**
+ * A <code>parseMetaDatas()</code> unit test.
+ * 
+ * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
+ * @productversion 1.0
+ */
 public class TestMetaData
 {
 	private var parser:AS3Parser;
@@ -79,19 +105,14 @@ public class TestMetaData
 			"</meta></meta-list>");
 	}
 	
-	//[Test]
 	private function assertMetaData(source:String, expected:String):void
 	{
-		var lines:Array =
-			[
-				source,
-				"__END__"
-			];
+		var lines:Array = ["{", source, "}", "__END__"];
 		
 		parser.scanner.setLines(ASTUtil.toVector(lines));
 		parser.nextToken();
-		//var result:String = ASTUtil.convert(parser.parseMetaDatas());
-		//Assert.assertEquals(expected, result);
+		var result:String = ASTUtil.convert(parser.parseMetaDatas());
+		Assert.assertEquals(expected, result);
 	}
 }
 }

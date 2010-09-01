@@ -24,6 +24,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
+import org.teotigraphix.as3parser.api.KeyWords;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
 import org.teotigraphix.as3parser.core.Token;
@@ -475,7 +476,7 @@ public class ParserBase implements IParser
 		
 		if (node)
 		{
-			tok = adapter.createToken(AS3NodeKind.NL, "\n", 
+			tok = adapter.createToken("pnewline", "\n", 
 				token.line, token.column);
 		}
 		

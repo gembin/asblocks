@@ -96,7 +96,7 @@ public class TestAS3FragmentParser
 			"</type></function></content>", result);
 	}
 	
-	[Test]
+	//[Test]
 	public function test_parseConstants():void
 	{
 		var ast:IParserNode;

@@ -146,7 +146,7 @@ public class AS3Parser extends ParserBase
 		// if the package has a doc comment, save it
 		if (tokenStartsWith(ASDOC_COMMENT))
 		{
-			result.addChild(createASDoc());
+			result.addChild(parseASdoc());
 			nextNonWhiteSpaceToken(result);
 		}
 		
@@ -237,9 +237,9 @@ public class AS3Parser extends ParserBase
 			}
 			else if (tokenStartsWith(ASDOC_COMMENT))
 			{
-				currentAsDoc = parseASdoc();
 				result.appendToken(adapter.createToken(
-					AS3NodeKind.AS_DOC, currentAsDoc.token.text));
+					AS3NodeKind.AS_DOC, token.text));
+				currentAsDoc = parseASdoc();
 			}
 			else if (tokIs(KeyWords.CLASS))
 			{
@@ -369,10 +369,11 @@ public class AS3Parser extends ParserBase
 		{
 			if (tokenStartsWith(ASDOC_COMMENT))
 			{
-				currentAsDoc = parseASdoc();
 				var current:TokenNode = (pendingMember) ? pendingMember : result;
 				current.appendToken(adapter.createToken(
-					AS3NodeKind.AS_DOC, currentAsDoc.token.text));
+					AS3NodeKind.AS_DOC, token.text));
+				currentAsDoc = parseASdoc();
+				nextNonWhiteSpaceToken(current);
 			}
 			else if (tokIs(KeyWords.INCLUDE))
 			{
@@ -447,10 +448,11 @@ public class AS3Parser extends ParserBase
 		{
 			if (tokenStartsWith(ASDOC_COMMENT))
 			{
-				currentAsDoc = parseASdoc();
 				var current:TokenNode = (pendingMember) ? pendingMember : result;
 				current.appendToken(adapter.createToken(
-					AS3NodeKind.AS_DOC, currentAsDoc.token.text));
+					AS3NodeKind.AS_DOC, token.text));
+				currentAsDoc = parseASdoc();
+				nextNonWhiteSpaceToken(current);
 			}
 			else if (tokIs(KeyWords.INCLUDE))
 			{
@@ -2476,24 +2478,9 @@ public class AS3Parser extends ParserBase
 		ISourceCodeScanner(scanner).commentColumn = -1;
 		result.start = scanner.offset - token.text.length;
 		result.end = scanner.offset;
-		consumeWS(token.text);
-		return result;
-	}
-	
-	/**
-	 * @private
-	 */
-	private function createASDoc():TokenNode
-	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.AS_DOC,
-			token.text, 
-			ISourceCodeScanner(scanner).commentLine,
-			ISourceCodeScanner(scanner).commentColumn);
-		ISourceCodeScanner(scanner).commentLine = -1;
-		ISourceCodeScanner(scanner).commentColumn = -1;
-		result.start = scanner.offset - token.text.length;
-		result.end = scanner.offset;
+		
+		consume(token.text, null, false);
+		
 		return result;
 	}
 	
