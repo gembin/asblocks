@@ -13,6 +13,11 @@ public class TokenBuilder
 		return new LinkedListToken(kind, text);
 	}
 	
+	public static function newQuestion():LinkedListToken
+	{
+		return newToken("question", "?");
+	}
+	
 	public static function newColumn():LinkedListToken
 	{
 		return newToken("column", Operators.COLUMN);
@@ -60,7 +65,7 @@ public class TokenBuilder
 	
 	public static function newEquals():LinkedListToken
 	{
-		return newToken("eq", "=");
+		return newToken("eq", "==");
 	}
 	
 	public static function newGreaterEquals():LinkedListToken

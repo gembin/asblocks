@@ -6,6 +6,7 @@ import org.teotigraphix.as3blocks.api.IArrayLiteralNode;
 import org.teotigraphix.as3blocks.api.IAssignmentExpressionNode;
 import org.teotigraphix.as3blocks.api.IBinaryExpressionNode;
 import org.teotigraphix.as3blocks.api.IBooleanLiteralNode;
+import org.teotigraphix.as3blocks.api.IConditionalExpressionNode;
 import org.teotigraphix.as3blocks.api.IExpressionNode;
 import org.teotigraphix.as3blocks.api.IFunctionLiteralNode;
 import org.teotigraphix.as3blocks.api.INullLiteralNode;
@@ -18,6 +19,7 @@ import org.teotigraphix.as3blocks.impl.ASTBuilder;
 import org.teotigraphix.as3blocks.impl.ArrayAccessExpressionNode;
 import org.teotigraphix.as3blocks.impl.ArrayLiteralNode;
 import org.teotigraphix.as3blocks.impl.BooleanLiteralNode;
+import org.teotigraphix.as3blocks.impl.ConditionalExpressionNode;
 import org.teotigraphix.as3blocks.impl.ExpressionBuilder;
 import org.teotigraphix.as3blocks.impl.FunctionLiteralNode;
 import org.teotigraphix.as3blocks.impl.NullLiteralNode;
@@ -221,6 +223,18 @@ public class AS3Factory2
 		return ASTBuilder.newBinaryExpression(TokenBuilder.newMinus(), left, right);
 	}
 	
+	//----------------------------------
+	// IConditionalExpressionNode
+	//----------------------------------
+	
+	public function newConditionalExpression(conditionExpression:IExpressionNode, 
+											 thenExpression:IExpressionNode,
+											 elseExpression:IExpressionNode):IConditionalExpressionNode
+	{
+		var ast:IParserNode = ASTBuilder.newConditionalExpression(
+			conditionExpression.node, thenExpression.node, elseExpression.node);
+		return new ConditionalExpressionNode(ast);
+	}
 	
 	
 	

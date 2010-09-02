@@ -85,7 +85,31 @@ public class ASTBuilder
 		return ast;
 	}
 	
-	
+	public static function newConditionalExpression(conditionExpression:IParserNode, 
+													thenExpression:IParserNode,
+													elseExpression:IParserNode):IParserNode
+	{
+		var op:LinkedListToken = TokenBuilder.newQuestion();
+		var colon:LinkedListToken = TokenBuilder.newColumn();
+		var ast:IParserNode = ASTUtil2.newTokenAST(op);
+		
+		TokenNode(ast).noUpdate = true;
+		ast.addChild(conditionExpression);
+		conditionExpression.stopToken.next = op;
+		ast.addChild(thenExpression);
+		thenExpression.startToken.previous = op;
+		thenExpression.stopToken.next = colon;
+		ast.addChild(elseExpression);
+		elseExpression.startToken.previous = colon;
+		ast.startToken = conditionExpression.startToken;
+		ast.stopToken = elseExpression.stopToken;
+		TokenNode(ast).noUpdate = false;
+		
+		spaceEitherSide(op);
+		spaceEitherSide(colon);
+		
+		return ast;
+	}
 	
 	
 	public static function newAssignmentExpression(op:LinkedListToken, 

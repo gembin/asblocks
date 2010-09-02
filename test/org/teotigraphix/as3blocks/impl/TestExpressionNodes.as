@@ -5,6 +5,7 @@ import org.flexunit.Assert;
 import org.teotigraphix.as3blocks.api.IArrayAccessExpressionNode;
 import org.teotigraphix.as3blocks.api.IAssignmentExpressionNode;
 import org.teotigraphix.as3blocks.api.IBinaryExpressionNode;
+import org.teotigraphix.as3blocks.api.IConditionalExpressionNode;
 import org.teotigraphix.as3blocks.api.IExpressionNode;
 import org.teotigraphix.as3blocks.api.IFunctionLiteralNode;
 import org.teotigraphix.as3blocks.api.ISimpleNameExpressionNode;
@@ -140,7 +141,7 @@ public class TestExpressionNodes
 			factory.newSimpleNameExpression("a"), 
 			factory.newSimpleNameExpression("b"));
 		
-		assertPrintExpression("a = b", expression);
+		assertPrintExpression("a == b", expression);
 		
 		// GE
 		expression = factory.newGreaterEqualsExpression(
@@ -230,7 +231,34 @@ public class TestExpressionNodes
 	[Test]
 	public function testConditionalExpressionNode():void
 	{
+		var conditionExpression:IExpressionNode = factory.newNotEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		var thenExpression:IExpressionNode = factory.newBooleanLiteral(false);
+		var elseExpression:IExpressionNode = factory.newBooleanLiteral(true);
 		
+		var expression:IConditionalExpressionNode = 
+			factory.newConditionalExpression(
+				conditionExpression, thenExpression, elseExpression);
+		
+		assertPrintExpression("a != b ? false : true", expression);
+		
+		// test changing the condition
+		expression.conditionExpression = factory.newEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrintExpression("a == b ? false : true", expression);
+		
+		// test changing the then
+		expression.thenExpression = factory.newNumberLiteral(4);
+		
+		assertPrintExpression("a == b ? 4 : true", expression);
+		
+		// test changing the else
+		expression.elseExpression = factory.newNumberLiteral(2);
+		
+		assertPrintExpression("a == b ? 4 : 2", expression);
 	}
 	
 	[Test]
