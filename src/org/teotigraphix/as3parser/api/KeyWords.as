@@ -45,6 +45,8 @@ public class KeyWords
 {
 	public static const AS:String = "as";
 	
+	public static const BREAK:String = "break";
+	
 	public static const CASE:String = "case";
 	
 	public static const CATCH:String = "catch";

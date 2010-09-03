@@ -20,10 +20,10 @@
 package org.teotigraphix.as3nodes.impl
 {
 
-import org.teotigraphix.as3blocks.api.IArrayAccessExpressionNode;
-import org.teotigraphix.as3blocks.api.IExpressionNode;
-import org.teotigraphix.as3blocks.impl.ArrayAccessExpressionNode;
-import org.teotigraphix.as3blocks.impl.ExpressionBuilder;
+import org.teotigraphix.asblocks.api.IArrayAccessExpressionNode;
+import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.impl.ArrayAccessExpressionNode;
+import org.teotigraphix.asblocks.impl.ExpressionBuilder;
 import org.teotigraphix.as3nodes.api.Access;
 import org.teotigraphix.as3nodes.api.IAS3Factory;
 import org.teotigraphix.as3nodes.api.IAS3Project;

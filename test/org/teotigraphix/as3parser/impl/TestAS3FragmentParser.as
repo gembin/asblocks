@@ -221,13 +221,17 @@ public class TestAS3FragmentParser
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<if><condition><primary>a</primary></condition><call>" +
 			"<primary>trace</primary><arguments><string>''</string></arguments>" +
-			"</call></if>", result);
-		
-		ast = AS3FragmentParser.parseStatement("if(a) trace('') else if(b) else trace('')");
-		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<if><condition><primary>a</primary></condition>" +
-			"<call><primary>trace</primary><arguments><string>''</string>" +
+			"</call><call><primary>trace</primary><arguments><string>''</string>" +
 			"</arguments></call></if>", result);
+		
+		ast = AS3FragmentParser.parseStatement("if(a) trace('') else if(b) trace('') else trace('')");
+		result = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<if><condition><primary>a</primary></condition><call>" +
+			"<primary>trace</primary><arguments><string>''</string></arguments>" +
+			"</call><if><condition><primary>b</primary></condition><call><primary>" +
+			"trace</primary><arguments><string>''</string></arguments></call><call>" +
+			"<primary>trace</primary><arguments><string>''</string></arguments>" +
+			"</call></if></if>", result);
 		
 		//------------------------------
 		// switch()
@@ -238,18 +242,18 @@ public class TestAS3FragmentParser
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<switch><condition><primary>x</primary></condition>" +
 			"<cases><case><number>1</number><switch-block><block><call><primary>" +
-			"trace</primary><arguments><string>'one'</string></arguments>" +
-			"</call><primary>break</primary></block><primary> </primary>" +
-			"</switch-block></case><case><default></default><switch-block>" +
-			"<call><primary>trace</primary><arguments><string>'unknown'</string>" +
-			"</arguments></call></switch-block></case></cases></switch>", result);
+			"trace</primary><arguments><string>'one'</string></arguments></call>" +
+			"<break></break></block></switch-block></case><case><default></default>" +
+			"<switch-block><call><primary>trace</primary><arguments><string>" +
+			"'unknown'</string></arguments></call></switch-block></case>" +
+			"</cases></switch>", result);
 		
 		ast = AS3FragmentParser.parseStatement("switch( x ){ case 1 : break; default:}");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<switch><condition><primary>x</primary></condition>" +
-			"<cases><case><number>1</number><switch-block><primary>break</primary>" +
-			"</switch-block></case><case><default></default><switch-block></switch-block>" +
-			"</case></cases></switch>", result);
+			"<cases><case><number>1</number><switch-block><break></break>" +
+			"</switch-block></case><case><default></default><switch-block>" +
+			"</switch-block></case></cases></switch>", result);
 		
 		//------------------------------
 		// do

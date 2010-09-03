@@ -36,29 +36,30 @@ public class TestSwitchStatement extends AbstractStatementTest
 		assertStatementPrint(input);
 		assertStatement("1", input,
 			"<switch line=\"1\" column=\"1\"><condition line=\"1\" column=\"7\">" +
-			"<primary line=\"1\" column=\"9\">x</primary></condition><cases line=\"1\" " +
-			"column=\"12\"><case line=\"1\" column=\"14\"><number line=\"1\" " +
-			"column=\"19\">1</number><switch-block line=\"1\" column=\"23\"><call " +
-			"line=\"1\" column=\"28\"><primary line=\"1\" column=\"23\">trace</primary>" +
-			"<arguments line=\"1\" column=\"28\"><string line=\"1\" column=\"29\">" +
-			"'one'</string></arguments></call><primary line=\"1\" column=\"37\">break" +
-			"</primary></switch-block></case><case line=\"1\" column=\"44\"><default " +
-			"line=\"1\" column=\"44\"></default><switch-block line=\"1\" column=\"54\">" +
-			"<call line=\"1\" column=\"59\"><primary line=\"1\" column=\"54\">trace" +
-			"</primary><arguments line=\"1\" column=\"59\"><string line=\"1\" column=\"60\">" +
-			"'unknown'</string></arguments></call></switch-block></case></cases></switch>");
+			"<primary line=\"1\" column=\"9\">x</primary></condition><cases " +
+			"line=\"1\" column=\"12\"><case line=\"1\" column=\"14\"><number " +
+			"line=\"1\" column=\"19\">1</number><switch-block line=\"1\" " +
+			"column=\"23\"><call line=\"1\" column=\"28\"><primary line=\"1\" " +
+			"column=\"23\">trace</primary><arguments line=\"1\" column=\"28\">" +
+			"<string line=\"1\" column=\"29\">'one'</string></arguments></call>" +
+			"<break line=\"1\" column=\"37\"></break></switch-block></case><case " +
+			"line=\"1\" column=\"44\"><default line=\"1\" column=\"44\"></default>" +
+			"<switch-block line=\"1\" column=\"54\"><call line=\"1\" column=\"59\">" +
+			"<primary line=\"1\" column=\"54\">trace</primary><arguments line=\"1\" " +
+			"column=\"59\"><string line=\"1\" column=\"60\">'unknown'</string>" +
+			"</arguments></call></switch-block></case></cases></switch>");
 		
 		input = "switch( x ){ case 1 : break; default:}";
 		assertStatementPrint(input);
 		assertStatement("2", input,
 			"<switch line=\"1\" column=\"1\"><condition line=\"1\" column=\"7\">" +
-			"<primary line=\"1\" column=\"9\">x</primary></condition><cases line=\"1\" " +
-			"column=\"12\"><case line=\"1\" column=\"14\"><number line=\"1\" " +
-			"column=\"19\">1</number><switch-block line=\"1\" column=\"23\"><primary " +
-			"line=\"1\" column=\"23\">break</primary></switch-block></case><case " +
-			"line=\"1\" column=\"30\"><default line=\"1\" column=\"30\"></default>" +
-			"<switch-block line=\"1\" column=\"38\"></switch-block></case>" +
-			"</cases></switch>");
+			"<primary line=\"1\" column=\"9\">x</primary></condition><cases " +
+			"line=\"1\" column=\"12\"><case line=\"1\" column=\"14\"><number " +
+			"line=\"1\" column=\"19\">1</number><switch-block line=\"1\" " +
+			"column=\"23\"><break line=\"1\" column=\"23\"></break></switch-block>" +
+			"</case><case line=\"1\" column=\"30\"><default line=\"1\" column=\"30\">" +
+			"</default><switch-block line=\"1\" column=\"38\"></switch-block>" +
+			"</case></cases></switch>");
 	}
 }
 }

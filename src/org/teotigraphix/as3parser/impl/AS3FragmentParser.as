@@ -262,6 +262,14 @@ public class AS3FragmentParser
 		return node;
 	}
 	
+	public static function parseName(name:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(name);
+		parser.nextToken();
+		var node:IParserNode = parser.parseName();
+		return node;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Private Class :: Methods

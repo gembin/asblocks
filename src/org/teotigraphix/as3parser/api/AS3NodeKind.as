@@ -93,6 +93,8 @@ public class AS3NodeKind
 	
 	public static const BLOCK:String = "block";
 	
+	public static const BREAK:String = "break";
+	
 	public static const CALL:String = "call";
 	
 	public static const CASE:String = "case";
@@ -119,6 +121,8 @@ public class AS3NodeKind
 	
 	public static const CONTENT:String = "content";
 	
+	public static const CONTINUE:String = "continue";
+	
 	public static const DOUBLE_COLUMN:String = "double-column";
 	
 	public static const DEFAULT:String = "default";
@@ -136,6 +140,8 @@ public class AS3NodeKind
 	public static const E4X_FILTER:String = "e4x-filter";
 	
 	public static const E4X_STAR:String = "e4x-star";
+	
+	public static const ELSE:String = "else";
 	
 	public static const ENCAPSULATED:String = "encapsulated";
 	
@@ -282,5 +288,7 @@ public class AS3NodeKind
 	public static const WHILE:String = "while";
 	
 	public static const XML:String = "xml";
+	
+	public static const XML_NAMESPACE:String = "xml-namespace";
 }
 }
