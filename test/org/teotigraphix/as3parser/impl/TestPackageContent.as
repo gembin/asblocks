@@ -117,8 +117,8 @@ public class TestPackageContent
 		var input:String = "public class A { }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"2\">" +
-			"public</mod><class line=\"1\" column=\"9\"><name line=\"1\" " +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"9\">" +
+			"<mod line=\"1\" column=\"2\">public</mod><name line=\"1\" " +
 			"column=\"15\">A</name><content line=\"1\" column=\"17\">" +
 			"</content></class></content>");
 	}
@@ -129,10 +129,10 @@ public class TestPackageContent
 		var input:String = "public interface IA { }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" " +
-			"column=\"2\">public</mod><interface line=\"1\" column=\"9\">" +
-			"<name line=\"1\" column=\"19\">IA</name><content line=\"1\" " +
-			"column=\"22\"></content></interface></content>");
+			"<content line=\"1\" column=\"1\"><interface line=\"1\" column=\"9\">" +
+			"<mod line=\"1\" column=\"2\">public</mod><name line=\"1\" " +
+			"column=\"19\">IA</name><content line=\"1\" column=\"22\"></content>" +
+			"</interface></content>");
 	}
 	
 	[Test]
@@ -141,11 +141,11 @@ public class TestPackageContent
 		var input:String = "/** AsDoc */ public class A { }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"15\">" +
-			"public</mod><class line=\"1\" column=\"22\"><as-doc line=\"1\" " +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"22\">" +
+			"<mod line=\"1\" column=\"15\">public</mod><as-doc line=\"1\" " +
 			"column=\"2\">/** AsDoc */</as-doc><name line=\"1\" column=\"28\">" +
-			"A</name><content line=\"1\" column=\"30\"></content></class>" +
-			"</content>");
+			"A</name><content line=\"1\" column=\"30\"></content>" +
+			"</class></content>");
 	}
 	
 	[Test]
@@ -154,11 +154,10 @@ public class TestPackageContent
 		var input:String = "/** AsDoc */ public interface IA { }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"15\">" +
-			"public</mod><interface line=\"1\" column=\"22\"><as-doc line=\"1\" " +
-			"column=\"2\">/** AsDoc */</as-doc><name line=\"1\" column=\"32\">" +
-			"IA</name><content line=\"1\" column=\"35\"></content></interface>" +
-			"</content>");
+			"<content line=\"1\" column=\"1\"><interface line=\"1\" column=\"22\">" +
+			"<mod line=\"1\" column=\"15\">public</mod><name line=\"1\" " +
+			"column=\"32\">IA</name><content line=\"1\" column=\"35\"></content>" +
+			"</interface></content>");
 	}
 	
 	[Test]
@@ -167,16 +166,16 @@ public class TestPackageContent
 		var input:String = "[Bindable(name=\"abc\", value=\"123\")] public class A { }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><meta line=\"1\" column=\"2\">" +
-			"<name line=\"1\" column=\"3\">Bindable</name><parameter-list " +
-			"line=\"1\" column=\"11\"><parameter line=\"1\" column=\"12\">" +
-			"<name line=\"1\" column=\"12\">name</name><string line=\"1\" " +
-			"column=\"17\">\"abc\"</string></parameter><parameter line=\"1\" " +
-			"column=\"24\"><name line=\"1\" column=\"24\">value</name><string " +
-			"line=\"1\" column=\"30\">\"123\"</string></parameter></parameter-list>" +
-			"</meta><mod line=\"1\" column=\"38\">public</mod><class line=\"1\" " +
-			"column=\"45\"><name line=\"1\" column=\"51\">A</name><content line=\"1\" " +
-			"column=\"53\"></content></class></content>");
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"45\">" +
+			"<meta line=\"1\" column=\"2\"><name line=\"1\" column=\"3\">" +
+			"Bindable</name><parameter-list line=\"1\" column=\"11\">" +
+			"<parameter line=\"1\" column=\"12\"><name line=\"1\" column=\"12\">" +
+			"name</name><string line=\"1\" column=\"17\">\"abc\"</string>" +
+			"</parameter><parameter line=\"1\" column=\"24\"><name line=\"1\" " +
+			"column=\"24\">value</name><string line=\"1\" column=\"30\">\"123\"" +
+			"</string></parameter></parameter-list></meta><mod line=\"1\" " +
+			"column=\"38\">public</mod><name line=\"1\" column=\"51\">A</name>" +
+			"<content line=\"1\" column=\"53\"></content></class></content>");
 	}
 	
 	[Test]
@@ -185,10 +184,10 @@ public class TestPackageContent
 		var input:String = "/** Comment */ [Bindable] public class A { }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><meta line=\"1\" column=\"17\">" +
-			"<as-doc line=\"1\" column=\"2\">/** Comment */</as-doc><name " +
-			"line=\"1\" column=\"18\">Bindable</name></meta><mod line=\"1\" " +
-			"column=\"28\">public</mod><class line=\"1\" column=\"35\"><name " +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"35\">" +
+			"<meta line=\"1\" column=\"17\"><as-doc line=\"1\" column=\"2\">" +
+			"/** Comment */</as-doc><name line=\"1\" column=\"18\">Bindable" +
+			"</name></meta><mod line=\"1\" column=\"28\">public</mod><name " +
 			"line=\"1\" column=\"41\">A</name><content line=\"1\" column=\"43\">" +
 			"</content></class></content>" );
 	}
@@ -203,13 +202,13 @@ public class TestPackageContent
 		var input:String = " public class A { public var myVar:int = 42; }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
-			"public</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
-			"column=\"16\">A</name><content line=\"1\" column=\"18\">" +
-			"<var-list line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">" +
-			"public</mod><name-type-init line=\"1\" column=\"31\"><name " +
-			"line=\"1\" column=\"31\">myVar</name><type line=\"1\" column=\"37\">" +
-			"int</type><init line=\"1\" column=\"43\"><number line=\"1\" " +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\"><var-list " +
+			"line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">public" +
+			"</mod><name-type-init line=\"1\" column=\"31\"><name line=\"1\" " +
+			"column=\"31\">myVar</name><type line=\"1\" column=\"37\">int" +
+			"</type><init line=\"1\" column=\"43\"><number line=\"1\" " +
 			"column=\"43\">42</number></init></name-type-init></var-list>" +
 			"</content></class></content>");
 	}
@@ -220,16 +219,16 @@ public class TestPackageContent
 		var input:String = " public class A { [MetaData] public var myVar:int = 42; }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
-			"public</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
 			"column=\"16\">A</name><content line=\"1\" column=\"18\"><var-list " +
-			"line=\"1\" column=\"31\"><meta line=\"1\" column=\"20\"><name line=\"1\" " +
-			"column=\"21\">MetaData</name></meta><mod line=\"1\" column=\"31\">" +
-			"public</mod><name-type-init line=\"1\" column=\"42\"><name line=\"1\" " +
-			"column=\"42\">myVar</name><type line=\"1\" column=\"48\">int</type>" +
-			"<init line=\"1\" column=\"54\"><number line=\"1\" column=\"54\">42" +
-			"</number></init></name-type-init></var-list></content>" +
-			"</class></content>");
+			"line=\"1\" column=\"31\"><meta line=\"1\" column=\"20\"><name " +
+			"line=\"1\" column=\"21\">MetaData</name></meta><mod line=\"1\" " +
+			"column=\"31\">public</mod><name-type-init line=\"1\" column=\"42\">" +
+			"<name line=\"1\" column=\"42\">myVar</name><type line=\"1\" " +
+			"column=\"48\">int</type><init line=\"1\" column=\"54\"><number " +
+			"line=\"1\" column=\"54\">42</number></init></name-type-init>" +
+			"</var-list></content></class></content>");
 	}
 	
 	[Test]
@@ -238,15 +237,16 @@ public class TestPackageContent
 		var input:String = " public class A { /** A var comment. */ public var myVar:int = 42; }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">public" +
-			"</mod><class line=\"1\" column=\"10\"><name line=\"1\" column=\"16\">" +
-			"A</name><content line=\"1\" column=\"18\"><var-list line=\"1\" " +
-			"column=\"42\"><as-doc line=\"1\" column=\"20\">/** A var comment. */" +
-			"</as-doc><mod line=\"1\" column=\"42\">public</mod><name-type-init " +
-			"line=\"1\" column=\"53\"><name line=\"1\" column=\"53\">myVar</name>" +
-			"<type line=\"1\" column=\"59\">int</type><init line=\"1\" column=\"65\">" +
-			"<number line=\"1\" column=\"65\">42</number></init></name-type-init>" +
-			"</var-list></content></class></content>");
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\"><var-list " +
+			"line=\"1\" column=\"42\"><as-doc line=\"1\" column=\"20\">" +
+			"/** A var comment. */</as-doc><mod line=\"1\" column=\"42\">public" +
+			"</mod><name-type-init line=\"1\" column=\"53\"><name line=\"1\" " +
+			"column=\"53\">myVar</name><type line=\"1\" column=\"59\">int</type>" +
+			"<init line=\"1\" column=\"65\"><number line=\"1\" column=\"65\">" +
+			"42</number></init></name-type-init></var-list></content>" +
+			"</class></content>");
 	}
 	
 	[Test]
@@ -255,12 +255,13 @@ public class TestPackageContent
 		var input:String = " public class A { /** A metadata comment. */ [MetaData] /** A var comment. */ public var myVar:int = 42; }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
-			"public</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
-			"column=\"16\">A</name><content line=\"1\" column=\"18\"><var-list " +
-			"line=\"1\" column=\"80\"><meta line=\"1\" column=\"47\"><as-doc " +
-			"line=\"1\" column=\"20\">/** A metadata comment. */</as-doc><name " +
-			"line=\"1\" column=\"48\">MetaData</name></meta><as-doc line=\"1\" " +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\">" +
+			"<var-list line=\"1\" column=\"80\"><meta line=\"1\" " +
+			"column=\"47\"><as-doc line=\"1\" column=\"20\">" +
+			"/** A metadata comment. */</as-doc><name line=\"1\" " +
+			"column=\"48\">MetaData</name></meta><as-doc line=\"1\" " +
 			"column=\"58\">/** A var comment. */</as-doc><mod line=\"1\" " +
 			"column=\"80\">public</mod><name-type-init line=\"1\" column=\"91\">" +
 			"<name line=\"1\" column=\"91\">myVar</name><type line=\"1\" " +
@@ -275,19 +276,20 @@ public class TestPackageContent
 		var input:String = " public class A {  [MetaData1][MetaData2][MetaData3] /** A var comment. */ public var myVar:int = 42; }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">public" +
-			"</mod><class line=\"1\" column=\"10\"><name line=\"1\" column=\"16\">" +
-			"A</name><content line=\"1\" column=\"18\"><var-list line=\"1\" " +
-			"column=\"77\"><meta line=\"1\" column=\"21\"><name line=\"1\" " +
-			"column=\"22\">MetaData1</name></meta><meta line=\"1\" column=\"32\">" +
-			"<name line=\"1\" column=\"33\">MetaData2</name></meta><meta " +
-			"line=\"1\" column=\"43\"><name line=\"1\" column=\"44\">MetaData3" +
-			"</name></meta><as-doc line=\"1\" column=\"55\">/** A var comment. */" +
-			"</as-doc><mod line=\"1\" column=\"77\">public</mod><name-type-init " +
-			"line=\"1\" column=\"88\"><name line=\"1\" column=\"88\">myVar" +
-			"</name><type line=\"1\" column=\"94\">int</type><init line=\"1\" " +
-			"column=\"100\"><number line=\"1\" column=\"100\">42</number>" +
-			"</init></name-type-init></var-list></content></class></content>");
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\">" +
+			"<var-list line=\"1\" column=\"77\"><meta line=\"1\" column=\"21\">" +
+			"<name line=\"1\" column=\"22\">MetaData1</name></meta><meta " +
+			"line=\"1\" column=\"32\"><name line=\"1\" column=\"33\">MetaData2" +
+			"</name></meta><meta line=\"1\" column=\"43\"><name line=\"1\" " +
+			"column=\"44\">MetaData3</name></meta><as-doc line=\"1\" " +
+			"column=\"55\">/** A var comment. */</as-doc><mod line=\"1\" " +
+			"column=\"77\">public</mod><name-type-init line=\"1\" column=\"88\">" +
+			"<name line=\"1\" column=\"88\">myVar</name><type line=\"1\" " +
+			"column=\"94\">int</type><init line=\"1\" column=\"100\"><number " +
+			"line=\"1\" column=\"100\">42</number></init></name-type-init>" +
+			"</var-list></content></class></content>");
 	}
 	
 	//----------------------------------
@@ -300,15 +302,16 @@ public class TestPackageContent
 		var input:String = " public class A { public static const MY_CONSTANT:int = 42; }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">public" +
-			"</mod><class line=\"1\" column=\"10\"><name line=\"1\" column=\"16\">" +
-			"A</name><content line=\"1\" column=\"18\"><const-list line=\"1\" " +
-			"column=\"20\"><mod line=\"1\" column=\"20\">public</mod><mod line=\"1\" " +
-			"column=\"27\">static</mod><name-type-init line=\"1\" column=\"40\">" +
-			"<name line=\"1\" column=\"40\">MY_CONSTANT</name><type line=\"1\" " +
-			"column=\"52\">int</type><init line=\"1\" column=\"58\"><number " +
-			"line=\"1\" column=\"58\">42</number></init></name-type-init>" +
-			"</const-list></content></class></content>");
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\">" +
+			"<const-list line=\"1\" column=\"20\"><mod line=\"1\" " +
+			"column=\"20\">public</mod><mod line=\"1\" column=\"27\">static" +
+			"</mod><name-type-init line=\"1\" column=\"40\"><name line=\"1\" " +
+			"column=\"40\">MY_CONSTANT</name><type line=\"1\" column=\"52\">" +
+			"int</type><init line=\"1\" column=\"58\"><number line=\"1\" " +
+			"column=\"58\">42</number></init></name-type-init></const-list>" +
+			"</content></class></content>");
 	}
 	
 	//----------------------------------
@@ -321,14 +324,14 @@ public class TestPackageContent
 		var input:String = " public class A { public function myFunction():int { } }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
-			"public</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
-			"column=\"16\">A</name><content line=\"1\" column=\"18\"><function " +
-			"line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">public</mod>" +
-			"<name line=\"1\" column=\"36\">myFunction</name><parameter-list " +
-			"line=\"1\" column=\"46\"></parameter-list><type line=\"1\" " +
-			"column=\"49\">int</type><block line=\"1\" column=\"53\"></block>" +
-			"</function></content></class></content>");
+			"<content line=\"1\" column=\"1\"><class line=\"1\" " +
+			"column=\"10\"><mod line=\"1\" column=\"3\">public</mod><name " +
+			"line=\"1\" column=\"16\">A</name><content line=\"1\" column=\"18\">" +
+			"<function line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">" +
+			"public</mod><name line=\"1\" column=\"36\">myFunction</name>" +
+			"<parameter-list line=\"1\" column=\"46\"></parameter-list><type " +
+			"line=\"1\" column=\"49\">int</type><block line=\"1\" column=\"53\">" +
+			"</block></function></content></class></content>");
 	}
 	
 	[Test]
@@ -337,14 +340,13 @@ public class TestPackageContent
 		var input:String = " public interface IA { function myFunction():int }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" " +
-			"column=\"3\">public</mod><interface line=\"1\" column=\"10\">" +
-			"<name line=\"1\" column=\"20\">IA</name><content line=\"1\" " +
-			"column=\"23\"><function line=\"1\" column=\"25\"><name " +
-			"line=\"1\" column=\"34\">myFunction</name><parameter-list " +
-			"line=\"1\" column=\"44\"></parameter-list><type line=\"1\" " +
-			"column=\"47\">int</type></function></content>" +
-			"</interface></content>");
+			"<content line=\"1\" column=\"1\"><interface line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
+			"column=\"20\">IA</name><content line=\"1\" column=\"23\">" +
+			"<function line=\"1\" column=\"25\"><name line=\"1\" column=\"34\">" +
+			"myFunction</name><parameter-list line=\"1\" column=\"44\">" +
+			"</parameter-list><type line=\"1\" column=\"47\">int</type></function>" +
+			"</content></interface></content>");
 	}
 	
 	[Test]
@@ -353,8 +355,8 @@ public class TestPackageContent
 		var input:String = " public class A { public function get myFunction():int { } }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">public" +
-			"</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
 			"column=\"16\">A</name><content line=\"1\" column=\"18\"><get " +
 			"line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">public" +
 			"</mod><name line=\"1\" column=\"40\">myFunction</name>" +
@@ -369,13 +371,13 @@ public class TestPackageContent
 		var input:String = " public interface IA { function get myFunction():int }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
-			"public</mod><interface line=\"1\" column=\"10\"><name line=\"1\" " +
+			"<content line=\"1\" column=\"1\"><interface line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
 			"column=\"20\">IA</name><content line=\"1\" column=\"23\"><get " +
-			"line=\"1\" column=\"25\"><name line=\"1\" column=\"38\">" +
-			"myFunction</name><parameter-list line=\"1\" column=\"48\">" +
-			"</parameter-list><type line=\"1\" column=\"51\">int</type>" +
-			"</get></content></interface></content>");
+			"line=\"1\" column=\"25\"><name line=\"1\" column=\"38\">myFunction" +
+			"</name><parameter-list line=\"1\" column=\"48\"></parameter-list>" +
+			"<type line=\"1\" column=\"51\">int</type></get></content>" +
+			"</interface></content>");
 	}
 	
 	[Test]
@@ -385,18 +387,17 @@ public class TestPackageContent
 			"value:int):void { } }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
-			"public</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
-			"column=\"16\">A</name><content line=\"1\" column=\"18\"><set " +
-			"line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">public" +
-			"</mod><name line=\"1\" column=\"40\">myFunction</name>" +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\">" +
+			"<set line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">" +
+			"public</mod><name line=\"1\" column=\"40\">myFunction</name>" +
 			"<parameter-list line=\"1\" column=\"50\"><parameter line=\"1\" " +
-			"column=\"51\"><name-type-init line=\"1\" column=\"51\">" +
-			"<name line=\"1\" column=\"51\">value</name><type line=\"1\" " +
-			"column=\"57\">int</type></name-type-init></parameter>" +
-			"</parameter-list><type line=\"1\" column=\"62\">void</type>" +
-			"<block line=\"1\" column=\"67\"></block></set></content>" +
-			"</class></content>");
+			"column=\"51\"><name-type-init line=\"1\" column=\"51\"><name " +
+			"line=\"1\" column=\"51\">value</name><type line=\"1\" column=\"57\">" +
+			"int</type></name-type-init></parameter></parameter-list><type " +
+			"line=\"1\" column=\"62\">void</type><block line=\"1\" column=\"67\">" +
+			"</block></set></content></class></content>");
 	}
 	
 	[Test]
@@ -406,16 +407,16 @@ public class TestPackageContent
 			"value:int):void }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">" +
-			"public</mod><interface line=\"1\" column=\"10\"><name line=\"1\" " +
-			"column=\"20\">IA</name><content line=\"1\" column=\"23\"><set " +
-			"line=\"1\" column=\"25\"><name line=\"1\" column=\"38\">myFunction" +
-			"</name><parameter-list line=\"1\" column=\"48\"><parameter " +
-			"line=\"1\" column=\"49\"><name-type-init line=\"1\" column=\"49\">" +
-			"<name line=\"1\" column=\"49\">value</name><type line=\"1\" " +
-			"column=\"55\">int</type></name-type-init></parameter>" +
-			"</parameter-list><type line=\"1\" column=\"60\">void</type>" +
-			"</set></content></interface></content>");
+			"<content line=\"1\" column=\"1\"><interface line=\"1\" " +
+			"column=\"10\"><mod line=\"1\" column=\"3\">public</mod>" +
+			"<name line=\"1\" column=\"20\">IA</name><content line=\"1\" " +
+			"column=\"23\"><set line=\"1\" column=\"25\"><name line=\"1\" " +
+			"column=\"38\">myFunction</name><parameter-list line=\"1\" " +
+			"column=\"48\"><parameter line=\"1\" column=\"49\"><name-type-init " +
+			"line=\"1\" column=\"49\"><name line=\"1\" column=\"49\">value" +
+			"</name><type line=\"1\" column=\"55\">int</type></name-type-init>" +
+			"</parameter></parameter-list><type line=\"1\" column=\"60\">" +
+			"void</type></set></content></interface></content>");
 	}
 	
 	[Test]
@@ -425,15 +426,16 @@ public class TestPackageContent
 			"myFunction():int { } }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">public" +
-			"</mod><class line=\"1\" column=\"10\"><name line=\"1\" " +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
 			"column=\"16\">A</name><content line=\"1\" column=\"18\">" +
 			"<function line=\"1\" column=\"43\"><as-doc line=\"1\" " +
 			"column=\"20\">/** Method comment. */</as-doc><mod line=\"1\" " +
-			"column=\"43\">public</mod><name line=\"1\" column=\"59\">myFunction" +
-			"</name><parameter-list line=\"1\" column=\"69\"></parameter-list>" +
-			"<type line=\"1\" column=\"72\">int</type><block line=\"1\" " +
-			"column=\"76\"></block></function></content></class></content>");
+			"column=\"43\">public</mod><name line=\"1\" column=\"59\">" +
+			"myFunction</name><parameter-list line=\"1\" column=\"69\">" +
+			"</parameter-list><type line=\"1\" column=\"72\">int</type>" +
+			"<block line=\"1\" column=\"76\"></block></function></content>" +
+			"</class></content>");
 	}
 	
 	[Test]
@@ -443,8 +445,8 @@ public class TestPackageContent
 			"/** A method comment. */ public function myFunction():int { } }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">public" +
-			"</mod><class line=\"1\" column=\"10\"><name line=\"1\" column=\"16\">" +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\"><mod " +
+			"line=\"1\" column=\"3\">public</mod><name line=\"1\" column=\"16\">" +
 			"A</name><content line=\"1\" column=\"18\"><function line=\"1\" " +
 			"column=\"83\"><meta line=\"1\" column=\"47\"><as-doc line=\"1\" " +
 			"column=\"20\">/** A metadata comment. */</as-doc><name line=\"1\" " +
@@ -470,15 +472,16 @@ public class TestPackageContent
 			"}";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><mod line=\"1\" column=\"3\">public" +
-			"</mod><class line=\"1\" column=\"10\"><name line=\"1\" column=\"16\">A" +
-			"</name><content line=\"1\" column=\"18\"><var-list line=\"1\" column=\"20\">" +
-			"<mod line=\"1\" column=\"20\">public</mod><name-type-init line=\"1\" " +
-			"column=\"31\"><name line=\"1\" column=\"31\">myVar</name><type line=\"1\" " +
-			"column=\"37\">int</type><init line=\"1\" column=\"43\"><number line=\"1\" " +
-			"column=\"43\">42</number></init></name-type-init></var-list><const-list " +
-			"line=\"1\" column=\"47\"><mod line=\"1\" column=\"47\">public</mod><mod " +
-			"line=\"1\" column=\"54\">static</mod><name-type-init line=\"1\" column=\"67\">" +
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
+			"column=\"16\">A</name><content line=\"1\" column=\"18\"><var-list " +
+			"line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">public</mod>" +
+			"<name-type-init line=\"1\" column=\"31\"><name line=\"1\" column=\"31\">" +
+			"myVar</name><type line=\"1\" column=\"37\">int</type><init line=\"1\" " +
+			"column=\"43\"><number line=\"1\" column=\"43\">42</number></init>" +
+			"</name-type-init></var-list><const-list line=\"1\" column=\"47\">" +
+			"<mod line=\"1\" column=\"47\">public</mod><mod line=\"1\" " +
+			"column=\"54\">static</mod><name-type-init line=\"1\" column=\"67\">" +
 			"<name line=\"1\" column=\"67\">MY_CONSTANT</name><type line=\"1\" " +
 			"column=\"79\">int</type><init line=\"1\" column=\"85\"><number line=\"1\" " +
 			"column=\"85\">42</number></init></name-type-init></const-list><function " +
@@ -488,13 +491,13 @@ public class TestPackageContent
 			"line=\"1\" column=\"117\"><name line=\"1\" column=\"117\">arg0</name>" +
 			"<type line=\"1\" column=\"122\">int</type></name-type-init></parameter>" +
 			"<parameter line=\"1\" column=\"127\"><name-type-init line=\"1\" " +
-			"column=\"127\"><name line=\"1\" column=\"127\">arg1</name><type " +
-			"line=\"1\" column=\"132\">String</type><init line=\"1\" column=\"141\">" +
-			"<string line=\"1\" column=\"141\">\"default\"</string></init>" +
-			"</name-type-init></parameter><parameter line=\"1\" column=\"152\">" +
-			"<rest line=\"1\" column=\"155\">rest</rest></parameter></parameter-list>" +
-			"<type line=\"1\" column=\"161\">void</type><block line=\"1\" column=\"166\">" +
-			"</block></function></content></class></content>");
+			"column=\"127\"><name line=\"1\" column=\"127\">arg1</name><type line=\"1\" " +
+			"column=\"132\">String</type><init line=\"1\" column=\"141\"><string " +
+			"line=\"1\" column=\"141\">\"default\"</string></init></name-type-init>" +
+			"</parameter><parameter line=\"1\" column=\"152\"><rest line=\"1\" " +
+			"column=\"155\">rest</rest></parameter></parameter-list><type line=\"1\" " +
+			"column=\"161\">void</type><block line=\"1\" column=\"166\"></block>" +
+			"</function></content></class></content>");
 	}
 	
 	protected function assertPackagePrint(input:String):void

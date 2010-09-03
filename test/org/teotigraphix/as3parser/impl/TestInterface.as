@@ -46,20 +46,20 @@ public class TestInterface
 	{
 		assertPackageContent("1",
 			"public interface A extends B { } ",
-			"<content line=\"1\" column=\"1\"><mod line=\"2\" column=\"1\">" +
-			"public</mod><interface line=\"2\" column=\"8\"><name line=\"2\" " +
-			"column=\"18\">A</name><extends line=\"2\" column=\"20\"><type " +
-			"line=\"2\" column=\"28\">B</type></extends><content line=\"2\" " +
-			"column=\"30\"></content></interface></content>");
+			"<content line=\"1\" column=\"1\"><interface line=\"2\" column=\"8\">" +
+			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" column=\"18\">" +
+			"A</name><extends line=\"2\" column=\"20\"><type line=\"2\" column=\"28\">" +
+			"B</type></extends><content line=\"2\" column=\"30\"></content>" +
+			"</interface></content>");
 		
 		assertPackageContent("2",
 			"   public interface ITimelineEntryRenderer extends IFlexDisplayObject, IDataRenderer{}",
-			"<content line=\"1\" column=\"1\"><mod line=\"2\" column=\"4\">" +
-			"public</mod><interface line=\"2\" column=\"11\"><name line=\"2\" " +
+			"<content line=\"1\" column=\"1\"><interface line=\"2\" column=\"11\">" +
+			"<mod line=\"2\" column=\"4\">public</mod><name line=\"2\" " +
 			"column=\"21\">ITimelineEntryRenderer</name><extends line=\"2\" " +
-			"column=\"44\"><type line=\"2\" column=\"52\">IFlexDisplayObject" +
-			"</type><type line=\"2\" column=\"72\">IDataRenderer</type></extends>" +
-			"<content line=\"2\" column=\"85\"></content></interface></content>");
+			"column=\"44\"><type line=\"2\" column=\"52\">IFlexDisplayObject</type>" +
+			"<type line=\"2\" column=\"72\">IDataRenderer</type></extends><content " +
+			"line=\"2\" column=\"85\"></content></interface></content>");
 	}
 	
 	[Test]
@@ -67,10 +67,10 @@ public class TestInterface
 	{
 		assertPackageContent("1",
 			"public interface A extends B { include \"ITextFieldInterface.asz\" } ",
-			"<content line=\"1\" column=\"1\"><mod line=\"2\" column=\"1\">" +
-			"public</mod><interface line=\"2\" column=\"8\"><name line=\"2\" " +
-			"column=\"18\">A</name><extends line=\"2\" column=\"20\"><type " +
-			"line=\"2\" column=\"28\">B</type></extends><content line=\"2\" " +
+			"<content line=\"1\" column=\"1\"><interface line=\"2\" column=\"8\">" +
+			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" " +
+			"column=\"18\">A</name><extends line=\"2\" column=\"20\">" +
+			"<type line=\"2\" column=\"28\">B</type></extends><content line=\"2\" " +
 			"column=\"30\"><include line=\"2\" column=\"32\"><string line=\"2\" " +
 			"column=\"40\">\"ITextFieldInterface.asz\"</string></include>" +
 			"</content></interface></content>" );

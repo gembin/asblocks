@@ -22,7 +22,7 @@ public class TestAS3FragmentParser
 			"Test { } } class InternalClass { }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<compilation-unit><package><name>my.domain</name>" +
-			"<content><mod>public</mod><class><name>Test</name><content></content>" +
+			"<content><class><mod>public</mod><name>Test</name><content></content>" +
 			"</class></content></package><content><class><name>InternalClass</name>" +
 			"<content></content></class></content></compilation-unit>", result);
 	}
@@ -36,8 +36,8 @@ public class TestAS3FragmentParser
 		ast = AS3FragmentParser.parsePackage("package my.domain{public class Test " +
 			"{ } } class InternalClass { }");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<package><name>my.domain</name><content><mod>public" +
-			"</mod><class><name>Test</name><content></content></class>" +
+		Assert.assertEquals("<package><name>my.domain</name><content><class>" +
+			"<mod>public</mod><name>Test</name><content></content></class>" +
 			"</content></package>", result);
 	}
 	
@@ -49,17 +49,17 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parsePackageContent("public class Test { }");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><mod>public</mod><class><name>Test</name>" +
+		Assert.assertEquals("<content><class><mod>public</mod><name>Test</name>" +
 			"<content></content></class></content>", result);
 		
 		ast = AS3FragmentParser.parsePackageContent("public interface ITest { }");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><mod>public</mod><interface><name>ITest</name>" +
+		Assert.assertEquals("<content><interface><mod>public</mod><name>ITest</name>" +
 			"<content></content></interface></content>", result);
 		
 		ast = AS3FragmentParser.parsePackageContent("public function myGlobalFunction():int { return -1; }");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><mod>public</mod><function><name>myGlobalFunction" +
+		Assert.assertEquals("<content><function><mod>public</mod><name>myGlobalFunction" +
 			"</name><parameter-list></parameter-list><type>int</type><block>" +
 			"<return><minus><number>1</number></minus></return></block>" +
 			"</function></content>", result);

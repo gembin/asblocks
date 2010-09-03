@@ -20,7 +20,6 @@
 package org.teotigraphix.as3parser.impl
 {
 
-import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
@@ -31,6 +30,7 @@ import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
 import org.teotigraphix.as3parser.core.Node;
 import org.teotigraphix.as3parser.core.TokenNode;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * A port of the Java PMD de.bokelberg.flex.parser.AS3Parser.
@@ -217,7 +217,23 @@ public class AS3Parser extends ParserBase
 		}
 		
 		var pendingType:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
-		
+		/*
+		Create placeholders
+		compilation-unit
+		  - package
+		    - as-doc
+		    - name
+		    - content
+		      
+		      - class
+		        - meta[i]
+		        - as-doc
+		        - mod-list
+		        - name
+		        - extends
+		        - implements
+		        - content
+		*/
 		while (!tokIs(Operators.RIGHT_CURLY_BRACKET)
 			&& !tokIs(KeyWords.EOF))
 		{
@@ -235,12 +251,13 @@ public class AS3Parser extends ParserBase
 			}
 			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
 			{
-				result.addChild(parseMetaData());
+				pendingType.addChild(parseMetaData());
 			}
 			else if (tokenStartsWith(ASDOC_COMMENT))
 			{
-				result.appendToken(adapter.createToken(
+				pendingType.appendToken(adapter.createToken(
 					AS3NodeKind.AS_DOC, token.text));
+				
 				currentAsDoc = parseASdoc();
 			}
 			else if (tokIs(KeyWords.CLASS))
@@ -259,11 +276,11 @@ public class AS3Parser extends ParserBase
 			{
 				if (!tokIsWhitespace())
 				{
-					result.addChild(adapter.copy(
+					pendingType.addChild(adapter.copy(
 						AS3NodeKind.MODIFIER, token));
 				}
 				
-				nextNonWhiteSpaceToken(result);
+				nextNonWhiteSpaceToken(pendingType);
 			}
 		}
 		
@@ -280,14 +297,13 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseClass(result:TokenNode):TokenNode
 	{
+		addAsDoc(result);
+		
 		result.kind = AS3NodeKind.CLASS;
-		result.stringValue = KeyWords.CLASS;
 		result.line = token.line;
 		result.column = token.column;
 		
-		addAsDoc(result);
-		
-		consumeWS(KeyWords.CLASS, result);
+		consume(KeyWords.CLASS, result);
 		
 		result.addChild(adapter.copy(
 			AS3NodeKind.NAME, token));
@@ -321,13 +337,10 @@ public class AS3Parser extends ParserBase
 	private function parseInterface(result:TokenNode):TokenNode
 	{
 		result.kind = AS3NodeKind.INTERFACE;
-		result.stringValue = KeyWords.INTERFACE;
 		result.line = token.line;
 		result.column = token.column;
 		
-		addAsDoc(result);
-		
-		consumeWS(KeyWords.INTERFACE, result);
+		consume(KeyWords.INTERFACE, result);
 		
 		result.addChild(adapter.copy(
 			AS3NodeKind.NAME, token));
