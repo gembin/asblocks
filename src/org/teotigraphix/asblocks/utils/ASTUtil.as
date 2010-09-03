@@ -182,14 +182,146 @@ public class ASTUtil
 		ast.addChild(stmt);
 	}
 	
-	
-	
 	public static function removeAllChildren(ast:IParserNode):void
 	{
 		while (ast.numChildren > 0)
 		{
 			ast.removeChildAt(0);
 		}
+	}
+	
+	/**
+	 * Converts an <code>IParserNode</code> into a flat XML String.
+	 * 
+	 * @param ast The <code>IParserNode</code> to convert.
+	 * @return A String XML representation of the <code>IParserNode</code>.
+	 */
+	public static function convert(ast:IParserNode, 
+								   location:Boolean = true):String
+	{
+		return visitNodes(ast, "", 0, location);
+	}
+	
+	
+	public static function decodeStringLiteral(string:String):String
+	{
+		var result:String = "";
+		
+		if (string.indexOf('"') != 0 && string.indexOf("'") != 0)
+		{
+			// SyntaxException
+			throw new Error("Invalid delimiter at position 0: " + string[0]);
+		}
+		
+		var chars:Array = string.split("");
+		
+		var delimiter:String = chars[0];
+		var end:int = chars.length - 1;
+		for (var i:int = 1; i < end; i++) 
+		{
+			var c:String = chars[i];
+			switch (c) 
+			{
+				case '\\':
+					
+					c = chars[++i];
+					switch (c) 
+					{
+						case 'n':
+							result += '\n';
+							break;
+						case 't':
+							result += '\t';
+							break;
+						case '\\':
+							result += '\\';
+							break;
+						default:
+							result += c;
+					}
+					break;
+				
+				default:
+					result += c;
+			}
+		}
+		
+		if (chars[end] != delimiter) 
+		{
+			// SyntaxException
+			throw new Error("End delimiter doesn't match " + delimiter + " at position " + end);
+		}
+		
+		return result;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private Class :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private static function visitNodes(ast:IParserNode, 
+									   result:String, 
+									   level:int,
+									   location:Boolean = true):String
+	{
+		if (location)
+		{
+			result += "<" + ast.kind + " line=\"" + 
+				ast.line + "\" column=\"" + ast.column + "\">";
+		}
+		else
+		{
+			result += "<" + ast.kind + ">";
+		}
+		
+		var numChildren:int = ast.numChildren;
+		if (numChildren > 0)
+		{
+			for (var i:int = 0; i < numChildren; i++)
+			{
+				result = visitNodes(ast.getChild(i), result, level + 1, location);
+			}
+		}
+		else if (ast.stringValue != null)
+		{
+			result += escapeEntities(ast.stringValue);
+		}
+		
+		result += "</" + ast.kind + ">";
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private static function escapeEntities(stringToEscape:String):String
+	{
+		var buffer:String = "";
+		
+		for (var i:int = 0; i < stringToEscape.length; i++)
+		{
+			var currentCharacter:String = stringToEscape.charAt(i);
+			
+			if (currentCharacter == '<')
+			{
+				buffer += "&lt;";
+			}
+			else if (currentCharacter == '>')
+			{
+				buffer += "&gt;";
+			}
+			else
+			{
+				buffer += currentCharacter;
+			}
+		}
+		return buffer;
 	}
 }
 }
