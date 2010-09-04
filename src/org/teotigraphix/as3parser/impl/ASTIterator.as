@@ -92,9 +92,23 @@ public class ASTIterator
 		parent.addChildAt(insert, index);
 	}
 	
+	public function insertAfterCurrent(insert:IParserNode):void
+	{
+		parent.addChildAt(insert, index + 1);
+	}
+	
 	public function getCurrentIndex():int
 	{
 		return index;
+	}
+	
+	public function reset(parent:IParserNode = null):void
+	{
+		if (parent)
+		{
+			this.parent = parent;
+		}
+		index = -1;
 	}
 
 }

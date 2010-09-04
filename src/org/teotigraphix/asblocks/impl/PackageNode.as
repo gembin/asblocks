@@ -20,12 +20,16 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IPackageNode;
 import org.teotigraphix.asblocks.api.ITypeNode;
-import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
- * The <code>ICompilationUnitNode</code> implementation.
+ * The <code>IPackageNode</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -34,6 +38,28 @@ import org.teotigraphix.as3parser.api.IParserNode;
 public class PackageNode extends ScriptNode 
 	implements IPackageNode
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function get contentIterator():ASTIterator
+	{
+		return new ASTIterator(contentNode);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function get contentNode():IParserNode
+	{
+		return node.getLastChild();
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  IPackageNode API :: Properties
@@ -49,6 +75,11 @@ public class PackageNode extends ScriptNode
 	 */
 	public function get name():String
 	{
+		var n:IParserNode = node.getKind(AS3NodeKind.NAME);
+		if (n)
+		{
+			return n.stringValue;
+		}
 		return null;
 	}
 	
@@ -57,7 +88,33 @@ public class PackageNode extends ScriptNode
 	 */	
 	public function set name(value:String):void
 	{
+		var i:ASTIterator = new ASTIterator(node);
+		var first:IParserNode = i.next();
 		
+		// a package can have an asdoc, which would be first
+		if (first.isKind(AS3NodeKind.AS_DOC))
+		{
+			first = i.next();
+		}
+		
+		// if name null, remove NAME node
+		if (!value && first.isKind(AS3NodeKind.NAME))
+		{
+			i.remove();
+			return;
+		}
+		
+		// replace with new NAME parsed node or add it new
+		var newName:IParserNode = AS3FragmentParser.parseName(value);
+		if (first.isKind(AS3NodeKind.NAME))
+		{
+			i.replace(newName);
+		}
+		else
+		{
+			i.insertBeforeCurrent(newName);
+			newName.appendToken(TokenBuilder.newSpace());
+		}
 	}
 	
 	//----------------------------------
@@ -69,6 +126,19 @@ public class PackageNode extends ScriptNode
 	 */
 	public function get typeNode():ITypeNode
 	{
+		var content:IParserNode = contentNode;
+		if (content.hasKind(AS3NodeKind.CLASS))
+		{
+			return new ClassTypeNode(content.getKind(AS3NodeKind.CLASS));
+		}
+		else if (content.hasKind(AS3NodeKind.INTERFACE))
+		{
+			return new InterfaceTypeNode(content.getKind(AS3NodeKind.INTERFACE));
+		}
+		else if (content.hasKind(AS3NodeKind.FUNCTION))
+		{
+			//return new FunctionTypeNode(content.getKind(AS3NodeKind.FUNCTION));
+		}
 		return null;
 	}
 	
@@ -93,27 +163,75 @@ public class PackageNode extends ScriptNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
-	 */
-	public function findImports():String
-	{
-		return null;
-	}
-	
-	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IPackageNode#addImports()
 	 */
 	public function addImports(name:String):void
 	{
-		
+		var imp:IParserNode = AS3FragmentParser.parseImport(name);
+		var pos:int = nextInsertion();
+		ASTUtil.addChildWithIndentation(contentNode, imp, pos);
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IPackageNode#removeImport()
 	 */
-	public function removeImports():Boolean
+	public function removeImport(name:String):Boolean
 	{
+		var i:ASTIterator = contentIterator;
+		var imp:IParserNode;
+		while (imp = i.search(AS3NodeKind.IMPORT))
+		{
+			if (importText(imp) == name)
+			{
+				i.remove();
+				return true;
+			}
+		}
 		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IPackageNode#findImports()
+	 */
+	public function findImports():Vector.<String>
+	{
+		var i:ASTIterator = contentIterator;
+		var imp:IParserNode;
+		var result:Vector.<String> = new Vector.<String>();
+		while (imp = i.search(AS3NodeKind.IMPORT))
+		{
+			result.push(importText(imp));
+		}
+		
+		return result;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function importText(imp:IParserNode):String
+	{
+		return imp.getFirstChild().stringValue;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function nextInsertion():int
+	{
+		var i:ASTIterator = contentIterator;
+		var index:int = 0;
+		while (i.search(AS3NodeKind.IMPORT))
+		{
+			index = i.getCurrentIndex() + 1;
+		}
+		return index;
 	}
 }
 }

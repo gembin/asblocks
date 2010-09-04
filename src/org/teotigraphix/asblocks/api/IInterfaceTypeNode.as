@@ -20,8 +20,6 @@
 package org.teotigraphix.asblocks.api
 {
 
-import org.teotigraphix.asblocks.api.IMethodNode;
-
 /**
  * TODO Docme
  * 
@@ -29,7 +27,7 @@ import org.teotigraphix.asblocks.api.IMethodNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
+public interface IInterfaceTypeNode extends ITypeNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -38,41 +36,13 @@ public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  name
+	//  superInterfaces
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get name():String;
-	
-	/**
-	 * @private
-	 */
-	function set name(value:String):void;
-	
-	//----------------------------------
-	//  visibility
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get visibility():Visibility;
-	
-	/**
-	 * @private
-	 */
-	function set visibility(value:Visibility):void;
-	
-	//----------------------------------
-	//  methods
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	//function get methods():Vector.<IMethodNode>;
+	function get superInterfaces():Vector.<String>;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -83,18 +53,11 @@ public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
 	/**
 	 * TODO Docme
 	 */
-//	function newMethod(name:String, 
-//					   visibility:Visibility, 
-//					   returnType:String):IMethodNode;
+	function addSuperInterface(name:String):Boolean;
 	
 	/**
 	 * TODO Docme
 	 */
-//	function getMethod(name:String):IMethodNode;
-	
-	/**
-	 * TODO Docme
-	 */
-//	function removeMethod(name:String):Boolean;
+	function removeSuperInterface(name:String):Boolean;
 }
 }

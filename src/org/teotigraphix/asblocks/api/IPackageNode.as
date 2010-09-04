@@ -66,16 +66,16 @@ public interface IPackageNode extends IScriptNode
 	/**
 	 * TODO Docme
 	 */
-	function findImports():String;
-	
-	/**
-	 * TODO Docme
-	 */
 	function addImports(name:String):void;
 	
 	/**
 	 * TODO Docme
 	 */
-	function removeImports():Boolean;
+	function removeImport(name:String):Boolean;
+	
+	/**
+	 * TODO Docme
+	 */
+	function findImports():Vector.<String>;
 }
 }

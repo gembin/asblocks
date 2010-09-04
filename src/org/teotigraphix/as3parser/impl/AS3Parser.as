@@ -504,7 +504,7 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function parseImport():TokenNode
+	internal function parseImport():TokenNode
 	{
 		var result:TokenNode = adapter.empty(
 			AS3NodeKind.IMPORT, token);

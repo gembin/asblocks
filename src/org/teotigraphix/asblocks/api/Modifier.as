@@ -21,13 +21,13 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * Member visibility modifiers.
+ * Type and member modifiers.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public final class Visibility
+public final class Modifier
 {
 	//--------------------------------------------------------------------------
 	//
@@ -35,23 +35,32 @@ public final class Visibility
 	//
 	//--------------------------------------------------------------------------
 	
-	public static const DEFAULT:Visibility = Visibility.create("default");
+	public static const DYNAMIC:Modifier = Modifier.create("dynamic");
 	
-	public static const INTERNAL:Visibility = Visibility.create("internal");
+	public static const FINAL:Modifier = Modifier.create("final");
 	
-	public static const PRIVATE:Visibility = Visibility.create("private");
+	public static const INTERNAL:Modifier = Modifier.create("internal");
 	
-	public static const PROTECTED:Visibility = Visibility.create("protected");
+	public static const OVERRIDE:Modifier = Modifier.create("override");
 	
-	public static const PUBLIC:Visibility = Visibility.create("public");
+	public static const PRIVATE:Modifier = Modifier.create("private");
+	
+	public static const PROTECTED:Modifier = Modifier.create("protected");
+	
+	public static const PUBLIC:Modifier = Modifier.create("public");
+	
+	public static const STATIC:Modifier = Modifier.create("static");
 	
 	private static var list:Array =
 		[
-			DEFAULT,
+			DYNAMIC,
+			FINAL,
 			INTERNAL,
+			OVERRIDE,
 			PRIVATE,
 			PROTECTED,
-			PUBLIC
+			PUBLIC,
+			STATIC
 		];
 	
 	//--------------------------------------------------------------------------
@@ -70,7 +79,7 @@ public final class Visibility
 	private var _name:String;
 	
 	/**
-	 * The visibility modifier name.
+	 * The modifier name.
 	 */
 	public function get name():String
 	{
@@ -86,7 +95,7 @@ public final class Visibility
 	/**
 	 * @private
 	 */
-	public function Visibility(name:String)
+	public function Modifier(name:String)
 	{
 		_name = name;
 	}
@@ -108,7 +117,7 @@ public final class Visibility
 	/**
 	 * @private
 	 */
-	public function equals(other:Visibility):Boolean
+	public function equals(other:Modifier):Boolean
 	{
 		return _name == other.name;
 	}
@@ -120,43 +129,20 @@ public final class Visibility
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @private
+	 * Creates a new Modifier.
+	 * 
+	 * @param name A String indicating the name of the modifier.
+	 * @return A new Modifer instance.
 	 */
-	public static function create(name:String):Visibility
+	public static function create(name:String):Modifier
 	{
-		for each (var element:Visibility in list) 
+		for each (var element:Modifier in list) 
 		{
 			if (element.name == name)
 				return element;
 		}
 		
-		return new Visibility(name);
-	}
-	
-	/**
-	 * @private
-	 */
-	public static function hasVisibility(visibility:String):Boolean
-	{
-		for each (var element:Visibility in list) 
-		{
-			if (element.name == visibility)
-				return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * @private
-	 */
-	public static function getVisibility(visibility:String):Visibility
-	{
-		for each (var element:Visibility in list) 
-		{
-			if (element.name == visibility)
-				return element;
-		}
-		return null;
+		return new Modifier(name);
 	}
 }
 }

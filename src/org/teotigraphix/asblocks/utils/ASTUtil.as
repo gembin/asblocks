@@ -1,11 +1,11 @@
 package org.teotigraphix.asblocks.utils
 {
-import org.teotigraphix.asblocks.impl.TokenBuilder;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.asblocks.impl.TokenBuilder;
 
 public class ASTUtil
 {
@@ -110,6 +110,56 @@ public class ASTUtil
 		return indent;
 	}
 	
+	public static function collapseWhitespace(startToken:LinkedListToken):void
+	{
+		// takes 2 tokens like "  " to " "
+		if (startToken.channel == AS3NodeKind.HIDDEN 
+			&& startToken.next.channel == AS3NodeKind.HIDDEN)
+		{
+			startToken.next.remove();
+		}
+	}
+	
+	public static function removeTrailingWhitespaceAndComma(stopToken:LinkedListToken, 
+															trim:Boolean = false):void
+	{
+		for (var tok:LinkedListToken = stopToken.next; tok != null; tok = tok.next)
+		{
+			if (tok.channel == AS3NodeKind.HIDDEN)
+			{
+				tok.remove();
+			}
+			else if (tok.text == ",")
+			{
+				tok.remove();
+				if (trim && stopToken.next.channel == AS3NodeKind.HIDDEN 
+					&& stopToken.previous.channel == AS3NodeKind.HIDDEN)
+				{
+					stopToken.next.remove();
+				}
+				break;
+			}
+			else
+			{
+				throw new Error("Unexpected token: " + tok);
+			}
+		}
+	}
+	
+	public static function printNode(ast:IParserNode):String
+	{
+		var result:String = "";
+		for (var tok:LinkedListToken = ast.startToken; tok != null; tok = tok.next)
+		{
+			result += tok.text;
+			if (tok == ast.stopToken)
+			{
+				break;
+			}
+		}
+		return result;
+	}
+	
 	public static function newAST(kind:String, text:String = null):IParserNode
 	{
 		return adapter.create(kind, text);
@@ -119,7 +169,6 @@ public class ASTUtil
 	{
 		return adapter.createNode(token);
 	}
-	
 	
 	/**
 	 * Returns the first child of the given AST node which has the given
@@ -164,7 +213,8 @@ public class ASTUtil
 	}
 	
 	public static function addChildWithIndentation(ast:IParserNode, 
-												   stmt:IParserNode):void
+												   stmt:IParserNode,
+												   index:int = -1):void
 	{
 		var last:IParserNode = ast.getLastChild();
 		var indent:String;
@@ -179,7 +229,14 @@ public class ASTUtil
 		
 		increaseIndent(stmt, indent);
 		stmt.addTokenAt(TokenBuilder.newNewline(), 0);
-		ast.addChild(stmt);
+		if (index == -1)
+		{
+			ast.addChild(stmt);
+		}
+		else
+		{
+			ast.addChildAt(stmt, index);
+		}
 	}
 	
 	public static function removeAllChildren(ast:IParserNode):void
@@ -188,6 +245,18 @@ public class ASTUtil
 		{
 			ast.removeChildAt(0);
 		}
+	}
+	
+	public static function typeText(ast:IParserNode):String
+	{
+		// TYPE node, I want to change ast some day
+		return ast.stringValue;
+	}
+	
+	public static function nameText(ast:IParserNode):String
+	{
+		// NAME node, I want to change ast some day
+		return ast.stringValue;
 	}
 	
 	/**

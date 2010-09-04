@@ -2,46 +2,75 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.Assert;
+import org.flexunit.asserts.assertNotNull;
+import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IClassTypeNode;
 import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IScriptNode;
-import org.teotigraphix.asblocks.utils.ASTUtil;
+import org.teotigraphix.asblocks.api.IPackageNode;
 
 public class TestCompilationUnitNode extends BaseASFactoryTest
-{	
+{
+	private var unit:ICompilationUnitNode;
+	
+	[Before]
+	override public function setUp():void
+	{
+		super.setUp();
+		
+		unit = project.newClass("A");
+		assertNotNull(unit);
+	}
+	
 	[Test]
-	public function testDefaultPackageWithClass():void
+	public function testBasicPackageAndClass():void
 	{
-		//  package { class A {} } 
-		var element:ICompilationUnitNode = project.newClass("A");
-		var result1:String = toElementString(element);
+		var input:String = "package {\n\tpublic class A {\n\t}\n}";
 		
-		var ast:IParserNode = parseCompilationUnit("package { public class A {} }");
-		var result2:String = ASTUtil.convert(ast, false);
+		// create a package with class
+		var unit:ICompilationUnitNode = project.newClass("A");
+		var result1:String = toElementString(unit);
 		
+		// parse a package with class
+		var ast:IParserNode = parseCompilationUnit(input);
+		var result2:String = toElementString(ast);
 		
-		//assertPrint("package my.domain {\n\tpublic class ClassA {\n\t}\n}", statement);
+		// assert the AST is equal
+		Assert.assertEquals(result1, result2);
+		
+		// assert that both ast models will print equal 
+		// with newlines, tabs and spaces
+		assertPrint(input, new CompilationUnitNode(ast));
+		assertPrint(input, unit);
 	}
 	
-	
-	
-	protected function assertCompilationUnit(message:String, 
-											 input:String, 
-											 expected:String):void
+	[Test]
+	public function testPackageNode():void
 	{
-		var result:String = ASTUtil.convert(parseCompilationUnit(input), false);
-		Assert.assertEquals(message, expected, result);
+		Assert.assertNotNull(unit.packageNode);
 	}
 	
-	protected function parseCompilationUnit(input:String):IParserNode
+	[Test]
+	public function testPackageName():void
 	{
-		parser.scanner.setLines(Vector.<String>([input]));
-		return parser.parseCompilationUnit();
+		// test packageNode
+		var packageNode:IPackageNode = unit.packageNode;
+		Assert.assertNotNull(packageNode);
+		// test packageName get /set
+		Assert.assertNull(unit.packageName);
+		
+		unit.packageName = "my.domain";
+		Assert.assertEquals("my.domain", unit.packageName);
+		
+		unit.packageName = "my.domain.sub";
+		Assert.assertEquals("my.domain.sub", unit.packageName);
 	}
 	
-	protected function toElementString(element:IScriptNode):String
+	[Test]
+	public function testTypeNode():void
 	{
-		return ASTUtil.convert(element.node, false);
+		assertNotNull(unit.typeNode);
+		assertTrue(unit.typeNode is IClassTypeNode);
 	}
 }
 }

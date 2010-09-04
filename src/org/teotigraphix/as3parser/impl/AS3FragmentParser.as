@@ -270,6 +270,16 @@ public class AS3FragmentParser
 		return node;
 	}
 	
+	public static function parseImport(name:String):IParserNode
+	{
+		var parser:AS3Parser = createParser("import " + name + ";");
+		parser.nextToken();
+		var node:IParserNode = parser.parseImport();
+		return node;
+	}
+	
+	
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Private Class :: Methods

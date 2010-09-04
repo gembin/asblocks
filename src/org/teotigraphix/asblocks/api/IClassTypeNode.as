@@ -29,7 +29,7 @@ import org.teotigraphix.asblocks.api.IMethodNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
+public interface IClassTypeNode extends ITypeNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -38,41 +38,64 @@ public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  name
+	//  isDynamic
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get name():String;
+	function get isDynamic():Boolean;
 	
 	/**
 	 * @private
 	 */
-	function set name(value:String):void;
+	function set isDynamic(value:Boolean):void;
 	
 	//----------------------------------
-	//  visibility
+	//  isFinal
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get visibility():Visibility;
+	function get isFinal():Boolean;
 	
 	/**
 	 * @private
 	 */
-	function set visibility(value:Visibility):void;
+	function set isFinal(value:Boolean):void;
 	
 	//----------------------------------
-	//  methods
+	//  superClass
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	//function get methods():Vector.<IMethodNode>;
+	function get superClass():String;
+	
+	/**
+	 * @private
+	 */
+	function set superClass(value:String):void;
+	
+	//----------------------------------
+	//  fields
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	//function get fields():Vector.<IFieldNode>;
+	
+	//----------------------------------
+	//  implementedInterfaces
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get implementedInterfaces():Vector.<String>;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -83,18 +106,28 @@ public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
 	/**
 	 * TODO Docme
 	 */
-//	function newMethod(name:String, 
-//					   visibility:Visibility, 
-//					   returnType:String):IMethodNode;
+	//function newField(name:String, 
+	//				  visibility:Visibility, 
+	//				  type:String):IFieldNode;
 	
 	/**
 	 * TODO Docme
 	 */
-//	function getMethod(name:String):IMethodNode;
+	//function getField(name:String):IFieldNode;
 	
 	/**
 	 * TODO Docme
 	 */
-//	function removeMethod(name:String):Boolean;
+	//function removeField(name:String):Boolean;
+	
+	/**
+	 * TODO Docme
+	 */
+	function addImplementedInterface(name:String):Boolean;
+	
+	/**
+	 * TODO Docme
+	 */
+	function removeImplementedInterface(name:String):Boolean;
 }
 }
