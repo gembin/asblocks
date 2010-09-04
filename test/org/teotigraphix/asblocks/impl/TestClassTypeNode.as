@@ -25,14 +25,22 @@ public class TestClassTypeNode extends BaseASFactoryTest
 		assertNotNull(unit.typeNode);
 	}
 	
-	
 	[Test]
 	public function test_newMethod():void
 	{
 		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		// TODO make sure dups cannot be created
 		var method:IMethodNode = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
+		assertNotNull(method);
+		assertEquals(Visibility.PUBLIC, method.visibility);
+		assertEquals("methodOne", method.name);
+		assertEquals("String", method.type);
 		assertPrint("package {\n\tpublic class A {\n\t\tpublic function methodOne()" +
 			":String {\n\t\t}\n\t}\n}", unit);
+		
+		assertTrue(typeNode.removeMethod("methodOne"));
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+		assertFalse(typeNode.removeMethod("methodOne"));
 	}
 	
 	[Test]

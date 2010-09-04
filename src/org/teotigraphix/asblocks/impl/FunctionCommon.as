@@ -1,12 +1,12 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IArgumentNode;
-import org.teotigraphix.asblocks.api.IFunctionCommon;
-import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.asblocks.api.IArgumentNode;
+import org.teotigraphix.asblocks.api.IFunctionCommon;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class FunctionCommon implements IFunctionCommon
 {
@@ -44,9 +44,9 @@ public class FunctionCommon implements IFunctionCommon
 	 */
 	public function get type():String
 	{
-		var nameTypeInit:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-		if (nameTypeInit)
-			return nameTypeInit.getKind(AS3NodeKind.TYPE).stringValue;
+		var t:IParserNode = node.getKind(AS3NodeKind.TYPE);
+		if (t)
+			return ASTUtil.typeText(t);
 		return null;
 	}
 	

@@ -274,10 +274,12 @@ public class ClassTypeNode extends TypeNode
 		return method;
 	}
 	
+	/**
+	 * @private
+	 */
 	public function addMethod(method:IMethodNode):void
 	{
-		ASTUtil.addChildWithIndentation(
-			node.getKind(AS3NodeKind.CONTENT), method.node);
+		ASTUtil.addChildWithIndentation(contentNode, method.node);
 	}
 	
 	//--------------------------------------------------------------------------

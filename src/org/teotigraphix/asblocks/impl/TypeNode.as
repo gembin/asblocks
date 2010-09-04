@@ -40,9 +40,17 @@ public class TypeNode extends ScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Private :: Properties
+	//  Protected :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function get contentNode():IParserNode
+	{
+		return node.getKind(AS3NodeKind.CONTENT);
+	}
 	
 	//--------------------------------------------------------------------------
 	//
@@ -110,6 +118,30 @@ public class TypeNode extends ScriptNode
 		// TODO IMPL
 	}
 	
+	//----------------------------------
+	//  methods
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.ITypeNode#methods
+	 */
+	public function get methods():Vector.<IMethodNode>
+	{
+		var result:Vector.<IMethodNode> = new Vector.<IMethodNode>();
+		var i:ASTIterator = new ASTIterator(contentNode);
+		while (i.hasNext())
+		{
+			var member:IParserNode = i.next();
+			if (member.isKind(AS3NodeKind.FUNCTION)
+				|| member.isKind(AS3NodeKind.GET)
+				|| member.isKind(AS3NodeKind.SET))
+			{
+				result.push(new MethodNode(member));
+			}
+		}
+		return result;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -138,6 +170,53 @@ public class TypeNode extends ScriptNode
 							  returnType:String):IMethodNode
 	{
 		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.ITypeNode#getMethod()
+	 */
+	public function getMethod(name:String):IMethodNode
+	{
+		var i:ASTIterator = new ASTIterator(contentNode);
+		while (i.hasNext())
+		{
+			var member:IParserNode = i.next();
+			if (member.isKind(AS3NodeKind.FUNCTION)
+				|| member.isKind(AS3NodeKind.GET)
+				|| member.isKind(AS3NodeKind.SET))
+			{
+				var meth:IMethodNode = new MethodNode(member);
+				if (meth.name == name)
+				{
+					return meth;
+				}
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.ITypeNode#removeMethod()
+	 */
+	public function removeMethod(name:String):Boolean
+	{
+		var i:ASTIterator = new ASTIterator(contentNode);
+		while (i.hasNext())
+		{
+			var member:IParserNode = i.next();
+			if (member.isKind(AS3NodeKind.FUNCTION)
+				|| member.isKind(AS3NodeKind.GET)
+				|| member.isKind(AS3NodeKind.SET))
+			{
+				var meth:IMethodNode = new MethodNode(member);
+				if (meth.name == name)
+				{
+					i.remove();
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	//--------------------------------------------------------------------------

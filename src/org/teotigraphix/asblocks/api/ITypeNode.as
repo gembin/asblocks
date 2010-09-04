@@ -72,7 +72,7 @@ public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
 	/**
 	 * TODO Docme
 	 */
-	//function get methods():Vector.<IMethodNode>;
+	function get methods():Vector.<IMethodNode>;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -90,11 +90,11 @@ public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
 	/**
 	 * TODO Docme
 	 */
-//	function getMethod(name:String):IMethodNode;
+	function getMethod(name:String):IMethodNode;
 	
 	/**
 	 * TODO Docme
 	 */
-//	function removeMethod(name:String):Boolean;
+	function removeMethod(name:String):Boolean;
 }
 }
