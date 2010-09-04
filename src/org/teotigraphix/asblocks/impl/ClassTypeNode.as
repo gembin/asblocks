@@ -26,7 +26,9 @@ import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IClassTypeNode;
+import org.teotigraphix.asblocks.api.IMethodNode;
 import org.teotigraphix.asblocks.api.Modifier;
+import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.asblocks.utils.ModifierUtil;
 
@@ -252,6 +254,30 @@ public class ClassTypeNode extends TypeNode
 			count++;
 		}
 		return false;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function newMethod(name:String, 
+									   visibility:Visibility, 
+									   returnType:String):IMethodNode
+	{
+		var method:IMethodNode = ASTBuilder.newMethod(name, visibility, returnType);
+		addMethod(method);
+		return method;
+	}
+	
+	public function addMethod(method:IMethodNode):void
+	{
+		ASTUtil.addChildWithIndentation(
+			node.getKind(AS3NodeKind.CONTENT), method.node);
 	}
 	
 	//--------------------------------------------------------------------------

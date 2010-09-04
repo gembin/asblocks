@@ -21,14 +21,14 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * A method.
+ * A member, method or field.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IMethodNode 
-	extends IFunctionCommon, IStatementContainer, IMemberNode
+public interface IMemberNode 
+	extends IScriptNode /*, IDocumentAware, IMetaDataAware*/
 {
 	//--------------------------------------------------------------------------
 	//
@@ -37,17 +37,59 @@ public interface IMethodNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  accessorRole
+	//  visibility
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get accessorRole():AccessorRole;
+	function get visibility():Visibility;
 	
 	/**
 	 * @private
 	 */
-	function set accessorRole(value:AccessorRole):void;
+	function set visibility(value:Visibility):void;
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get name():String;
+	
+	/**
+	 * @private
+	 */
+	function set name(value:String):void;
+	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get type():String;
+	
+	/**
+	 * @private
+	 */
+	function set type(value:String):void;
+	
+	//----------------------------------
+	//  isStatic
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get isStatic():Boolean;
+	
+	/**
+	 * @private
+	 */
+	function set isStatic(value:Boolean):void;
 }
 }

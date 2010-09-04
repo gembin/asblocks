@@ -20,7 +20,7 @@
 package org.teotigraphix.asblocks.api
 {
 
-import org.teotigraphix.asblocks.api.IMethodNode;
+
 
 /**
  * TODO Docme
@@ -83,9 +83,9 @@ public interface ITypeNode extends IScriptNode//, IMetaDataAware, IDocumentAware
 	/**
 	 * TODO Docme
 	 */
-//	function newMethod(name:String, 
-//					   visibility:Visibility, 
-//					   returnType:String):IMethodNode;
+	function newMethod(name:String, 
+					   visibility:Visibility, 
+					   returnType:String):IMethodNode;
 	
 	/**
 	 * TODO Docme

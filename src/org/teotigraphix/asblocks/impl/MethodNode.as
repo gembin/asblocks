@@ -20,6 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.AccessorRole;
 import org.teotigraphix.asblocks.api.IArgumentNode;
 import org.teotigraphix.asblocks.api.IBreakStatementNode;
 import org.teotigraphix.asblocks.api.IContinueStatementNode;
@@ -29,25 +32,23 @@ import org.teotigraphix.asblocks.api.IDoWhileStatementNode;
 import org.teotigraphix.asblocks.api.IExpressionNode;
 import org.teotigraphix.asblocks.api.IExpressionStatementNode;
 import org.teotigraphix.asblocks.api.IFunctionCommon;
-import org.teotigraphix.asblocks.api.IFunctionLiteralNode;
 import org.teotigraphix.asblocks.api.IIfStatementNode;
+import org.teotigraphix.asblocks.api.IMethodNode;
 import org.teotigraphix.asblocks.api.IReturnStatementNode;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.IStatementNode;
 import org.teotigraphix.asblocks.api.ISwitchStatementNode;
 import org.teotigraphix.asblocks.api.IThrowStatementNode;
-import org.teotigraphix.as3parser.api.AS3NodeKind;
-import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IFunctionLiteralNode</code> implementation.
+ * The <code>IMemberNode</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class FunctionLiteralNode extends ExpressionNode 
-	implements IFunctionLiteralNode
+public class MethodNode extends MemberNode 
+	implements IMethodNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -64,6 +65,44 @@ public class FunctionLiteralNode extends ExpressionNode
 	 * @private
 	 */
 	private var containerMixin:IStatementContainer;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IMethodNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  accessorRole
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMethodNode#accessorRole
+	 */
+	public function get accessorRole():AccessorRole
+	{
+		if (node.isKind(AS3NodeKind.FUNCTION))
+		{
+			return AccessorRole.NORMAL;
+		}
+		else if (node.isKind(AS3NodeKind.GET))
+		{
+			return AccessorRole.GETTER;
+		}
+		else if (node.isKind(AS3NodeKind.SET))
+		{
+			return AccessorRole.SETTER;
+		}
+		return null;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set accessorRole(value:AccessorRole):void
+	{
+		// TODO impl
+	}
 	
 	//--------------------------------------------------------------------------
 	//
@@ -90,7 +129,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#type
 	 */
-	public function get type():String
+	override public function get type():String
 	{
 		return functionMixin.type;
 	}
@@ -98,7 +137,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set type(value:String):void
+	override public function set type(value:String):void
 	{
 		functionMixin.type = value;
 	}
@@ -112,12 +151,17 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * Constructor.
 	 */
-	public function FunctionLiteralNode(node:IParserNode)
+	public function MethodNode(node:IParserNode)
 	{
 		super(node);
 		
+		var block:IParserNode = node.getKind(AS3NodeKind.BLOCK);
+		if (block)
+		{
+			containerMixin = new StatementList(block);
+		}
+		
 		functionMixin = new FunctionCommon(node);
-		containerMixin = new StatementList(node.getKind(AS3NodeKind.BLOCK));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -245,5 +289,12 @@ public class FunctionLiteralNode extends ExpressionNode
 	{
 		return containerMixin.newThrow(expression);
 	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
 }
 }

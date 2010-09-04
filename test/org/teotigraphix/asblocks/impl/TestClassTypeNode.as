@@ -8,6 +8,7 @@ import org.flexunit.asserts.assertNull;
 import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.asblocks.api.IClassTypeNode;
 import org.teotigraphix.asblocks.api.ICompilationUnitNode;
+import org.teotigraphix.asblocks.api.IMethodNode;
 import org.teotigraphix.asblocks.api.Visibility;
 
 public class TestClassTypeNode extends BaseASFactoryTest
@@ -22,6 +23,16 @@ public class TestClassTypeNode extends BaseASFactoryTest
 		unit = project.newClass("A");
 		assertNotNull(unit);
 		assertNotNull(unit.typeNode);
+	}
+	
+	
+	[Test]
+	public function test_newMethod():void
+	{
+		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var method:IMethodNode = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
+		assertPrint("package {\n\tpublic class A {\n\t\tpublic function methodOne()" +
+			":String {\n\t\t}\n\t}\n}", unit);
 	}
 	
 	[Test]

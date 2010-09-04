@@ -23,20 +23,21 @@ package org.teotigraphix.asblocks.impl
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
-import org.teotigraphix.asblocks.api.IMethodNode;
-import org.teotigraphix.asblocks.api.ITypeNode;
+import org.teotigraphix.asblocks.api.IMemberNode;
+import org.teotigraphix.asblocks.api.Modifier;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ModifierUtil;
 
 /**
- * The <code>ITypeNode</code> implementation.
+ * The <code>IMemberNode</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class TypeNode extends ScriptNode 
-	implements ITypeNode
+public class MemberNode extends ScriptNode 
+	implements IMemberNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -46,39 +47,16 @@ public class TypeNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  ITypeNode API :: Properties
+	//  IMemberNode API :: Properties
 	//
 	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#name
-	 */
-	public function get name():String
-	{
-		var i:ASTIterator = new ASTIterator(node);
-		return i.find(AS3NodeKind.NAME).stringValue;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set name(value:String):void
-	{
-		var i:ASTIterator = new ASTIterator(node);
-		i.find(AS3NodeKind.NAME);
-		i.replace(ASTUtil.newAST(AS3NodeKind.NAME, value));
-	}
 	
 	//----------------------------------
 	//  visibility
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#visibility
+	 * @copy org.teotigraphix.asblocks.api.IMemberNode#visibility
 	 */
 	public function get visibility():Visibility
 	{
@@ -110,6 +88,72 @@ public class TypeNode extends ScriptNode
 		// TODO IMPL
 	}
 	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMemberNode#name
+	 */
+	public function get name():String
+	{
+		var i:ASTIterator = new ASTIterator(node);
+		return ASTUtil.nameText(i.find(AS3NodeKind.NAME));
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set name(value:String):void
+	{
+		var i:ASTIterator = new ASTIterator(node);
+		i.find(AS3NodeKind.NAME);
+		i.replace(ASTUtil.newAST(AS3NodeKind.NAME, value));
+	}
+	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMemberNode#type
+	 */
+	public function get type():String
+	{
+		var i:ASTIterator = new ASTIterator(node);
+		return i.find(AS3NodeKind.TYPE).stringValue;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set type(value:String):void
+	{
+		var i:ASTIterator = new ASTIterator(node);
+		i.find(AS3NodeKind.TYPE);
+		i.replace(ASTUtil.newAST(AS3NodeKind.TYPE, value));
+	}
+	
+	//----------------------------------
+	//  isStatic
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMemberNode#isStatic
+	 */
+	public function get isStatic():Boolean
+	{
+		return ModifierUtil.hasModifierFlag(node, Modifier.STATIC);
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set isStatic(value:Boolean):void
+	{
+		ModifierUtil.setModifierFlag(node, value, Modifier.STATIC);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -119,26 +163,16 @@ public class TypeNode extends ScriptNode
 	/**
 	 * Constructor.
 	 */
-	public function TypeNode(node:IParserNode)
+	public function MemberNode(node:IParserNode)
 	{
 		super(node);
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  ITypeNode API :: Methods
+	//  IMemberNode API :: Methods
 	//
 	//--------------------------------------------------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#newMethod()
-	 */
-	public function newMethod(name:String, 
-							  visibility:Visibility, 
-							  returnType:String):IMethodNode
-	{
-		return null;
-	}
 	
 	//--------------------------------------------------------------------------
 	//

@@ -1,21 +1,49 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IAssignmentExpressionNode;
-import org.teotigraphix.asblocks.api.IBinaryExpressionNode;
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.asblocks.api.IAssignmentExpressionNode;
+import org.teotigraphix.asblocks.api.IBinaryExpressionNode;
+import org.teotigraphix.asblocks.api.ICompilationUnitNode;
+import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IMethodNode;
+import org.teotigraphix.asblocks.api.Visibility;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
 {
 	
-	
+	public static function newMethod(name:String, 
+									 visibility:Visibility, 
+									 returnType:String):IMethodNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.appendToken(TokenBuilder.newFunction());
+		ast.appendToken(TokenBuilder.newSpace());
+		var n:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME, name);
+		ast.addChild(n);
+		var params:IParserNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.PARAMETER_LIST,
+			AS3NodeKind.LPAREN, "(",
+			AS3NodeKind.RPAREN, ")");
+		ast.addChild(params);
+		if (returnType)
+		{
+			ast.appendToken(TokenBuilder.newColumn());
+			ast.addChild(AS3FragmentParser.parseType(returnType));
+		}
+		ast.appendToken(TokenBuilder.newSpace());
+		var block:IParserNode = newBlock();
+		ast.addChild(block);
+		
+		return new MethodNode(ast);
+	}
 	
 	public static function synthesizeClass(qualifiedName:String):ICompilationUnitNode
 	{

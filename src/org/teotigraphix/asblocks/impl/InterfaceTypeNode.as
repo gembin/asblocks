@@ -51,7 +51,7 @@ public class InterfaceTypeNode extends TypeNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  implementedInterfaces
+	//  superInterfaces
 	//----------------------------------
 	
 	/**
