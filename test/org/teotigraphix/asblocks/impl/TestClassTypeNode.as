@@ -5,6 +5,7 @@ import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertNull;
+import org.flexunit.asserts.assertStrictlyEquals;
 import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.asblocks.api.IClassTypeNode;
 import org.teotigraphix.asblocks.api.ICompilationUnitNode;
@@ -44,6 +45,34 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	}
 	
 	[Test]
+	public function test_getMethod():void
+	{
+		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var method:IMethodNode = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
+		assertEquals(method.name, typeNode.getMethod("methodOne").name);
+		assertNull(typeNode.getMethod("methodTwo"));
+		typeNode.removeMethod("methodOne");
+		assertNull(typeNode.getMethod("methodOne"));
+	}
+	
+	[Test]
+	public function test_removeMethod():void
+	{
+		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var method1:IMethodNode = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
+		var method2:IMethodNode = typeNode.newMethod("methodTwo", Visibility.PUBLIC, "String");
+		var method3:IMethodNode = typeNode.newMethod("methodThree", Visibility.PUBLIC, "String");
+		assertEquals(3, typeNode.methods.length);
+		assertTrue(typeNode.removeMethod("methodOne"));
+		assertEquals(2, typeNode.methods.length);
+		assertTrue(typeNode.removeMethod("methodTwo"));
+		assertEquals(1, typeNode.methods.length);
+		assertTrue(typeNode.removeMethod("methodThree"));
+		assertEquals(0, typeNode.methods.length);
+		assertFalse(typeNode.removeMethod("methodFour"));
+	}
+	
+	[Test]
 	public function test_isDynamic():void
 	{
 		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
@@ -68,7 +97,13 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_visibility():void
 	{
-		assertEquals(Visibility.PUBLIC, unit.typeNode.visibility);
+		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		assertEquals(Visibility.PUBLIC, typeNode.visibility);
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+		// TOD this shouldn' be possible, just testing right now
+		//typeNode.visibility = Visibility.INTERNAL;
+		//assertEquals(Visibility.INTERNAL, typeNode.visibility);
+		//assertPrint("package {\n\internal class A {\n\t}\n}", unit);
 	}
 	
 	[Test]

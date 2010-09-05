@@ -226,7 +226,7 @@ public class AS3Parser extends ParserBase
 		    - content
 		      
 		      - class
-		        - meta[i]
+		        - meta-list
 		        - as-doc
 		        - mod-list
 		        - name

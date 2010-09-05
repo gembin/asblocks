@@ -27,6 +27,7 @@ import org.teotigraphix.asblocks.api.IMethodNode;
 import org.teotigraphix.asblocks.api.ITypeNode;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ModifierUtil;
 
 /**
  * The <code>ITypeNode</code> implementation.
@@ -90,24 +91,7 @@ public class TypeNode extends ScriptNode
 	 */
 	public function get visibility():Visibility
 	{
-		// get all MODIFIER nodes from the CLASS|INTERFACE node which is root
-		var modifiers:Vector.<IParserNode> = findModifiers();
-		if (modifiers.length == 0)
-		{
-			return Visibility.DEFAULT;
-		}
-		
-		var len:int = modifiers.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var modifier:String = modifiers[i].stringValue;
-			if (Visibility.hasVisibility(modifier))
-			{
-				return Visibility.getVisibility(modifier);
-			}
-		}
-		
-		return null;
+		return ModifierUtil.getVisibility(node);
 	}
 	
 	/**
@@ -115,7 +99,7 @@ public class TypeNode extends ScriptNode
 	 */	
 	public function set visibility(value:Visibility):void
 	{
-		// TODO IMPL
+		return ModifierUtil.setVisibility(node, value);
 	}
 	
 	//----------------------------------
@@ -217,31 +201,6 @@ public class TypeNode extends ScriptNode
 			}
 		}
 		return false;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Private :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	private function findModifiers():Vector.<IParserNode>
-	{
-		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
-		var i:ASTIterator = new ASTIterator(node);
-		var child:IParserNode;
-		while (i.hasNext())
-		{
-			child = i.next();
-			if (child.isKind(AS3NodeKind.MODIFIER))
-			{
-				result.push(child);
-			}
-		}
-		return result;
 	}
 }
 }

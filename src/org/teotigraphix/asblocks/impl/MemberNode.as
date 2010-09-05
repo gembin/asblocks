@@ -60,24 +60,7 @@ public class MemberNode extends ScriptNode
 	 */
 	public function get visibility():Visibility
 	{
-		// get all MODIFIER nodes from the CLASS|INTERFACE node which is root
-		var modifiers:Vector.<IParserNode> = findModifiers();
-		if (modifiers.length == 0)
-		{
-			return Visibility.DEFAULT;
-		}
-		
-		var len:int = modifiers.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var modifier:String = modifiers[i].stringValue;
-			if (Visibility.hasVisibility(modifier))
-			{
-				return Visibility.getVisibility(modifier);
-			}
-		}
-		
-		return null;
+		return ModifierUtil.getVisibility(node);
 	}
 	
 	/**
@@ -85,7 +68,7 @@ public class MemberNode extends ScriptNode
 	 */	
 	public function set visibility(value:Visibility):void
 	{
-		// TODO IMPL
+		return ModifierUtil.setVisibility(node, value);
 	}
 	
 	//----------------------------------
