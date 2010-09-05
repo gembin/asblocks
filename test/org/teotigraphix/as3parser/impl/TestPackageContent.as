@@ -44,7 +44,7 @@ public class TestPackageContent
 		parser = new AS3Parser();
 	}
 	
-	[Test]
+	//[Test]
 	public function testIncludes():void
 	{
 		var input:String = "include '..my/Include.as'";
@@ -73,7 +73,7 @@ public class TestPackageContent
 			"</include></content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testImports():void
 	{
 		var input:String = "import a.b.c;";
@@ -101,7 +101,7 @@ public class TestPackageContent
 			"</class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testUse():void
 	{
 		var input:String = "use namespace flash_proxy;";
@@ -111,7 +111,7 @@ public class TestPackageContent
 			"<name line=\"1\" column=\"16\">flash_proxy</name></use></content>" );
 	}
 	
-	[Test]
+	//[Test]
 	public function testClass():void
 	{
 		var input:String = "public class A { }";
@@ -123,7 +123,7 @@ public class TestPackageContent
 			"</content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testInterface():void
 	{
 		var input:String = "public interface IA { }";
@@ -135,7 +135,7 @@ public class TestPackageContent
 			"</interface></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithAsDoc():void
 	{
 		var input:String = "/** AsDoc */ public class A { }";
@@ -148,7 +148,7 @@ public class TestPackageContent
 			"</class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testInterfaceWithAsDoc():void
 	{
 		var input:String = "/** AsDoc */ public interface IA { }";
@@ -160,7 +160,7 @@ public class TestPackageContent
 			"</interface></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithMetadata():void
 	{
 		var input:String = "[Bindable(name=\"abc\", value=\"123\")] public class A { }";
@@ -178,7 +178,7 @@ public class TestPackageContent
 			"<content line=\"1\" column=\"53\"></content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithMetadataComment():void
 	{
 		var input:String = "/** Comment */ [Bindable] public class A { }";
@@ -196,7 +196,7 @@ public class TestPackageContent
 	// var
 	//----------------------------------
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedVar():void
 	{
 		var input:String = " public class A { public var myVar:int = 42; }";
@@ -213,7 +213,7 @@ public class TestPackageContent
 			"</content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedVarWithMetaData():void
 	{
 		var input:String = " public class A { [MetaData] public var myVar:int = 42; }";
@@ -231,7 +231,7 @@ public class TestPackageContent
 			"</var-list></content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedVarWithAsDoc():void
 	{
 		var input:String = " public class A { /** A var comment. */ public var myVar:int = 42; }";
@@ -249,7 +249,7 @@ public class TestPackageContent
 			"</class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedVarWithMetaDataAsDocAndAsDoc():void
 	{
 		var input:String = " public class A { /** A metadata comment. */ [MetaData] /** A var comment. */ public var myVar:int = 42; }";
@@ -270,7 +270,7 @@ public class TestPackageContent
 			"</var-list></content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedVarWithMultipleMetaDataAndAsDoc():void
 	{
 		var input:String = " public class A {  [MetaData1][MetaData2][MetaData3] /** A var comment. */ public var myVar:int = 42; }";
@@ -296,7 +296,7 @@ public class TestPackageContent
 	// const
 	//----------------------------------
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedConst():void
 	{
 		var input:String = " public class A { public static const MY_CONSTANT:int = 42; }";
@@ -318,7 +318,7 @@ public class TestPackageContent
 	// function
 	//----------------------------------
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedFunction():void
 	{
 		var input:String = " public class A { public function myFunction():int { } }";
@@ -334,7 +334,7 @@ public class TestPackageContent
 			"</block></function></content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testInterfaceWithFullFeaturedFunction():void
 	{
 		var input:String = " public interface IA { function myFunction():int }";
@@ -349,7 +349,7 @@ public class TestPackageContent
 			"</content></interface></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedGetFunction():void
 	{
 		var input:String = " public class A { public function get myFunction():int { } }";
@@ -365,7 +365,7 @@ public class TestPackageContent
 			"column=\"57\"></block></get></content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testInterfaceWithFullFeaturedGetFunction():void
 	{
 		var input:String = " public interface IA { function get myFunction():int }";
@@ -380,7 +380,7 @@ public class TestPackageContent
 			"</interface></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedSetFunction():void
 	{
 		var input:String = " public class A { public function set myFunction(" +
@@ -400,7 +400,7 @@ public class TestPackageContent
 			"</block></set></content></class></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testInterfaceWithFullFeaturedSetFunction():void
 	{
 		var input:String = " public interface IA { function set myFunction(" +
@@ -419,7 +419,7 @@ public class TestPackageContent
 			"void</type></set></content></interface></content>");
 	}
 	
-	[Test]
+	//[Test]
 	public function testClassWithFullFeaturedFunctionWithAsDoc():void
 	{
 		var input:String = " public class A { /** Method comment. */ public function " +
@@ -445,17 +445,20 @@ public class TestPackageContent
 			"/** A method comment. */ public function myFunction():int { } }";
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
-			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\"><mod " +
-			"line=\"1\" column=\"3\">public</mod><name line=\"1\" column=\"16\">" +
-			"A</name><content line=\"1\" column=\"18\"><function line=\"1\" " +
-			"column=\"83\"><meta line=\"1\" column=\"47\"><as-doc line=\"1\" " +
-			"column=\"20\">/** A metadata comment. */</as-doc><name line=\"1\" " +
-			"column=\"48\">MetaData</name></meta><as-doc line=\"1\" column=\"58\">" +
-			"/** A method comment. */</as-doc><mod line=\"1\" column=\"83\">public" +
-			"</mod><name line=\"1\" column=\"99\">myFunction</name><parameter-list " +
-			"line=\"1\" column=\"109\"></parameter-list><type line=\"1\" " +
-			"column=\"112\">int</type><block line=\"1\" column=\"116\"></block>" +
-			"</function></content></class></content>");
+			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
+			"<mod-list line=\"1\" column=\"3\"><mod line=\"1\" column=\"3\">" +
+			"public</mod></mod-list><name line=\"1\" column=\"16\">A</name>" +
+			"<content line=\"1\" column=\"18\"><function line=\"1\" column=\"83\">" +
+			"<meta-list line=\"1\" column=\"47\"><meta line=\"1\" column=\"47\">" +
+			"<as-doc line=\"1\" column=\"20\">/** A metadata comment. */</as-doc>" +
+			"<name line=\"1\" column=\"48\">MetaData</name></meta></meta-list>" +
+			"<as-doc line=\"1\" column=\"58\">/** A method comment. */</as-doc>" +
+			"<mod-list line=\"1\" column=\"83\"><mod line=\"1\" column=\"83\">" +
+			"public</mod></mod-list><accessor-role line=\"1\" column=\"99\">" +
+			"</accessor-role><name line=\"1\" column=\"99\">myFunction</name>" +
+			"<parameter-list line=\"1\" column=\"109\"></parameter-list><type " +
+			"line=\"1\" column=\"112\">int</type><block line=\"1\" column=\"116\">" +
+			"</block></function></content></class></content>");
 	}
 	
 	//----------------------------------
@@ -473,31 +476,40 @@ public class TestPackageContent
 		assertPackagePrint(input);
 		assertPackageContent("1", input,
 			"<content line=\"1\" column=\"1\"><class line=\"1\" column=\"10\">" +
-			"<mod line=\"1\" column=\"3\">public</mod><name line=\"1\" " +
-			"column=\"16\">A</name><content line=\"1\" column=\"18\"><var-list " +
-			"line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">public</mod>" +
-			"<name-type-init line=\"1\" column=\"31\"><name line=\"1\" column=\"31\">" +
-			"myVar</name><type line=\"1\" column=\"37\">int</type><init line=\"1\" " +
+			"<mod-list line=\"1\" column=\"3\"><mod line=\"1\" column=\"3\">public" +
+			"</mod></mod-list><name line=\"1\" column=\"16\">A</name><content " +
+			"line=\"1\" column=\"18\"><field-list line=\"1\" column=\"20\">" +
+			"<mod-list line=\"1\" column=\"20\"><mod line=\"1\" column=\"20\">" +
+			"public</mod></mod-list><field-role line=\"1\" column=\"27\"><var " +
+			"line=\"1\" column=\"27\"></var></field-role><name-type-init " +
+			"line=\"1\" column=\"31\"><name line=\"1\" column=\"31\">myVar" +
+			"</name><type line=\"1\" column=\"37\">int</type><init line=\"1\" " +
 			"column=\"43\"><number line=\"1\" column=\"43\">42</number></init>" +
-			"</name-type-init></var-list><const-list line=\"1\" column=\"47\">" +
-			"<mod line=\"1\" column=\"47\">public</mod><mod line=\"1\" " +
-			"column=\"54\">static</mod><name-type-init line=\"1\" column=\"67\">" +
+			"</name-type-init></field-list><field-list line=\"1\" column=\"47\">" +
+			"<mod-list line=\"1\" column=\"47\"><mod line=\"1\" column=\"47\">" +
+			"public</mod><mod line=\"1\" column=\"54\">static</mod></mod-list>" +
+			"<field-role line=\"1\" column=\"61\"><const line=\"1\" column=\"61\">" +
+			"</const></field-role><name-type-init line=\"1\" column=\"67\">" +
 			"<name line=\"1\" column=\"67\">MY_CONSTANT</name><type line=\"1\" " +
-			"column=\"79\">int</type><init line=\"1\" column=\"85\"><number line=\"1\" " +
-			"column=\"85\">42</number></init></name-type-init></const-list><function " +
-			"line=\"1\" column=\"89\"><mod line=\"1\" column=\"89\">public</mod><name " +
-			"line=\"1\" column=\"105\">myFunction</name><parameter-list line=\"1\" " +
-			"column=\"116\"><parameter line=\"1\" column=\"117\"><name-type-init " +
-			"line=\"1\" column=\"117\"><name line=\"1\" column=\"117\">arg0</name>" +
-			"<type line=\"1\" column=\"122\">int</type></name-type-init></parameter>" +
-			"<parameter line=\"1\" column=\"127\"><name-type-init line=\"1\" " +
-			"column=\"127\"><name line=\"1\" column=\"127\">arg1</name><type line=\"1\" " +
-			"column=\"132\">String</type><init line=\"1\" column=\"141\"><string " +
-			"line=\"1\" column=\"141\">\"default\"</string></init></name-type-init>" +
-			"</parameter><parameter line=\"1\" column=\"152\"><rest line=\"1\" " +
-			"column=\"155\">rest</rest></parameter></parameter-list><type line=\"1\" " +
-			"column=\"161\">void</type><block line=\"1\" column=\"166\"></block>" +
-			"</function></content></class></content>");
+			"column=\"79\">int</type><init line=\"1\" column=\"85\"><number " +
+			"line=\"1\" column=\"85\">42</number></init></name-type-init>" +
+			"</field-list><function line=\"1\" column=\"89\"><mod-list " +
+			"line=\"1\" column=\"89\"><mod line=\"1\" column=\"89\">public</mod>" +
+			"</mod-list><accessor-role line=\"1\" column=\"105\"></accessor-role>" +
+			"<name line=\"1\" column=\"105\">myFunction</name><parameter-list " +
+			"line=\"1\" column=\"116\"><parameter line=\"1\" column=\"117\">" +
+			"<name-type-init line=\"1\" column=\"117\"><name line=\"1\" " +
+			"column=\"117\">arg0</name><type line=\"1\" column=\"122\">int" +
+			"</type></name-type-init></parameter><parameter line=\"1\" " +
+			"column=\"127\"><name-type-init line=\"1\" column=\"127\"><name " +
+			"line=\"1\" column=\"127\">arg1</name><type line=\"1\" " +
+			"column=\"132\">String</type><init line=\"1\" column=\"141\">" +
+			"<string line=\"1\" column=\"141\">\"default\"</string></init>" +
+			"</name-type-init></parameter><parameter line=\"1\" column=\"152\">" +
+			"<rest line=\"1\" column=\"155\">rest</rest></parameter>" +
+			"</parameter-list><type line=\"1\" column=\"161\">void</type>" +
+			"<block line=\"1\" column=\"166\"></block></function></content>" +
+			"</class></content>");
 	}
 	
 	protected function assertPackagePrint(input:String):void

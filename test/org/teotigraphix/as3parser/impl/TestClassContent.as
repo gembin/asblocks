@@ -19,32 +19,39 @@ public class TestClassContent
 	{
 		assertClassContent("1",
 			"const a",
-			"<const-list line=\"2\" column=\"1\"><name-type-init line=\"2\" " +
-			"column=\"7\"><name line=\"2\" column=\"7\">a</name></name-type-init>" +
-			"</const-list>");
+			"<field-list line=\"2\" column=\"1\"><field-role line=\"2\" " +
+			"column=\"1\"><const line=\"2\" column=\"1\"></const></field-role>" +
+			"<name-type-init line=\"2\" column=\"7\"><name line=\"2\" column=\"7\">" +
+			"a</name></name-type-init></field-list>");
 		
 		assertClassContent("2",
 			"public const a",
-			"<const-list line=\"2\" column=\"1\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><name-type-init line=\"2\" " +
-			"column=\"14\"><name line=\"2\" column=\"14\">a</name></name-type-init>" +
-			"</const-list>");
+			"<field-list line=\"2\" column=\"1\"><mod-list line=\"2\" column=\"1\">" +
+			"<mod line=\"2\" column=\"1\">public</mod></mod-list><field-role " +
+			"line=\"2\" column=\"8\"><const line=\"2\" column=\"8\"></const>" +
+			"</field-role><name-type-init line=\"2\" column=\"14\"><name " +
+			"line=\"2\" column=\"14\">a</name></name-type-init></field-list>");
 		
 		assertClassContent("3",
 			"public static const a : int = 0",
-			"<const-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">" +
-			"public</mod><mod line=\"2\" column=\"8\">static</mod>" +
-			"<name-type-init line=\"2\" column=\"21\"><name line=\"2\" " +
-			"column=\"21\">a</name><type line=\"2\" column=\"25\">int</type>" +
-			"<init line=\"2\" column=\"31\"><number line=\"2\" column=\"31\">" +
-			"0</number></init></name-type-init></const-list>");
+			"<field-list line=\"2\" column=\"1\"><mod-list line=\"2\" " +
+			"column=\"1\"><mod line=\"2\" column=\"1\">public</mod><mod " +
+			"line=\"2\" column=\"8\">static</mod></mod-list><field-role " +
+			"line=\"2\" column=\"15\"><const line=\"2\" column=\"15\">" +
+			"</const></field-role><name-type-init line=\"2\" column=\"21\">" +
+			"<name line=\"2\" column=\"21\">a</name><type line=\"2\" " +
+			"column=\"25\">int</type><init line=\"2\" column=\"31\">" +
+			"<number line=\"2\" column=\"31\">0</number></init></name-type-init>" +
+			"</field-list>");
 		
 		assertClassContent("4",
 			"[Bindable] const a",
-			"<const-list line=\"2\" column=\"1\"><meta line=\"2\" column=\"1\">" +
-			"<name line=\"2\" column=\"2\">Bindable</name></meta><name-type-init " +
-			"line=\"2\" column=\"18\"><name line=\"2\" column=\"18\">a</name>" +
-			"</name-type-init></const-list>");
+			"<field-list line=\"2\" column=\"1\"><meta-list line=\"2\" " +
+			"column=\"1\"><meta line=\"2\" column=\"1\"><name line=\"2\" " +
+			"column=\"2\">Bindable</name></meta></meta-list><field-role " +
+			"line=\"2\" column=\"12\"><const line=\"2\" column=\"12\"></const>" +
+			"</field-role><name-type-init line=\"2\" column=\"18\"><name " +
+			"line=\"2\" column=\"18\">a</name></name-type-init></field-list>");
 	}
 	
 	[Test]
@@ -67,54 +74,62 @@ public class TestClassContent
 	{
 		assertClassContent("1",
 			"function a(){}",
-			"<function line=\"2\" column=\"1\"><name line=\"2\" column=\"10\">" +
-			"a</name><parameter-list line=\"2\" column=\"11\"></parameter-list>" +
-			"</function>");
+			"<function line=\"2\" column=\"1\"><accessor-role line=\"2\" " +
+			"column=\"10\"></accessor-role><name line=\"2\" column=\"10\">a</name>" +
+			"<parameter-list line=\"2\" column=\"11\"></parameter-list></function>");
 
 		assertClassContent("2",
 			"function set a( value : int ) : void {}",
-			"<set line=\"2\" column=\"1\"><name line=\"2\" column=\"14\">a</name>" +
-			"<parameter-list line=\"2\" column=\"15\"><parameter line=\"2\" " +
-			"column=\"17\"><name-type-init line=\"2\" column=\"17\"><name line=\"2\" " +
-			"column=\"17\">value</name><type line=\"2\" column=\"25\">int</type>" +
-			"</name-type-init></parameter></parameter-list></set>");
+			"<function line=\"2\" column=\"1\"><accessor-role line=\"2\" " +
+			"column=\"10\"><set line=\"2\" column=\"10\"></set></accessor-role><" +
+			"name line=\"2\" column=\"14\">a</name><parameter-list line=\"2\" " +
+			"column=\"15\"><parameter line=\"2\" column=\"17\"><name-type-init " +
+			"line=\"2\" column=\"17\"><name line=\"2\" column=\"17\">value</name>" +
+			"<type line=\"2\" column=\"25\">int</type></name-type-init></parameter>" +
+			"</parameter-list></function>");
 		
 		assertClassContent("3",
 			"function get a() : int {}",
-			"<get line=\"2\" column=\"1\">" +
+			"<function line=\"2\" column=\"1\"><accessor-role line=\"2\" " +
+			"column=\"10\"><get line=\"2\" column=\"10\"></get></accessor-role>" +
 			"<name line=\"2\" column=\"14\">a</name><parameter-list line=\"2\" " +
-			"column=\"15\"></parameter-list></get>");
+			"column=\"15\"></parameter-list></function>");
 		
 		assertClassContent( "function with default parameter",
 			"public function newLine ( height:*='' ):void{}",
-			"<function line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">" +
-			"public</mod><name line=\"2\" column=\"17\">newLine</name>" +
-			"<parameter-list line=\"2\" column=\"25\"><parameter line=\"2\" " +
-			"column=\"27\"><name-type-init line=\"2\" column=\"27\"><name " +
-			"line=\"2\" column=\"27\">height</name><type line=\"2\" column=\"34\">" +
-			"*</type><init line=\"2\" column=\"36\"><string line=\"2\" " +
-			"column=\"36\">''</string></init></name-type-init></parameter>" +
-			"</parameter-list><type line=\"2\" column=\"41\">void</type>" +
-			"</function>" );
+			"<function line=\"2\" column=\"1\"><mod-list line=\"2\" column=\"1\">" +
+			"<mod line=\"2\" column=\"1\">public</mod></mod-list><accessor-role " +
+			"line=\"2\" column=\"17\"></accessor-role><name line=\"2\" " +
+			"column=\"17\">newLine</name><parameter-list line=\"2\" " +
+			"column=\"25\"><parameter line=\"2\" column=\"27\">" +
+			"<name-type-init line=\"2\" column=\"27\"><name line=\"2\" " +
+			"column=\"27\">height</name><type line=\"2\" column=\"34\">*</type>" +
+			"<init line=\"2\" column=\"36\"><string line=\"2\" column=\"36\">''" +
+			"</string></init></name-type-init></parameter></parameter-list>" +
+			"<type line=\"2\" column=\"41\">void</type></function>" );
 		
 		assertClassContent("4",
 			"/** Asdoc comment. */ public function a():void{}",
 			"<function line=\"2\" column=\"23\"><as-doc line=\"2\" " +
-			"column=\"1\">/** Asdoc comment. */</as-doc><mod line=\"2\" " +
-			"column=\"23\">public</mod><name line=\"2\" column=\"39\">a</name>" +
-			"<parameter-list line=\"2\" column=\"40\"></parameter-list>" +
-			"<type line=\"2\" column=\"43\">void</type></function>");
+			"column=\"1\">/** Asdoc comment. */</as-doc><mod-list line=\"2\" " +
+			"column=\"23\"><mod line=\"2\" column=\"23\">public</mod>" +
+			"</mod-list><accessor-role line=\"2\" column=\"39\"></accessor-role>" +
+			"<name line=\"2\" column=\"39\">a</name><parameter-list line=\"2\" " +
+			"column=\"40\"></parameter-list><type line=\"2\" column=\"43\">" +
+			"void</type></function>");
 		
 		assertClassContent("5",
 			"public function log(message:String, ... rest):void{}",
-			"<function line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">" +
-			"public</mod><name line=\"2\" column=\"17\">log</name>" +
-			"<parameter-list line=\"2\" column=\"20\"><parameter line=\"2\" " +
-			"column=\"21\"><name-type-init line=\"2\" column=\"21\"><name " +
-			"line=\"2\" column=\"21\">message</name><type line=\"2\" column=\"29\">" +
-			"String</type></name-type-init></parameter><parameter line=\"2\" " +
-			"column=\"37\"><rest line=\"2\" column=\"41\">rest</rest></parameter>" +
-			"</parameter-list><type line=\"2\" column=\"47\">void</type></function>");
+			"<function line=\"2\" column=\"1\"><mod-list line=\"2\" column=\"1\">" +
+			"<mod line=\"2\" column=\"1\">public</mod></mod-list><accessor-role " +
+			"line=\"2\" column=\"17\"></accessor-role><name line=\"2\" " +
+			"column=\"17\">log</name><parameter-list line=\"2\" column=\"20\">" +
+			"<parameter line=\"2\" column=\"21\"><name-type-init line=\"2\" " +
+			"column=\"21\"><name line=\"2\" column=\"21\">message</name><type " +
+			"line=\"2\" column=\"29\">String</type></name-type-init></parameter>" +
+			"<parameter line=\"2\" column=\"37\"><rest line=\"2\" column=\"41\">" +
+			"rest</rest></parameter></parameter-list><type line=\"2\" " +
+			"column=\"47\">void</type></function>");
 	}
 	
 	[Test]
@@ -122,31 +137,37 @@ public class TestClassContent
 	{
 		assertClassContent("1",
 			"var a",
-			"<var-list line=\"2\" column=\"1\"><name-type-init line=\"2\" " +
-			"column=\"5\"><name line=\"2\" column=\"5\">a</name></name-type-init>" +
-			"</var-list>" );
+			"<field-list line=\"2\" column=\"1\"><field-role line=\"2\" " +
+			"column=\"1\"><var line=\"2\" column=\"1\"></var></field-role>" +
+			"<name-type-init line=\"2\" column=\"5\"><name line=\"2\" " +
+			"column=\"5\">a</name></name-type-init></field-list>" );
 		
 		assertClassContent("2",
 			"public var a;",
-			"<var-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public" +
-			"</mod><name-type-init line=\"2\" column=\"12\"><name line=\"2\" " +
-			"column=\"12\">a</name></name-type-init></var-list>");
+			"<field-list line=\"2\" column=\"1\"><mod-list line=\"2\" " +
+			"column=\"1\"><mod line=\"2\" column=\"1\">public</mod></mod-list>" +
+			"<field-role line=\"2\" column=\"8\"><var line=\"2\" column=\"8\">" +
+			"</var></field-role><name-type-init line=\"2\" column=\"12\">" +
+			"<name line=\"2\" column=\"12\">a</name></name-type-init></field-list>");
 		
 		assertClassContent("3",
 			"public static var a : int = 0",
-			"<var-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public" +
-			"</mod><mod line=\"2\" column=\"8\">static</mod><name-type-init " +
-			"line=\"2\" column=\"19\"><name line=\"2\" column=\"19\">a</name>" +
-			"<type line=\"2\" column=\"23\">int</type><init line=\"2\" column=\"29\">" +
-			"<number line=\"2\" column=\"29\">0</number></init></name-type-init>" +
-			"</var-list>");
+			"<field-list line=\"2\" column=\"1\"><mod-list line=\"2\" column=\"1\">" +
+			"<mod line=\"2\" column=\"1\">public</mod><mod line=\"2\" column=\"8\">" +
+			"static</mod></mod-list><field-role line=\"2\" column=\"15\"><var " +
+			"line=\"2\" column=\"15\"></var></field-role><name-type-init line=\"2\" " +
+			"column=\"19\"><name line=\"2\" column=\"19\">a</name><type line=\"2\" " +
+			"column=\"23\">int</type><init line=\"2\" column=\"29\"><number line=\"2\" " +
+			"column=\"29\">0</number></init></name-type-init></field-list>");
 		
 		assertClassContent("4",
 			"[Bindable] var a",
-			"<var-list line=\"2\" column=\"1\"><meta line=\"2\" column=\"1\">" +
-			"<name line=\"2\" column=\"2\">Bindable</name></meta><name-type-init " +
-			"line=\"2\" column=\"16\"><name line=\"2\" column=\"16\">a</name>" +
-			"</name-type-init></var-list>" );
+			"<field-list line=\"2\" column=\"1\"><meta-list line=\"2\" " +
+			"column=\"1\"><meta line=\"2\" column=\"1\"><name line=\"2\" " +
+			"column=\"2\">Bindable</name></meta></meta-list><field-role " +
+			"line=\"2\" column=\"12\"><var line=\"2\" column=\"12\"></var>" +
+			"</field-role><name-type-init line=\"2\" column=\"16\"><name " +
+			"line=\"2\" column=\"16\">a</name></name-type-init></field-list>" );
 	}
 	
 	private function assertClassContent(message:String, 

@@ -35,11 +35,12 @@ public class TestConstStatement extends AbstractStatementTest
 		var input:String = "const a : int = 4";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<const-list line=\"1\" column=\"1\"><name-type-init line=\"1\" " +
-			"column=\"7\"><name line=\"1\" column=\"7\">a</name><type " +
-			"line=\"1\" column=\"11\">int</type><init line=\"1\" " +
-			"column=\"17\"><number line=\"1\" column=\"17\">4</number></init>" +
-			"</name-type-init></const-list>");
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\">" +
+			"<const line=\"1\" column=\"1\"></const></dec-role><name-type-init " +
+			"line=\"1\" column=\"7\"><name line=\"1\" column=\"7\">a</name>" +
+			"<type line=\"1\" column=\"11\">int</type><init line=\"1\" " +
+			"column=\"17\"><number line=\"1\" column=\"17\">4</number>" +
+			"</init></name-type-init></dec-list>");
 	}
 	
 	[Test]
@@ -48,11 +49,12 @@ public class TestConstStatement extends AbstractStatementTest
 		var input:String = "const a : String = \"Hello World\";";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<const-list line=\"1\" column=\"1\"><name-type-init line=\"1\" " +
-			"column=\"7\"><name line=\"1\" column=\"7\">a</name>" +
-			"<type line=\"1\" column=\"11\">String</type><init line=\"1\" " +
-			"column=\"20\"><string line=\"1\" column=\"20\">\"Hello World\"" +
-			"</string></init></name-type-init></const-list>");
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\">" +
+			"<const line=\"1\" column=\"1\"></const></dec-role><name-type-init " +
+			"line=\"1\" column=\"7\"><name line=\"1\" column=\"7\">a</name><type " +
+			"line=\"1\" column=\"11\">String</type><init line=\"1\" column=\"20\">" +
+			"<string line=\"1\" column=\"20\">\"Hello World\"</string></init>" +
+			"</name-type-init></dec-list>");
 	}
 	
 	[Test]
@@ -61,10 +63,11 @@ public class TestConstStatement extends AbstractStatementTest
 		var input:String = "const a = 4";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<const-list line=\"1\" column=\"1\"><name-type-init line=\"1\" " +
-			"column=\"7\"><name line=\"1\" column=\"7\">a</name><init " +
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\">" +
+			"<const line=\"1\" column=\"1\"></const></dec-role><name-type-init " +
+			"line=\"1\" column=\"7\"><name line=\"1\" column=\"7\">a</name><init " +
 			"line=\"1\" column=\"11\"><number line=\"1\" column=\"11\">4</number>" +
-			"</init></name-type-init></const-list>" );
+			"</init></name-type-init></dec-list>" );
 	}
 	
 	[Test]
@@ -73,9 +76,10 @@ public class TestConstStatement extends AbstractStatementTest
 		var input:String = "const a";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<const-list line=\"1\" column=\"1\"><name-type-init line=\"1\" " +
-			"column=\"7\"><name line=\"1\" column=\"7\">a</name>" +
-			"</name-type-init></const-list>" );
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\">" +
+			"<const line=\"1\" column=\"1\"></const></dec-role><name-type-init " +
+			"line=\"1\" column=\"7\"><name line=\"1\" column=\"7\">a</name>" +
+			"</name-type-init></dec-list>" );
 	}
 	
 	[Test]
@@ -84,10 +88,10 @@ public class TestConstStatement extends AbstractStatementTest
 		var input:String = "const a : Object";
 		assertStatementPrint(input);
 		assertStatement( "1", input,
-			"<const-list line=\"1\" column=\"1\"><name-type-init line=\"1\" " +
-			"column=\"7\"><name line=\"1\" column=\"7\">a</name><type " +
-			"line=\"1\" column=\"11\">Object</type></name-type-init>" +
-			"</const-list>" );
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\">" +
+			"<const line=\"1\" column=\"1\"></const></dec-role><name-type-init " +
+			"line=\"1\" column=\"7\"><name line=\"1\" column=\"7\">a</name><type " +
+			"line=\"1\" column=\"11\">Object</type></name-type-init></dec-list>" );
 	}
 	
 	[Test]
@@ -96,9 +100,11 @@ public class TestConstStatement extends AbstractStatementTest
 		var input:String = "const a : flash.util.System";
 		assertStatementPrint(input);
 		assertStatement( "1", input,
-			"<const-list line=\"1\" column=\"1\"><name-type-init line=\"1\" " +
-			"column=\"7\"><name line=\"1\" column=\"7\">a</name><type line=\"1\" " +
-			"column=\"11\">flash.util.System</type></name-type-init></const-list>" );
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\">" +
+			"<const line=\"1\" column=\"1\"></const></dec-role><name-type-init " +
+			"line=\"1\" column=\"7\"><name line=\"1\" column=\"7\">a</name>" +
+			"<type line=\"1\" column=\"11\">flash.util.System</type>" +
+			"</name-type-init></dec-list>" );
 	}
 }
 }

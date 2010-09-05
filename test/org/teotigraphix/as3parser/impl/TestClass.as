@@ -47,14 +47,14 @@ public class TestClass
 		assertPackageContent("1", 
 			"public /*foo comment*/class A { } ",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"23\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" " +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod></mod-list><name line=\"2\" " +
 			"column=\"29\">A</name><content line=\"2\" column=\"31\"></content>" +
 			"</class></content>");
 		
 		assertPackageContent("2", 
 			"public class A extends B { } ",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"8\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" " +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod></mod-list><name line=\"2\" " +
 			"column=\"14\">A</name><extends line=\"2\" column=\"16\"><type " +
 			"line=\"2\" column=\"24\">B</type></extends><content line=\"2\" " +
 			"column=\"26\"></content></class></content>");
@@ -62,7 +62,7 @@ public class TestClass
 		assertPackageContent("3",
 			"public class A extends com.adobe::B { } ",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"8\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" " +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod></mod-list><name line=\"2\" " +
 			"column=\"14\">A</name><extends line=\"2\" column=\"16\"><type " +
 			"line=\"2\" column=\"24\">com.adobe::B</type></extends><content " +
 			"line=\"2\" column=\"37\"></content></class></content>");
@@ -74,8 +74,8 @@ public class TestClass
 		assertPackageContent("1",
 			"public final class Title{ }",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"14\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><mod line=\"2\" " +
-			"column=\"8\">final</mod><name line=\"2\" column=\"20\">Title" +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod><mod line=\"2\" " +
+			"column=\"8\">final</mod></mod-list><name line=\"2\" column=\"20\">Title" +
 			"</name><content line=\"2\" column=\"25\"></content>" +
 			"</class></content>");
 	}
@@ -86,7 +86,7 @@ public class TestClass
 		assertPackageContent("1",
 			"public class A extends B implements C,D { } ",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"8\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" " +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod></mod-list><name line=\"2\" " +
 			"column=\"14\">A</name><extends line=\"2\" column=\"16\">" +
 			"<type line=\"2\" column=\"24\">B</type></extends><implements " +
 			"line=\"2\" column=\"26\"><type line=\"2\" column=\"37\">C</type>" +
@@ -100,7 +100,7 @@ public class TestClass
 		assertPackageContent("1",
 			"public class A implements B,C { } ",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"8\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" " +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod></mod-list><name line=\"2\" " +
 			"column=\"14\">A</name><implements line=\"2\" column=\"16\">" +
 			"<type line=\"2\" column=\"27\">B</type><type line=\"2\" " +
 			"column=\"29\">C</type></implements><content line=\"2\" " +
@@ -113,7 +113,7 @@ public class TestClass
 		assertPackageContent("1",
 			"public class A implements B { } ",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"8\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" " +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod></mod-list><name line=\"2\" " +
 			"column=\"14\">A</name><implements line=\"2\" column=\"16\">" +
 			"<type line=\"2\" column=\"27\">B</type></implements><content " +
 			"line=\"2\" column=\"29\"></content></class></content>");
@@ -125,8 +125,8 @@ public class TestClass
 		assertPackageContent("1",
 			"public final class Title{ import lala.lala; }",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"14\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><mod line=\"2\" " +
-			"column=\"8\">final</mod><name line=\"2\" column=\"20\">Title" +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod><mod line=\"2\" " +
+			"column=\"8\">final</mod></mod-list><name line=\"2\" column=\"20\">Title" +
 			"</name><content line=\"2\" column=\"25\"><import line=\"2\" " +
 			"column=\"27\"><type line=\"2\" column=\"34\">lala.lala</type>" +
 			"</import></content></class></content>");
@@ -138,7 +138,7 @@ public class TestClass
 		assertPackageContent("1",
 			"public class A extends B { include \"ITextFieldInterface.asz\" } ",
 			"<content line=\"1\" column=\"1\"><class line=\"2\" column=\"8\">" +
-			"<mod line=\"2\" column=\"1\">public</mod><name line=\"2\" " +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">public</mod></mod-list><name line=\"2\" " +
 			"column=\"14\">A</name><extends line=\"2\" column=\"16\"><type " +
 			"line=\"2\" column=\"24\">B</type></extends><content line=\"2\" " +
 			"column=\"26\"><include line=\"2\" column=\"28\"><string line=\"2\" " +

@@ -62,28 +62,28 @@ public class ModifierUtil
 	
 	public static function getVisibility(node:IParserNode):Visibility
 	{
-		var modifiers:Vector.<IParserNode> = findModifiers(node);
-		if (modifiers.length == 0)
+		var modifiers:IParserNode = findModifiers(node);
+		if (modifiers.numChildren == 0)
 		{
 			return Visibility.DEFAULT;
 		}
 		
-		var len:int = modifiers.length;
-		for (var i:int = 0; i < len; i++)
+		var i:ASTIterator = new ASTIterator(modifiers);
+		var child:IParserNode;
+		while (i.hasNext())
 		{
-			var modifier:String = modifiers[i].stringValue;
-			if (Visibility.hasVisibility(modifier))
+			child = i.next();
+			if (Visibility.hasVisibility(child.stringValue))
 			{
-				return Visibility.getVisibility(modifier);
+				return Visibility.getVisibility(child.stringValue);
 			}
 		}
-		
 		return null;
 	}
 	
 	public static function setVisibility(node:IParserNode, visibility:Visibility):void
 	{
-		var modifiers:Vector.<IParserNode> = findModifiers(node);
+		var modifiers:IParserNode = findModifiers(node);
 		// modifiers always go right before the NAME
 		
 	}
@@ -97,20 +97,9 @@ public class ModifierUtil
 	/**
 	 * @private
 	 */
-	private static function findModifiers(node:IParserNode):Vector.<IParserNode>
+	private static function findModifiers(node:IParserNode):IParserNode
 	{
-		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
-		var i:ASTIterator = new ASTIterator(node);
-		var child:IParserNode;
-		while (i.hasNext())
-		{
-			child = i.next();
-			if (child.isKind(AS3NodeKind.MODIFIER))
-			{
-				result.push(child);
-			}
-		}
-		return result;
+		return node.getKind(AS3NodeKind.MOD_LIST);
 	}
 }
 }

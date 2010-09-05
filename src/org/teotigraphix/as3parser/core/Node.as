@@ -187,7 +187,7 @@ public class Node extends NestedNode implements IParserNode
 	public function set startToken(value:LinkedListToken):void
 	{
 		if (parent)
-			TokenNode(parent).notifyChildStartTokenChange(this, startToken);
+			TokenNode(parent).notifyChildStartTokenChange(this, value);
 		
 		_startToken = value;
 	}
@@ -215,7 +215,7 @@ public class Node extends NestedNode implements IParserNode
 	public function set stopToken(value:LinkedListToken):void
 	{
 		if (parent)
-			TokenNode(parent).notifyChildStopTokenChange(this, stopToken);
+			TokenNode(parent).notifyChildStopTokenChange(this, value);
 		
 		_stopToken = value;
 	}

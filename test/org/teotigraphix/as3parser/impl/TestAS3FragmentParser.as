@@ -22,7 +22,7 @@ public class TestAS3FragmentParser
 			"Test { } } class InternalClass { }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<compilation-unit><package><name>my.domain</name>" +
-			"<content><class><mod>public</mod><name>Test</name><content></content>" +
+			"<content><class><mod-list><mod>public</mod></mod-list><name>Test</name><content></content>" +
 			"</class></content></package><content><class><name>InternalClass</name>" +
 			"<content></content></class></content></compilation-unit>", result);
 	}
@@ -37,7 +37,7 @@ public class TestAS3FragmentParser
 			"{ } } class InternalClass { }");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<package><name>my.domain</name><content><class>" +
-			"<mod>public</mod><name>Test</name><content></content></class>" +
+			"<mod-list><mod>public</mod></mod-list><name>Test</name><content></content></class>" +
 			"</content></package>", result);
 	}
 	
@@ -49,20 +49,21 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parsePackageContent("public class Test { }");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><class><mod>public</mod><name>Test</name>" +
+		Assert.assertEquals("<content><class><mod-list><mod>public</mod></mod-list><name>Test</name>" +
 			"<content></content></class></content>", result);
 		
 		ast = AS3FragmentParser.parsePackageContent("public interface ITest { }");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><interface><mod>public</mod><name>ITest</name>" +
+		Assert.assertEquals("<content><interface><mod-list><mod>public</mod></mod-list><name>ITest</name>" +
 			"<content></content></interface></content>", result);
 		
 		ast = AS3FragmentParser.parsePackageContent("public function myGlobalFunction():int { return -1; }");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><function><mod>public</mod><name>myGlobalFunction" +
-			"</name><parameter-list></parameter-list><type>int</type><block>" +
-			"<return><minus><number>1</number></minus></return></block>" +
-			"</function></content>", result);
+		Assert.assertEquals("<content><function><mod-list><mod>public</mod></mod-list>" +
+			"<accessor-role></accessor-role><name>myGlobalFunction</name>" +
+			"<parameter-list></parameter-list><type>int</type><block><return>" +
+			"<minus><number>1</number></minus></return></block></function>" +
+			"</content>", result);
 	}
 	
 	[Test]
@@ -74,11 +75,13 @@ public class TestAS3FragmentParser
 		ast = AS3FragmentParser.parseClassContent("private var hello:World = null; " +
 			"flash_proxy function getProperty():Object{return null;}");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><var-list><mod>private</mod><name-type-init>" +
-			"<name>hello</name><type>World</type><init><null>null</null></init>" +
-			"</name-type-init></var-list><function><mod>flash_proxy</mod>" +
-			"<name>getProperty</name><parameter-list></parameter-list><type>" +
-			"Object</type></function></content>", result);
+		Assert.assertEquals("<content><field-list><mod-list><mod>private</mod>" +
+			"</mod-list><field-role><var></var></field-role><name-type-init>" +
+			"<name>hello</name><type>World</type><init><null>null</null>" +
+			"</init></name-type-init></field-list><function><mod-list>" +
+			"<mod>flash_proxy</mod></mod-list><accessor-role></accessor-role>" +
+			"<name>getProperty</name><parameter-list></parameter-list>" +
+			"<type>Object</type></function></content>", result);
 	}
 	
 	[Test]
@@ -90,9 +93,10 @@ public class TestAS3FragmentParser
 		ast = AS3FragmentParser.parseInterfaceContent("function get hello():World; " +
 			"function recycleWorld():void;");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><get><name>hello</name><parameter-list>" +
-			"</parameter-list><type>World</type></get><function><name>" +
-			"recycleWorld</name><parameter-list></parameter-list><type>void" +
+		Assert.assertEquals("<content><function><accessor-role><get></get>" +
+			"</accessor-role><name>hello</name><parameter-list></parameter-list>" +
+			"<type>World</type></function><function><accessor-role></accessor-role>" +
+			"<name>recycleWorld</name><parameter-list></parameter-list><type>void" +
 			"</type></function></content>", result);
 	}
 	
@@ -106,8 +110,8 @@ public class TestAS3FragmentParser
 			"public static const MY_CONSTANT:String = \"me\";");
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<content><const-list><meta><name>MetaData</name>" +
-			"</meta><as-doc>/** My asdoc. */</as-doc><mod>public</mod><mod>" +
-			"static</mod><name-type-init><name>MY_CONSTANT</name><type>String" +
+			"</meta><as-doc>/** My asdoc. */</as-doc><mod-list><mod>public</mod><mod>" +
+			"static</mod></mod-list><name-type-init><name>MY_CONSTANT</name><type>String" +
 			"</type><init><string>\"me\"</string></init></name-type-init>" +
 			"</const-list></content>", result);
 		
@@ -115,11 +119,11 @@ public class TestAS3FragmentParser
 			"public static const MY_CONSTANT:String = \"me\";" +
 			"public static const YOU_CONSTANT:String = \"you\";");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><const-list><mod>public</mod><mod>" +
-			"static</mod><name-type-init><name>MY_CONSTANT</name>" +
+		Assert.assertEquals("<content><const-list><mod-list><mod>public</mod><mod>" +
+			"static</mod></mod-list><name-type-init><name>MY_CONSTANT</name>" +
 			"<type>String</type><init><string>\"me\"</string></init>" +
-			"</name-type-init></const-list><const-list><mod>public</mod>" +
-			"<mod>static</mod><name-type-init><name>YOU_CONSTANT</name>" +
+			"</name-type-init></const-list><const-list><mod-list><mod>public</mod>" +
+			"<mod>static</mod><mod-list><name-type-init><name>YOU_CONSTANT</name>" +
 			"<type>String</type><init><string>\"you\"</string></init>" +
 			"</name-type-init></const-list></content>", result);
 	}
@@ -343,43 +347,46 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parseStatement("var i;");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<var-list><name-type-init><name>i</name>" +
-			"</name-type-init></var-list>", result);
+		Assert.assertEquals("<dec-list><dec-role><var></var></dec-role>" +
+			"<name-type-init><name>i</name></name-type-init></dec-list>", result);
 		
 		ast = AS3FragmentParser.parseStatement("var i:World = new World();");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<var-list><name-type-init><name>i</name><type>" +
-			"World</type><init><primary><new><call><primary>World</primary>" +
-			"<arguments></arguments></call></new></primary></init>" +
-			"</name-type-init></var-list>", result);
+		Assert.assertEquals("<dec-list><dec-role><var></var></dec-role>" +
+			"<name-type-init><name>i</name><type>World</type><init><primary>" +
+			"<new><call><primary>World</primary><arguments></arguments></call>" +
+			"</new></primary></init></name-type-init></dec-list>", result);
 		
 		ast = AS3FragmentParser.parseStatement("var a:World, b:World, c:World;");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<var-list><name-type-init><name>a</name>" +
-			"<type>World</type></name-type-init><name-type-init><name>b" +
-			"</name><type>World</type></name-type-init><name-type-init>" +
-			"<name>c</name><type>World</type></name-type-init></var-list>", result);
+		Assert.assertEquals("<dec-list><dec-role><var></var></dec-role>" +
+			"<name-type-init><name>a</name><type>World</type></name-type-init>" +
+			"<name-type-init><name>b</name><type>World</type></name-type-init>" +
+			"<name-type-init><name>c</name><type>World</type></name-type-init>" +
+			"</dec-list>", result);
 		
 		ast = AS3FragmentParser.parseStatement("var a:Array = [0,1,2];");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<var-list><name-type-init><name>a</name><type>Array</type>" +
-			"<init><primary><array><number>0</number><number>1</number><number>2" +
-			"</number></array></primary></init></name-type-init></var-list>", result);
+		Assert.assertEquals("<dec-list><dec-role><var></var></dec-role>" +
+			"<name-type-init><name>a</name><type>Array</type><init><primary>" +
+			"<array><number>0</number><number>1</number><number>2</number>" +
+			"</array></primary></init></name-type-init></dec-list>", result);
 		
 		ast = AS3FragmentParser.parseStatement("var a:Object = {a:1,b:1};");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<var-list><name-type-init><name>a</name><type>" +
-			"Object</type><init><primary><object><prop><name>a</name><value>" +
-			"<number>1</number></value></prop><prop><name>b</name><value>" +
-			"<number>1</number></value></prop></object></primary></init>" +
-			"</name-type-init></var-list>", result);
+		Assert.assertEquals("<dec-list><dec-role><var></var></dec-role>" +
+			"<name-type-init><name>a</name><type>Object</type><init><primary>" +
+			"<object><prop><name>a</name><value><number>1</number></value>" +
+			"</prop><prop><name>b</name><value><number>1</number></value>" +
+			"</prop></object></primary></init></name-type-init></dec-list>", result);
 		
 		ast = AS3FragmentParser.parseStatement("var a:Vector.<World> = new World.<World>(255, true);");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<var-list><name-type-init><name>a</name><vector>" +
-			"<type>World</type></vector><init><primary><new><primary>World" +
-			"</primary><arguments><number>255</number><true>true</true>" +
-			"</arguments></new></primary></init></name-type-init></var-list>", result);
+		Assert.assertEquals("<dec-list><dec-role><var></var></dec-role>" +
+			"<name-type-init><name>a</name><vector><type>World</type></vector>" +
+			"<init><primary><new><primary>World</primary><arguments><number>" +
+			"255</number><true>true</true></arguments></new></primary></init>" +
+			"</name-type-init></dec-list>", result);
 		
 		//------------------------------
 		// const
@@ -387,14 +394,14 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parseStatement("const i;");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<const-list><name-type-init><name>i</name>" +
-			"</name-type-init></const-list>", result);
+		Assert.assertEquals("<dec-list><dec-role><const></const></dec-role>" +
+			"<name-type-init><name>i</name></name-type-init></dec-list>", result);
 		
 		ast = AS3FragmentParser.parseStatement("const i:int = 42;");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<const-list><name-type-init><name>i</name><type>" +
-			"int</type><init><number>42</number></init></name-type-init>" +
-			"</const-list>", result);
+		Assert.assertEquals("<dec-list><dec-role><const></const></dec-role>" +
+			"<name-type-init><name>i</name><type>int</type><init><number>42" +
+			"</number></init></name-type-init></dec-list>", result);
 		
 		//------------------------------
 		// return

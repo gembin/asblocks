@@ -72,22 +72,27 @@ public class TestInterfaceContent
 	{
 		assertInterfaceContent("1",
 			"function a()",
-			"<function line=\"2\" column=\"1\"><name line=\"2\" column=\"10\">" +
-			"a</name><parameter-list line=\"2\" column=\"11\"></parameter-list>" +
-			"</function>");
+			"<function line=\"2\" column=\"1\">" +
+			"<accessor-role line=\"2\" column=\"10\"></accessor-role>" +
+			"<name line=\"2\" column=\"10\">a</name><parameter-list line=\"2\" " +
+			"column=\"11\"></parameter-list></function>");
 		
 		assertInterfaceContent("2",
 			"function set a( value : int ) : void",
-			"<set line=\"2\" column=\"1\"><name line=\"2\" column=\"14\">a</name>" +
-			"<parameter-list line=\"2\" column=\"15\"><parameter line=\"2\" " +
-			"column=\"17\"><name-type-init line=\"2\" column=\"17\"><name " +
-			"line=\"2\" column=\"17\">value</name><type line=\"2\" column=\"25\">" +
-			"int</type></name-type-init></parameter></parameter-list></set>");
+			"<function line=\"2\" column=\"1\"><accessor-role line=\"2\" " +
+			"column=\"10\"><set line=\"2\" column=\"10\"></set></accessor-role>" +
+			"<name line=\"2\" column=\"14\">a</name><parameter-list line=\"2\" " +
+			"column=\"15\"><parameter line=\"2\" column=\"17\"><name-type-init " +
+			"line=\"2\" column=\"17\"><name line=\"2\" column=\"17\">value" +
+			"</name><type line=\"2\" column=\"25\">int</type></name-type-init>" +
+			"</parameter></parameter-list></function>");
 		
 		assertInterfaceContent("3",
 			"function get a() : int",
-			"<get line=\"2\" column=\"1\"><name line=\"2\" column=\"14\">a</name>" +
-			"<parameter-list line=\"2\" column=\"15\"></parameter-list></get>");
+			"<function line=\"2\" column=\"1\"><accessor-role line=\"2\" " +
+			"column=\"10\"><get line=\"2\" column=\"10\"></get></accessor-role>" +
+			"<name line=\"2\" column=\"14\">a</name><parameter-list line=\"2\" " +
+			"column=\"15\"></parameter-list></function>");
 	}
 	
 	private function assertInterfaceContent(message:String, 

@@ -17,6 +17,10 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
+// _FIXME reimpl mod-list
+// FIXME reimpl meta-list
+// FIXME reimpl accessor-role to FUNCTION where GET | SET is consumed
+
 package org.teotigraphix.as3parser.impl
 {
 
@@ -209,7 +213,7 @@ public class AS3Parser extends ParserBase
 		result.line = token.line;
 		result.column = token.column;
 		
-		var internalParse:Boolean = tokIs("class") || tokIs("function");
+		var internalParse:Boolean = tokIs(KeyWords.CLASS) || tokIs(KeyWords.FUNCTION);
 		
 		if (!internalParse)
 		{
@@ -217,23 +221,9 @@ public class AS3Parser extends ParserBase
 		}
 		
 		var pendingType:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
-		/*
-		Create placeholders
-		compilation-unit
-		  - package
-		    - as-doc
-		    - name
-		    - content
-		      
-		      - class
-		        - meta-list
-		        - as-doc
-		        - mod-list
-		        - name
-		        - extends
-		        - implements
-		        - content
-		*/
+		var pendingMetaList:TokenNode;
+		var pendingModList:TokenNode;
+		
 		while (!tokIs(Operators.RIGHT_CURLY_BRACKET)
 			&& !tokIs(KeyWords.EOF))
 		{
@@ -251,7 +241,13 @@ public class AS3Parser extends ParserBase
 			}
 			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
 			{
-				pendingType.addChild(parseMetaData());
+				if (!pendingType.hasKind(AS3NodeKind.META_LIST))
+				{
+					pendingMetaList = adapter.empty(AS3NodeKind.META_LIST, token);
+					pendingType.addChild(pendingMetaList);
+				}
+				
+				pendingMetaList.addChild(parseMetaData());
 			}
 			else if (tokenStartsWith(ASDOC_COMMENT))
 			{
@@ -276,11 +272,21 @@ public class AS3Parser extends ParserBase
 			{
 				if (!tokIsWhitespace())
 				{
-					pendingType.addChild(adapter.copy(
+					if (!pendingType.hasKind(AS3NodeKind.MOD_LIST))
+					{
+						pendingModList = adapter.empty(AS3NodeKind.MOD_LIST, token);
+						pendingType.addChild(pendingModList);
+					}
+					
+					pendingModList.addChild(adapter.copy(
 						AS3NodeKind.MODIFIER, token));
+					
+					nextNonWhiteSpaceToken(pendingModList);
 				}
-				
-				nextNonWhiteSpaceToken(pendingType);
+				else
+				{
+					nextNonWhiteSpaceToken(pendingType);
+				}
 			}
 		}
 		
@@ -379,6 +385,8 @@ public class AS3Parser extends ParserBase
 		consumeWS(Operators.LEFT_CURLY_BRACKET, result);
 		
 		var pendingMember:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
+		var pendingMetaList:TokenNode;
+		var pendingModList:TokenNode;
 		
 		while (!tokIs(Operators.RIGHT_CURLY_BRACKET))
 		{
@@ -400,7 +408,13 @@ public class AS3Parser extends ParserBase
 			}
 			else if (tokIs(Operators.LEFT_SQUARE_BRACKET))
 			{
-				pendingMember.addChild(parseMetaData());
+				if (!pendingMember.hasKind(AS3NodeKind.META_LIST))
+				{
+					pendingMetaList = adapter.empty(AS3NodeKind.META_LIST, token);
+					pendingMember.addChild(pendingMetaList);
+				}
+				
+				pendingMetaList.addChild(parseMetaData());
 			}
 			else if (tokIs(KeyWords.VAR))
 			{
@@ -420,7 +434,7 @@ public class AS3Parser extends ParserBase
 			else
 			{
 				var isWhitespace:Boolean = tokIsWhitespace();
-				if (!isWhitespace)
+				if (!tokIsWhitespace())
 				{
 					if (!pendingMember)
 					{
@@ -429,11 +443,21 @@ public class AS3Parser extends ParserBase
 					
 					addAsDoc(pendingMember);
 					
-					pendingMember.addChild(adapter.copy(
+					if (!pendingMember.hasKind(AS3NodeKind.MOD_LIST))
+					{
+						pendingModList = adapter.empty(AS3NodeKind.MOD_LIST, token);
+						pendingMember.addChild(pendingModList);
+					}
+					
+					pendingModList.addChild(adapter.copy(
 						AS3NodeKind.MODIFIER, token));
+					
+					nextNonWhiteSpaceToken(pendingModList);
 				}
-				
-				nextNonWhiteSpaceToken(pendingMember);
+				else
+				{
+					nextNonWhiteSpaceToken(pendingMember);
+				}
 			}
 		}
 		
@@ -668,14 +692,13 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseClassField(result:TokenNode):TokenNode
 	{
-		result.kind = AS3NodeKind.VAR_LIST;
 		var mod:LinkedListToken = findToken(result.token, AS3NodeKind.MODIFIER);
 		if (mod)
 		{
 			result.line = mod.line;
 			result.column = mod.column;
 		}
-		result = parseVarList(result);
+		result = parseFieldList(result);
 		skip(Operators.SEMI_COLUMN, result);
 		return result;
 	}
@@ -685,14 +708,13 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseClassConstant(result:TokenNode):TokenNode
 	{
-		result.kind = AS3NodeKind.CONST_LIST;
 		var mod:LinkedListToken = findToken(result.token, AS3NodeKind.MODIFIER);
 		if (mod)
 		{
 			result.line = mod.line;
 			result.column = mod.column;
 		}
-		result = parseConstList(result);
+		result = parseFieldList(result);
 		skip(Operators.SEMI_COLUMN, result);
 		return result;
 	}
@@ -724,14 +746,27 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function parseConstList(result:TokenNode):TokenNode
+	private function parseDeclarationList(result:TokenNode):TokenNode
 	{
 		if (!result)
 		{
-			result = adapter.copy(AS3NodeKind.CONST_LIST, token);
+			result = adapter.empty(AS3NodeKind.DEC_LIST, token);
+		}
+		else
+		{
+			result.kind = AS3NodeKind.DEC_LIST;
 		}
 		
-		consume(KeyWords.CONST, result);
+		var role:TokenNode = adapter.empty(
+			AS3NodeKind.DEC_ROLE, token);
+		result.addChild(role);
+		
+		if (tokIs(KeyWords.VAR) || tokIs(KeyWords.CONST))
+		{
+			role.addChild(adapter.empty(token.text, token));
+			consume(token.text, role);
+		}
+		
 		collectVarListContent(result);
 		
 		return result;
@@ -740,14 +775,27 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function parseVarList(result:TokenNode):TokenNode
+	private function parseFieldList(result:TokenNode):TokenNode
 	{
 		if (!result)
 		{
-			result = adapter.copy(AS3NodeKind.VAR_LIST, token);
+			result = adapter.empty(AS3NodeKind.FIELD_LIST, token);
+		}
+		else
+		{
+			result.kind = AS3NodeKind.FIELD_LIST;
 		}
 		
-		consume(KeyWords.VAR, result);
+		var role:TokenNode = adapter.empty(
+			AS3NodeKind.FIELD_ROLE, token);
+		result.addChild(role);
+		
+		if (tokIs(KeyWords.VAR) || tokIs(KeyWords.CONST))
+		{
+			role.addChild(adapter.empty(token.text, token));
+			consume(token.text, role);
+		}
+		
 		collectVarListContent(result);
 		
 		return result;
@@ -911,14 +959,16 @@ public class AS3Parser extends ParserBase
 	
 	private function parseFunction(result:TokenNode):TokenNode
 	{
+		result.kind = AS3NodeKind.FUNCTION;
+		
+		var role:TokenNode = adapter.empty(
+			AS3NodeKind.ACCESSOR_ROLE, token);
+		result.addChild(role);
+		
 		if (tokIs(KeyWords.GET) || tokIs(KeyWords.SET))
 		{
-			result.kind = token.text;
-			consume(result.kind, result);
-		}
-		else
-		{
-			result.kind = AS3NodeKind.FUNCTION;
+			role.addChild(adapter.empty(token.text, token));
+			consume(token.text, role);
 		}
 		
 		result.addChild(adapter.copy(AS3NodeKind.NAME, token));
@@ -1992,12 +2042,7 @@ public class AS3Parser extends ParserBase
 		
 		if (tokIs(KeyWords.VAR))
 		{
-			var variable:TokenNode = adapter.empty(
-				AS3NodeKind.VAR, token);
-			
-			consume(KeyWords.VAR, node);
-			variable.addChild(parseNameTypeInit());
-			node.addChild(variable);
+			node.addChild(parseDeclarationList(null));
 		}
 		else
 		{
@@ -2035,7 +2080,7 @@ public class AS3Parser extends ParserBase
 			{
 				init = adapter.empty(
 					AS3NodeKind.INIT, token);
-				init.addChild(parseVarList(null));
+				init.addChild(parseDeclarationList(null));
 				node.addChild(init);
 			}
 			else
@@ -2395,7 +2440,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseVar():TokenNode
 	{
-		var result:TokenNode = parseVarList(null);
+		var result:TokenNode = parseDeclarationList(null);
 		skip(Operators.SEMI_COLUMN, result);
 		return result;
 	}
@@ -2405,7 +2450,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseConst():TokenNode
 	{
-		var result:TokenNode = parseConstList(null);
+		var result:TokenNode = parseDeclarationList(null);
 		skip(Operators.SEMI_COLUMN, result);
 		return result;
 	}

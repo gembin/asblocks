@@ -22,7 +22,9 @@ public class ASTBuilder
 									 returnType:String):IMethodNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
+		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
+		ast.addChild(mods);
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newFunction());
 		ast.appendToken(TokenBuilder.newSpace());
@@ -99,24 +101,25 @@ public class ASTBuilder
 	
 	private static function synthesizeAS3Class(className:String):IParserNode
 	{
-		var clazz:IParserNode = ASTUtil.newAST(AS3NodeKind.CLASS);
-		var pmod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, "public");
-		clazz.addChild(pmod);
-		clazz.appendToken(TokenBuilder.newSpace());
-		clazz.appendToken(TokenBuilder.newClass());
-		clazz.appendToken(TokenBuilder.newSpace());
-		clazz.addChild(ASTUtil.newAST(AS3NodeKind.NAME, className));
-		clazz.appendToken(TokenBuilder.newSpace());
-		clazz.addChild(newBlock(AS3NodeKind.CONTENT));
-		
-		return clazz;
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CLASS);
+		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, "public"));
+		ast.addChild(mods);
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.appendToken(TokenBuilder.newClass());
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, className));
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(newBlock(AS3NodeKind.CONTENT));
+		return ast;
 	}
 	
 	private static function synthesizeAS3Interface(name:String):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.INTERFACE);
-		var pmod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, "public");
-		ast.addChild(pmod);
+		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, "public"));
+		ast.addChild(mods);
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newInterface());
 		ast.appendToken(TokenBuilder.newSpace());

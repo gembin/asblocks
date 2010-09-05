@@ -67,6 +67,8 @@ public class AS3NodeKind
 	
 	//--------------------------------------------------------------------------
 	
+	public static const ACCESSOR_ROLE:String = "accessor-role";
+	
 	public static const ADD:String = "add";
 	
 	public static const AND:String = "and";
@@ -125,6 +127,10 @@ public class AS3NodeKind
 	
 	public static const DOUBLE_COLUMN:String = "double-column";
 	
+	public static const DEC_LIST:String = "dec-list";
+	
+	public static const DEC_ROLE:String = "dec-role";
+	
 	public static const DEFAULT:String = "default";
 	
 	public static const DELETE:String = "delete";
@@ -154,6 +160,10 @@ public class AS3NodeKind
 	public static const EXTENDS:String = "extends";
 	
 	public static const FALSE:String = "false";
+	
+	public static const FIELD_LIST:String = "field-list";
+	
+	public static const FIELD_ROLE:String = "field-role";
 
 	public static const FINALLY:String = "finally";
 	

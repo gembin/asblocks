@@ -71,6 +71,19 @@ public class TokenNode extends Node
 	/**
 	 * @private
 	 */
+	override public function set kind(value:String):void
+	{
+		super.kind = value;
+		
+		if (token)
+		{
+			token.kind = value;
+		}
+	}
+	
+	/**
+	 * @private
+	 */
 	override public function set stringValue(value:String):void
 	{
 		super.stringValue = value;
