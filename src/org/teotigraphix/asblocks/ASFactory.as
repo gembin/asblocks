@@ -47,6 +47,7 @@ import org.teotigraphix.asblocks.api.ISimpleNameExpression;
 import org.teotigraphix.asblocks.api.IStringLiteral;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
 import org.teotigraphix.asblocks.impl.ASParser;
+import org.teotigraphix.asblocks.impl.ASProject;
 import org.teotigraphix.asblocks.impl.ASTBuilder;
 import org.teotigraphix.asblocks.impl.ASWriter;
 import org.teotigraphix.asblocks.impl.ArrayAccessExpressionNode;
@@ -538,6 +539,16 @@ public class ASFactory
 	/**
 	 * TODO DOCME
 	 */
+	public function newEmptyASProject(outputLocation:String):IASProject
+	{
+		var result:IASProject = new ASProject(this);
+		result.outputLocation = outputLocation;
+		return result;
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
 	public function newParser():IASParser
 	{
 		return new ASParser();
@@ -550,7 +561,7 @@ public class ASFactory
 	{
 		return new ASWriter();
 	}
-
+	
 	
 }
 }

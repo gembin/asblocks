@@ -20,10 +20,12 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.IASProject;
 import org.teotigraphix.asblocks.api.IClassPathEntry;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.utils.FileUtil;
 
 /**
  * The default implementation of the <code>IASProject</code> API.
@@ -61,8 +63,7 @@ public class ASProject implements IASProject
 	 */
 	public function get compilationUnits():Vector.<ICompilationUnit>
 	{
-		var result:Vector.<ICompilationUnit> = 
-			new Vector.<ICompilationUnit>(_compilationUnits.length);
+		var result:Vector.<ICompilationUnit> = new Vector.<ICompilationUnit>();
 		var len:int = _compilationUnits.length;
 		for (var i:int = 0; i < len; i++)
 		{
@@ -82,8 +83,7 @@ public class ASProject implements IASProject
 	 */
 	public function get classPathEntries():Vector.<IClassPathEntry>
 	{
-		var result:Vector.<IClassPathEntry> = 
-			new Vector.<IClassPathEntry>(_classPathEntries.length);
+		var result:Vector.<IClassPathEntry> = new Vector.<IClassPathEntry>();
 		var len:int = _classPathEntries.length;
 		for (var i:int = 0; i < len; i++)
 		{
@@ -233,6 +233,8 @@ public class ASProject implements IASProject
 	 */
 	public function writeAll():void
 	{
+		clearBuffer();
+		
 		var len:int = compilationUnits.length;
 		for (var i:int = 0; i < len; i++)
 		{
@@ -247,12 +249,33 @@ public class ASProject implements IASProject
 	//
 	//--------------------------------------------------------------------------
 	
+	private var _sourceCodeList:Array = [];
+	
+	public function get sourceCodeList():Array
+	{
+		return _sourceCodeList;
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function clearBuffer():void
+	{
+		_sourceCodeList = [];
+	}
+	
 	/**
 	 * @private
 	 */
 	protected function write(location:String, unit:ICompilationUnit):void
 	{
-		// subclass for implementation
+		var fileName:String = FileUtil.fileNameFor(unit);
+		
+		// subclass for new implementation
+		var code:SourceCode = new SourceCode(null, fileName);
+		factory.newWriter().write(code, unit);
+		
+		_sourceCodeList.push(code);
 	}
 }
 }

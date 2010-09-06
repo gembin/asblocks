@@ -6,12 +6,42 @@ import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertNull;
 import org.flexunit.asserts.assertTrue;
-import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.asblocks.ASFactory;
+import org.teotigraphix.asblocks.IASProject;
 import org.teotigraphix.asblocks.api.IClassPathEntry;
+import org.teotigraphix.asblocks.api.IClassType;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.api.IMethod;
+import org.teotigraphix.asblocks.api.Visibility;
 
 public class TestASProject extends BaseASFactoryTest
 {
+	[Test]
+	/**
+	 * package {
+	 * 	public class Test {
+	 * 		public function test():void {
+	 * 			trace('Hello world');
+	 * 		}
+	 * 	}
+	 * }
+	 */
+	public function test_basicExample():void
+	{
+		var factorty:ASFactory = new ASFactory();
+		var project:ASProject = factorty.newEmptyASProject(".") as ASProject;
+		var unit:ICompilationUnit = project.newClass("Test");
+		var clazz:IClassType = unit.typeNode as IClassType;
+		var method:IMethod = clazz.newMethod("test", Visibility.PUBLIC, "void");
+		method.addStatement("trace('Hello world')");
+		project.writeAll();
+		assertEquals("Test.as", 
+			project.sourceCodeList[0].filePath);
+		assertEquals("package {\n\tpublic class Test {\n\t\tpublic function " +
+			"test():void {\n\t\t\ttrace('Hello world');\n\t\t}\n\t}\n}", 
+			project.sourceCodeList[0].code);
+	}
+	
 	[Test]
 	public function test_outputLocation():void
 	{
