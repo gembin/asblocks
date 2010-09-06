@@ -4,7 +4,6 @@ import flexunit.framework.Assert;
 
 import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.as3parser.core.Token;
-import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class TestAS3Scanner
 {
@@ -33,7 +32,7 @@ public class TestAS3Scanner
 				"-"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -54,7 +53,7 @@ public class TestAS3Scanner
 				"-="
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -71,7 +70,7 @@ public class TestAS3Scanner
 				"="
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(lines[0]);
 	}
@@ -90,7 +89,7 @@ public class TestAS3Scanner
 				">>>"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -112,7 +111,7 @@ public class TestAS3Scanner
 				"^="
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -130,7 +129,7 @@ public class TestAS3Scanner
 				"// line comment"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -154,7 +153,7 @@ public class TestAS3Scanner
 				"!=="
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -175,7 +174,7 @@ public class TestAS3Scanner
 				"||="
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -199,7 +198,7 @@ public class TestAS3Scanner
 				"/="
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -219,7 +218,7 @@ public class TestAS3Scanner
 				"|="
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -237,7 +236,7 @@ public class TestAS3Scanner
 				"myXML.@*"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("myXML");
 		assertText(".");
@@ -267,7 +266,7 @@ public class TestAS3Scanner
 				"!="
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -288,7 +287,7 @@ public class TestAS3Scanner
 				"a..E"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("a");
 		assertText("\n");
@@ -351,7 +350,7 @@ public class TestAS3Scanner
 				"*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(lines[0]);
 		assertText("\n");
@@ -369,7 +368,7 @@ public class TestAS3Scanner
 				"</a>"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(join(lines, "\n"));
 	}
@@ -385,7 +384,7 @@ public class TestAS3Scanner
 				"word5 word6"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("word1");
 		assertText("word2");
@@ -408,7 +407,7 @@ public class TestAS3Scanner
 				"0xffgg"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(lines[0]);
 		assertText("\n" );
@@ -432,7 +431,7 @@ public class TestAS3Scanner
 				"-"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		for (var i:int = 0; i < lines.length; i++)
 		{
@@ -452,7 +451,7 @@ public class TestAS3Scanner
 				"/[+-.]\\\\//"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(lines[0]);
 		assertText("\n");
@@ -468,7 +467,7 @@ public class TestAS3Scanner
 	{
 		var lines:Array = "{}()[]:;,?~".split("");
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		// the first entry is empty, so we skip it
 		for (var i:int = 0; i < lines.length; i++)
@@ -487,7 +486,7 @@ public class TestAS3Scanner
 				"word //another single line comment"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(lines[0]);
 		assertText("\n");
@@ -503,7 +502,7 @@ public class TestAS3Scanner
 				"word"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(lines[0]);
 	}
@@ -518,7 +517,7 @@ public class TestAS3Scanner
 				"\"string\\\"\""
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(lines[0]);
 		assertText("\n");
@@ -537,7 +536,7 @@ public class TestAS3Scanner
 				"<?xml version=\"1.0\"?><root>test</root>"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		// the first entry is empty, so we skip it
 		for (var i:int = 0; i < lines.length; i++)
@@ -555,7 +554,7 @@ public class TestAS3Scanner
 				"-Infinity"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText(lines[0]);
 	}

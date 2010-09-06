@@ -3,11 +3,10 @@ package org.teotigraphix.as3parser.impl
 
 import flexunit.framework.Assert;
 
-import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.core.TokenEntry;
 import org.teotigraphix.as3parser.core.Tokens;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestAS3Tokenizer
 {
@@ -32,7 +31,7 @@ public class TestAS3Tokenizer
 				"}",
 			];
 		
-		sourceCode = new SourceCode(ASTUtil.toSourceCode(lines));
+		sourceCode = new SourceCode(lines.join("\n"));
 	}
 	
 	[Test]

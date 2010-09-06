@@ -2,11 +2,12 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.Assert;
+import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.api.IArrayAccessExpression;
 import org.teotigraphix.asblocks.api.IAssignmentExpression;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.IBlock;
-import org.teotigraphix.asblocks.api.IBreakStatement;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IConditionalExpression;
 import org.teotigraphix.asblocks.api.IDoWhileStatement;
@@ -23,10 +24,7 @@ import org.teotigraphix.asblocks.api.ISwitchCase;
 import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
-import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.SourceCode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
-import org.teotigraphix.asblocks.ASFactory;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestExpressionNodes
 {

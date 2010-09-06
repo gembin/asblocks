@@ -20,9 +20,7 @@
 package org.teotigraphix.as3parser.impl
 {
 
-import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
  * A utility class to parse actionscript3 fragements that don't start

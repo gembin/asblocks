@@ -3,7 +3,7 @@ package org.teotigraphix.as3parser.impl
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestAS3FragmentParser
 {

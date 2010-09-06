@@ -20,8 +20,6 @@
 package org.teotigraphix.as3parser.impl
 {
 
-import org.teotigraphix.as3parser.utils.ASTUtil;
-
 /**
  * A <code>for(){}</code>, <code>for(in){}</code> and <code>for each(in){}</code> 
  * statement unit test.

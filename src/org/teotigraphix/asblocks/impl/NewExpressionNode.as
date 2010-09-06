@@ -20,12 +20,10 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.asblocks.api.INewExpression;
-import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.INewExpression;
 
 /**
  * The <code>INewExpression</code> implementation.

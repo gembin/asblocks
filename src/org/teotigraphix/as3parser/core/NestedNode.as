@@ -22,7 +22,7 @@ package org.teotigraphix.as3parser.core
 
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ITokenListUpdateDelegate;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * A parser node that contains parser node children.

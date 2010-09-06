@@ -32,7 +32,7 @@ import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.errors.NullTokenError;
 import org.teotigraphix.as3parser.errors.Position;
 import org.teotigraphix.as3parser.errors.UnExpectedTokenError;
-import org.teotigraphix.as3parser.utils.FileUtil;
+import org.teotigraphix.asblocks.utils.FileUtil;
 
 /**
  * The default base implementation of the IParser interface.

@@ -20,12 +20,10 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ISwitchCase;
-import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
  * The <code>ISwitchCase</code> implementation.

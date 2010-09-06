@@ -20,9 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IStringLiteral;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.api.IStringLiteral;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IStringLiteral</code> implementation.

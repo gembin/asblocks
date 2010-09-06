@@ -22,9 +22,9 @@ package org.teotigraphix.as3parser.impl
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.asblocks.impl.ASTPrinter;
 import org.teotigraphix.as3parser.core.SourceCode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.impl.ASTPrinter;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /*
 primary
@@ -242,7 +242,7 @@ public class TestPrimaryExpression
 	private function assertNumber(input:String, 
 								  expected:String):void
 	{
-		parser.scanner.setLines(ASTUtil.toVector([input]));
+		parser.scanner.setLines(Vector.<String>([input]));
 		parser.nextToken(); // first call
 		var result:String = ASTUtil.convert(parser.parsePrimaryExpression());
 		Assert.assertEquals("<number line=\"1\" column=\"1\">" + 

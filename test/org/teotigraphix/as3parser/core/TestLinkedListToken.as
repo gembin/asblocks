@@ -4,8 +4,8 @@ package org.teotigraphix.as3parser.core
 import org.flexunit.Assert;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3Parser;
-import org.teotigraphix.as3parser.utils.ASTUtil;
 import org.teotigraphix.asblocks.impl.ASTPrinter;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestLinkedListToken
 {
@@ -23,7 +23,7 @@ public class TestLinkedListToken
 				"}"
 			];
 		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		parser.scanner.setLines(Vector.<String>(lines));
 		
 		var ast:IParserNode = parser.parseCompilationUnit();
 		var result:String = ASTUtil.convert(ast);
@@ -74,7 +74,7 @@ public class TestLinkedListToken
 				"}"
 			];
 		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		parser.scanner.setLines(Vector.<String>(lines));
 		
 		var ast:IParserNode = parser.parseCompilationUnit();
 		var result:String = ASTUtil.convert(ast);

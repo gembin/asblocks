@@ -3,7 +3,7 @@ package org.teotigraphix.as3parser.impl
 
 import flexunit.framework.Assert;
 
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestASDocParser
 {
@@ -26,7 +26,7 @@ public class TestASDocParser
 				"/**A short comment.*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
 		
@@ -74,7 +74,7 @@ public class TestASDocParser
 				" */"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
 		
@@ -114,7 +114,7 @@ public class TestASDocParser
 				" */"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
 		
@@ -135,7 +135,7 @@ public class TestASDocParser
 				"/** Class comment. */",
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
 		

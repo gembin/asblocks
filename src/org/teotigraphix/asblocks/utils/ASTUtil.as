@@ -29,7 +29,6 @@ import org.teotigraphix.as3parser.errors.NullTokenError;
 import org.teotigraphix.as3parser.errors.UnExpectedTokenError;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.AS3Parser;
-import org.teotigraphix.as3parser.impl.AS3Scanner;
 import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.impl.ASTBuilder;
 import org.teotigraphix.asblocks.impl.TokenBuilder;
@@ -175,7 +174,7 @@ public class ASTUtil
 			}
 			else
 			{
-				throw new Error("Unexpected token: " + tok);
+				throw new ASBlocksSyntaxError("Unexpected token: " + tok);
 			}
 		}
 	}
@@ -273,6 +272,30 @@ public class ASTUtil
 		}
 	}
 	
+	
+	public static function removePreceedingWhitespaceAndComma(startToken:LinkedListToken):void
+	{
+		for (var tok:LinkedListToken = startToken.previous; tok != null; tok = tok.previous)
+		{
+			if (tok.channel == AS3NodeKind.HIDDEN) 
+			{
+				var del:LinkedListToken = tok;
+				tok = tok.next;
+				del.remove();
+				continue;
+			} 
+			else if (tok.kind == "comma")
+			{
+				tok.remove();
+				break;
+			}
+			else
+			{
+				throw new ASBlocksSyntaxError("Unexpected token: " + tok);
+			}
+		}
+	}
+	
 	public static function removeAllChildren(ast:IParserNode):void
 	{
 		while (ast.numChildren > 0)
@@ -312,8 +335,7 @@ public class ASTUtil
 		
 		if (string.indexOf('"') != 0 && string.indexOf("'") != 0)
 		{
-			// SyntaxException
-			throw new Error("Invalid delimiter at position 0: " + string[0]);
+			throw new ASBlocksSyntaxError("Invalid delimiter at position 0: " + string[0]);
 		}
 		
 		var chars:Array = string.split("");
@@ -351,8 +373,7 @@ public class ASTUtil
 		
 		if (chars[end] != delimiter) 
 		{
-			// SyntaxException
-			throw new Error("End delimiter doesn't match " + delimiter + " at position " + end);
+			throw new ASBlocksSyntaxError("End delimiter doesn't match " + delimiter + " at position " + end);
 		}
 		
 		return result;
@@ -427,6 +448,13 @@ public class ASTUtil
 		return buffer;
 	}
 	
+	public static function tokenName(kind:String):String
+	{
+		return kind;
+	}
+	
+
+	
 	public static function parse(code:ISourceCode):AS3Parser
 	{
 		var parser:AS3Parser = new AS3Parser();
@@ -464,7 +492,29 @@ public class ASTUtil
 		return new ASBlocksSyntaxError(message, cause);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Node :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
+	public static function getNodes(kind:String, node:IParserNode):Vector.<IParserNode>
+	{
+		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
+		
+		if (node.numChildren == 0)
+			return result;
+		
+		var len:int = node.children.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IParserNode = node.children[i] as IParserNode;
+			if (element.isKind(kind))
+				result.push(element)
+		}
+		
+		return result;
+	}
 	
 }
 }

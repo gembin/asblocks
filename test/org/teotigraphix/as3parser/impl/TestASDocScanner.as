@@ -3,7 +3,7 @@ package org.teotigraphix.as3parser.impl
 import flexunit.framework.Assert;
 
 import org.teotigraphix.as3parser.core.Token;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestASDocScanner
 {
@@ -28,7 +28,7 @@ public class TestASDocScanner
 				"*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("\n");
@@ -57,7 +57,7 @@ public class TestASDocScanner
 				"/***A comment.**/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("*");
@@ -77,7 +77,7 @@ public class TestASDocScanner
 				"/**A comment.*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("A");
@@ -95,7 +95,7 @@ public class TestASDocScanner
 				"/**A comment.", "*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("A");
@@ -113,7 +113,7 @@ public class TestASDocScanner
 				"/**A comment.\t*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("A");
@@ -134,7 +134,7 @@ public class TestASDocScanner
 				"*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("\n");
@@ -171,7 +171,7 @@ public class TestASDocScanner
 				"*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("\n");
@@ -214,7 +214,7 @@ public class TestASDocScanner
 				"*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("\n");
@@ -258,7 +258,7 @@ public class TestASDocScanner
 				"*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("\n");
@@ -284,7 +284,7 @@ public class TestASDocScanner
 				"*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("\n");
@@ -315,7 +315,7 @@ public class TestASDocScanner
 				"*/"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("/**");
 		assertText("\n");

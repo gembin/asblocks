@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.as3parser.utils
+package org.teotigraphix.asblocks.utils
 {
 
 import flash.system.Capabilities;

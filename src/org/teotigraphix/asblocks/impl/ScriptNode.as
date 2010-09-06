@@ -20,9 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.api.IScriptNode;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IScriptNode</code> implementation.

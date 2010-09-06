@@ -22,7 +22,7 @@ package org.teotigraphix.as3parser.impl
 
 import flexunit.framework.Assert;
 
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * A <code>class</code> unit test.
@@ -152,7 +152,7 @@ public class TestClass
 	{
 		var lines:Array = ["{", input, "}" ];
 		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		parser.scanner.setLines(Vector.<String>(lines));
 		parser.nextToken(); // first call
 		var result:String = ASTUtil.convert(parser.parsePackageContent());
 		

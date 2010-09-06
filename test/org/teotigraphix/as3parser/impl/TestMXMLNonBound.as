@@ -3,7 +3,7 @@ package org.teotigraphix.as3parser.impl
 import flexunit.framework.Assert;
 
 import org.teotigraphix.as3parser.api.IScanner;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestMXMLNonBound
 {
@@ -29,7 +29,7 @@ public class TestMXMLNonBound
 				"__END__"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
 		
@@ -51,7 +51,7 @@ public class TestMXMLNonBound
 				"__END__"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		parser.nextToken(); // into <
 		
@@ -81,7 +81,7 @@ public class TestMXMLNonBound
 				"__END__"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		parser.nextToken(); // into <
 		

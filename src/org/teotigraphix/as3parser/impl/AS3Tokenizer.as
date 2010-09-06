@@ -40,7 +40,6 @@ import org.teotigraphix.as3parser.api.KeyWords;
 import org.teotigraphix.as3parser.core.Token;
 import org.teotigraphix.as3parser.core.TokenEntry;
 import org.teotigraphix.as3parser.core.Tokens;
-import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class AS3Tokenizer implements ITokenizer
 {
@@ -107,7 +106,7 @@ public class AS3Tokenizer implements ITokenizer
 	protected function initializeScanner(tokens:ISourceCode):IScanner
 	{
 		var scanner:AS3Scanner = new AS3Scanner();
-		scanner.setLines(ASTUtil.toVector(tokens.code.split(AS3Parser.NEW_LINE)));
+		scanner.setLines(Vector.<String>(tokens.code.split(AS3Parser.NEW_LINE)));
 		return scanner;
 	}
 	

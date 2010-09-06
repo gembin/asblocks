@@ -21,7 +21,7 @@ package org.teotigraphix.as3parser.impl
 {
 
 import org.flexunit.Assert;
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * A <code>parseMetaDatas()</code> unit test.
@@ -109,7 +109,7 @@ public class TestMetaData
 	{
 		var lines:Array = ["{", source, "}", "__END__"];
 		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		parser.scanner.setLines(Vector.<String>(lines));
 		parser.nextToken();
 		var result:String = ASTUtil.convert(parser.parseMetaDatas());
 		Assert.assertEquals(expected, result);

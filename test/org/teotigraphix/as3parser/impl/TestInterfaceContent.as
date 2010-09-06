@@ -22,7 +22,7 @@ package org.teotigraphix.as3parser.impl
 
 import flexunit.framework.Assert;
 
-import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * A <code>parseInterfaceContent()</code> unit test.
@@ -101,7 +101,7 @@ public class TestInterfaceContent
 	{
 		var lines:Array = ["{", input, "}", "__END__"];
 		
-		parser.scanner.setLines(ASTUtil.toVector(lines));
+		parser.scanner.setLines(Vector.<String>(lines));
 		parser.nextToken(); // first call
 		var result:String = ASTUtil.convert(parser.parseTypeContent());
 		

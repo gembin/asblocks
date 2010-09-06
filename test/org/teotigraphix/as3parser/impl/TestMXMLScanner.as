@@ -4,7 +4,6 @@ import flexunit.framework.Assert;
 
 import org.teotigraphix.as3parser.api.IScanner;
 import org.teotigraphix.as3parser.core.Token;
-import org.teotigraphix.as3parser.utils.ASTUtil;
 
 public class TestMXMLScanner
 {
@@ -29,7 +28,7 @@ public class TestMXMLScanner
 				"</Application>"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("<");
 		assertText("Application");
@@ -49,7 +48,7 @@ public class TestMXMLScanner
 	{
 		var lines:Array = ["<!-- no asdoc comment. -->"];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("<!-- no asdoc comment. -->");
 	}
@@ -59,7 +58,7 @@ public class TestMXMLScanner
 	{
 		var lines:Array = ["<!--- ", "\t* My asdoc comment. ", "-->"];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("<!--- \n\t* My asdoc comment. \n-->");
 	}
@@ -76,7 +75,7 @@ public class TestMXMLScanner
 				"</fx:Script>"
 			];
 		
-		scanner.setLines(ASTUtil.toVector(lines));
+		scanner.setLines(Vector.<String>(lines));
 		
 		assertText("<");
 		assertText("fx");
