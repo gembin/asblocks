@@ -24,6 +24,8 @@ import flash.system.Capabilities;
 import flash.system.System;
 import flash.utils.getDefinitionByName;
 
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+
 /**
  * A utility class for dealing with files and their data.
  * 
@@ -33,6 +35,11 @@ import flash.utils.getDefinitionByName;
  */
 public class FileUtil
 {
+	/**
+	 * TODO implement OS or subclass
+	 */
+	public static var separator:String = "/";
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public Class :: Methods
@@ -99,6 +106,22 @@ public class FileUtil
 			path = path.replace(/\\/g, "/");
 		}
 		return path;
+	}
+	
+	public static function fileNameFor(unit:ICompilationUnit):String
+	{
+		var name:String;
+		var packageName:String = unit.packageName;
+		var typeName:String = unit.typeNode.name;
+		if (packageName == null || packageName == "")
+		{
+			name = typeName;
+		}
+		else
+		{
+			name = packageName + "." + typeName;
+		}
+		return name.replace(/\\./g, separator) + ".as";
 	}
 	
 	public static function get isDesktop():Boolean

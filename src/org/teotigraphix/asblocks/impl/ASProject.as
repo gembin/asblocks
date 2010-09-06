@@ -22,6 +22,7 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.IASProject;
+import org.teotigraphix.asblocks.api.IClassPathEntry;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 
 /**
@@ -42,7 +43,7 @@ public class ASProject implements IASProject
 	/**
 	 * @private
 	 */
-	private var factory:ASFactory;
+	protected var factory:ASFactory;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -53,14 +54,43 @@ public class ASProject implements IASProject
 	/**
 	 * @private
 	 */
-	private var _compilationUnits:Vector.<ICompilationUnit>;
+	protected var _compilationUnits:Vector.<ICompilationUnit> = new Vector.<ICompilationUnit>();
 	
 	/**
 	 * @copy org.teotigraphix.asblocks.IASProject#compilationUnits
 	 */
 	public function get compilationUnits():Vector.<ICompilationUnit>
 	{
-		return _compilationUnits;
+		var result:Vector.<ICompilationUnit> = 
+			new Vector.<ICompilationUnit>(_compilationUnits.length);
+		var len:int = _compilationUnits.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(_compilationUnits[i]);
+			
+		}
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	protected var _classPathEntries:Vector.<IClassPathEntry> = new Vector.<IClassPathEntry>();
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#classPathEntries
+	 */
+	public function get classPathEntries():Vector.<IClassPathEntry>
+	{
+		var result:Vector.<IClassPathEntry> = 
+			new Vector.<IClassPathEntry>(_classPathEntries.length);
+		var len:int = _classPathEntries.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(_classPathEntries[i]);
+			
+		}
+		return result;
 	}
 	
 	//----------------------------------
@@ -131,20 +161,21 @@ public class ASProject implements IASProject
 	/**
 	 * @copy org.teotigraphix.asblocks.IASProject#addCompilationUnit()
 	 */
-	public function addCompilationUnit(unit:ICompilationUnit):void
+	public function addCompilationUnit(unit:ICompilationUnit):Boolean
 	{
-		if (!_compilationUnits)
+		if (_compilationUnits.indexOf(unit) != -1)
 		{
-			_compilationUnits = new Vector.<ICompilationUnit>();
+			return false;
 		}
 		
 		_compilationUnits.push(unit);
+		return true;
 	}
 	
 	/**
 	 * @copy org.teotigraphix.asblocks.IASProject#removeCompilationUnit()
 	 */
-	public function removeCompilationUnit(unit:ICompilationUnit):void
+	public function removeCompilationUnit(unit:ICompilationUnit):Boolean
 	{
 		var len:int = _compilationUnits.length;
 		for (var i:int = 0; i < len; i++)
@@ -153,9 +184,75 @@ public class ASProject implements IASProject
 			if (element === unit)
 			{
 				_compilationUnits.splice(i, 1);
-				break;
+				return true;
 			}	
 		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#addClassPath()
+	 */
+	public function addClassPath(classPath:String):IClassPathEntry
+	{
+		var entry:IClassPathEntry;
+		
+		for each (entry in _classPathEntries) 
+		{
+			if (entry.filePath == classPath)
+			{
+				return null;
+			}
+		}
+		
+		entry = new ClassPathEntry(classPath);
+		_classPathEntries.push(entry);
+		return entry;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#removeClassPath()
+	 */
+	public function removeClassPath(classPath:String):Boolean
+	{
+		var len:int = _classPathEntries.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IClassPathEntry = _classPathEntries[i] as IClassPathEntry;
+			if (element.filePath == classPath)
+			{
+				_classPathEntries.splice(i, 1);
+				return true;
+			}	
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#writeAll()
+	 */
+	public function writeAll():void
+	{
+		var len:int = compilationUnits.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:ICompilationUnit = compilationUnits[i] as ICompilationUnit;
+			write(outputLocation, element);
+		}
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function write(location:String, unit:ICompilationUnit):void
+	{
+		// subclass for implementation
 	}
 }
 }

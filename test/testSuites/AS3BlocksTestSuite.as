@@ -1,6 +1,7 @@
 package testSuites
 {
 
+import org.teotigraphix.asblocks.TestASFactory;
 import org.teotigraphix.asblocks.impl.TestASProject;
 import org.teotigraphix.asblocks.impl.TestClassTypeNode;
 import org.teotigraphix.asblocks.impl.TestCompilationUnitNode;
@@ -11,8 +12,9 @@ import org.teotigraphix.asblocks.impl.TestPackageNode;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
-public class AS3BlockTestSuite
+public class AS3BlocksTestSuite
 {
+	public var testASFactory:TestASFactory;
 	public var testASProject:TestASProject;
 	public var testCompilationUnitNode:TestCompilationUnitNode;
 	public var testPackageNode:TestPackageNode;

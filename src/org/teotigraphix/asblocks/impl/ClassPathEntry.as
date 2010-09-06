@@ -17,20 +17,19 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks
+package org.teotigraphix.asblocks.impl
 {
 
 import org.teotigraphix.asblocks.api.IClassPathEntry;
-import org.teotigraphix.asblocks.api.ICompilationUnit;
 
 /**
- * TODO DOCME
+ * A class path entry such as an <code>.as</code> file or <code>.swc</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IASProject
+public class ClassPathEntry implements IClassPathEntry
 {
 	//--------------------------------------------------------------------------
 	//
@@ -39,76 +38,44 @@ public interface IASProject
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  compilationUnits
+	//  filePath
 	//----------------------------------
-	
-	/**
-	 * TODO DOCME
-	 */
-	function get compilationUnits():Vector.<ICompilationUnit>;
-	
-	//----------------------------------
-	//  classPathEntries
-	//----------------------------------
-	
-	/**
-	 * TODO DOCME
-	 */
-	function get classPathEntries():Vector.<IClassPathEntry>;
-	
-	//----------------------------------
-	//  outputLocation
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get outputLocation():String;
 	
 	/**
 	 * @private
 	 */
-	function set outputLocation(value:String):void;
+	private var _filePath:String;
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IClassPathEntry#filePath
+	 */
+	public function get filePath():String
+	{
+		return _filePath;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set filePath(value:String):void
+	{
+		_filePath = value;
+	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Constructor.
 	 */
-	function newClass(qualifiedName:String):ICompilationUnit;
-	
-	/**
-	 * TODO DOCME
-	 */
-	function newInterface(qualifiedName:String):ICompilationUnit;
-	
-	/**
-	 * TODO DOCME
-	 */
-	function addCompilationUnit(unit:ICompilationUnit):Boolean;
-	
-	/**
-	 * TODO DOCME
-	 */
-	function removeCompilationUnit(unit:ICompilationUnit):Boolean;
-	
-	/**
-	 * TODO DOCME
-	 */
-	function addClassPath(classPath:String):IClassPathEntry;
-	
-	/**
-	 * TODO DOCME
-	 */
-	function removeClassPath(classPath:String):Boolean;
-	
-	/**
-	 * TODO DOCME
-	 */
-	function writeAll():void;
+	public function ClassPathEntry(filePath:String)
+	{
+		super();
+		
+		this.filePath = filePath;
+	}
 }
 }

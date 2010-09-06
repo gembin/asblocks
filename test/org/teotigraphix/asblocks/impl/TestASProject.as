@@ -2,12 +2,26 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.asserts.assertEquals;
+import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
+import org.flexunit.asserts.assertNull;
+import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.asblocks.api.IClassPathEntry;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 
 public class TestASProject extends BaseASFactoryTest
 {
+	[Test]
+	public function test_outputLocation():void
+	{
+		assertNull(project.outputLocation);
+		project.outputLocation = "/someplace/output";
+		assertEquals("/someplace/output", project.outputLocation);
+		project.outputLocation = null;
+		assertNull(project.outputLocation);
+	}
+	
 	[Test]
 	public function test_newClass():void
 	{
@@ -48,12 +62,13 @@ public class TestASProject extends BaseASFactoryTest
 			"package my.domain {\n\tpublic class ClassA {\n\t}\n}");
 		assertEquals("my.domain", unit.packageName);
 		assertEquals("ClassA", unit.typeNode.name);
-		project.addCompilationUnit(unit);
+		assertTrue(project.addCompilationUnit(unit));
 		var units:Vector.<ICompilationUnit> = project.compilationUnits;
 		assertNotNull(units);
 		assertEquals(1, units.length);
 		assertEquals("my.domain", units[0].packageName);
 		assertEquals("ClassA", units[0].typeNode.name);
+		assertFalse(project.addCompilationUnit(unit));
 	}
 	
 	[Test]
@@ -69,6 +84,52 @@ public class TestASProject extends BaseASFactoryTest
 		units = project.compilationUnits;
 		assertNotNull(units);
 		assertEquals(0, units.length);
+	}
+	
+	[Test]
+	public function test_addClassPath():void
+	{
+		assertNotNull(project.classPathEntries);
+		assertNotNull(project.addClassPath("/path1/src"));
+		assertNotNull(project.addClassPath("/path2/src"));
+		assertNotNull(project.addClassPath("/path3/src"));
+		assertNull(project.addClassPath("/path1/src"));
+		var entries:Vector.<IClassPathEntry> = project.classPathEntries;
+		assertNotNull(entries);
+		assertEquals(3, entries.length);
+		assertEquals("/path1/src", entries[0].filePath);
+		assertEquals("/path2/src", entries[1].filePath);
+		assertEquals("/path3/src", entries[2].filePath);
+	}
+	
+	[Test]
+	public function test_removeClassPath():void
+	{
+		assertNotNull(project.classPathEntries);
+		assertNotNull(project.addClassPath("/path1/src"));
+		assertNotNull(project.addClassPath("/path2/src"));
+		assertNotNull(project.addClassPath("/path3/src"));
+		var entries:Vector.<IClassPathEntry> = project.classPathEntries;
+		assertNotNull(entries);
+		assertEquals(3, entries.length);
+		assertEquals("/path1/src", entries[0].filePath);
+		assertEquals("/path2/src", entries[1].filePath);
+		assertEquals("/path3/src", entries[2].filePath);
+		assertTrue(project.removeClassPath("/path1/src"));
+		assertFalse(project.removeClassPath("/path1/src"));
+		entries = project.classPathEntries;
+		assertEquals(2, entries.length);
+		assertEquals("/path2/src", entries[0].filePath);
+		assertEquals("/path3/src", entries[1].filePath);
+		assertTrue(project.removeClassPath("/path2/src"));
+		assertFalse(project.removeClassPath("/path2/src"));
+		entries = project.classPathEntries;
+		assertEquals(1, entries.length);
+		assertEquals("/path3/src", entries[0].filePath);
+		assertTrue(project.removeClassPath("/path3/src"));
+		assertFalse(project.removeClassPath("/path3/src"));
+		entries = project.classPathEntries;
+		assertEquals(0, entries.length);
 	}
 }
 }
