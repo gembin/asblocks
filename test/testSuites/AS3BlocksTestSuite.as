@@ -3,6 +3,7 @@ package testSuites
 
 import org.teotigraphix.asblocks.TestASFactory;
 import org.teotigraphix.asblocks.impl.TestASProject;
+import org.teotigraphix.asblocks.impl.TestArrayAccessExpression;
 import org.teotigraphix.asblocks.impl.TestClassTypeNode;
 import org.teotigraphix.asblocks.impl.TestCompilationUnitNode;
 import org.teotigraphix.asblocks.impl.TestExpressionNodes;
@@ -23,5 +24,8 @@ public class AS3BlocksTestSuite
 	
 	public var testExpressionNodes:TestExpressionNodes;
 	public var testLiteralNodes:TestLiteralNodes;
+	
+	// 
+	public var testArrayAccessExpression:TestArrayAccessExpression;
 }
 }

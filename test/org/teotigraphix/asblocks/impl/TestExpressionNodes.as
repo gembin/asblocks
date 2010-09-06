@@ -578,6 +578,8 @@ public class TestExpressionNodes
 	[Test]
 	public function testPostfixExpressionNode():void
 	{
+		
+		
 		var expression:IPostfixExpression;
 		
 		expression = factory.newPostDecExpression(factory.newSimpleNameExpression("i"));

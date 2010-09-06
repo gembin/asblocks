@@ -26,6 +26,7 @@ public class ASTBuilder
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
 		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
 		ast.addChild(mods);
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newFunction());
 		ast.appendToken(TokenBuilder.newSpace());
