@@ -13,8 +13,11 @@ import org.teotigraphix.asblocks.api.IExpression;
 public class TestArrayAccessExpression
 {
 	private var factory:ASFactory = new ASFactory();
+	
 	private var expression:IArrayAccessExpression;
+	
 	private var target:IExpression;
+	
 	private var subscript:IExpression;
 	
 	[Before]
@@ -44,6 +47,31 @@ public class TestArrayAccessExpression
 		expression = factory.newArrayAccessExpression(target, subscript);
 		assertEquals(target.node, expression.target.node);
 		assertEquals(subscript.node, expression.subscript.node);
+	}
+	
+	[Test]
+	public function testParse():void
+	{
+		expression = factory.newExpression("foo[1]") as IArrayAccessExpression;
+		target = factory.newExpression("foo");
+		subscript = factory.newNumberLiteral(1);
+	}
+	
+	[Test]
+	public function testTokenBoundries():void
+	{
+		expression = factory.newExpression("a[b][c]") as IArrayAccessExpression;
+		var target:IExpression = factory.newExpression("foo");
+		expression.target = target;
+	}
+	
+	[Test]
+	public function testSubscript():void
+	{
+		expression = factory.newExpression("foo[1]") as IArrayAccessExpression;
+		target = factory.newExpression("foo");
+		subscript = factory.newStringLiteral("bar");
+		expression.subscript = subscript;
 	}
 }
 }

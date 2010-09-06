@@ -49,28 +49,39 @@ public class ASTBuilder
 		return new MethodNode(ast);
 	}
 	
+	/**
+	 * Builds a <code>IField</code>'s AST.
+	 * 
+	 * @param name A String name.
+	 * @param name The field's Visibility.
+	 * @param name A String type.
+	 * @return A <code>IField</code> instance with built AST.
+	 */
 	public static function newField(name:String, 
 									visibility:Visibility, 
 									type:String):IField
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_LIST);
-		// mod-list
+		// field-list/mod-list
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
 		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
 		ast.addChild(mods);
 		ast.appendToken(TokenBuilder.newSpace());
-		// field-role
+		// field-list/field-role
 		var frole:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_ROLE);
 		frole.addChild(ASTUtil.newAST(AS3NodeKind.VAR, "var"));
 		ast.addChild(frole);
 		ast.appendToken(TokenBuilder.newSpace());
-		// name
-		ast.addChild(ASTUtil.newNameAST(name));
+		// field-list/name-type-init
+		var nti:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME_TYPE_INIT);
+		ast.addChild(nti);
+		// field-list/name-type-init/name
+		nti.addChild(ASTUtil.newNameAST(name));
 		if (type)
 		{
-			// type
-			ast.appendToken(TokenBuilder.newColumn());
-			ast.addChild(ASTUtil.newTypeAST(type));
+			// field-list/name-type-init/type
+			nti.appendToken(TokenBuilder.newColumn());
+			nti.addChild(ASTUtil.newTypeAST(type));
 		}
 		ast.appendToken(TokenBuilder.newSemi());
 		return new FieldNode(ast);

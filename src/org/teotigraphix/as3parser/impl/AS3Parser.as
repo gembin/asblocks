@@ -1529,8 +1529,11 @@ public class AS3Parser extends ParserBase
 		
 		result.addChild(parseParameterList());
 		nextNonWhiteSpaceToken(result);
-		result.addChild(parseOptionalType(result));
-		nextNonWhiteSpaceToken(result);
+		if (!tokIs(Operators.LEFT_CURLY_BRACKET))
+		{
+			result.addChild(parseOptionalType(result));
+			nextNonWhiteSpaceToken(result);
+		}
 		result.addChild(parseBlock());
 		
 		return result;

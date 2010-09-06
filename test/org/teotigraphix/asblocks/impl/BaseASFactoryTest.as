@@ -36,6 +36,12 @@ public class BaseASFactoryTest
 		asparser = factory.newParser();
 	}
 	
+	[After]
+	public function tearDown():void
+	{
+		
+	}
+	
 	protected function assertPrint(expected:String, 
 								   expression:IScriptNode):void
 	{

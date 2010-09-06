@@ -404,7 +404,8 @@ public class NestedNode
 			_children = new Vector.<IParserNode>();
 		
 		var old:IParserNode = getChild(index);
-		old.parent = null;
+		if (old)
+			old.parent = null;
 		_children.splice(index, 1, child) as IParserNode;
 		
 		if (!noUpdate && tokenListUpdater)

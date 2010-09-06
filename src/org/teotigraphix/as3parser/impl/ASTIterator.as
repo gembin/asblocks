@@ -7,7 +7,13 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 public class ASTIterator
 {
 	private var parent:IParserNode;
+	
 	private var index:int = -1;
+	
+	public function get current():IParserNode
+	{
+		return parent.getChild(index);
+	}
 	
 	public function ASTIterator(parent:IParserNode)
 	{

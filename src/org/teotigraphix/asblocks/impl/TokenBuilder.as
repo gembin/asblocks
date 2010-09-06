@@ -188,6 +188,16 @@ public class TokenBuilder
 		return newToken("sub", "-");
 	}
 	
+	public static function newConst():LinkedListToken
+	{
+		return newToken("const", "const");
+	}
+	
+	public static function newVar():LinkedListToken
+	{
+		return newToken("var", "var");
+	}
+	
 	public static function newFunction():LinkedListToken
 	{
 		return newToken(AS3NodeKind.FUNCTION, KeyWords.FUNCTION);

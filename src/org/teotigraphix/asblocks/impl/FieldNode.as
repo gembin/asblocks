@@ -20,9 +20,15 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
+import org.teotigraphix.as3parser.core.TokenNode;
+import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IField;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IField</code> implementation.
@@ -34,6 +40,11 @@ import org.teotigraphix.asblocks.api.IField;
 public class FieldNode extends MemberNode 
 	implements IField
 {
+	private function get nameTypeInit():IParserNode
+	{
+		return node.getKind(AS3NodeKind.NAME_TYPE_INIT);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Private :: Variables
@@ -49,7 +60,8 @@ public class FieldNode extends MemberNode
 	 */
 	override public function get name():String
 	{
-		return super.name; // TODO impl nti
+		var i:ASTIterator = new ASTIterator(nameTypeInit);
+		return ASTUtil.nameText(i.find(AS3NodeKind.NAME));
 	}
 	
 	/**
@@ -57,7 +69,13 @@ public class FieldNode extends MemberNode
 	 */	
 	override public function set name(value:String):void
 	{
-		super.name = value; // TODO impl nti
+		if (value.indexOf('.') != -1)
+		{
+			throw new ASBlocksSyntaxError("field name must not contain '.'");
+		}
+		var i:ASTIterator = new ASTIterator(nameTypeInit);
+		i.find(AS3NodeKind.NAME);
+		i.replace(ASTUtil.newAST(AS3NodeKind.NAME, value));
 	}
 	
 	//----------------------------------
@@ -69,7 +87,8 @@ public class FieldNode extends MemberNode
 	 */
 	override public function get type():String
 	{
-		return super.type; // TODO impl nti
+		var i:ASTIterator = new ASTIterator(nameTypeInit);
+		return ASTUtil.typeText(i.find(AS3NodeKind.TYPE));
 	}
 	
 	/**
@@ -77,7 +96,9 @@ public class FieldNode extends MemberNode
 	 */	
 	override public function set type(value:String):void
 	{
-		super.type = type; // TODO impl nti
+		var i:ASTIterator = new ASTIterator(nameTypeInit);
+		i.find(AS3NodeKind.TYPE);
+		i.replace(ASTUtil.newAST(AS3NodeKind.TYPE, value));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -91,11 +112,11 @@ public class FieldNode extends MemberNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IFieldNode#isConstant
 	 */
 	public function get isConstant():Boolean
 	{
-		return false;
+		return node.getKind(AS3NodeKind.FIELD_ROLE).getFirstChild().isKind(AS3NodeKind.CONST);
 	}
 	
 	/**
@@ -103,7 +124,23 @@ public class FieldNode extends MemberNode
 	 */	
 	public function set isConstant(value:Boolean):void
 	{
+		var role:IParserNode = node.getKind(AS3NodeKind.FIELD_ROLE);
+		if (role.getFirstChild().isKind(AS3NodeKind.CONST) == value)
+		{
+			return;
+		}
 		
+		var node:LinkedListToken;
+		if (value) 
+		{
+			node = TokenBuilder.newConst();
+		} 
+		else
+		{
+			node = TokenBuilder.newVar();
+		}
+		
+		role.setChildAt(ASTUtil.newTokenAST(node), 0);
 	}
 	
 	//----------------------------------
@@ -111,11 +148,14 @@ public class FieldNode extends MemberNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IFieldNode#initializer
 	 */
 	public function get initializer():IExpression
 	{
-		return null;
+		var init:IParserNode = nameTypeInit.getKind(AS3NodeKind.INIT);
+		if (!init)
+			return null;
+		return ExpressionBuilder.build(init.getFirstChild());
 	}
 	
 	/**
@@ -123,7 +163,14 @@ public class FieldNode extends MemberNode
 	 */	
 	public function set initializer(value:IExpression):void
 	{
-		
+		if (value == null) 
+		{
+			removeInitializer();
+		} 
+		else 
+		{
+			setInitAST(value.node);
+		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -145,6 +192,41 @@ public class FieldNode extends MemberNode
 	//  Private :: Methods
 	//
 	//--------------------------------------------------------------------------
+	/**
 	
+	 *  * @private
+	 */	
+	private function setInitAST(expression:IParserNode):void
+	{
+		var nti:IParserNode = nameTypeInit;
+		var init:IParserNode = nti.getKind(AS3NodeKind.INIT);
+		if (init == null)
+		{
+			init = ASTUtil.newAST(AS3NodeKind.INIT, "=");
+			// TODO get addTokenAt() in public API
+			TokenNode(init).addTokenAt(TokenBuilder.newSpace(), 0);
+			init.appendToken(TokenBuilder.newSpace());
+			nti.addChild(init);
+		}
+		else
+		{
+			init.removeChildAt(0);
+		}
+		
+		init.addChild(expression);
+	}
+	
+	/**
+	 * @private
+	 */	
+	private function removeInitializer():void
+	{
+		var nti:IParserNode = nameTypeInit;
+		var i:ASTIterator = new ASTIterator(nti);
+		if (i.search(AS3NodeKind.INIT) != null)
+		{
+			i.remove();
+		}
+	}
 }
 }

@@ -38,7 +38,7 @@ public class CodeMirror
 			}
 			catch (e:ASBlocksSyntaxError)
 			{
-				throw new Error("assertReflection(2) - writer.write() error");
+				throw new Error("assertReflection(2) - writer.write() error \n" + e.message);
 			}
 			assertEquals(sourceCode1.code, sourceCode2.code);
 			return unit2;

@@ -7,6 +7,7 @@ import org.teotigraphix.asblocks.impl.TestArrayAccessExpression;
 import org.teotigraphix.asblocks.impl.TestClassTypeNode;
 import org.teotigraphix.asblocks.impl.TestCompilationUnitNode;
 import org.teotigraphix.asblocks.impl.TestExpressionNodes;
+import org.teotigraphix.asblocks.impl.TestFieldNode;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
 import org.teotigraphix.asblocks.impl.TestLiteralNodes;
 import org.teotigraphix.asblocks.impl.TestPackageNode;
@@ -27,5 +28,7 @@ public class AS3BlocksTestSuite
 	
 	// 
 	public var testArrayAccessExpression:TestArrayAccessExpression;
+	public var testFieldNode:TestFieldNode;
+	
 }
 }
