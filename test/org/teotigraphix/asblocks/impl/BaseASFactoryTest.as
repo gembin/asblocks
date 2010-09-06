@@ -6,9 +6,10 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.impl.AS3Scanner;
+import org.teotigraphix.asblocks.ASFactory;
+import org.teotigraphix.asblocks.IASParser;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.utils.ASTUtil;
-import org.teotigraphix.asblocks.ASFactory;
 
 public class BaseASFactoryTest
 {
@@ -17,6 +18,8 @@ public class BaseASFactoryTest
 	protected var factory:ASFactory;
 	
 	protected var project:ASProject;
+	
+	protected var asparser:IASParser;
 	
 	protected var parser:AS3Parser;
 	
@@ -30,6 +33,7 @@ public class BaseASFactoryTest
 		printer = new ASTPrinter(new SourceCode());
 		factory = new ASFactory();
 		project = new ASProject(factory);
+		asparser = factory.newParser();
 	}
 	
 	protected function assertPrint(expected:String, 

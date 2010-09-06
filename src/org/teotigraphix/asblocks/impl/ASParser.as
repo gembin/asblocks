@@ -22,6 +22,7 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
+import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.errors.UnExpectedTokenError;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.asblocks.IASParser;
@@ -59,6 +60,14 @@ public class ASParser implements IASParser
 			throw ASTUtil.constructSyntaxError(null, parser, e);
 		}
 		return new CompilationUnitNode(ast);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASParser#parseString()
+	 */
+	public function parseString(source:String):ICompilationUnit
+	{
+		return parse(new SourceCode(source));
 	}
 }
 }

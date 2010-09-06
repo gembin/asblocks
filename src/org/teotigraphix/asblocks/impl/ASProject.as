@@ -24,32 +24,31 @@ import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.IASProject;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 
+/**
+ * The default implementation of the <code>IASProject</code> API.
+ * 
+ * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
+ * @productversion 1.0
+ */
 public class ASProject implements IASProject
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Variables
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
 	private var factory:ASFactory;
 	
-	public function ASProject(factory:ASFactory)
-	{
-		this.factory = factory;
-	}
-	
-	public function newClass(qualifiedName:String):ICompilationUnit
-	{
-		var cu:ICompilationUnit = factory.newClass(qualifiedName);
-		addCompilationUnit(cu);
-		return cu;
-	}
-	
-	public function newInterface(qualifiedName:String):ICompilationUnit
-	{
-		var cu:ICompilationUnit = factory.newInterface(qualifiedName);
-		addCompilationUnit(cu);
-		return cu;
-	}
-	
-	//----------------------------------
-	//  compilationUnits
-	//----------------------------------
+	//--------------------------------------------------------------------------
+	//
+	//  IASProject API :: Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
 	 * @private
@@ -57,14 +56,56 @@ public class ASProject implements IASProject
 	private var _compilationUnits:Vector.<ICompilationUnit>;
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.IASProject#compilationUnits
 	 */
 	public function get compilationUnits():Vector.<ICompilationUnit>
 	{
 		return _compilationUnits;
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
 	
+	/**
+	 * Constructor.
+	 */
+	public function ASProject(factory:ASFactory)
+	{
+		this.factory = factory;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IASProject API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#newClass()
+	 */
+	public function newClass(qualifiedName:String):ICompilationUnit
+	{
+		var cu:ICompilationUnit = factory.newClass(qualifiedName);
+		addCompilationUnit(cu);
+		return cu;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#newInterface()
+	 */
+	public function newInterface(qualifiedName:String):ICompilationUnit
+	{
+		var cu:ICompilationUnit = factory.newInterface(qualifiedName);
+		addCompilationUnit(cu);
+		return cu;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#addCompilationUnit()
+	 */
 	public function addCompilationUnit(unit:ICompilationUnit):void
 	{
 		if (!_compilationUnits)
@@ -75,9 +116,21 @@ public class ASProject implements IASProject
 		_compilationUnits.push(unit);
 	}
 	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#removeCompilationUnit()
+	 */
 	public function removeCompilationUnit(unit:ICompilationUnit):void
 	{
-		
+		var len:int = _compilationUnits.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:ICompilationUnit = _compilationUnits[i] as ICompilationUnit;
+			if (element === unit)
+			{
+				_compilationUnits.splice(i, 1);
+				break;
+			}	
+		}
 	}
 }
 }

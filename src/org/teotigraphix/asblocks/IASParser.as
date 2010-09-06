@@ -49,5 +49,14 @@ public interface IASParser
 	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError
 	 */
 	function parse(code:ISourceCode):ICompilationUnit;
+	
+	/**
+	 * Parses the <code>String</code> source code data.
+	 * 
+	 * @param source The <code>String</code> source code.
+	 * @return An <code>ICompilationUnit</code> detailing the source code.
+	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError
+	 */
+	function parseString(source:String):ICompilationUnit;
 }
 }
