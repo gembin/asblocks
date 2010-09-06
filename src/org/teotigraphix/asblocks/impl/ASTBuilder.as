@@ -10,6 +10,7 @@ import org.teotigraphix.asblocks.api.IAssignmentExpressionNode;
 import org.teotigraphix.asblocks.api.IBinaryExpressionNode;
 import org.teotigraphix.asblocks.api.ICompilationUnitNode;
 import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IFieldNode;
 import org.teotigraphix.asblocks.api.IMethodNode;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
@@ -45,6 +46,33 @@ public class ASTBuilder
 		ast.addChild(block);
 		
 		return new MethodNode(ast);
+	}
+	
+	public static function newField(name:String, 
+									visibility:Visibility, 
+									type:String):IFieldNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_LIST);
+		// mod-list
+		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
+		ast.addChild(mods);
+		ast.appendToken(TokenBuilder.newSpace());
+		// field-role
+		var frole:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_ROLE);
+		frole.addChild(ASTUtil.newAST(AS3NodeKind.VAR, "var"));
+		ast.addChild(frole);
+		ast.appendToken(TokenBuilder.newSpace());
+		// name
+		ast.addChild(ASTUtil.newNameAST(name));
+		if (type)
+		{
+			// type
+			ast.appendToken(TokenBuilder.newColumn());
+			ast.addChild(ASTUtil.newTypeAST(type));
+		}
+		ast.appendToken(TokenBuilder.newSemi());
+		return new FieldNode(ast);
 	}
 	
 	public static function synthesizeClass(qualifiedName:String):ICompilationUnitNode

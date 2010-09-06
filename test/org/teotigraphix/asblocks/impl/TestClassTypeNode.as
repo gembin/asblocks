@@ -9,6 +9,7 @@ import org.flexunit.asserts.assertStrictlyEquals;
 import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.asblocks.api.IClassTypeNode;
 import org.teotigraphix.asblocks.api.ICompilationUnitNode;
+import org.teotigraphix.asblocks.api.IFieldNode;
 import org.teotigraphix.asblocks.api.IMethodNode;
 import org.teotigraphix.asblocks.api.Visibility;
 
@@ -24,6 +25,51 @@ public class TestClassTypeNode extends BaseASFactoryTest
 		unit = project.newClass("A");
 		assertNotNull(unit);
 		assertNotNull(unit.typeNode);
+	}
+	
+	[Test]
+	public function test_newField():void
+	{
+		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		// TODO make sure dups cannot be created
+		var field:IFieldNode = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
+		assertNotNull(field);
+		assertEquals(Visibility.PUBLIC, field.visibility);
+		assertEquals("fieldOne", field.name);
+		assertEquals("String", field.type);
+		assertPrint("package {\n\tpublic class A {\n\t\tpublic var fieldOne:String;\n\t}\n}", unit);
+		
+		assertTrue(typeNode.removeField("fieldOne"));
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+		assertFalse(typeNode.removeField("fieldOne"));
+	}
+	
+	[Test]
+	public function test_getField():void
+	{
+		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var field:IFieldNode = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
+		assertEquals(field.name, typeNode.getField("fieldOne").name);
+		assertNull(typeNode.getField("fieldTwo"));
+		typeNode.removeField("fieldOne");
+		assertNull(typeNode.getField("fieldOne"));
+	}
+	
+	[Test]
+	public function test_removeField():void
+	{
+		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var field1:IFieldNode = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
+		var field2:IFieldNode = typeNode.newField("fieldTwo", Visibility.PUBLIC, "String");
+		var field3:IFieldNode = typeNode.newField("fieldThree", Visibility.PUBLIC, "String");
+		assertEquals(3, typeNode.fields.length);
+		assertTrue(typeNode.removeField("fieldOne"));
+		assertEquals(2, typeNode.fields.length);
+		assertTrue(typeNode.removeField("fieldTwo"));
+		assertEquals(1, typeNode.fields.length);
+		assertTrue(typeNode.removeField("fieldThree"));
+		assertEquals(0, typeNode.fields.length);
+		assertFalse(typeNode.removeField("fieldFour"));
 	}
 	
 	[Test]

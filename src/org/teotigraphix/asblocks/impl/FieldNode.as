@@ -17,115 +17,134 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks.api
+package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IFieldNode;
+
 /**
- * TODO Docme
+ * The <code>IFieldNode</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IClassTypeNode extends ITypeNode
+public class FieldNode extends MemberNode 
+	implements IFieldNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Private :: Variables
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  isDynamic
+	//  name
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IMemberNode#name
 	 */
-	function get isDynamic():Boolean;
-	
-	/**
-	 * @private
-	 */
-	function set isDynamic(value:Boolean):void;
-	
-	//----------------------------------
-	//  isFinal
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isFinal():Boolean;
+	override public function get name():String
+	{
+		return super.name; // TODO impl nti
+	}
 	
 	/**
 	 * @private
-	 */
-	function set isFinal(value:Boolean):void;
+	 */	
+	override public function set name(value:String):void
+	{
+		super.name = value; // TODO impl nti
+	}
 	
 	//----------------------------------
-	//  superClass
+	//  type
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IMemberNode#type
 	 */
-	function get superClass():String;
+	override public function get type():String
+	{
+		return super.type; // TODO impl nti
+	}
 	
 	/**
 	 * @private
-	 */
-	function set superClass(value:String):void;
-	
-	//----------------------------------
-	//  fields
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get fields():Vector.<IFieldNode>;
-	
-	//----------------------------------
-	//  implementedInterfaces
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get implementedInterfaces():Vector.<String>;
+	 */	
+	override public function set type(value:String):void
+	{
+		super.type = type; // TODO impl nti
+	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  IFieldNode API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  isConstant
+	//----------------------------------
+	
+	/**
+	 * doc
+	 */
+	public function get isConstant():Boolean
+	{
+		return false;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set isConstant(value:Boolean):void
+	{
+		
+	}
+	
+	//----------------------------------
+	//  initializer
+	//----------------------------------
+	
+	/**
+	 * doc
+	 */
+	public function get initializer():IExpressionNode
+	{
+		return null;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set initializer(value:IExpressionNode):void
+	{
+		
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function addImplementedInterface(name:String):Boolean;
+	public function FieldNode(node:IParserNode)
+	{
+		super(node);
+	}
 	
-	/**
-	 * TODO Docme
-	 */
-	function removeImplementedInterface(name:String):Boolean;
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
-	/**
-	 * TODO Docme
-	 */
-	function newField(name:String, 
-					  visibility:Visibility, 
-					  type:String):IFieldNode;
-	
-	/**
-	 * TODO Docme
-	 */
-	function getField(name:String):IFieldNode;
-	
-	/**
-	 * TODO Docme
-	 */
-	function removeField(name:String):Boolean;
 }
 }

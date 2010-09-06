@@ -21,13 +21,13 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * A common interface for IMethodNode and IFunctionLiteralNode.
+ * A field.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IFunctionCommon
+public interface IFieldNode extends IMemberNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -36,52 +36,31 @@ public interface IFunctionCommon
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  arguments
+	//  isConstant
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get arguments():Vector.<IArgumentNode>;
+	function get isConstant():Boolean;
 	
 	/**
 	 * @private
 	 */
-	//function set arguments(value:Vector.<IArgumentNode>):void;
+	function set isConstant(value:Boolean):void;
 	
 	//----------------------------------
-	//  type
+	//  initializer
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get returnType():String;
+	function get initializer():IExpressionNode;
 	
 	/**
 	 * @private
 	 */
-	function set returnType(value:String):void;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function addParameter(name:String, type:String, defaultValue:String = null):IArgumentNode;
-	
-	/**
-	 * TODO Docme
-	 */
-	function removeParameter(name:String):IArgumentNode;
-	
-	/**
-	 * TODO Docme
-	 */
-	function addRestParam(name:String):IArgumentNode;
+	function set initializer(value:IExpressionNode):void;
 }
 }

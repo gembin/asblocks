@@ -36,13 +36,13 @@ public class FunctionCommon implements IFunctionCommon
 	}
 	
 	//----------------------------------
-	//  type
+	//  returnType
 	//----------------------------------
 	
 	/**
 	 * doc
 	 */
-	public function get type():String
+	public function get returnType():String
 	{
 		var t:IParserNode = node.getKind(AS3NodeKind.TYPE);
 		if (t)
@@ -53,7 +53,7 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * @private
 	 */	
-	public function set type(value:String):void
+	public function set returnType(value:String):void
 	{
 		// lambda/name-type-int/type
 		var nameTypeInit:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);

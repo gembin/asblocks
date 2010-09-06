@@ -26,6 +26,7 @@ import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IClassTypeNode;
+import org.teotigraphix.asblocks.api.IFieldNode;
 import org.teotigraphix.asblocks.api.IMethodNode;
 import org.teotigraphix.asblocks.api.Modifier;
 import org.teotigraphix.asblocks.api.Visibility;
@@ -166,6 +167,28 @@ public class ClassTypeNode extends TypeNode
 		return result;
 	}
 	
+	//----------------------------------
+	//  fields
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.ITypeNode#fields
+	 */
+	public function get fields():Vector.<IFieldNode>
+	{
+		var result:Vector.<IFieldNode> = new Vector.<IFieldNode>();
+		var i:ASTIterator = new ASTIterator(contentNode);
+		while (i.hasNext())
+		{
+			var member:IParserNode = i.next();
+			if (member.isKind(AS3NodeKind.FIELD_LIST))
+			{
+				result.push(new FieldNode(member));
+			}
+		}
+		return result;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -274,12 +297,73 @@ public class ClassTypeNode extends TypeNode
 		return method;
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  IClassTypeNode API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#newField()
+	 */
+	public function newField(name:String, 
+							 visibility:Visibility, 
+							 type:String):IFieldNode
+	{
+		var field:IFieldNode = ASTBuilder.newField(name, visibility, type);
+		addField(field);
+		return field;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#getField()
+	 */
+	public function getField(name:String):IFieldNode
+	{
+		var i:ASTIterator = new ASTIterator(contentNode);
+		while (i.hasNext())
+		{
+			var member:IParserNode = i.next();
+			if (member.isKind(AS3NodeKind.FIELD_LIST))
+			{
+				var field:IFieldNode = new FieldNode(member);
+				if (field.name == name)
+				{
+					return field;
+				}
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * @private
 	 */
-	public function addMethod(method:IMethodNode):void
+	public function addField(field:IFieldNode):void
 	{
-		ASTUtil.addChildWithIndentation(contentNode, method.node);
+		ASTUtil.addChildWithIndentation(contentNode, field.node);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#removeField()
+	 */
+	public function removeField(name:String):Boolean
+	{
+		var i:ASTIterator = new ASTIterator(contentNode);
+		while (i.hasNext())
+		{
+			var member:IParserNode = i.next();
+			if (member.isKind(AS3NodeKind.FIELD_LIST))
+			{
+				var field:IFieldNode = new FieldNode(member);
+				if (field.name == name)
+				{
+					i.remove();
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	//--------------------------------------------------------------------------

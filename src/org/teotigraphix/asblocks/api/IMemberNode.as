@@ -71,12 +71,12 @@ public interface IMemberNode
 	/**
 	 * TODO Docme
 	 */
-	//function get type():String;
+	function get type():String;
 	
 	/**
 	 * @private
 	 */
-	//function set type(value:String):void;
+	function set type(value:String):void;
 	
 	//----------------------------------
 	//  isStatic

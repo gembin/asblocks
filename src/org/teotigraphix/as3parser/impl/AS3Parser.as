@@ -17,10 +17,6 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-// _FIXME reimpl mod-list
-// FIXME reimpl meta-list
-// FIXME reimpl accessor-role to FUNCTION where GET | SET is consumed
-
 package org.teotigraphix.as3parser.impl
 {
 

@@ -82,7 +82,7 @@ public class TestLiteralNodes
 	{
 		var expression:IFunctionLiteralNode = factory.newFunctionLiteral();
 		
-		expression.type = "my.domain.Type";
+		expression.returnType = "my.domain.Type";
 		expression.addParameter("arg0", "String");
 		expression.addParameter("arg1", "int", "0");
 		

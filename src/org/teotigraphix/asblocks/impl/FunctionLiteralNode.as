@@ -84,23 +84,23 @@ public class FunctionLiteralNode extends ExpressionNode
 	}
 	
 	//----------------------------------
-	//  type
+	//  returnType
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#type
+	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#returnType
 	 */
-	public function get type():String
+	public function get returnType():String
 	{
-		return functionMixin.type;
+		return functionMixin.returnType;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set type(value:String):void
+	public function set returnType(value:String):void
 	{
-		functionMixin.type = value;
+		functionMixin.returnType = value;
 	}
 	
 	//--------------------------------------------------------------------------

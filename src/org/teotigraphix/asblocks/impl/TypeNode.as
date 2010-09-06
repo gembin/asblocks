@@ -180,6 +180,14 @@ public class TypeNode extends ScriptNode
 	}
 	
 	/**
+	 * @private
+	 */
+	public function addMethod(method:IMethodNode):void
+	{
+		ASTUtil.addChildWithIndentation(contentNode, method.node);
+	}
+	
+	/**
 	 * @copy org.teotigraphix.asblocks.api.ITypeNode#removeMethod()
 	 */
 	public function removeMethod(name:String):Boolean
