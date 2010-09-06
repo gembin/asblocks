@@ -20,7 +20,6 @@
 package org.teotigraphix.as3parser.impl
 {
 
-import org.teotigraphix.as3nodes.impl.ParserFactory;
 import org.teotigraphix.as3parser.api.IParser;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;

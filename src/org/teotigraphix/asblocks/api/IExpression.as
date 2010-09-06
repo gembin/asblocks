@@ -20,8 +20,6 @@
 package org.teotigraphix.asblocks.api
 {
 
-import org.teotigraphix.as3nodes.api.IScriptNode;
-
 /**
  * The supertype for all interfaces which represent expressions. 
  * 
@@ -29,7 +27,7 @@ import org.teotigraphix.as3nodes.api.IScriptNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IExpression extends org.teotigraphix.asblocks.api.IScriptNode
+public interface IExpression extends IScriptNode
 {
 	
 }

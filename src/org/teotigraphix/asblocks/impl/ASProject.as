@@ -63,6 +63,31 @@ public class ASProject implements IASProject
 		return _compilationUnits;
 	}
 	
+	//----------------------------------
+	//  outputLocation
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _outputLocation:String;
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.IASProject#outputLocation
+	 */
+	public function get outputLocation():String
+	{
+		return _outputLocation;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set outputLocation(value:String):void
+	{
+		_outputLocation = value;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

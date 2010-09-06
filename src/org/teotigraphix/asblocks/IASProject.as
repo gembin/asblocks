@@ -62,12 +62,12 @@ public interface IASProject
 	/**
 	 * TODO Docme
 	 */
-	//function get outputLocation():String;
+	function get outputLocation():String;
 	
 	/**
 	 * @private
 	 */
-	//function set outputLocation(value:String):void;
+	function set outputLocation(value:String):void;
 	
 	//--------------------------------------------------------------------------
 	//
