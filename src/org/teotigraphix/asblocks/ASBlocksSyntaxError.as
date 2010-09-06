@@ -21,14 +21,19 @@ package org.teotigraphix.asblocks
 {
 
 /**
- * TODO DOCME
+ * Thrown when ActionScript code which is syntactically invalid is encountered.
+ * 
+ * <p>The <code>cause</code>, if defined, may contain further details 
+ * describing what syntactic problem was encountered.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class SyntaxError extends Error
+public class ASBlocksSyntaxError extends Error
 {
+	public var cause:Error;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -38,9 +43,11 @@ public class SyntaxError extends Error
 	/**
 	 * Constructor.
 	 */
-	public function SyntaxError(message:String)
+	public function ASBlocksSyntaxError(message:String, cause:Error = null)
 	{
 		super(message);
+		
+		this.cause = cause;
 	}
 }
 }

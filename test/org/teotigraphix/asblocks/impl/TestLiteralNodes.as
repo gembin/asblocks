@@ -14,7 +14,6 @@ import org.teotigraphix.asblocks.api.IPropertyField;
 import org.teotigraphix.asblocks.api.IStringLiteral;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
-import org.teotigraphix.as3parser.core.ASTPrinter;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.asblocks.ASFactory;
 

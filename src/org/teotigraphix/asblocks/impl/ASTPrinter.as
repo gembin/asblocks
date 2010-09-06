@@ -1,12 +1,16 @@
-package org.teotigraphix.as3parser.core
+package org.teotigraphix.asblocks.impl
 {
+
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.ISourceCode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
+import org.teotigraphix.as3parser.core.SourceCode;
 
 public class ASTPrinter
 {
-	private var sourceCode:SourceCode;
+	private var sourceCode:ISourceCode;
 	
-	public function ASTPrinter(sourceCode:SourceCode)
+	public function ASTPrinter(sourceCode:ISourceCode)
 	{
 		this.sourceCode = sourceCode;
 	}

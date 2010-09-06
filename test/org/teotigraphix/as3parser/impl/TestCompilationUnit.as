@@ -22,7 +22,7 @@ package org.teotigraphix.as3parser.impl
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.ASTPrinter;
+import org.teotigraphix.asblocks.impl.ASTPrinter;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 

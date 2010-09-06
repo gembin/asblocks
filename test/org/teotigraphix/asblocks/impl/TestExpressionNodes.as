@@ -24,7 +24,6 @@ import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.ASTPrinter;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 import org.teotigraphix.asblocks.ASFactory;
@@ -157,23 +156,24 @@ public class TestExpressionNodes
 		
 		assertPrint("{\n}", statement);
 		
-		var ifst:IIfStatement = factory.newIf(factory.newExpression("test()"));
+		var ifst:IIfStatement = statement.newIf(factory.newExpression("test()"));
 		ifst.addStatement("trace('test succeeded')");
 		
-		assertPrint("if (test()) {\n\ttrace('test succeeded');\n}", ifst);
+		assertPrint("{\n\tif (test()) {\n\t\ttrace('test succeeded');\n\t}\n}", ifst);
 		
 		ifst.elseBlock.addStatement("trace('test failed')");
 		
-		assertPrint("if (test()) {\n\ttrace('test succeeded');\n} else " +
-			"{\n\ttrace('test failed');\n}", ifst);
+		assertPrint("{\n\tif (test()) {\n\t\ttrace('test succeeded');\n\t} else " +
+			"{\n\t\ttrace('test failed');\n\t}\n}", ifst);
 		
 		var ifstSub:IIfStatement = ifst.newIf(factory.newExpression("test2()"));
 		ifstSub.addStatement("trace('sub test succeeded')");
 		ifstSub.elseBlock.addStatement("trace('sub test failed')");
 		
-		assertPrint("if (test()) {\n\ttrace('test succeeded');\n\tif (test2()) " +
-			"{\n\t\ttrace('sub test succeeded');\n\t} else {\n\t\ttrace(" +
-			"'sub test failed');\n\t}\n} else {\n\ttrace('test failed');\n}", ifstSub);
+		assertPrint("{\n\tif (test()) {\n\t\ttrace('test succeeded');\n\t\tif " +
+			"(test2()) {\n\t\t\ttrace('sub test succeeded');\n\t\t} else " +
+			"{\n\t\t\ttrace('sub test failed');\n\t\t}\n\t} else {\n\t\ttrace(" +
+			"'test failed');\n\t}\n}", ifstSub);
 	}
 	
 	[Test]

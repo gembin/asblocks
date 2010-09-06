@@ -17,37 +17,34 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks
+package org.teotigraphix.asblocks.impl
 {
 
 import org.teotigraphix.as3parser.api.ISourceCode;
+import org.teotigraphix.asblocks.IASWriter;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 
 /**
- * Parse an entire ActionScript source file from the given 
- * <code>ISourceCode</code>, returning an <code>ICompilationUnit</code> 
- * which details the type  contained in the file.
+ * Implementation of <code>IASWriter</code> API.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IASParser
+public class ASWriter implements IASWriter
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  IASWriter API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Parses the <code>ISourceCode</code>'s source code data.
-	 * 
-	 * @param code An <code>ISourceCode</code> instance holding the source
-	 * code or fileName to parse into an <code>ICompilationUnit</code>.
-	 * @return An <code>ICompilationUnit</code> detailing the source code.
-	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError
+	 * @copy org.teotigraphix.asblocks.IASWriter#write()
 	 */
-	function parse(code:ISourceCode):ICompilationUnit;
+	public function write(code:ISourceCode, unit:ICompilationUnit):void
+	{
+		new ASTPrinter(code).print(unit.node);
+	}
 }
 }

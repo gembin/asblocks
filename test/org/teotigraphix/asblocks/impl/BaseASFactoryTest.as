@@ -3,7 +3,6 @@ package org.teotigraphix.asblocks.impl
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.ASTPrinter;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.impl.AS3Scanner;

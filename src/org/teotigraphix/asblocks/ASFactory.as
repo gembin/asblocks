@@ -46,7 +46,9 @@ import org.teotigraphix.asblocks.api.IPrefixExpression;
 import org.teotigraphix.asblocks.api.ISimpleNameExpression;
 import org.teotigraphix.asblocks.api.IStringLiteral;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
+import org.teotigraphix.asblocks.impl.ASParser;
 import org.teotigraphix.asblocks.impl.ASTBuilder;
+import org.teotigraphix.asblocks.impl.ASWriter;
 import org.teotigraphix.asblocks.impl.ArrayAccessExpressionNode;
 import org.teotigraphix.asblocks.impl.ArrayLiteralNode;
 import org.teotigraphix.asblocks.impl.BooleanLiteralNode;
@@ -532,13 +534,23 @@ public class ASFactory
 		return new StatementList(ast);
 	}
 	
+	
 	/**
 	 * TODO DOCME
 	 */
-	public function newIf(condition:IExpression):IIfStatement
+	public function newParser():IASParser
 	{
-		var ast:IParserNode = ASTBuilder.newIf(condition.node);
-		return new IfStatementNode(ast);
+		return new ASParser();
 	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newWriter():IASWriter
+	{
+		return new ASWriter();
+	}
+
+	
 }
 }

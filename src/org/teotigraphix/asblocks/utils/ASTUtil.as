@@ -22,9 +22,16 @@ package org.teotigraphix.asblocks.utils
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.ISourceCode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
+import org.teotigraphix.as3parser.errors.NullTokenError;
+import org.teotigraphix.as3parser.errors.UnExpectedTokenError;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.as3parser.impl.AS3Parser;
+import org.teotigraphix.as3parser.impl.AS3Scanner;
+import org.teotigraphix.asblocks.ASBlocksSyntaxError;
+import org.teotigraphix.asblocks.impl.ASTBuilder;
 import org.teotigraphix.asblocks.impl.TokenBuilder;
 
 /**
@@ -419,5 +426,45 @@ public class ASTUtil
 		}
 		return buffer;
 	}
+	
+	public static function parse(code:ISourceCode):AS3Parser
+	{
+		var parser:AS3Parser = new AS3Parser();
+		var source:String = code.code;
+		source = source.split("\r\n").join("\n");
+		parser.scanner.setLines(Vector.<String>(source.split("\n")));
+		return parser;
+		
+	}
+	
+	public static function constructSyntaxError(statement:String, 
+												parser:AS3Parser,
+												cause:Error):ASBlocksSyntaxError
+	{
+		var message:String = "";
+		if (cause is UnExpectedTokenError)
+		{
+			message = cause.message;
+		}
+		else if (cause is NullTokenError)
+		{
+			message = cause.message;
+		}
+		else
+		{
+			if (!statement)
+			{
+				message = "";
+			}
+			else
+			{
+				message = "Problem parsing " + ASTBuilder.escapeString(statement);
+			}
+		}
+		return new ASBlocksSyntaxError(message, cause);
+	}
+	
+	
+	
 }
 }

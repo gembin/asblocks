@@ -17,37 +17,48 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks
+package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
+import org.teotigraphix.as3parser.errors.UnExpectedTokenError;
+import org.teotigraphix.as3parser.impl.AS3Parser;
+import org.teotigraphix.asblocks.IASParser;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
- * Parse an entire ActionScript source file from the given 
- * <code>ISourceCode</code>, returning an <code>ICompilationUnit</code> 
- * which details the type  contained in the file.
+ * Implementation of the <code>IASParser</code> API.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IASParser
+public class ASParser implements IASParser
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  IASParser API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Parses the <code>ISourceCode</code>'s source code data.
-	 * 
-	 * @param code An <code>ISourceCode</code> instance holding the source
-	 * code or fileName to parse into an <code>ICompilationUnit</code>.
-	 * @return An <code>ICompilationUnit</code> detailing the source code.
-	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError
+	 * @copy org.teotigraphix.asblocks.IASParser#parse()
 	 */
-	function parse(code:ISourceCode):ICompilationUnit;
+	public function parse(code:ISourceCode):ICompilationUnit
+	{
+		var parser:AS3Parser = ASTUtil.parse(code);
+		var ast:IParserNode;
+		try
+		{
+			ast = parser.parseCompilationUnit();
+		}
+		catch (e:UnExpectedTokenError)
+		{
+			throw ASTUtil.constructSyntaxError(null, parser, e);
+		}
+		return new CompilationUnitNode(ast);
+	}
 }
 }
