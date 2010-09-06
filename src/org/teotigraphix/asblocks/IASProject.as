@@ -20,6 +20,8 @@
 package org.teotigraphix.asblocks
 {
 
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+
 /**
  * TODO DOCME
  * 
@@ -29,6 +31,83 @@ package org.teotigraphix.asblocks
  */
 public interface IASProject
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
+	//----------------------------------
+	//  compilationUnits
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function get compilationUnits():Vector.<ICompilationUnit>;
+	
+	//----------------------------------
+	//  classPathEntries
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	//function get classPathEntries():Vector.<IClassPathEntry>;
+	
+	//----------------------------------
+	//  outputLocation
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	//function get outputLocation():String;
+	
+	/**
+	 * @private
+	 */
+	//function set outputLocation(value:String):void;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newClass(qualifiedName:String):ICompilationUnit;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function newInterface(qualifiedName:String):ICompilationUnit;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function addCompilationUnit(unit:ICompilationUnit):void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function removeCompilationUnit(unit:ICompilationUnit):void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	//function addClassPath(classPath:String):void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	//function removeClassPath(classPath:String):void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	//function writeAll():void;
 }
 }
