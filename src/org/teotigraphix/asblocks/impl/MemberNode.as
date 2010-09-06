@@ -23,21 +23,21 @@ package org.teotigraphix.asblocks.impl
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
-import org.teotigraphix.asblocks.api.IMemberNode;
+import org.teotigraphix.asblocks.api.IMember;
 import org.teotigraphix.asblocks.api.Modifier;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.asblocks.utils.ModifierUtil;
 
 /**
- * The <code>IMemberNode</code> implementation.
+ * The <code>IMember</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class MemberNode extends ScriptNode 
-	implements IMemberNode
+	implements IMember
 {
 	//--------------------------------------------------------------------------
 	//
@@ -47,7 +47,7 @@ public class MemberNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IMemberNode API :: Properties
+	//  IMember API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -56,7 +56,7 @@ public class MemberNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IMemberNode#visibility
+	 * @copy org.teotigraphix.asblocks.api.IMember#visibility
 	 */
 	public function get visibility():Visibility
 	{
@@ -76,7 +76,7 @@ public class MemberNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IMemberNode#name
+	 * @copy org.teotigraphix.asblocks.api.IMember#name
 	 */
 	public function get name():String
 	{
@@ -99,7 +99,7 @@ public class MemberNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IMemberNode#type
+	 * @copy org.teotigraphix.asblocks.api.IMember#type
 	 */
 	public function get type():String
 	{
@@ -122,7 +122,7 @@ public class MemberNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IMemberNode#isStatic
+	 * @copy org.teotigraphix.asblocks.api.IMember#isStatic
 	 */
 	public function get isStatic():Boolean
 	{
@@ -153,7 +153,7 @@ public class MemberNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IMemberNode API :: Methods
+	//  IMember API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	

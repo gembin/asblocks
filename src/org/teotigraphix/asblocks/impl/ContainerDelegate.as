@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IBreakStatementNode;
-import org.teotigraphix.asblocks.api.IContinueStatementNode;
-import org.teotigraphix.asblocks.api.IDeclarationStatementNode;
-import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatementNode;
-import org.teotigraphix.asblocks.api.IDoWhileStatementNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionStatementNode;
-import org.teotigraphix.asblocks.api.IIfStatementNode;
-import org.teotigraphix.asblocks.api.IReturnStatementNode;
+import org.teotigraphix.asblocks.api.IBreakStatement;
+import org.teotigraphix.asblocks.api.IContinueStatement;
+import org.teotigraphix.asblocks.api.IDeclarationStatement;
+import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatement;
+import org.teotigraphix.asblocks.api.IDoWhileStatement;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IExpressionStatement;
+import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.IReturnStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
-import org.teotigraphix.asblocks.api.IStatementNode;
-import org.teotigraphix.asblocks.api.ISwitchStatementNode;
-import org.teotigraphix.asblocks.api.IThrowStatementNode;
+import org.teotigraphix.asblocks.api.IStatement;
+import org.teotigraphix.asblocks.api.ISwitchStatement;
+import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
@@ -67,7 +67,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function addStatement(statement:String):IStatementNode
+	public function addStatement(statement:String):IStatement
 	{
 		return statementContainer.addStatement(statement);
 	}
@@ -75,7 +75,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newExpressionStatement(statement:String):IExpressionStatementNode
+	public function newExpressionStatement(statement:String):IExpressionStatement
 	{
 		return statementContainer.newExpressionStatement(statement);
 	}
@@ -83,7 +83,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newBreak():IBreakStatementNode
+	public function newBreak():IBreakStatement
 	{
 		return statementContainer.newBreak();
 	}
@@ -91,7 +91,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newContinue():IContinueStatementNode
+	public function newContinue():IContinueStatement
 	{
 		return statementContainer.newContinue();
 	}
@@ -99,7 +99,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newDeclaration(assignment:IExpressionNode):IDeclarationStatementNode
+	public function newDeclaration(assignment:IExpression):IDeclarationStatement
 	{
 		return statementContainer.newDeclaration(assignment);
 	}
@@ -107,7 +107,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatementNode
+	public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement
 	{
 		return statementContainer.newDefaultXMLNamespace(namespace);
 	}
@@ -115,7 +115,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newDoWhile(condition:IExpressionNode):IDoWhileStatementNode
+	public function newDoWhile(condition:IExpression):IDoWhileStatement
 	{
 		return statementContainer.newDoWhile(condition);
 	}
@@ -123,7 +123,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newIf(condition:IExpressionNode):IIfStatementNode
+	public function newIf(condition:IExpression):IIfStatement
 	{
 		return statementContainer.newIf(condition);
 	}
@@ -131,7 +131,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * @private
 	 */
-	public function newReturn(expression:IExpressionNode = null):IReturnStatementNode
+	public function newReturn(expression:IExpression = null):IReturnStatement
 	{
 		return statementContainer.newReturn(expression);
 	}
@@ -139,7 +139,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * @private
 	 */
-	public function newSwitch(condition:IExpressionNode):ISwitchStatementNode
+	public function newSwitch(condition:IExpression):ISwitchStatement
 	{
 		return statementContainer.newSwitch(condition);
 	}
@@ -147,7 +147,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * @private
 	 */
-	public function newThrow(expression:IExpressionNode):IThrowStatementNode
+	public function newThrow(expression:IExpression):IThrowStatement
 	{
 		return statementContainer.newThrow(expression);
 	}

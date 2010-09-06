@@ -49,7 +49,7 @@ public class ScriptNode implements IScriptNode
 	private var _node:IParserNode;
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IScriptFragmentNode#node
+	 * @copy org.teotigraphix.asblocks.api.IScriptNode#node
 	 */
 	public function get node():IParserNode
 	{

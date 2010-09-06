@@ -20,9 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
-import org.teotigraphix.asblocks.api.ISimpleNameExpressionNode;
+import org.teotigraphix.asblocks.api.ISimpleNameExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
@@ -70,12 +70,12 @@ public class FieldAccessExpression extends ExpressionNode
 	/**
 	 * @private
 	 */
-	private var _target:IExpressionNode;
+	private var _target:IExpression;
 	
 	/**
 	 * doc
 	 */
-	public function get target():IExpressionNode
+	public function get target():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -83,7 +83,7 @@ public class FieldAccessExpression extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set target(value:IExpressionNode):void
+	public function set target(value:IExpression):void
 	{
 		node.setChildAt(value.node, 0);
 	}

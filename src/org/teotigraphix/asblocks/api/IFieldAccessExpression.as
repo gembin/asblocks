@@ -28,7 +28,7 @@ package org.teotigraphix.asblocks.api
  * @productversion 1.0
  */
 public interface IFieldAccessExpression 
-	extends IExpressionNode, IScriptNode
+	extends IExpression, IScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -57,11 +57,11 @@ public interface IFieldAccessExpression
 	/**
 	 * TODO Docme
 	 */
-	function get target():IExpressionNode;
+	function get target():IExpression;
 	
 	/**
 	 * @private
 	 */
-	function set target(value:IExpressionNode):void;
+	function set target(value:IExpression):void;
 }
 }

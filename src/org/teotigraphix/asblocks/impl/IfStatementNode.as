@@ -20,28 +20,28 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IBlockNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IIfStatementNode;
+import org.teotigraphix.asblocks.api.IBlock;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
-import org.teotigraphix.asblocks.api.IStatementNode;
+import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IIfStatementNode</code> implementation.
+ * The <code>IIfStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class IfStatementNode extends ContainerDelegate 
-	implements IIfStatementNode
+	implements IIfStatement
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IIfStatementNode API :: Properties
+	//  IIfStatement API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -67,12 +67,12 @@ public class IfStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */
-	private var _elseBlock:IBlockNode;
+	private var _elseBlock:IBlock;
 	
 	/**
 	 * doc
 	 */
-	public function get elseBlock():IBlockNode
+	public function get elseBlock():IBlock
 	{
 		var eclause:IParserNode = elseClause;
 		if (!eclause)
@@ -87,19 +87,19 @@ public class IfStatementNode extends ContainerDelegate
 			ASTUtil.increaseIndentAfterFirstLine(block, indent);
 		}
 		
-		var stmt:IStatementNode = StatementBuilder.build(eclause.getFirstChild());
-		if (!(stmt is IBlockNode))
+		var stmt:IStatement = StatementBuilder.build(eclause.getFirstChild());
+		if (!(stmt is IBlock))
 		{
 			throw new Error("Expected a block"); // SyntaxError
 		}
 		
-		return stmt as IBlockNode;
+		return stmt as IBlock;
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set elseBlock(value:IBlockNode):void
+	public function set elseBlock(value:IBlock):void
 	{
 		if (_elseBlock == value)
 			return;
@@ -111,7 +111,7 @@ public class IfStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */	
-	public function set thenStatement(value:IStatementNode):void
+	public function set thenStatement(value:IStatement):void
 	{
 		var thenAST:IParserNode = value.node;
 		node.setChildAt(thenAST, 1);
@@ -126,7 +126,7 @@ public class IfStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */
-	private var _condition:IExpressionNode;
+	private var _condition:IExpression;
 	
 	private function get elseClause():IParserNode
 	{
@@ -141,7 +141,7 @@ public class IfStatementNode extends ContainerDelegate
 	/**
 	 * doc
 	 */
-	public function get condition():IExpressionNode
+	public function get condition():IExpression
 	{
 		return ExpressionBuilder.build(conditionNode.getFirstChild());
 	}
@@ -149,7 +149,7 @@ public class IfStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */	
-	public function set condition(value:IExpressionNode):void
+	public function set condition(value:IExpression):void
 	{
 		conditionNode.setChildAt(value.node, 0);
 	}

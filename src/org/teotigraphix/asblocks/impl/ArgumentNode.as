@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IArgumentNode;
+import org.teotigraphix.asblocks.api.IArgument;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IArgumentNode</code> implementation.
+ * The <code>IArgument</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ArgumentNode extends ScriptNode 
-	implements IArgumentNode
+	implements IArgument
 {
 	//--------------------------------------------------------------------------
 	//

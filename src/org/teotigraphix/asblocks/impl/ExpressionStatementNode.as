@@ -20,20 +20,20 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionStatementNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IExpressionStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 /**
- * The <code>IExpressionStatementNode</code> implementation.
+ * The <code>IExpressionStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ExpressionStatementNode extends ScriptNode 
-	implements IExpressionStatementNode
+	implements IExpressionStatement
 {
 	//--------------------------------------------------------------------------
 	//
@@ -48,7 +48,7 @@ public class ExpressionStatementNode extends ScriptNode
 	/**
 	 * doc
 	 */
-	public function get expression():IExpressionNode
+	public function get expression():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}

@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IStatementContainer;
-import org.teotigraphix.asblocks.api.ISwitchDefaultNode;
+import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>ISwitchDefaultNode</code> implementation.
+ * The <code>ISwitchDefault</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class SwitchDefaultNode extends ContainerDelegate implements ISwitchDefaultNode
+public class SwitchDefaultNode extends ContainerDelegate implements ISwitchDefault
 {
 	//--------------------------------------------------------------------------
 	//

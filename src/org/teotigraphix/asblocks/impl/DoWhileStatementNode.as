@@ -20,20 +20,20 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IDoWhileStatementNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IDoWhileStatement;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IDoWhileStatementNode</code> implementation.
+ * The <code>IDoWhileStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class DoWhileStatementNode extends ContainerDelegate 
-	implements IDoWhileStatementNode
+	implements IDoWhileStatement
 {
 	//--------------------------------------------------------------------------
 	//
@@ -58,7 +58,7 @@ public class DoWhileStatementNode extends ContainerDelegate
 	/**
 	 * doc
 	 */
-	public function get condition():IExpressionNode
+	public function get condition():IExpression
 	{
 		return ExpressionBuilder.build(conditionNode.getFirstChild());
 	}
@@ -66,7 +66,7 @@ public class DoWhileStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */	
-	public function set condition(value:IExpressionNode):void
+	public function set condition(value:IExpression):void
 	{
 		conditionNode.setChildAt(value.node, 1);
 	}

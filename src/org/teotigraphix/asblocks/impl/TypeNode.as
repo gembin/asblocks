@@ -23,21 +23,21 @@ package org.teotigraphix.asblocks.impl
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
-import org.teotigraphix.asblocks.api.IMethodNode;
-import org.teotigraphix.asblocks.api.ITypeNode;
+import org.teotigraphix.asblocks.api.IMethod;
+import org.teotigraphix.asblocks.api.IType;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.asblocks.utils.ModifierUtil;
 
 /**
- * The <code>ITypeNode</code> implementation.
+ * The <code>IType</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class TypeNode extends ScriptNode 
-	implements ITypeNode
+	implements IType
 {
 	//--------------------------------------------------------------------------
 	//
@@ -55,7 +55,7 @@ public class TypeNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  ITypeNode API :: Properties
+	//  IType API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -64,7 +64,7 @@ public class TypeNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#name
+	 * @copy org.teotigraphix.asblocks.api.IType#name
 	 */
 	public function get name():String
 	{
@@ -87,7 +87,7 @@ public class TypeNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#visibility
+	 * @copy org.teotigraphix.asblocks.api.IType#visibility
 	 */
 	public function get visibility():Visibility
 	{
@@ -107,11 +107,11 @@ public class TypeNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#methods
+	 * @copy org.teotigraphix.asblocks.api.IType#methods
 	 */
-	public function get methods():Vector.<IMethodNode>
+	public function get methods():Vector.<IMethod>
 	{
-		var result:Vector.<IMethodNode> = new Vector.<IMethodNode>();
+		var result:Vector.<IMethod> = new Vector.<IMethod>();
 		var i:ASTIterator = new ASTIterator(contentNode);
 		while (i.hasNext())
 		{
@@ -142,24 +142,24 @@ public class TypeNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  ITypeNode API :: Methods
+	//  IType API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#newMethod()
+	 * @copy org.teotigraphix.asblocks.api.IType#newMethod()
 	 */
 	public function newMethod(name:String, 
 							  visibility:Visibility, 
-							  returnType:String):IMethodNode
+							  returnType:String):IMethod
 	{
 		return null;
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#getMethod()
+	 * @copy org.teotigraphix.asblocks.api.IType#getMethod()
 	 */
-	public function getMethod(name:String):IMethodNode
+	public function getMethod(name:String):IMethod
 	{
 		var i:ASTIterator = new ASTIterator(contentNode);
 		while (i.hasNext())
@@ -169,7 +169,7 @@ public class TypeNode extends ScriptNode
 				|| member.isKind(AS3NodeKind.GET)
 				|| member.isKind(AS3NodeKind.SET))
 			{
-				var meth:IMethodNode = new MethodNode(member);
+				var meth:IMethod = new MethodNode(member);
 				if (meth.name == name)
 				{
 					return meth;
@@ -182,13 +182,13 @@ public class TypeNode extends ScriptNode
 	/**
 	 * @private
 	 */
-	public function addMethod(method:IMethodNode):void
+	public function addMethod(method:IMethod):void
 	{
 		ASTUtil.addChildWithIndentation(contentNode, method.node);
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ITypeNode#removeMethod()
+	 * @copy org.teotigraphix.asblocks.api.IType#removeMethod()
 	 */
 	public function removeMethod(name:String):Boolean
 	{
@@ -200,7 +200,7 @@ public class TypeNode extends ScriptNode
 				|| member.isKind(AS3NodeKind.GET)
 				|| member.isKind(AS3NodeKind.SET))
 			{
-				var meth:IMethodNode = new MethodNode(member);
+				var meth:IMethod = new MethodNode(member);
 				if (meth.name == name)
 				{
 					i.remove();

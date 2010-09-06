@@ -9,6 +9,7 @@ import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.impl.AS3Scanner;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.utils.ASTUtil;
+import org.teotigraphix.asblocks.ASFactory;
 
 public class BaseASFactoryTest
 {

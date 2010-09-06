@@ -20,25 +20,25 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IPackageNode;
-import org.teotigraphix.asblocks.api.ITypeNode;
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.api.IPackage;
+import org.teotigraphix.asblocks.api.IType;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>ICompilationUnitNode</code> implementation.
+ * The <code>ICompilationUnit</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class CompilationUnitNode extends ScriptNode 
-	implements ICompilationUnitNode
+	implements ICompilationUnit
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ICompilationUnitNode API :: Properties
+	//  ICompilationUnit API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -47,7 +47,7 @@ public class CompilationUnitNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ICompilationUnitNode#packageName
+	 * @copy org.teotigraphix.asblocks.api.ICompilationUnit#packageName
 	 */
 	public function get packageName():String
 	{
@@ -67,9 +67,9 @@ public class CompilationUnitNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ICompilationUnitNode#packageName
+	 * @copy org.teotigraphix.asblocks.api.ICompilationUnit#packageName
 	 */
-	public function get packageNode():IPackageNode
+	public function get packageNode():IPackage
 	{
 		var ast:IParserNode = node.getKind(AS3NodeKind.PACKAGE);
 		if (!ast)
@@ -84,11 +84,11 @@ public class CompilationUnitNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ICompilationUnitNode#packageName
+	 * @copy org.teotigraphix.asblocks.api.ICompilationUnit#packageName
 	 */
-	public function get typeNode():ITypeNode
+	public function get typeNode():IType
 	{
-		var pkg:IPackageNode = packageNode;
+		var pkg:IPackage = packageNode;
 		if (!pkg)
 		{
 			return null;

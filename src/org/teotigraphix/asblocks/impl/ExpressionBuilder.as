@@ -1,13 +1,13 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 public class ExpressionBuilder
 {
-	public static function build(ast:IParserNode):IExpressionNode
+	public static function build(ast:IParserNode):IExpression
 	{
 		switch (ast.kind)
 		{

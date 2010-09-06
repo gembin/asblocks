@@ -3,8 +3,8 @@ package org.teotigraphix.asblocks.impl
 
 import org.flexunit.Assert;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IPackageNode;
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.api.IPackage;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
@@ -13,10 +13,10 @@ public class TestPackageNode extends BaseASFactoryTest
 	[Test]
 	public function testPackageNode():void
 	{
-		var unit:ICompilationUnitNode = project.newClass("A");
+		var unit:ICompilationUnit = project.newClass("A");
 		
 		// test packageNode
-		var packageNode:IPackageNode = unit.packageNode;
+		var packageNode:IPackage = unit.packageNode;
 		Assert.assertNotNull(packageNode);
 		// test packageName get /set
 		Assert.assertNull(packageNode.name);
@@ -31,7 +31,7 @@ public class TestPackageNode extends BaseASFactoryTest
 	[Test]
 	public function testPackageNode_addImport():void
 	{
-		var unit:ICompilationUnitNode = project.newClass("A");
+		var unit:ICompilationUnit = project.newClass("A");
 		
 		unit.packageNode.addImports("my.other.B");
 		unit.packageNode.addImports("my.other.C");
@@ -44,7 +44,7 @@ public class TestPackageNode extends BaseASFactoryTest
 	[Test]
 	public function testPackageNode_removeImport():void
 	{
-		var unit:ICompilationUnitNode = project.newClass("A");
+		var unit:ICompilationUnit = project.newClass("A");
 		
 		unit.packageNode.addImports("my.other.B");
 		unit.packageNode.addImports("my.other.C");
@@ -66,7 +66,7 @@ public class TestPackageNode extends BaseASFactoryTest
 	[Test]
 	public function testPackageNode_findImports():void
 	{
-		var unit:ICompilationUnitNode = project.newClass("A");
+		var unit:ICompilationUnit = project.newClass("A");
 		
 		unit.packageNode.addImports("my.other.B");
 		unit.packageNode.addImports("my.other.C");

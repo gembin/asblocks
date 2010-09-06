@@ -24,19 +24,19 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
-import org.teotigraphix.asblocks.api.IPackageNode;
-import org.teotigraphix.asblocks.api.ITypeNode;
+import org.teotigraphix.asblocks.api.IPackage;
+import org.teotigraphix.asblocks.api.IType;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
- * The <code>IPackageNode</code> implementation.
+ * The <code>IPackage</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class PackageNode extends ScriptNode 
-	implements IPackageNode
+	implements IPackage
 {
 	//--------------------------------------------------------------------------
 	//
@@ -62,7 +62,7 @@ public class PackageNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IPackageNode API :: Properties
+	//  IPackage API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -71,7 +71,7 @@ public class PackageNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPackageNode#name
+	 * @copy org.teotigraphix.asblocks.api.IPackage#name
 	 */
 	public function get name():String
 	{
@@ -122,9 +122,9 @@ public class PackageNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPackageNode#typeNode
+	 * @copy org.teotigraphix.asblocks.api.IPackage#typeNode
 	 */
-	public function get typeNode():ITypeNode
+	public function get typeNode():IType
 	{
 		var content:IParserNode = contentNode;
 		if (content.hasKind(AS3NodeKind.CLASS))
@@ -158,12 +158,12 @@ public class PackageNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IPackageNode API :: Methods
+	//  IPackage API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPackageNode#addImports()
+	 * @copy org.teotigraphix.asblocks.api.IPackage#addImports()
 	 */
 	public function addImports(name:String):void
 	{
@@ -173,7 +173,7 @@ public class PackageNode extends ScriptNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPackageNode#removeImport()
+	 * @copy org.teotigraphix.asblocks.api.IPackage#removeImport()
 	 */
 	public function removeImport(name:String):Boolean
 	{
@@ -191,7 +191,7 @@ public class PackageNode extends ScriptNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPackageNode#findImports()
+	 * @copy org.teotigraphix.asblocks.api.IPackage#findImports()
 	 */
 	public function findImports():Vector.<String>
 	{

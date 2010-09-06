@@ -20,24 +20,23 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IBlockNode;
-import org.teotigraphix.asblocks.api.IBreakStatementNode;
-import org.teotigraphix.asblocks.api.IContinueStatementNode;
-import org.teotigraphix.asblocks.api.IDeclarationStatementNode;
-import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatementNode;
-import org.teotigraphix.asblocks.api.IDoWhileStatementNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionStatementNode;
-import org.teotigraphix.asblocks.api.IIfStatementNode;
-import org.teotigraphix.asblocks.api.IReturnStatementNode;
-import org.teotigraphix.asblocks.api.IStatementContainer;
-import org.teotigraphix.asblocks.api.IStatementNode;
-import org.teotigraphix.asblocks.api.ISwitchStatementNode;
-import org.teotigraphix.asblocks.api.IThrowStatementNode;
-import org.teotigraphix.asblocks.utils.ASTUtil;
-import org.teotigraphix.as3nodes.impl.AS3Factory;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.asblocks.api.IBlock;
+import org.teotigraphix.asblocks.api.IBreakStatement;
+import org.teotigraphix.asblocks.api.IContinueStatement;
+import org.teotigraphix.asblocks.api.IDeclarationStatement;
+import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatement;
+import org.teotigraphix.asblocks.api.IDoWhileStatement;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IExpressionStatement;
+import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.IReturnStatement;
+import org.teotigraphix.asblocks.api.IStatement;
+import org.teotigraphix.asblocks.api.IStatementContainer;
+import org.teotigraphix.asblocks.api.ISwitchStatement;
+import org.teotigraphix.asblocks.api.IThrowStatement;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IStatementContainer</code> implementation.
@@ -46,7 +45,7 @@ import org.teotigraphix.as3parser.impl.AS3FragmentParser;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class StatementList extends ContainerDelegate implements IBlockNode
+public class StatementList extends ContainerDelegate implements IBlock
 {
 	override protected function get statementContainer():IStatementContainer
 	{
@@ -70,7 +69,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function addStatement(statement:String):IStatementNode
+	override public function addStatement(statement:String):IStatement
 	{
 		var stmt:IParserNode = AS3FragmentParser.parseExpressionStatement(statement);
 		stmt.stopToken.next = null;
@@ -81,7 +80,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newBreak():IBreakStatementNode
+	override public function newBreak():IBreakStatement
 	{
 		var ast:IParserNode = ASTBuilder.newBreak();
 		_addStatement(ast);
@@ -91,7 +90,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newContinue():IContinueStatementNode
+	override public function newContinue():IContinueStatement
 	{
 		var ast:IParserNode = ASTBuilder.newContinue();
 		_addStatement(ast);
@@ -101,7 +100,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newDeclaration(assignment:IExpressionNode):IDeclarationStatementNode
+	override public function newDeclaration(assignment:IExpression):IDeclarationStatement
 	{
 		var ast:IParserNode = ASTBuilder.newDeclaration(assignment.node);
 		_addStatement(ast);
@@ -111,7 +110,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatementNode
+	override public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement
 	{
 		var ast:IParserNode = ASTBuilder.newDefaultXMLNamespace(
 			AS3FragmentParser.parsePrimaryExpression(ASTBuilder.escapeString(namespace)));
@@ -122,7 +121,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newDoWhile(condition:IExpressionNode):IDoWhileStatementNode
+	override public function newDoWhile(condition:IExpression):IDoWhileStatement
 	{
 		var ast:IParserNode = ASTBuilder.newDoWhile(condition.node);
 		_addStatement(ast);
@@ -132,7 +131,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newExpressionStatement(statement:String):IExpressionStatementNode
+	override public function newExpressionStatement(statement:String):IExpressionStatement
 	{
 		var ast:IParserNode = AS3FragmentParser.parseExpressionStatement(statement);
 		_addStatement(ast);
@@ -142,7 +141,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newIf(condition:IExpressionNode):IIfStatementNode
+	override public function newIf(condition:IExpression):IIfStatement
 	{
 		var ifStmt:IParserNode = ASTBuilder.newIf(condition.node);
 		_addStatement(ifStmt);
@@ -152,7 +151,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newReturn(expression:IExpressionNode = null):IReturnStatementNode
+	override public function newReturn(expression:IExpression = null):IReturnStatement
 	{
 		var result:IParserNode = ASTBuilder.newReturn((expression) ? expression.node : null);
 		_addStatement(result);
@@ -162,7 +161,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newSwitch(condition:IExpressionNode):ISwitchStatementNode
+	override public function newSwitch(condition:IExpression):ISwitchStatement
 	{
 		var result:IParserNode = ASTBuilder.newSwitch(condition.node);
 		_addStatement(result);
@@ -172,7 +171,7 @@ public class StatementList extends ContainerDelegate implements IBlockNode
 	/**
 	 * @private
 	 */
-	override public function newThrow(expression:IExpressionNode):IThrowStatementNode
+	override public function newThrow(expression:IExpression):IThrowStatement
 	{
 		var result:IParserNode = ASTBuilder.newThrow(expression.node);
 		_addStatement(result);

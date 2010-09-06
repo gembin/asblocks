@@ -42,7 +42,7 @@ public interface IFunctionCommon
 	/**
 	 * TODO Docme
 	 */
-	function get arguments():Vector.<IArgumentNode>;
+	function get arguments():Vector.<IArgument>;
 	
 	/**
 	 * @private
@@ -72,16 +72,16 @@ public interface IFunctionCommon
 	/**
 	 * TODO Docme
 	 */
-	function addParameter(name:String, type:String, defaultValue:String = null):IArgumentNode;
+	function addParameter(name:String, type:String, defaultValue:String = null):IArgument;
 	
 	/**
 	 * TODO Docme
 	 */
-	function removeParameter(name:String):IArgumentNode;
+	function removeParameter(name:String):IArgument;
 	
 	/**
 	 * TODO Docme
 	 */
-	function addRestParam(name:String):IArgumentNode;
+	function addRestParam(name:String):IArgument;
 }
 }

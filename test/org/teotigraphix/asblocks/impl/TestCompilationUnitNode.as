@@ -5,13 +5,13 @@ import org.flexunit.Assert;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.asblocks.api.IClassTypeNode;
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IPackageNode;
+import org.teotigraphix.asblocks.api.IClassType;
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.api.IPackage;
 
 public class TestCompilationUnitNode extends BaseASFactoryTest
 {
-	private var unit:ICompilationUnitNode;
+	private var unit:ICompilationUnit;
 	
 	[Before]
 	override public function setUp():void
@@ -28,7 +28,7 @@ public class TestCompilationUnitNode extends BaseASFactoryTest
 		var input:String = "package {\n\tpublic class A {\n\t}\n}";
 		
 		// create a package with class
-		var unit:ICompilationUnitNode = project.newClass("A");
+		var unit:ICompilationUnit = project.newClass("A");
 		var result1:String = toElementString(unit);
 		
 		// parse a package with class
@@ -54,7 +54,7 @@ public class TestCompilationUnitNode extends BaseASFactoryTest
 	public function testPackageName():void
 	{
 		// test packageNode
-		var packageNode:IPackageNode = unit.packageNode;
+		var packageNode:IPackage = unit.packageNode;
 		Assert.assertNotNull(packageNode);
 		// test packageName get /set
 		Assert.assertNull(unit.packageName);
@@ -70,7 +70,7 @@ public class TestCompilationUnitNode extends BaseASFactoryTest
 	public function testTypeNode():void
 	{
 		assertNotNull(unit.typeNode);
-		assertTrue(unit.typeNode is IClassTypeNode);
+		assertTrue(unit.typeNode is IClassType);
 	}
 }
 }

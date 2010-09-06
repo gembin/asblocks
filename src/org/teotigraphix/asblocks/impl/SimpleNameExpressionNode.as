@@ -20,22 +20,22 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.ISimpleNameExpressionNode;
+import org.teotigraphix.asblocks.api.ISimpleNameExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>ISimpleNameExpressionNode</code> implementation.
+ * The <code>ISimpleNameExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class SimpleNameExpressionNode extends ExpressionNode 
-	implements ISimpleNameExpressionNode
+	implements ISimpleNameExpression
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ISimpleNameExpressionNode API :: Properties
+	//  ISimpleNameExpression API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -44,7 +44,7 @@ public class SimpleNameExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ISimpleNameExpressionNode#name
+	 * @copy org.teotigraphix.asblocks.api.ISimpleNameExpression#name
 	 */
 	public function get name():String
 	{

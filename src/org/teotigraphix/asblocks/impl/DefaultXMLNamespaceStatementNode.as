@@ -20,18 +20,18 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatementNode;
+import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IDefaultXMLNamespaceStatementNode</code> implementation.
+ * The <code>IDefaultXMLNamespaceStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class DefaultXMLNamespaceStatementNode extends ScriptNode 
-	implements IDefaultXMLNamespaceStatementNode
+	implements IDefaultXMLNamespaceStatement
 {
 	//--------------------------------------------------------------------------
 	//

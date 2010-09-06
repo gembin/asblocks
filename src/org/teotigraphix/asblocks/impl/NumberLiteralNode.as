@@ -20,22 +20,22 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.INumberLiteralNode;
+import org.teotigraphix.asblocks.api.INumberLiteral;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>INumberLiteralNode</code> implementation.
+ * The <code>INumberLiteral</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class NumberLiteralNode extends LiteralNode 
-	implements INumberLiteralNode
+	implements INumberLiteral
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ISimpleNameExpressionNode API :: Properties
+	//  INumberLiteral API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -44,7 +44,7 @@ public class NumberLiteralNode extends LiteralNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.INumberLiteralNode#value
+	 * @copy org.teotigraphix.asblocks.api.INumberLiteral#value
 	 */
 	public function get value():Number
 	{

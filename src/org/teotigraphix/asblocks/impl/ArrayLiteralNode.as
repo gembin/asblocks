@@ -20,25 +20,25 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IArrayLiteralNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IArrayLiteral;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
- * The <code>IArrayLiteralNode</code> implementation.
+ * The <code>IArrayLiteral</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ArrayLiteralNode extends LiteralNode 
-	implements IArrayLiteralNode
+	implements IArrayLiteral
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IArrayLiteralNode API :: Properties
+	//  IArrayLiteral API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -47,11 +47,11 @@ public class ArrayLiteralNode extends LiteralNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IArrayLiteralNode#entries
+	 * @copy org.teotigraphix.asblocks.api.IArrayLiteral#entries
 	 */
-	public function get entries():Vector.<IExpressionNode>
+	public function get entries():Vector.<IExpression>
 	{
-		var entries:Vector.<IExpressionNode> = new Vector.<IExpressionNode>();
+		var entries:Vector.<IExpression> = new Vector.<IExpression>();
 		var i:ASTIterator = new ASTIterator(node);
 		while (i.hasNext()) 
 		{
@@ -76,14 +76,14 @@ public class ArrayLiteralNode extends LiteralNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IArrayLiteralNode API :: Methods
+	//  IArrayLiteral API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IArrayLiteralNode#add()
+	 * @copy org.teotigraphix.asblocks.api.IArrayLiteral#add()
 	 */
-	public function add(expression:IExpressionNode):void
+	public function add(expression:IExpression):void
 	{
 		if (node.numChildren > 0)
 		{
@@ -94,9 +94,9 @@ public class ArrayLiteralNode extends LiteralNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IArrayLiteralNode#remove()
+	 * @copy org.teotigraphix.asblocks.api.IArrayLiteral#remove()
 	 */
-	public function remove(index:int):IExpressionNode
+	public function remove(index:int):IExpression
 	{
 		var old:IParserNode = node.getChild(index);
 		if (node.numChildren - 1 > index)

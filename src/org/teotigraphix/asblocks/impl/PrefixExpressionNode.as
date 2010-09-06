@@ -20,25 +20,25 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IPrefixExpressionNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IPrefixExpression;
 import org.teotigraphix.asblocks.api.PrefixOperator;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.TokenNode;
 
 /**
- * The <code>IPrefixExpressionNode</code> implementation.
+ * The <code>IPrefixExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class PrefixExpressionNode extends ExpressionNode 
-	implements IPrefixExpressionNode
+	implements IPrefixExpression
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IPrefixExpressionNode API :: Properties
+	//  IPrefixExpression API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -47,9 +47,9 @@ public class PrefixExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPrefixExpressionNode#expression
+	 * @copy org.teotigraphix.asblocks.api.IPrefixExpression#expression
 	 */
-	public function get expression():IExpressionNode
+	public function get expression():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -57,7 +57,7 @@ public class PrefixExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set expression(value:IExpressionNode):void
+	public function set expression(value:IExpression):void
 	{
 		node.setChildAt(value.node, 0);
 	}
@@ -67,7 +67,7 @@ public class PrefixExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPrefixExpressionNode#operator
+	 * @copy org.teotigraphix.asblocks.api.IPrefixExpression#operator
 	 */
 	public function get operator():PrefixOperator
 	{

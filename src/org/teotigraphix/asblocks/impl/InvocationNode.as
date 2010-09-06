@@ -20,24 +20,24 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IINvocationNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IINvocation;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
 
 /**
- * The <code>IINvocationNode</code> implementation.
+ * The <code>IINvocation</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class InvocationNode extends ExpressionNode 
-	implements IINvocationNode
+	implements IINvocation
 {
-	protected function setArguments(value:Vector.<IExpressionNode>):void
+	protected function setArguments(value:Vector.<IExpression>):void
 	{
 		var args:IParserNode = node.getKind(AS3NodeKind.ARGUMENTS);
 		
@@ -49,7 +49,7 @@ public class InvocationNode extends ExpressionNode
 		var len:int = value.length;
 		for (var i:int = 0; i < len; i++)
 		{
-			var element:IExpressionNode = value[i] as IExpressionNode;
+			var element:IExpression = value[i] as IExpression;
 			args.addChild(element.node);
 			if (i < len - 1)
 			{
@@ -64,14 +64,14 @@ public class InvocationNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IINvocationNode#arguments
+	 * @copy org.teotigraphix.asblocks.api.IINvocation#arguments
 	 */
-	public function get arguments():Vector.<IExpressionNode>
+	public function get arguments():Vector.<IExpression>
 	{
 		var args:IParserNode = node.getKind(AS3NodeKind.ARGUMENTS);
 		var i:ASTIterator = new ASTIterator(args);
 		
-		var result:Vector.<IExpressionNode> = new Vector.<IExpressionNode>();
+		var result:Vector.<IExpression> = new Vector.<IExpression>();
 		while (i.hasNext())
 		{
 			result.push(ExpressionBuilder.build(i.next()));
@@ -83,7 +83,7 @@ public class InvocationNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set arguments(value:Vector.<IExpressionNode>):void
+	public function set arguments(value:Vector.<IExpression>):void
 	{
 		setArguments(value);
 	}
@@ -93,9 +93,9 @@ public class InvocationNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IINvocationNode#target
+	 * @copy org.teotigraphix.asblocks.api.IINvocation#target
 	 */
-	public function get target():IExpressionNode
+	public function get target():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -103,7 +103,7 @@ public class InvocationNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set target(value:IExpressionNode):void
+	public function set target(value:IExpression):void
 	{
 		node.setChildAt(value.node, 0);
 	}

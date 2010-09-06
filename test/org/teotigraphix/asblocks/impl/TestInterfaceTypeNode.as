@@ -5,13 +5,13 @@ import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertTrue;
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IInterfaceTypeNode;
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.api.IInterfaceType;
 import org.teotigraphix.asblocks.api.Visibility;
 
 public class TestInterfaceTypeNode extends BaseASFactoryTest
 {
-	private var unit:ICompilationUnitNode;
+	private var unit:ICompilationUnit;
 	
 	[Before]
 	override public function setUp():void
@@ -32,7 +32,7 @@ public class TestInterfaceTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_name():void
 	{
-		var typeNode:IInterfaceTypeNode = unit.typeNode as IInterfaceTypeNode;
+		var typeNode:IInterfaceType = unit.typeNode as IInterfaceType;
 		assertEquals("IA", typeNode.name);
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
 		typeNode.name = "ITestA";
@@ -46,7 +46,7 @@ public class TestInterfaceTypeNode extends BaseASFactoryTest
 	{
 		// TODO block adding the same type
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
-		var typeNode:IInterfaceTypeNode = unit.typeNode as IInterfaceTypeNode;
+		var typeNode:IInterfaceType = unit.typeNode as IInterfaceType;
 		typeNode.addSuperInterface("IInterfaceB");
 		assertPrint("package {\n\tpublic interface IA extends IInterfaceB {\n\t}\n}", unit);
 		typeNode.addSuperInterface("IInterfaceC");
@@ -61,7 +61,7 @@ public class TestInterfaceTypeNode extends BaseASFactoryTest
 	public function test_removeSuperInterface():void
 	{
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
-		var typeNode:IInterfaceTypeNode = unit.typeNode as IInterfaceTypeNode;
+		var typeNode:IInterfaceType = unit.typeNode as IInterfaceType;
 		typeNode.addSuperInterface("IInterfaceB");
 		assertPrint("package {\n\tpublic interface IA extends IInterfaceB {\n\t}\n}", unit);
 		typeNode.addSuperInterface("IInterfaceC");

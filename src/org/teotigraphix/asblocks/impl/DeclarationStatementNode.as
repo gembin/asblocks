@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IDeclarationStatementNode;
+import org.teotigraphix.asblocks.api.IDeclarationStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IDeclarationStatementNode</code> implementation.
+ * The <code>IDeclarationStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class DeclarationStatementNode extends ScriptNode 
-	implements IDeclarationStatementNode
+	implements IDeclarationStatement
 {
 	//----------------------------------
 	//  firstVarName

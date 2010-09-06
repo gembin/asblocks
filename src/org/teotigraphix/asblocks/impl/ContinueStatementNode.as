@@ -20,18 +20,18 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IContinueStatementNode;
+import org.teotigraphix.asblocks.api.IContinueStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IContinueStatementNode</code> implementation.
+ * The <code>IContinueStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ContinueStatementNode extends ScriptNode 
-	implements IContinueStatementNode
+	implements IContinueStatement
 {
 	//--------------------------------------------------------------------------
 	//

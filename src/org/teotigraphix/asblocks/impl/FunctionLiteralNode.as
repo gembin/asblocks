@@ -20,34 +20,34 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IArgumentNode;
-import org.teotigraphix.asblocks.api.IBreakStatementNode;
-import org.teotigraphix.asblocks.api.IContinueStatementNode;
-import org.teotigraphix.asblocks.api.IDeclarationStatementNode;
-import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatementNode;
-import org.teotigraphix.asblocks.api.IDoWhileStatementNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionStatementNode;
-import org.teotigraphix.asblocks.api.IFunctionCommon;
-import org.teotigraphix.asblocks.api.IFunctionLiteralNode;
-import org.teotigraphix.asblocks.api.IIfStatementNode;
-import org.teotigraphix.asblocks.api.IReturnStatementNode;
-import org.teotigraphix.asblocks.api.IStatementContainer;
-import org.teotigraphix.asblocks.api.IStatementNode;
-import org.teotigraphix.asblocks.api.ISwitchStatementNode;
-import org.teotigraphix.asblocks.api.IThrowStatementNode;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IArgument;
+import org.teotigraphix.asblocks.api.IBreakStatement;
+import org.teotigraphix.asblocks.api.IContinueStatement;
+import org.teotigraphix.asblocks.api.IDeclarationStatement;
+import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatement;
+import org.teotigraphix.asblocks.api.IDoWhileStatement;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IExpressionStatement;
+import org.teotigraphix.asblocks.api.IFunctionCommon;
+import org.teotigraphix.asblocks.api.IFunctionLiteral;
+import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.IReturnStatement;
+import org.teotigraphix.asblocks.api.IStatement;
+import org.teotigraphix.asblocks.api.IStatementContainer;
+import org.teotigraphix.asblocks.api.ISwitchStatement;
+import org.teotigraphix.asblocks.api.IThrowStatement;
 
 /**
- * The <code>IFunctionLiteralNode</code> implementation.
+ * The <code>IFunctionLiteral</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class FunctionLiteralNode extends ExpressionNode 
-	implements IFunctionLiteralNode
+	implements IFunctionLiteral
 {
 	//--------------------------------------------------------------------------
 	//
@@ -78,7 +78,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#arguments
 	 */
-	public function get arguments():Vector.<IArgumentNode>
+	public function get arguments():Vector.<IArgument>
 	{
 		return functionMixin.arguments;
 	}
@@ -131,7 +131,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	 */
 	public function addParameter(name:String, 
 								 type:String, 
-								 defaultValue:String = null):IArgumentNode
+								 defaultValue:String = null):IArgument
 	{
 		return functionMixin.addParameter(name, type, defaultValue);
 	}
@@ -139,7 +139,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#removeParameter()
 	 */
-	public function removeParameter(name:String):IArgumentNode
+	public function removeParameter(name:String):IArgument
 	{
 		return functionMixin.removeParameter(name);
 	}
@@ -147,7 +147,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addRestParam()
 	 */
-	public function addRestParam(name:String):IArgumentNode
+	public function addRestParam(name:String):IArgument
 	{
 		return functionMixin.addRestParam(name);
 	}
@@ -161,7 +161,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#addStatement()
 	 */
-	public function addStatement(statement:String):IStatementNode
+	public function addStatement(statement:String):IStatement
 	{
 		return containerMixin.addStatement(statement);
 	}
@@ -169,7 +169,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newExpressionStatement()
 	 */
-	public function newExpressionStatement(statement:String):IExpressionStatementNode
+	public function newExpressionStatement(statement:String):IExpressionStatement
 	{
 		return containerMixin.newExpressionStatement(statement);
 	}
@@ -177,7 +177,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newBreak()
 	 */
-	public function newBreak():IBreakStatementNode
+	public function newBreak():IBreakStatement
 	{
 		return containerMixin.newBreak();
 	}
@@ -185,7 +185,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newContinue()
 	 */
-	public function newContinue():IContinueStatementNode
+	public function newContinue():IContinueStatement
 	{
 		return containerMixin.newContinue();
 	}
@@ -193,7 +193,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newDeclaration()
 	 */
-	public function newDeclaration(assignment:IExpressionNode):IDeclarationStatementNode
+	public function newDeclaration(assignment:IExpression):IDeclarationStatement
 	{
 		return containerMixin.newDeclaration(assignment);
 	}
@@ -201,7 +201,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newDefaultXMLNamespace()
 	 */
-	public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatementNode
+	public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement
 	{
 		return containerMixin.newDefaultXMLNamespace(namespace);
 	}
@@ -209,7 +209,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newDoWhile()
 	 */
-	public function newDoWhile(condition:IExpressionNode):IDoWhileStatementNode
+	public function newDoWhile(condition:IExpression):IDoWhileStatement
 	{
 		return containerMixin.newDoWhile(condition);
 	}
@@ -217,7 +217,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newIf()
 	 */
-	public function newIf(condition:IExpressionNode):IIfStatementNode
+	public function newIf(condition:IExpression):IIfStatement
 	{
 		return containerMixin.newIf(condition);
 	}
@@ -225,7 +225,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newReturn()
 	 */
-	public function newReturn(expression:IExpressionNode = null):IReturnStatementNode
+	public function newReturn(expression:IExpression = null):IReturnStatement
 	{
 		return containerMixin.newReturn(expression);
 	}
@@ -233,7 +233,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newSwitch()
 	 */
-	public function newSwitch(condition:IExpressionNode):ISwitchStatementNode
+	public function newSwitch(condition:IExpression):ISwitchStatement
 	{
 		return containerMixin.newSwitch(condition);
 	}
@@ -241,7 +241,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newThrow()
 	 */
-	public function newThrow(expression:IExpressionNode):IThrowStatementNode
+	public function newThrow(expression:IExpression):IThrowStatement
 	{
 		return containerMixin.newThrow(expression);
 	}

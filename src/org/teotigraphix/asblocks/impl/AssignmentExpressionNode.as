@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IAssignmentExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IAssignmentExpression;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IAssignmentExpressionNode</code> implementation.
+ * The <code>IAssignmentExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class AssignmentExpressionNode extends ExpressionNode 
-	implements IAssignmentExpressionNode
+	implements IAssignmentExpression
 {
 	//--------------------------------------------------------------------------
 	//
@@ -45,9 +45,9 @@ public class AssignmentExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IAssignmentExpressionNode#leftExpression
+	 * @copy org.teotigraphix.asblocks.api.IAssignmentExpression#leftExpression
 	 */
-	public function get leftExpression():IExpressionNode
+	public function get leftExpression():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -55,7 +55,7 @@ public class AssignmentExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set leftExpression(value:IExpressionNode):void
+	public function set leftExpression(value:IExpression):void
 	{
 		setExpression(value, 0);
 	}
@@ -70,7 +70,7 @@ public class AssignmentExpressionNode extends ExpressionNode
 	private var _operator:String = "=";
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IAssignmentExpressionNode#operator
+	 * @copy org.teotigraphix.asblocks.api.IAssignmentExpression#operator
 	 */
 	public function get operator():String
 	{
@@ -90,9 +90,9 @@ public class AssignmentExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IAssignmentExpressionNode#rightExpression
+	 * @copy org.teotigraphix.asblocks.api.IAssignmentExpression#rightExpression
 	 */
-	public function get rightExpression():IExpressionNode
+	public function get rightExpression():IExpression
 	{
 		return ExpressionBuilder.build(node.getLastChild());
 	}
@@ -100,7 +100,7 @@ public class AssignmentExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set rightExpression(value:IExpressionNode):void
+	public function set rightExpression(value:IExpression):void
 	{
 		setExpression(value, 1);
 	}
@@ -119,7 +119,7 @@ public class AssignmentExpressionNode extends ExpressionNode
 		super(node);
 	}
 	
-	private function setExpression(expression:IExpressionNode, index:int):void
+	private function setExpression(expression:IExpression, index:int):void
 	{
 		var subAST:IParserNode = expression.node;
 		//ASTBuilder.assertNoParent("expression", subExpr);

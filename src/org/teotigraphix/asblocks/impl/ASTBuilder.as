@@ -6,12 +6,12 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
-import org.teotigraphix.asblocks.api.IAssignmentExpressionNode;
-import org.teotigraphix.asblocks.api.IBinaryExpressionNode;
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IFieldNode;
-import org.teotigraphix.asblocks.api.IMethodNode;
+import org.teotigraphix.asblocks.api.IAssignmentExpression;
+import org.teotigraphix.asblocks.api.IBinaryExpression;
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IField;
+import org.teotigraphix.asblocks.api.IMethod;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
@@ -20,7 +20,7 @@ public class ASTBuilder
 	
 	public static function newMethod(name:String, 
 									 visibility:Visibility, 
-									 returnType:String):IMethodNode
+									 returnType:String):IMethod
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
@@ -50,7 +50,7 @@ public class ASTBuilder
 	
 	public static function newField(name:String, 
 									visibility:Visibility, 
-									type:String):IFieldNode
+									type:String):IField
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_LIST);
 		// mod-list
@@ -75,7 +75,7 @@ public class ASTBuilder
 		return new FieldNode(ast);
 	}
 	
-	public static function synthesizeClass(qualifiedName:String):ICompilationUnitNode
+	public static function synthesizeClass(qualifiedName:String):ICompilationUnit
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.COMPILATION_UNIT);
 		var past:IParserNode = ASTUtil.newAST(AS3NodeKind.PACKAGE, "package");
@@ -101,7 +101,7 @@ public class ASTBuilder
 		return new CompilationUnitNode(ast);
 	}
 	
-	public static function synthesizeInterface(qualifiedName:String):ICompilationUnitNode
+	public static function synthesizeInterface(qualifiedName:String):ICompilationUnit
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.COMPILATION_UNIT);
 		var past:IParserNode = ASTUtil.newAST(AS3NodeKind.PACKAGE, "package");
@@ -462,8 +462,8 @@ public class ASTBuilder
 	
 	
 	public static function newAssignmentExpression(op:LinkedListToken, 
-												   left:IExpressionNode,
-												   right:IExpressionNode):IAssignmentExpressionNode
+												   left:IExpression,
+												   right:IExpression):IAssignmentExpression
 	{
 		var ast:IParserNode = ASTUtil.newTokenAST(op);
 		var leftExpr:IParserNode = left.node;
@@ -496,8 +496,8 @@ public class ASTBuilder
 	
 	
 	public static function newBinaryExpression(op:LinkedListToken, 
-											   left:IExpressionNode,
-											   right:IExpressionNode):IBinaryExpressionNode
+											   left:IExpression,
+											   right:IExpression):IBinaryExpression
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.OP, op.text);
 		

@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IReturnStatementNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IReturnStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IReturnStatementNode</code> implementation.
+ * The <code>IReturnStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ReturnStatementNode extends ScriptNode 
-	implements IReturnStatementNode
+	implements IReturnStatement
 {
 	private function get hasExpression():Boolean
 	{
@@ -41,7 +41,7 @@ public class ReturnStatementNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IDoWhileStatementNode API :: Properties
+	//  IReturnStatement API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -52,7 +52,7 @@ public class ReturnStatementNode extends ScriptNode
 	/**
 	 * doc
 	 */
-	public function get expression():IExpressionNode
+	public function get expression():IExpression
 	{
 		if (!hasExpression)
 		{
@@ -64,7 +64,7 @@ public class ReturnStatementNode extends ScriptNode
 	/**
 	 * @private
 	 */	
-	public function set expression(value:IExpressionNode):void
+	public function set expression(value:IExpression):void
 	{
 		//TODO IMPL
 	}

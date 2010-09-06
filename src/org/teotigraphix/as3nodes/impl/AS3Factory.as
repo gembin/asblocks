@@ -20,8 +20,8 @@
 package org.teotigraphix.as3nodes.impl
 {
 
-import org.teotigraphix.asblocks.api.IArrayAccessExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IArrayAccessExpression;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.impl.ArrayAccessExpressionNode;
 import org.teotigraphix.asblocks.impl.ExpressionBuilder;
 import org.teotigraphix.as3nodes.api.Access;
@@ -333,7 +333,7 @@ public class AS3Factory implements IAS3Factory
 	 * @throws SyntaxException if the given string is not a vaild
 	 *         ActionScript 3 expression.
 	 */
-	public function newExpression(expression:String):IExpressionNode
+	public function newExpression(expression:String):IExpression
 	{
 		var ast:IParserNode = AS3FragmentParser.parseExpression(expression);
 //		ast.parent = null;
@@ -342,8 +342,8 @@ public class AS3Factory implements IAS3Factory
 	/**
 	 * TODO DOCME
 	 */
-	public function newArrayAccessExpression(target:IExpressionNode, 
-											 subscript:IExpressionNode):IArrayAccessExpressionNode
+	public function newArrayAccessExpression(target:IExpression, 
+											 subscript:IExpression):IArrayAccessExpression
 	{
 		/*
 		LinkedListTree ast = ASTUtils.newImaginaryAST(AS3Parser.ARRAY_ACC);

@@ -1,23 +1,23 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IArrayAccessExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IArrayAccessExpression;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IArrayAccessExpressionNode</code> implementation.
+ * The <code>IArrayAccessExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ArrayAccessExpressionNode extends ExpressionNode 
-	implements IArrayAccessExpressionNode
+	implements IArrayAccessExpression
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IArrayAccessExpressionNode API :: Properties
+	//  IArrayAccessExpression API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -26,9 +26,9 @@ public class ArrayAccessExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IArrayAccessExpressionNode#target
+	 * @copy org.teotigraphix.asblocks.api.IArrayAccessExpression#target
 	 */
-	public function get target():IExpressionNode
+	public function get target():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -36,7 +36,7 @@ public class ArrayAccessExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set target(value:IExpressionNode):void
+	public function set target(value:IExpression):void
 	{
 		node.setChildAt(value.node, 0);
 	}
@@ -46,9 +46,9 @@ public class ArrayAccessExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IArrayAccessExpressionNode#subscript
+	 * @copy org.teotigraphix.asblocks.api.IArrayAccessExpression#subscript
 	 */
-	public function get subscript():IExpressionNode
+	public function get subscript():IExpression
 	{
 		return ExpressionBuilder.build(node.getLastChild());
 	}
@@ -56,7 +56,7 @@ public class ArrayAccessExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set subscript(value:IExpressionNode):void
+	public function set subscript(value:IExpression):void
 	{
 		node.setChildAt(value.node, 1);
 	}

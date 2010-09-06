@@ -60,58 +60,58 @@ public interface IStatementContainer
 	
 //	function addComment(text:String):void;
 	
-	function addStatement(statement:String):IStatementNode;
+	function addStatement(statement:String):IStatement;
 	
 	// then all the new factory methods
 	
 	/**
 	 * TODO Docme
 	 */
-	function newExpressionStatement(statement:String):IExpressionStatementNode;
+	function newExpressionStatement(statement:String):IExpressionStatement;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newBreak():IBreakStatementNode;
+	function newBreak():IBreakStatement;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newContinue():IContinueStatementNode;
+	function newContinue():IContinueStatement;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newDeclaration(assignment:IExpressionNode):IDeclarationStatementNode;
+	function newDeclaration(assignment:IExpression):IDeclarationStatement;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatementNode;
+	function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newDoWhile(condition:IExpressionNode):IDoWhileStatementNode;
+	function newDoWhile(condition:IExpression):IDoWhileStatement;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newIf(condition:IExpressionNode):IIfStatementNode;
+	function newIf(condition:IExpression):IIfStatement;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newReturn(expression:IExpressionNode = null):IReturnStatementNode
+	function newReturn(expression:IExpression = null):IReturnStatement
 	
 	/**
 	 * @private
 	 */
-	function newSwitch(condition:IExpressionNode):ISwitchStatementNode;
+	function newSwitch(condition:IExpression):ISwitchStatement;
 	
 	/**
 	 * @private
 	 */
-	function newThrow(expression:IExpressionNode):IThrowStatementNode;
+	function newThrow(expression:IExpression):IThrowStatement;
 }
 }

@@ -20,25 +20,25 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IPostfixExpressionNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IPostfixExpression;
 import org.teotigraphix.asblocks.api.PostfixOperator;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.TokenNode;
 
 /**
- * The <code>IPostfixExpressionNode</code> implementation.
+ * The <code>IPostfixExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class PostfixExpressionNode extends ExpressionNode 
-	implements IPostfixExpressionNode
+	implements IPostfixExpression
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IPostfixExpressionNode API :: Properties
+	//  IPostfixExpression API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -47,9 +47,9 @@ public class PostfixExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPostfixExpressionNode#expression
+	 * @copy org.teotigraphix.asblocks.api.IPostfixExpression#expression
 	 */
-	public function get expression():IExpressionNode
+	public function get expression():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -57,7 +57,7 @@ public class PostfixExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set expression(value:IExpressionNode):void
+	public function set expression(value:IExpression):void
 	{
 		node.setChildAt(value.node, 0);
 	}
@@ -67,7 +67,7 @@ public class PostfixExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPostfixExpressionNode#operator
+	 * @copy org.teotigraphix.asblocks.api.IPostfixExpression#operator
 	 */
 	public function get operator():PostfixOperator
 	{

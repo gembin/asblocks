@@ -20,18 +20,18 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IINvocationExpressionNode;
+import org.teotigraphix.asblocks.api.IINvocationExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IINvocationExpressionNode</code> implementation.
+ * The <code>IINvocationExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class InvocationExpressionNode extends InvocationNode 
-	implements IINvocationExpressionNode
+	implements IINvocationExpression
 {
 	//--------------------------------------------------------------------------
 	//

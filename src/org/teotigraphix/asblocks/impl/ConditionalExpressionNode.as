@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IConditionalExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IConditionalExpression;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IConditionalExpressionNode</code> implementation.
+ * The <code>IConditionalExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ConditionalExpressionNode extends ExpressionNode 
-	implements IConditionalExpressionNode
+	implements IConditionalExpression
 {
 	//--------------------------------------------------------------------------
 	//
@@ -45,9 +45,9 @@ public class ConditionalExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IConditionalExpressionNode#conditionExpression
+	 * @copy org.teotigraphix.asblocks.api.IConditionalExpression#conditionExpression
 	 */
-	public function get conditionExpression():IExpressionNode
+	public function get conditionExpression():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -55,7 +55,7 @@ public class ConditionalExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set conditionExpression(value:IExpressionNode):void
+	public function set conditionExpression(value:IExpression):void
 	{
 		node.setChildAt(value.node, 0);
 	}
@@ -65,9 +65,9 @@ public class ConditionalExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IConditionalExpressionNode#thenExpression
+	 * @copy org.teotigraphix.asblocks.api.IConditionalExpression#thenExpression
 	 */
-	public function get thenExpression():IExpressionNode
+	public function get thenExpression():IExpression
 	{
 		return ExpressionBuilder.build(node.getChild(1));
 	}
@@ -75,7 +75,7 @@ public class ConditionalExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set thenExpression(value:IExpressionNode):void
+	public function set thenExpression(value:IExpression):void
 	{
 		node.setChildAt(value.node, 1);
 	}
@@ -85,9 +85,9 @@ public class ConditionalExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IConditionalExpressionNode#elseExpression
+	 * @copy org.teotigraphix.asblocks.api.IConditionalExpression#elseExpression
 	 */
-	public function get elseExpression():IExpressionNode
+	public function get elseExpression():IExpression
 	{
 		return ExpressionBuilder.build(node.getLastChild());
 	}
@@ -95,7 +95,7 @@ public class ConditionalExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set elseExpression(value:IExpressionNode):void
+	public function set elseExpression(value:IExpression):void
 	{
 		node.setChildAt(value.node, 2);
 	}

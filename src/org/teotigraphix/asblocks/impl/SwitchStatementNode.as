@@ -20,25 +20,25 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.ISwitchCaseNode;
-import org.teotigraphix.asblocks.api.ISwitchDefaultNode;
-import org.teotigraphix.asblocks.api.ISwitchLabelNode;
-import org.teotigraphix.asblocks.api.ISwitchStatementNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.ISwitchCase;
+import org.teotigraphix.asblocks.api.ISwitchDefault;
+import org.teotigraphix.asblocks.api.ISwitchLabel;
+import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 
 /**
- * The <code>ISwitchStatementNode</code> implementation.
+ * The <code>ISwitchStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class SwitchStatementNode extends ScriptNode 
-	implements ISwitchStatementNode
+	implements ISwitchStatement
 {
 	private function get block():IParserNode
 	{
@@ -47,7 +47,7 @@ public class SwitchStatementNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  ISwitchStatementNode API :: Properties
+	//  ISwitchStatement API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -63,7 +63,7 @@ public class SwitchStatementNode extends ScriptNode
 	/**
 	 * doc
 	 */
-	public function get condition():IExpressionNode
+	public function get condition():IExpression
 	{
 		return ExpressionBuilder.build(conditionNode.getFirstChild());
 	}
@@ -71,7 +71,7 @@ public class SwitchStatementNode extends ScriptNode
 	/**
 	 * @private
 	 */	
-	public function set condition(value:IExpressionNode):void
+	public function set condition(value:IExpression):void
 	{
 		conditionNode.setChildAt(value.node, 0);
 	}
@@ -79,7 +79,7 @@ public class SwitchStatementNode extends ScriptNode
 	/**
 	 * doc
 	 */
-	public function get labels():Vector.<ISwitchLabelNode>
+	public function get labels():Vector.<ISwitchLabel>
 	{
 		// TODO Impl
 		return null;
@@ -108,7 +108,7 @@ public class SwitchStatementNode extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newCase(label:String):ISwitchCaseNode
+	public function newCase(label:String):ISwitchCase
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CASE, "case");
 		ast.appendToken(TokenBuilder.newSpace());
@@ -123,7 +123,7 @@ public class SwitchStatementNode extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newDefault():ISwitchDefaultNode
+	public function newDefault():ISwitchDefault
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEFAULT, "default");
 		ast.appendToken(TokenBuilder.newColumn());

@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IThrowStatementNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IReturnStatementNode</code> implementation.
+ * The <code>IReturnStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ThrowStatementNode extends ScriptNode 
-	implements IThrowStatementNode
+	implements IThrowStatement
 {
 	//----------------------------------
 	//  expression
@@ -41,7 +41,7 @@ public class ThrowStatementNode extends ScriptNode
 	/**
 	 * doc
 	 */
-	public function get expression():IExpressionNode
+	public function get expression():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}

@@ -25,18 +25,18 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
-import org.teotigraphix.asblocks.api.IInterfaceTypeNode;
+import org.teotigraphix.asblocks.api.IInterfaceType;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
- * The <code>IInterfaceTypeNode</code> implementation.
+ * The <code>IInterfaceType</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class InterfaceTypeNode extends TypeNode 
-	implements IInterfaceTypeNode
+	implements IInterfaceType
 {
 	//--------------------------------------------------------------------------
 	//
@@ -46,7 +46,7 @@ public class InterfaceTypeNode extends TypeNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IInterfaceTypeNode API :: Properties
+	//  IInterfaceType API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -55,7 +55,7 @@ public class InterfaceTypeNode extends TypeNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IInterfaceTypeNode#superInterfaces
+	 * @copy org.teotigraphix.asblocks.api.IInterfaceType#superInterfaces
 	 */
 	public function get superInterfaces():Vector.<String>
 	{
@@ -93,7 +93,7 @@ public class InterfaceTypeNode extends TypeNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IInterfaceTypeNode#addSuperInterface()
+	 * @copy org.teotigraphix.asblocks.api.IInterfaceType#addSuperInterface()
 	 */
 	public function addSuperInterface(name:String):Boolean
 	{
@@ -122,7 +122,7 @@ public class InterfaceTypeNode extends TypeNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IInterfaceTypeNode#removeSuperInterface()
+	 * @copy org.teotigraphix.asblocks.api.IInterfaceType#removeSuperInterface()
 	 */
 	public function removeSuperInterface(name:String):Boolean
 	{

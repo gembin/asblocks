@@ -20,29 +20,29 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.INewExpressionNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.INewExpression;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
- * The <code>INewExpressionNode</code> implementation.
+ * The <code>INewExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class NewExpressionNode extends InvocationNode 
-	implements INewExpressionNode
+	implements INewExpression
 {
 	private function get hasArguments():Boolean
 	{
 		return node.hasKind(AS3NodeKind.ARGUMENTS);
 	}
 	
-	override public function get arguments():Vector.<IExpressionNode>
+	override public function get arguments():Vector.<IExpression>
 	{
 		if (hasArguments)
 		{
@@ -51,7 +51,7 @@ public class NewExpressionNode extends InvocationNode
 		return null;
 	}
 	
-	override public function set arguments(value:Vector.<IExpressionNode>):void
+	override public function set arguments(value:Vector.<IExpression>):void
 	{
 		super.arguments = value;
 		// TODO fix error

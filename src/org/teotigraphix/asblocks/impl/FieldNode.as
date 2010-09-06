@@ -21,18 +21,18 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IFieldNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IField;
 
 /**
- * The <code>IFieldNode</code> implementation.
+ * The <code>IField</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class FieldNode extends MemberNode 
-	implements IFieldNode
+	implements IField
 {
 	//--------------------------------------------------------------------------
 	//
@@ -82,7 +82,7 @@ public class FieldNode extends MemberNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IFieldNode API :: Properties
+	//  IField API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -113,7 +113,7 @@ public class FieldNode extends MemberNode
 	/**
 	 * doc
 	 */
-	public function get initializer():IExpressionNode
+	public function get initializer():IExpression
 	{
 		return null;
 	}
@@ -121,7 +121,7 @@ public class FieldNode extends MemberNode
 	/**
 	 * @private
 	 */	
-	public function set initializer(value:IExpressionNode):void
+	public function set initializer(value:IExpression):void
 	{
 		
 	}

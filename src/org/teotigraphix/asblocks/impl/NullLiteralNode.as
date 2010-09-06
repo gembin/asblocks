@@ -20,18 +20,18 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.INullLiteralNode;
+import org.teotigraphix.asblocks.api.INullLiteral;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>NullLiteralNode</code> implementation.
+ * The <code>NullLiteral</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class NullLiteralNode extends LiteralNode 
-	implements INullLiteralNode
+	implements INullLiteral
 {
 	//--------------------------------------------------------------------------
 	//

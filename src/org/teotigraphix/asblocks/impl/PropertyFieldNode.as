@@ -20,23 +20,23 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IPropertyFieldNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IPropertyField;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IFieldNode</code> implementation.
+ * The <code>IPropertyField</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class PropertyFieldNode extends ScriptNode 
-	implements IPropertyFieldNode
+	implements IPropertyField
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IArrayLiteralNode API :: Properties
+	//  IPropertyField API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -45,7 +45,7 @@ public class PropertyFieldNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPropertyFieldNode#name
+	 * @copy org.teotigraphix.asblocks.api.IPropertyField#name
 	 */
 	public function get name():String
 	{
@@ -57,9 +57,9 @@ public class PropertyFieldNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPropertyFieldNode#value
+	 * @copy org.teotigraphix.asblocks.api.IPropertyField#value
 	 */
-	public function get value():IExpressionNode
+	public function get value():IExpression
 	{
 		return ExpressionBuilder.build(node.getLastChild());
 	}

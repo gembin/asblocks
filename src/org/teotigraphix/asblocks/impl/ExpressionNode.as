@@ -20,18 +20,18 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The base class for all <code>IExpressionNode</code>.
+ * The base class for all <code>IExpression</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ExpressionNode extends ScriptNode 
-	implements IExpressionNode
+	implements IExpression
 {
 	//--------------------------------------------------------------------------
 	//

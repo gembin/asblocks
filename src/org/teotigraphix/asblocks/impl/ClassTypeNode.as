@@ -25,23 +25,23 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
-import org.teotigraphix.asblocks.api.IClassTypeNode;
-import org.teotigraphix.asblocks.api.IFieldNode;
-import org.teotigraphix.asblocks.api.IMethodNode;
+import org.teotigraphix.asblocks.api.IClassType;
+import org.teotigraphix.asblocks.api.IField;
+import org.teotigraphix.asblocks.api.IMethod;
 import org.teotigraphix.asblocks.api.Modifier;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.asblocks.utils.ModifierUtil;
 
 /**
- * The <code>IClassTypeNode</code> implementation.
+ * The <code>IClassType</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ClassTypeNode extends TypeNode 
-	implements IClassTypeNode
+	implements IClassType
 {
 	//--------------------------------------------------------------------------
 	//
@@ -51,7 +51,7 @@ public class ClassTypeNode extends TypeNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IClassTypeNode API :: Properties
+	//  IClassType API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -60,7 +60,7 @@ public class ClassTypeNode extends TypeNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#isDynamic
+	 * @copy org.teotigraphix.asblocks.api.IClassType#isDynamic
 	 */
 	public function get isDynamic():Boolean
 	{
@@ -80,7 +80,7 @@ public class ClassTypeNode extends TypeNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#isFinal
+	 * @copy org.teotigraphix.asblocks.api.IClassType#isFinal
 	 */
 	public function get isFinal():Boolean
 	{
@@ -100,7 +100,7 @@ public class ClassTypeNode extends TypeNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#superClass
+	 * @copy org.teotigraphix.asblocks.api.IClassType#superClass
 	 */
 	public function get superClass():String
 	{
@@ -150,7 +150,7 @@ public class ClassTypeNode extends TypeNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#implementedInterfaces
+	 * @copy org.teotigraphix.asblocks.api.IClassType#implementedInterfaces
 	 */
 	public function get implementedInterfaces():Vector.<String>
 	{
@@ -174,9 +174,9 @@ public class ClassTypeNode extends TypeNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.ITypeNode#fields
 	 */
-	public function get fields():Vector.<IFieldNode>
+	public function get fields():Vector.<IField>
 	{
-		var result:Vector.<IFieldNode> = new Vector.<IFieldNode>();
+		var result:Vector.<IField> = new Vector.<IField>();
 		var i:ASTIterator = new ASTIterator(contentNode);
 		while (i.hasNext())
 		{
@@ -205,12 +205,12 @@ public class ClassTypeNode extends TypeNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IClassTypeNode API :: Methods
+	//  IClassType API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#addImplementedInterface()
+	 * @copy org.teotigraphix.asblocks.api.IClassType#addImplementedInterface()
 	 */
 	public function addImplementedInterface(name:String):Boolean
 	{
@@ -239,7 +239,7 @@ public class ClassTypeNode extends TypeNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#removeImplementedInterface()
+	 * @copy org.teotigraphix.asblocks.api.IClassType#removeImplementedInterface()
 	 */
 	public function removeImplementedInterface(name:String):Boolean
 	{
@@ -290,35 +290,35 @@ public class ClassTypeNode extends TypeNode
 	 */
 	override public function newMethod(name:String, 
 									   visibility:Visibility, 
-									   returnType:String):IMethodNode
+									   returnType:String):IMethod
 	{
-		var method:IMethodNode = ASTBuilder.newMethod(name, visibility, returnType);
+		var method:IMethod = ASTBuilder.newMethod(name, visibility, returnType);
 		addMethod(method);
 		return method;
 	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IClassTypeNode API :: Methods
+	//  IClassType API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#newField()
+	 * @copy org.teotigraphix.asblocks.api.IClassType#newField()
 	 */
 	public function newField(name:String, 
 							 visibility:Visibility, 
-							 type:String):IFieldNode
+							 type:String):IField
 	{
-		var field:IFieldNode = ASTBuilder.newField(name, visibility, type);
+		var field:IField = ASTBuilder.newField(name, visibility, type);
 		addField(field);
 		return field;
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#getField()
+	 * @copy org.teotigraphix.asblocks.api.IClassType#getField()
 	 */
-	public function getField(name:String):IFieldNode
+	public function getField(name:String):IField
 	{
 		var i:ASTIterator = new ASTIterator(contentNode);
 		while (i.hasNext())
@@ -326,7 +326,7 @@ public class ClassTypeNode extends TypeNode
 			var member:IParserNode = i.next();
 			if (member.isKind(AS3NodeKind.FIELD_LIST))
 			{
-				var field:IFieldNode = new FieldNode(member);
+				var field:IField = new FieldNode(member);
 				if (field.name == name)
 				{
 					return field;
@@ -339,13 +339,13 @@ public class ClassTypeNode extends TypeNode
 	/**
 	 * @private
 	 */
-	public function addField(field:IFieldNode):void
+	public function addField(field:IField):void
 	{
 		ASTUtil.addChildWithIndentation(contentNode, field.node);
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IClassTypeNode#removeField()
+	 * @copy org.teotigraphix.asblocks.api.IClassType#removeField()
 	 */
 	public function removeField(name:String):Boolean
 	{
@@ -355,7 +355,7 @@ public class ClassTypeNode extends TypeNode
 			var member:IParserNode = i.next();
 			if (member.isKind(AS3NodeKind.FIELD_LIST))
 			{
-				var field:IFieldNode = new FieldNode(member);
+				var field:IField = new FieldNode(member);
 				if (field.name == name)
 				{
 					i.remove();

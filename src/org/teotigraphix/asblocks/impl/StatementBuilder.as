@@ -1,13 +1,13 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IStatementNode;
+import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 public class StatementBuilder
 {
-	public static function build(ast:IParserNode):IStatementNode
+	public static function build(ast:IParserNode):IStatement
 	{
 		switch (ast.kind)
 		{

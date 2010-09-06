@@ -2,31 +2,32 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.Assert;
-import org.teotigraphix.asblocks.api.IArrayAccessExpressionNode;
-import org.teotigraphix.asblocks.api.IAssignmentExpressionNode;
-import org.teotigraphix.asblocks.api.IBinaryExpressionNode;
-import org.teotigraphix.asblocks.api.IBlockNode;
-import org.teotigraphix.asblocks.api.IBreakStatementNode;
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IConditionalExpressionNode;
-import org.teotigraphix.asblocks.api.IDoWhileStatementNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IArrayAccessExpression;
+import org.teotigraphix.asblocks.api.IAssignmentExpression;
+import org.teotigraphix.asblocks.api.IBinaryExpression;
+import org.teotigraphix.asblocks.api.IBlock;
+import org.teotigraphix.asblocks.api.IBreakStatement;
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.api.IConditionalExpression;
+import org.teotigraphix.asblocks.api.IDoWhileStatement;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
-import org.teotigraphix.asblocks.api.IINvocationExpressionNode;
-import org.teotigraphix.asblocks.api.IIfStatementNode;
-import org.teotigraphix.asblocks.api.INewExpressionNode;
-import org.teotigraphix.asblocks.api.IPostfixExpressionNode;
-import org.teotigraphix.asblocks.api.IPrefixExpressionNode;
+import org.teotigraphix.asblocks.api.IINvocationExpression;
+import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.INewExpression;
+import org.teotigraphix.asblocks.api.IPostfixExpression;
+import org.teotigraphix.asblocks.api.IPrefixExpression;
 import org.teotigraphix.asblocks.api.IScriptNode;
-import org.teotigraphix.asblocks.api.ISimpleNameExpressionNode;
-import org.teotigraphix.asblocks.api.ISwitchCaseNode;
-import org.teotigraphix.asblocks.api.ISwitchDefaultNode;
-import org.teotigraphix.asblocks.api.ISwitchStatementNode;
-import org.teotigraphix.asblocks.api.IThrowStatementNode;
+import org.teotigraphix.asblocks.api.ISimpleNameExpression;
+import org.teotigraphix.asblocks.api.ISwitchCase;
+import org.teotigraphix.asblocks.api.ISwitchDefault;
+import org.teotigraphix.asblocks.api.ISwitchStatement;
+import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.ASTPrinter;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
+import org.teotigraphix.asblocks.ASFactory;
 
 public class TestExpressionNodes
 {
@@ -47,7 +48,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testClass():void
 	{
-		var statement:ICompilationUnitNode = project.newClass("my.domain.ClassA");
+		var statement:ICompilationUnit = project.newClass("my.domain.ClassA");
 		
 		var result:String = ASTUtil.convert(statement.node, false);
 		
@@ -57,7 +58,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testInterface():void
 	{
-		var statement:ICompilationUnitNode = project.newInterface("my.domain.IInterfaceA");
+		var statement:ICompilationUnit = project.newInterface("my.domain.IInterfaceA");
 		
 		var result:String = ASTUtil.convert(statement.node, false);
 		
@@ -67,7 +68,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testBlock():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		
 		assertPrint("{\n}", statement);
 	}
@@ -75,7 +76,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testBreakStatement():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		statement.newBreak();
 		assertPrint("{\n\tbreak;\n}", statement);
 	}
@@ -83,7 +84,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testContinueStatement():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		statement.newContinue();
 		assertPrint("{\n\tcontinue;\n}", statement);
 	}
@@ -91,9 +92,9 @@ public class TestExpressionNodes
 	[Test]
 	public function testDeclaration():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		// FIXME use var-list and const-list ast model
-		var expression:IAssignmentExpressionNode = factory.
+		var expression:IAssignmentExpression = factory.
 			newAssignmentExpression(
 				factory.newSimpleNameExpression("a"),
 				factory.newNumberLiteral(42));
@@ -105,7 +106,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testXMLNamespace():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		
 		statement.newDefaultXMLNamespace("my_namespace");
 		assertPrint("{\n\tdefault xml namespace = \"my_namespace\";\n}", statement);
@@ -114,9 +115,9 @@ public class TestExpressionNodes
 	[Test]
 	public function testDoWhile():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		
-		var result:IDoWhileStatementNode = statement.newDoWhile(factory.newExpression("hasNext()"));
+		var result:IDoWhileStatement = statement.newDoWhile(factory.newExpression("hasNext()"));
 		assertPrint("{\n\tdo {\n\t} while (hasNext());\n}", statement);
 		
 		result.newExpressionStatement("trace('Hello World')");
@@ -126,7 +127,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testExpressionStatement():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		statement.newExpressionStatement("hasNext()");
 		assertPrint("{\n\thasNext();\n}", statement);
 	}
@@ -152,11 +153,11 @@ public class TestExpressionNodes
 	[Test]
 	public function testIfStatement():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		
 		assertPrint("{\n}", statement);
 		
-		var ifst:IIfStatementNode = factory.newIf(factory.newExpression("test()"));
+		var ifst:IIfStatement = factory.newIf(factory.newExpression("test()"));
 		ifst.addStatement("trace('test succeeded')");
 		
 		assertPrint("if (test()) {\n\ttrace('test succeeded');\n}", ifst);
@@ -166,7 +167,7 @@ public class TestExpressionNodes
 		assertPrint("if (test()) {\n\ttrace('test succeeded');\n} else " +
 			"{\n\ttrace('test failed');\n}", ifst);
 		
-		var ifstSub:IIfStatementNode = ifst.newIf(factory.newExpression("test2()"));
+		var ifstSub:IIfStatement = ifst.newIf(factory.newExpression("test2()"));
 		ifstSub.addStatement("trace('sub test succeeded')");
 		ifstSub.elseBlock.addStatement("trace('sub test failed')");
 		
@@ -178,7 +179,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testReturnStatement():void
 	{
-		var statement:IBlockNode = factory.newBlock();
+		var statement:IBlock = factory.newBlock();
 		statement.newReturn(factory.newExpression("result"));
 		
 		assertPrint("{\n\treturn result;\n}", statement);
@@ -192,13 +193,13 @@ public class TestExpressionNodes
 	[Test]
 	public function testSwitchStatement():void
 	{
-		var statement:IBlockNode = factory.newBlock();
-		var switchStatement:ISwitchStatementNode = statement.
+		var statement:IBlock = factory.newBlock();
+		var switchStatement:ISwitchStatement = statement.
 			newSwitch(factory.newExpression("count"));
 		
 		assertPrint("{\n\tswitch (count) {\n\t}\n}", statement);
 		
-		var cs:ISwitchCaseNode = switchStatement.newCase("1");
+		var cs:ISwitchCase = switchStatement.newCase("1");
 		cs.newBreak();
 		
 		cs = switchStatement.newCase("2");
@@ -207,7 +208,7 @@ public class TestExpressionNodes
 		assertPrint("{\n\tswitch (count) {\n\t\tcase 1:\n\t\t\tbreak;\n\t\tcase 2:" +
 			"\n\t\t\tbreak;\n\t}\n}", statement);
 		
-		var csd:ISwitchDefaultNode = switchStatement.newDefault();
+		var csd:ISwitchDefault = switchStatement.newDefault();
 		csd.newBreak();
 		
 		assertPrint("{\n\tswitch (count) {\n\t\tcase 1:\n\t\t\tbreak;\n\t\tcase 2:" +
@@ -217,8 +218,8 @@ public class TestExpressionNodes
 	[Test]
 	public function testThrowStatement():void
 	{
-		var statement:IBlockNode = factory.newBlock();
-		var throwStatement:IThrowStatementNode = statement.
+		var statement:IBlock = factory.newBlock();
+		var throwStatement:IThrowStatement = statement.
 			newThrow(factory.newExpression("new Error('Hello World')"));
 		
 		assertPrint("{\n\tthrow new Error('Hello World');\n}", statement);
@@ -251,10 +252,10 @@ public class TestExpressionNodes
 	[Test]
 	public function testArrayAccessExpressionNode():void
 	{
-		var target:IExpressionNode = factory.newExpression("myObject[42]");
-		var subscript:IExpressionNode = factory.newExpression("0");
+		var target:IExpression = factory.newExpression("myObject[42]");
+		var subscript:IExpression = factory.newExpression("0");
 		
-		var expression:IArrayAccessExpressionNode = 
+		var expression:IArrayAccessExpression = 
 			factory.newArrayAccessExpression(target, subscript);
 		
 		assertPrint("myObject[42][0]", expression);
@@ -283,10 +284,10 @@ public class TestExpressionNodes
 	[Test]
 	public function testAssignmentExpressionNode():void
 	{
-		var left:IExpressionNode = factory.newExpression("myAnswer");
-		var right:IExpressionNode = factory.newExpression("4");
+		var left:IExpression = factory.newExpression("myAnswer");
+		var right:IExpression = factory.newExpression("4");
 		
-		var expression:IAssignmentExpressionNode = 
+		var expression:IAssignmentExpression = 
 			factory.newAssignmentExpression(left, right);
 		
 		assertPrint("myAnswer = 4", expression);
@@ -297,10 +298,10 @@ public class TestExpressionNodes
 		assertPrint("myAnswer = otherAnswer = 4", expression);
 		
 		// change left expression to an array access
-		var target:IExpressionNode = factory.newExpression("myObject[42]");
-		var subscript:IExpressionNode = factory.newExpression("2");
+		var target:IExpression = factory.newExpression("myObject[42]");
+		var subscript:IExpression = factory.newExpression("2");
 		
-		var arrayAccessExpression:IArrayAccessExpressionNode = 
+		var arrayAccessExpression:IArrayAccessExpression = 
 			factory.newArrayAccessExpression(target, subscript);
 		
 		expression.leftExpression = arrayAccessExpression;
@@ -311,10 +312,10 @@ public class TestExpressionNodes
 	[Test]
 	public function testBinaryExpressionNode():void
 	{
-		var left:IExpressionNode;
-		var right:IExpressionNode;
+		var left:IExpression;
+		var right:IExpression;
 		
-		var expression:IBinaryExpressionNode;
+		var expression:IBinaryExpression;
 		
 		// ADD
 		expression = factory.newAddExpression(
@@ -453,13 +454,13 @@ public class TestExpressionNodes
 	[Test]
 	public function testConditionalExpressionNode():void
 	{
-		var conditionExpression:IExpressionNode = factory.newNotEqualsExpression(
+		var conditionExpression:IExpression = factory.newNotEqualsExpression(
 			factory.newSimpleNameExpression("a"), 
 			factory.newSimpleNameExpression("b"));
-		var thenExpression:IExpressionNode = factory.newBooleanLiteral(false);
-		var elseExpression:IExpressionNode = factory.newBooleanLiteral(true);
+		var thenExpression:IExpression = factory.newBooleanLiteral(false);
+		var elseExpression:IExpression = factory.newBooleanLiteral(true);
 		
-		var expression:IConditionalExpressionNode = 
+		var expression:IConditionalExpression = 
 			factory.newConditionalExpression(
 				conditionExpression, thenExpression, elseExpression);
 		
@@ -532,14 +533,14 @@ public class TestExpressionNodes
 	[Test]
 	public function testInvocationExpressionNode():void
 	{
-		var expression:IINvocationExpressionNode = 
+		var expression:IINvocationExpression = 
 			factory.newInvocationExpression(
 				factory.newSimpleNameExpression("myObject"), null);
 		
 		assertPrint("myObject()", expression);
 		
 		// test adding args
-		var args:Vector.<IExpressionNode> = new Vector.<IExpressionNode>();
+		var args:Vector.<IExpression> = new Vector.<IExpression>();
 		args.push(factory.newBooleanLiteral(true));
 		args.push(factory.newStringLiteral("Hello World"));
 		
@@ -558,7 +559,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testNewExpressionNode():void
 	{
-		var expression:INewExpressionNode = 
+		var expression:INewExpression = 
 			factory.newNewExpression(
 				factory.newSimpleNameExpression("HelloWorld"), null);
 		
@@ -567,7 +568,7 @@ public class TestExpressionNodes
 		// assertPrintExpression("new HelloWorld", expression);
 		
 		// test adding args
-		var args:Vector.<IExpressionNode> = new Vector.<IExpressionNode>();
+		var args:Vector.<IExpression> = new Vector.<IExpression>();
 		args.push(factory.newBooleanLiteral(true));
 		args.push(factory.newStringLiteral("Hello World"));
 		
@@ -579,7 +580,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testPostfixExpressionNode():void
 	{
-		var expression:IPostfixExpressionNode;
+		var expression:IPostfixExpression;
 		
 		expression = factory.newPostDecExpression(factory.newSimpleNameExpression("i"));
 		assertPrint("i--", expression);
@@ -601,7 +602,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testPrefixExpressionNode():void
 	{
-		var expression:IPrefixExpressionNode;
+		var expression:IPrefixExpression;
 		
 		expression = factory.newPreDecExpression(factory.newSimpleNameExpression("i"));
 		assertPrint("--i", expression);
@@ -619,7 +620,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testSimpleNameExpressionNode():void
 	{
-		var expression:ISimpleNameExpressionNode = 
+		var expression:ISimpleNameExpression = 
 			factory.newSimpleNameExpression("myObject");
 		
 		Assert.assertEquals("myObject", expression.name);

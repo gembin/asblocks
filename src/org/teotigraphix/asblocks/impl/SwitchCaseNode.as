@@ -20,25 +20,25 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatementContainer;
-import org.teotigraphix.asblocks.api.ISwitchCaseNode;
+import org.teotigraphix.asblocks.api.ISwitchCase;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
- * The <code>ISwitchCaseNode</code> implementation.
+ * The <code>ISwitchCase</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class SwitchCaseNode extends ContainerDelegate implements ISwitchCaseNode
+public class SwitchCaseNode extends ContainerDelegate implements ISwitchCase
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  ISwitchCase API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -54,12 +54,12 @@ public class SwitchCaseNode extends ContainerDelegate implements ISwitchCaseNode
 	/**
 	 * @private
 	 */
-	private var _label:IExpressionNode;
+	private var _label:IExpression;
 	
 	/**
 	 * doc
 	 */
-	public function get label():IExpressionNode
+	public function get label():IExpression
 	{
 		return _label;
 	}
@@ -67,7 +67,7 @@ public class SwitchCaseNode extends ContainerDelegate implements ISwitchCaseNode
 	/**
 	 * @private
 	 */	
-	public function set label(value:IExpressionNode):void
+	public function set label(value:IExpression):void
 	{
 		if (_label == value)
 			return;

@@ -21,20 +21,20 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.teotigraphix.asblocks.api.BinaryOperator;
-import org.teotigraphix.asblocks.api.IBinaryExpressionNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
+import org.teotigraphix.asblocks.api.IBinaryExpression;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.TokenNode;
 
 /**
- * The <code>IBinaryExpressionNode</code> implementation.
+ * The <code>IBinaryExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class BinaryOperatorNode extends ExpressionNode 
-	implements IBinaryExpressionNode
+	implements IBinaryExpression
 {
 	//--------------------------------------------------------------------------
 	//
@@ -47,9 +47,9 @@ public class BinaryOperatorNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IBinaryExpressionNode#leftExpression
+	 * @copy org.teotigraphix.asblocks.api.IBinaryExpression#leftExpression
 	 */
-	public function get leftExpression():IExpressionNode
+	public function get leftExpression():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -57,7 +57,7 @@ public class BinaryOperatorNode extends ExpressionNode
 	/**
 	 * @private
 	 */
-	public function set leftExpression(value:IExpressionNode):void
+	public function set leftExpression(value:IExpression):void
 	{
 		setExpression(value, 0);
 	}
@@ -67,9 +67,9 @@ public class BinaryOperatorNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IBinaryExpressionNode#rightExpression
+	 * @copy org.teotigraphix.asblocks.api.IBinaryExpression#rightExpression
 	 */
-	public function get rightExpression():IExpressionNode
+	public function get rightExpression():IExpression
 	{
 		return ExpressionBuilder.build(node.getLastChild());
 	}
@@ -77,7 +77,7 @@ public class BinaryOperatorNode extends ExpressionNode
 	/**
 	 * @private
 	 */
-	public function set rightExpression(value:IExpressionNode):void
+	public function set rightExpression(value:IExpression):void
 	{
 		setExpression(value, 1);
 	}
@@ -87,7 +87,7 @@ public class BinaryOperatorNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IBinaryExpressionNode#operator
+	 * @copy org.teotigraphix.asblocks.api.IBinaryExpression#operator
 	 */
 	public function get operator():BinaryOperator
 	{
@@ -119,7 +119,7 @@ public class BinaryOperatorNode extends ExpressionNode
 	/**
 	 * @private
 	 */
-	private function setExpression(expression:IExpressionNode, index:int):void
+	private function setExpression(expression:IExpression, index:int):void
 	{
 		node.setChildAt(expression.node, index);
 	}

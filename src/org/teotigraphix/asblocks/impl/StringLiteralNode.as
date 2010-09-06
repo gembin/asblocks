@@ -20,19 +20,19 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IStringLiteralNode;
+import org.teotigraphix.asblocks.api.IStringLiteral;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.utils.ASTUtil;
 
 /**
- * The <code>IStringLiteralNode</code> implementation.
+ * The <code>IStringLiteral</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class StringLiteralNode extends LiteralNode 
-	implements IStringLiteralNode
+	implements IStringLiteral
 {
 	//--------------------------------------------------------------------------
 	//
@@ -45,7 +45,7 @@ public class StringLiteralNode extends LiteralNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IStringLiteralNode#value
+	 * @copy org.teotigraphix.asblocks.api.IStringLiteral#value
 	 */
 	public function get value():String
 	{

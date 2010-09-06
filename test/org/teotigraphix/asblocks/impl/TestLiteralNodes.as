@@ -2,20 +2,21 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.Assert;
-import org.teotigraphix.asblocks.api.IArrayLiteralNode;
-import org.teotigraphix.asblocks.api.IAssignmentExpressionNode;
-import org.teotigraphix.asblocks.api.IBooleanLiteralNode;
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IFunctionLiteralNode;
-import org.teotigraphix.asblocks.api.INullLiteralNode;
-import org.teotigraphix.asblocks.api.INumberLiteralNode;
-import org.teotigraphix.asblocks.api.IObjectLiteralNode;
-import org.teotigraphix.asblocks.api.IPropertyFieldNode;
-import org.teotigraphix.asblocks.api.IStringLiteralNode;
-import org.teotigraphix.asblocks.api.IUndefinedLiteralNode;
+import org.teotigraphix.asblocks.api.IArrayLiteral;
+import org.teotigraphix.asblocks.api.IAssignmentExpression;
+import org.teotigraphix.asblocks.api.IBooleanLiteral;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IFunctionLiteral;
+import org.teotigraphix.asblocks.api.INullLiteral;
+import org.teotigraphix.asblocks.api.INumberLiteral;
+import org.teotigraphix.asblocks.api.IObjectLiteral;
+import org.teotigraphix.asblocks.api.IPropertyField;
+import org.teotigraphix.asblocks.api.IStringLiteral;
+import org.teotigraphix.asblocks.api.IUndefinedLiteral;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.core.ASTPrinter;
 import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.asblocks.ASFactory;
 
 public class TestLiteralNodes
 {
@@ -33,7 +34,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testArrayLiteralNode():void
 	{
-		var expression:IArrayLiteralNode = factory.newArrayLiteral();
+		var expression:IArrayLiteral = factory.newArrayLiteral();
 		
 		expression.add(factory.newSimpleNameExpression("a"));
 		expression.add(factory.newSimpleNameExpression("b"));
@@ -43,7 +44,7 @@ public class TestLiteralNodes
 		
 		expression.remove(2);
 		
-		var expression2:IArrayLiteralNode = factory.newArrayLiteral();
+		var expression2:IArrayLiteral = factory.newArrayLiteral();
 		
 		expression2.add(factory.newNullLiteral());
 		expression2.add(factory.newSimpleNameExpression("foo"));
@@ -62,8 +63,8 @@ public class TestLiteralNodes
 	[Test]
 	public function testBooleanLiteralNode():void
 	{
-		var trueExpression:IBooleanLiteralNode = factory.newBooleanLiteral(true);
-		var falseExpression:IBooleanLiteralNode = factory.newBooleanLiteral(false);
+		var trueExpression:IBooleanLiteral = factory.newBooleanLiteral(true);
+		var falseExpression:IBooleanLiteral = factory.newBooleanLiteral(false);
 		
 		Assert.assertTrue(trueExpression.node.isKind(AS3NodeKind.TRUE));
 		assertPrintExpression("true", trueExpression);
@@ -80,7 +81,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testFunctionLiteralNode():void
 	{
-		var expression:IFunctionLiteralNode = factory.newFunctionLiteral();
+		var expression:IFunctionLiteral = factory.newFunctionLiteral();
 		
 		expression.returnType = "my.domain.Type";
 		expression.addParameter("arg0", "String");
@@ -91,8 +92,8 @@ public class TestLiteralNodes
 		assertPrintExpression("function(arg0:String, arg1:int = 0):my.domain.Type " +
 			"{\n\ttrace('Hello World');\n}", expression);
 		
-		var left:IExpressionNode = factory.newExpression("myObject");
-		var right:IExpressionNode = factory.newExpression("{a:1,b:2c:3}");
+		var left:IExpression = factory.newExpression("myObject");
+		var right:IExpression = factory.newExpression("{a:1,b:2c:3}");
 		
 		//var arrexpression:IAssignmentExpressionNode = 
 		//	factory.newAssignmentExpression(left, right);
@@ -106,7 +107,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testNumberLiteralNode():void
 	{
-		var expression:INumberLiteralNode = factory.newNumberLiteral(42);
+		var expression:INumberLiteral = factory.newNumberLiteral(42);
 		
 		Assert.assertEquals(42, expression.value);
 		Assert.assertTrue(expression.node.isKind(AS3NodeKind.NUMBER));
@@ -116,7 +117,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testNullLiteralNode():void
 	{
-		var expression:INullLiteralNode = factory.newNullLiteral();
+		var expression:INullLiteral = factory.newNullLiteral();
 		
 		Assert.assertTrue(expression.node.isKind(AS3NodeKind.NULL));
 		assertPrintExpression("null", expression);
@@ -125,25 +126,25 @@ public class TestLiteralNodes
 	[Test]
 	public function testObjectLiteralNode():void
 	{
-		var expression:IObjectLiteralNode = factory.newObjectLiteral();
+		var expression:IObjectLiteral = factory.newObjectLiteral();
 		
 		expression.newField("a", factory.newNumberLiteral(0));
 		expression.newField("b", factory.newNumberLiteral(1));
 		expression.newField("c", factory.newNumberLiteral(2));
 		
-		var fields:Vector.<IPropertyFieldNode> = expression.fields;
+		var fields:Vector.<IPropertyField> = expression.fields;
 		Assert.assertNotNull(fields);
 		Assert.assertEquals(3, fields.length);
 		
-		Assert.assertEquals(0, INumberLiteralNode(fields[0].value).value);
-		Assert.assertEquals(1, INumberLiteralNode(fields[1].value).value);
-		Assert.assertEquals(2, INumberLiteralNode(fields[2].value).value);
+		Assert.assertEquals(0, INumberLiteral(fields[0].value).value);
+		Assert.assertEquals(1, INumberLiteral(fields[1].value).value);
+		Assert.assertEquals(2, INumberLiteral(fields[2].value).value);
 		
 		assertPrintExpression("{\n\ta: 0,\n\tb: 1,\n\tc: 2\n}", expression);
 		
 		// add a sub object
 		
-		var expression2:IObjectLiteralNode = factory.newObjectLiteral();
+		var expression2:IObjectLiteral = factory.newObjectLiteral();
 		
 		expression2.newField("d", factory.newNumberLiteral(3));
 		expression2.newField("e", factory.newNumberLiteral(4));
@@ -154,7 +155,7 @@ public class TestLiteralNodes
 		fields = expression.fields;
 		Assert.assertNotNull(fields);
 		Assert.assertEquals(4, fields.length);
-		Assert.assertTrue(fields[3].value is IObjectLiteralNode);
+		Assert.assertTrue(fields[3].value is IObjectLiteral);
 		
 		assertPrintExpression("{\n\ta: 0,\n\tb: 1,\n\tc: 2,\n\tsub: {\n\t\td: " +
 			"3,\n\t\te: 4,\n\t\tf: 5\n\t}\n}", expression);
@@ -169,7 +170,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testStringLiteralNode():void
 	{
-		var expression:IStringLiteralNode = factory.newStringLiteral("hello world");
+		var expression:IStringLiteral = factory.newStringLiteral("hello world");
 		
 		Assert.assertEquals("hello world", expression.value);
 		Assert.assertTrue(expression.node.isKind(AS3NodeKind.STRING));
@@ -179,7 +180,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testUndefinedLiteralNode():void
 	{
-		var expression:IUndefinedLiteralNode = factory.newUndefinedLiteral();
+		var expression:IUndefinedLiteral = factory.newUndefinedLiteral();
 		
 		Assert.assertTrue(expression.node.isKind(AS3NodeKind.UNDEFINED));
 		assertPrintExpression("undefined", expression);
@@ -192,7 +193,7 @@ public class TestLiteralNodes
 	}
 	
 	protected function assertPrintExpression(expected:String, 
-											 expression:IExpressionNode):void
+											 expression:IExpression):void
 	{
 		printer.print(expression.node);
 		Assert.assertEquals(expected, printer.flush());

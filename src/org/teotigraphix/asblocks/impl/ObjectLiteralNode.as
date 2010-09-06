@@ -20,26 +20,26 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpressionNode;
-import org.teotigraphix.asblocks.api.IObjectLiteralNode;
-import org.teotigraphix.asblocks.api.IPropertyFieldNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IObjectLiteral;
+import org.teotigraphix.asblocks.api.IPropertyField;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
 
 /**
- * The <code>IObjectLiteralNode</code> implementation.
+ * The <code>IObjectLiteral</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class ObjectLiteralNode extends LiteralNode 
-	implements IObjectLiteralNode
+	implements IObjectLiteral
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IArrayLiteralNode API :: Properties
+	//  IObjectLiteral API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -48,11 +48,11 @@ public class ObjectLiteralNode extends LiteralNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IObjectLiteralNode#fields
+	 * @copy org.teotigraphix.asblocks.api.IObjectLiteral#fields
 	 */
-	public function get fields():Vector.<IPropertyFieldNode>
+	public function get fields():Vector.<IPropertyField>
 	{
-		var result:Vector.<IPropertyFieldNode> = new Vector.<IPropertyFieldNode>();
+		var result:Vector.<IPropertyField> = new Vector.<IPropertyField>();
 		var i:ASTIterator = new ASTIterator(node);
 		while (i.hasNext()) 
 		{
@@ -77,14 +77,14 @@ public class ObjectLiteralNode extends LiteralNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IArrayLiteralNode API :: Methods
+	//  IObjectLiteral API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IObjectLiteralNode#add()
+	 * @copy org.teotigraphix.asblocks.api.IObjectLiteral#add()
 	 */
-	public function newField(name:String, expression:IExpressionNode):IPropertyFieldNode
+	public function newField(name:String, expression:IExpression):IPropertyField
 	{
 		var ast:IParserNode = ASTBuilder.newObjectField(name, expression.node);
 		var indent:String = ASTUtil.findIndent(node) + "\t";

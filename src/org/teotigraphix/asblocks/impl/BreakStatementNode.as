@@ -20,18 +20,18 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IBreakStatementNode;
+import org.teotigraphix.asblocks.api.IBreakStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
- * The <code>IBreakStatementNode</code> implementation.
+ * The <code>IBreakStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class BreakStatementNode extends ScriptNode 
-	implements IBreakStatementNode
+	implements IBreakStatement
 {
 	//--------------------------------------------------------------------------
 	//

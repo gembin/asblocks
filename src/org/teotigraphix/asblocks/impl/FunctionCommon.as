@@ -4,7 +4,7 @@ package org.teotigraphix.asblocks.impl
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
-import org.teotigraphix.asblocks.api.IArgumentNode;
+import org.teotigraphix.asblocks.api.IArgument;
 import org.teotigraphix.asblocks.api.IFunctionCommon;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
@@ -25,12 +25,12 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * @private
 	 */
-	private var _arguments:Vector.<IArgumentNode>;
+	private var _arguments:Vector.<IArgument>;
 	
 	/**
 	 * doc
 	 */
-	public function get arguments():Vector.<IArgumentNode>
+	public function get arguments():Vector.<IArgument>
 	{
 		return _arguments;
 	}
@@ -105,7 +105,7 @@ public class FunctionCommon implements IFunctionCommon
 	 */
 	public function addParameter(name:String, 
 								 type:String, 
-								 defaultValue:String = null):IArgumentNode
+								 defaultValue:String = null):IArgument
 	{
 		var ast:IParserNode = ASTUtil.newParamterAST();
 		ast.addChild(ASTUtil.newNameAST(name));
@@ -121,7 +121,7 @@ public class FunctionCommon implements IFunctionCommon
 		return createParameter(ast);
 	}
 	
-	private function createParameter(ast:IParserNode):IArgumentNode
+	private function createParameter(ast:IParserNode):IArgument
 	{
 		var paramList:IParserNode = node.getKind(AS3NodeKind.PARAMETER_LIST);
 		if (paramList.numChildren > 0)
@@ -136,7 +136,7 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * TODO Docme
 	 */
-	public function removeParameter(name:String):IArgumentNode
+	public function removeParameter(name:String):IArgument
 	{
 		return null;
 	}
@@ -144,7 +144,7 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * TODO Docme
 	 */
-	public function addRestParam(name:String):IArgumentNode
+	public function addRestParam(name:String):IArgument
 	{
 		return null;
 	}

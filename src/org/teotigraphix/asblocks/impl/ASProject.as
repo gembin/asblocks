@@ -1,7 +1,8 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.ASFactory;
 
 public class ASProject
 {
@@ -12,16 +13,16 @@ public class ASProject
 		this.factory = factory;
 	}
 	
-	public function newClass(qualifiedName:String):ICompilationUnitNode
+	public function newClass(qualifiedName:String):ICompilationUnit
 	{
-		var cu:ICompilationUnitNode = factory.newClass(qualifiedName);
+		var cu:ICompilationUnit = factory.newClass(qualifiedName);
 		addCompilationUnit(cu);
 		return cu;
 	}
 	
-	public function newInterface(qualifiedName:String):ICompilationUnitNode
+	public function newInterface(qualifiedName:String):ICompilationUnit
 	{
-		var cu:ICompilationUnitNode = factory.newInterface(qualifiedName);
+		var cu:ICompilationUnit = factory.newInterface(qualifiedName);
 		addCompilationUnit(cu);
 		return cu;
 	}
@@ -33,22 +34,22 @@ public class ASProject
 	/**
 	 * @private
 	 */
-	private var _compilationUnits:Vector.<ICompilationUnitNode>;
+	private var _compilationUnits:Vector.<ICompilationUnit>;
 	
 	/**
 	 * doc
 	 */
-	public function get compilationUnits():Vector.<ICompilationUnitNode>
+	public function get compilationUnits():Vector.<ICompilationUnit>
 	{
 		return _compilationUnits;
 	}
 	
 	
-	public function addCompilationUnit(unit:ICompilationUnitNode):void
+	public function addCompilationUnit(unit:ICompilationUnit):void
 	{
 		if (!_compilationUnits)
 		{
-			_compilationUnits = new Vector.<ICompilationUnitNode>();
+			_compilationUnits = new Vector.<ICompilationUnit>();
 		}
 		
 		_compilationUnits.push(unit);

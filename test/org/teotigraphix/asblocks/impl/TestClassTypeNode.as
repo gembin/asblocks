@@ -7,15 +7,15 @@ import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertNull;
 import org.flexunit.asserts.assertStrictlyEquals;
 import org.flexunit.asserts.assertTrue;
-import org.teotigraphix.asblocks.api.IClassTypeNode;
-import org.teotigraphix.asblocks.api.ICompilationUnitNode;
-import org.teotigraphix.asblocks.api.IFieldNode;
-import org.teotigraphix.asblocks.api.IMethodNode;
+import org.teotigraphix.asblocks.api.IClassType;
+import org.teotigraphix.asblocks.api.ICompilationUnit;
+import org.teotigraphix.asblocks.api.IField;
+import org.teotigraphix.asblocks.api.IMethod;
 import org.teotigraphix.asblocks.api.Visibility;
 
 public class TestClassTypeNode extends BaseASFactoryTest
 {
-	private var unit:ICompilationUnitNode;
+	private var unit:ICompilationUnit;
 	
 	[Before]
 	override public function setUp():void
@@ -30,9 +30,9 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_newField():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		// TODO make sure dups cannot be created
-		var field:IFieldNode = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
+		var field:IField = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
 		assertNotNull(field);
 		assertEquals(Visibility.PUBLIC, field.visibility);
 		assertEquals("fieldOne", field.name);
@@ -47,8 +47,8 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_getField():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
-		var field:IFieldNode = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		var field:IField = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
 		assertEquals(field.name, typeNode.getField("fieldOne").name);
 		assertNull(typeNode.getField("fieldTwo"));
 		typeNode.removeField("fieldOne");
@@ -58,10 +58,10 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_removeField():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
-		var field1:IFieldNode = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
-		var field2:IFieldNode = typeNode.newField("fieldTwo", Visibility.PUBLIC, "String");
-		var field3:IFieldNode = typeNode.newField("fieldThree", Visibility.PUBLIC, "String");
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		var field1:IField = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
+		var field2:IField = typeNode.newField("fieldTwo", Visibility.PUBLIC, "String");
+		var field3:IField = typeNode.newField("fieldThree", Visibility.PUBLIC, "String");
 		assertEquals(3, typeNode.fields.length);
 		assertTrue(typeNode.removeField("fieldOne"));
 		assertEquals(2, typeNode.fields.length);
@@ -75,9 +75,9 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_newMethod():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		// TODO make sure dups cannot be created
-		var method:IMethodNode = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
+		var method:IMethod = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
 		assertNotNull(method);
 		assertEquals(Visibility.PUBLIC, method.visibility);
 		assertEquals("methodOne", method.name);
@@ -93,8 +93,8 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_getMethod():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
-		var method:IMethodNode = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		var method:IMethod = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
 		assertEquals(method.name, typeNode.getMethod("methodOne").name);
 		assertNull(typeNode.getMethod("methodTwo"));
 		typeNode.removeMethod("methodOne");
@@ -104,10 +104,10 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_removeMethod():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
-		var method1:IMethodNode = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
-		var method2:IMethodNode = typeNode.newMethod("methodTwo", Visibility.PUBLIC, "String");
-		var method3:IMethodNode = typeNode.newMethod("methodThree", Visibility.PUBLIC, "String");
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		var method1:IMethod = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
+		var method2:IMethod = typeNode.newMethod("methodTwo", Visibility.PUBLIC, "String");
+		var method3:IMethod = typeNode.newMethod("methodThree", Visibility.PUBLIC, "String");
 		assertEquals(3, typeNode.methods.length);
 		assertTrue(typeNode.removeMethod("methodOne"));
 		assertEquals(2, typeNode.methods.length);
@@ -121,7 +121,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_isDynamic():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		assertFalse(typeNode.isDynamic);
 		typeNode.isDynamic = true;
 		assertTrue(typeNode.isDynamic);
@@ -132,7 +132,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_isFinal():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		assertFalse(typeNode.isFinal);
 		typeNode.isFinal = true;
 		assertTrue(typeNode.isFinal);
@@ -143,7 +143,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_visibility():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		assertEquals(Visibility.PUBLIC, typeNode.visibility);
 		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
 		// TOD this shouldn' be possible, just testing right now
@@ -155,7 +155,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_name():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		assertEquals("A", typeNode.name);
 		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
 		typeNode.name = "TestA";
@@ -167,7 +167,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_superClass():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		assertNull(typeNode.superClass);
 		typeNode.superClass = "ClassB";
 		assertEquals("ClassB", typeNode.superClass);
@@ -185,7 +185,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	{
 		// TODO block adding the same type
 		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		typeNode.addImplementedInterface("IInterfaceA");
 		assertPrint("package {\n\tpublic class A implements IInterfaceA {\n\t}\n}", unit);
 		typeNode.addImplementedInterface("IInterfaceB");
@@ -200,7 +200,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	public function test_removeImplementedInterface():void
 	{
 		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		typeNode.addImplementedInterface("IInterfaceA");
 		assertPrint("package {\n\tpublic class A implements IInterfaceA {\n\t}\n}", unit);
 		typeNode.addImplementedInterface("IInterfaceB");
@@ -215,7 +215,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_implementedInterface():void
 	{
-		var typeNode:IClassTypeNode = unit.typeNode as IClassTypeNode;
+		var typeNode:IClassType = unit.typeNode as IClassType;
 		typeNode.addImplementedInterface("IInterfaceA");
 		typeNode.addImplementedInterface("IInterfaceB");
 		typeNode.addImplementedInterface("IInterfaceC");

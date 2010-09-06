@@ -42,7 +42,7 @@ public interface IMetaDataAware
 	/**
 	 * The metadata nodes found on the host.
 	 */
-	function get metaDatas():Vector.<IMetaDataNode>;
+	function get metaDatas():Vector.<IMetaData>;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -53,7 +53,7 @@ public interface IMetaDataAware
 	/**
 	 * TODO Docme
 	 */
-	function newMetaData(name:String):IMetaDataNode;
+	function newMetaData(name:String):IMetaData;
 	
 	/**
 	 * Returns the first IMetaDataNode node named name.
@@ -61,7 +61,7 @@ public interface IMetaDataAware
 	 * @param name A String indicating the first IMetaDataNode node to return.
 	 * @return An IMetaDataNode named name.
 	 */
-	function getMetaData(name:String):IMetaDataNode;
+	function getMetaData(name:String):IMetaData;
 	
 	/**
 	 * Returns all IMetaDataNode nodes named name as a Vector.
@@ -69,7 +69,7 @@ public interface IMetaDataAware
 	 * @param name A String indicating the IMetaDataNode nodes to return.
 	 * @return A Vector of IMetaDataNode named name.
 	 */
-	function getAllMetaData(name:String):Vector.<IMetaDataNode>;
+	function getAllMetaData(name:String):Vector.<IMetaData>;
 	
 	/**
 	 * Returns whether the host contains metadata named name.
@@ -84,6 +84,6 @@ public interface IMetaDataAware
 	 * 
 	 * @param node The metadata node to remove.
 	 */
-	function removeMetaData(node:IMetaDataNode):Boolean;
+	function removeMetaData(node:IMetaData):Boolean;
 }
 }
