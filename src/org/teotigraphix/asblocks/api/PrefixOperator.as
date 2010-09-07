@@ -20,9 +20,15 @@
 package org.teotigraphix.asblocks.api
 {
 
+import com.ericfeminella.collections.HashMap;
+import com.ericfeminella.collections.IMap;
+
+import flash.errors.IllegalOperationError;
+
 import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.core.LinkedListToken;
-import org.teotigraphix.as3parser.core.Token;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * Prefix operators.
@@ -33,21 +39,40 @@ import org.teotigraphix.as3parser.core.Token;
  */
 public final class PrefixOperator
 {
+	private static var OPERATORS_BY_TYPE:IMap = new HashMap();
+	
+	private static var TYPES_BY_OPERATOR:IMap = new HashMap();
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public :: Constants
 	//
 	//--------------------------------------------------------------------------
 	
-	public static const PREDEC:PrefixOperator = PrefixOperator.create("--");
 	
-	public static const PREINC:PrefixOperator = PrefixOperator.create("++");
+	public static const PREDEC:PrefixOperator = PrefixOperator.create("PREDEC");
 	
-	private static var list:Array =
-		[
-			PREDEC,
-			PREINC
-		];
+	public static const PREINC:PrefixOperator = PrefixOperator.create("PREINC");
+	
+	
+	private static var intialized:Boolean = false;
+	
+	private static function initialize():void
+	{
+		if (intialized)
+			return;
+		
+		mapOp(AS3NodeKind.PRE_DEC, "--", PrefixOperator.PREDEC);
+		mapOp(AS3NodeKind.PRE_INC, "++", PrefixOperator.PREINC);
+		
+		intialized = true;
+	}
+	
+	private static function mapOp(kind:String, text:String, operator:PrefixOperator):void
+	{
+		OPERATORS_BY_TYPE.put(kind, operator);
+		TYPES_BY_OPERATOR.put(operator, new LinkedListToken(kind, text));
+	}
 	
 	//--------------------------------------------------------------------------
 	//
@@ -115,44 +140,46 @@ public final class PrefixOperator
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @private
+	 * Creates a new PrefixOperator.
+	 * 
+	 * @param name A String indicating the name of the PrefixOperator.
+	 * @return A new PrefixOperator instance.
 	 */
-	public static function create(name:String):PrefixOperator
+	private static function create(name:String):PrefixOperator
 	{
-		for each (var element:PrefixOperator in list) 
-		{
-			if (element.name == name)
-				return element;
-		}
-		
 		return new PrefixOperator(name);
 	}
 	
-	/**
-	 * @private
-	 */
-	public static function find(type:String):PrefixOperator
+	public static function opFromKind(kind:String):PrefixOperator
 	{
-		for each (var element:PrefixOperator in list) 
+		if (!intialized)
 		{
-			if (element.name == type)
-				return element;
+			initialize();
 		}
-		return null;
+		
+		var op:PrefixOperator = OPERATORS_BY_TYPE.getValue(kind);
+		if (op == null) 
+		{
+			throw new IllegalOperationError("No operator for token-type '" + 
+				ASTUtil.tokenName(kind) + "'");
+		}
+		return op;
 	}
 	
-	/**
-	 * @private
-	 */
-	public static function initialize(operator:PrefixOperator, token:Token):void
+	public static function initializeFromOp(operator:PrefixOperator, tok:IToken):void
 	{
-		var ltok:LinkedListToken = token as LinkedListToken;
-		var op:PrefixOperator = find(operator.name);
-		if (!op)
-			return;	
+		if (!intialized)
+		{
+			initialize();
+		}
 		
-		ltok.text = op.name;
-		ltok.kind = AS3NodeKind.OP;
+		var type:LinkedListToken = TYPES_BY_OPERATOR.getValue(operator);
+		if (type == null) 
+		{
+			throw new IllegalOperationError("No operator for Op " + operator);
+		}
+		tok.kind = type.kind;
+		tok.text = type.text;
 	}
 }
 }

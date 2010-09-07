@@ -71,7 +71,7 @@ public class PrefixExpressionNode extends ExpressionNode
 	 */
 	public function get operator():PrefixOperator
 	{
-		return PrefixOperator.find(node.stringValue);
+		return PrefixOperator.opFromKind(node.kind);
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class PrefixExpressionNode extends ExpressionNode
 	 */
 	public function set operator(value:PrefixOperator):void
 	{
-		PrefixOperator.initialize(value, TokenNode(node).token);
+		PrefixOperator.initializeFromOp(value, TokenNode(node).token);
 	}
 	
 	//--------------------------------------------------------------------------

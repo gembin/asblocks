@@ -62,31 +62,6 @@ public class LinkedListToken extends Token
 	}
 	
 	//----------------------------------
-	//  kind
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _kind:String;
-	
-	/**
-	 * The token's kind.
-	 */
-	public function get kind():String
-	{
-		return _kind;
-	}
-	
-	/**
-	 * @private
-	 */
-	public function set kind(value:String):void
-	{
-		_kind = value;
-	}
-	
-	//----------------------------------
 	//  previous
 	//----------------------------------
 	
@@ -155,7 +130,7 @@ public class LinkedListToken extends Token
 	{
 		super(text, line, column);
 		
-		_kind = kind;
+		this.kind = kind;
 	}
 	
 	public function afterInsert(insert:LinkedListToken):void

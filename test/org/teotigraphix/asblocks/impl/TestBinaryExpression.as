@@ -2,12 +2,8 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.asserts.assertEquals;
-import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.SourceCode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.asblocks.ASFactory;
-import org.teotigraphix.asblocks.CodeMirror;
 import org.teotigraphix.asblocks.api.BinaryOperator;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.IExpression;
@@ -34,16 +30,6 @@ public class TestBinaryExpression
 	[After]
 	public function tearDown():void
 	{
-		/*
-		if (expression)
-		{
-			var sourceCode:SourceCode = new SourceCode();
-			var ast:IParserNode = expression.node;
-			new ASTPrinter(sourceCode).print(ast);
-			var parsed:IParserNode = AS3FragmentParser.parseExpression(sourceCode.code);
-			CodeMirror.assertASTMatch(ast, parsed);
-		}
-		*/
 		if (expression)
 		{
 			assertEquals(left.node, expression.leftExpression.node);
@@ -100,113 +86,113 @@ public class TestBinaryExpression
 		assertOp(BinaryOperator.EQ);
 	}
 	
-	
-	
-	
-	
-	
-	
-	
 	[Test]
-	public function _testLogicalOr():void
+	public function testGreaterEquals():void
 	{
-		//expression = factory.newExpression("a || b || c") as IBinaryExpression;
-		//assertTrue(expression.operator.equals(BinaryOperator.AND));
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newGreaterEqualsExpression(left, right);
+		assertOp(BinaryOperator.GE);
 	}
 	
 	[Test]
-	public function _testLogicalAnd():void
+	public function testGreaterThan():void
 	{
-		//expression = factory.newExpression("a && b && c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	[Test]
-	public function _testBitOr():void
-	{
-		//expression = factory.newExpression("a | b | c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newGreaterThanExpression(left, right);
+		assertOp(BinaryOperator.GT);
 	}
 	
 	[Test]
-	public function _testXor():void
+	public function testLessEquals():void
 	{
-		//expression = factory.newExpression("a ^ b ^ c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newLessEqualsExpression(left, right);
+		assertOp(BinaryOperator.LE);
 	}
 	
 	[Test]
-	public function _testBitAnd():void
+	public function testLessThan():void
 	{
-		//expression = factory.newExpression("a & b & c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newLessThanExpression(left, right);
+		assertOp(BinaryOperator.LT);
 	}
 	
 	[Test]
-	public function _testEquality():void
+	public function testModulo():void
 	{
-		//expression = factory.newExpression("a == b == c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newModuloExpression(left, right);
+		assertOp(BinaryOperator.MOD);
 	}
 	
 	[Test]
-	public function _testRelational():void
+	public function testMultiply():void
 	{
-		//expression = factory.newExpression("a < b < c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newMultiplyExpression(left, right);
+		assertOp(BinaryOperator.MUL);
 	}
 	
 	[Test]
-	public function _testShift():void
+	public function testNotEquals():void
 	{
-		//expression = factory.newExpression("a << b << c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newNotEqualsExpression(left, right);
+		assertOp(BinaryOperator.NE);
 	}
 	
 	[Test]
-	public function _testAdditivePlus():void
+	public function testOr():void
 	{
-		//expression = factory.newExpression("a + b + c") as IBinaryExpression;
-		//assertEquals(BinaryOperator.ADD, expression.operator.name);
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newOrExpression(left, right);
+		assertOp(BinaryOperator.OR);
 	}
 	
 	[Test]
-	public function _testAdditiveMinus():void
+	public function testShiftLeft():void
 	{
-		//expression = factory.newExpression("a - b - c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newShiftLeftExpression(left, right);
+		assertOp(BinaryOperator.SL);
 	}
 	
 	[Test]
-	public function _testMultiplicative():void
+	public function testShiftRight():void
 	{
-		//expression = factory.newExpression("a * b * c") as IBinaryExpression;
-		//var left:IExpression = factory.newExpression("foo");
-		//expression.leftExpression = left;
+		expression = factory.newShiftRightExpression(left, right);
+		assertOp(BinaryOperator.SR);
+	}
+	
+	[Test]
+	public function testShiftRightUnsigned():void
+	{
+		expression = factory.newShiftRightUnsignedExpression(left, right);
+		assertOp(BinaryOperator.SRU);
+	}
+	
+	[Test]
+	public function testSubtract():void
+	{
+		expression = factory.newSubtractExpression(left, right);
+		assertOp(BinaryOperator.SUB);
+	}
+	
+	[Test]
+	public function testSetOp():void
+	{
+		expression = factory.newAddExpression(left, right);
+		assertOp(BinaryOperator.ADD);
+		expression.operator = BinaryOperator.SUB;
+		assertOp(BinaryOperator.SUB);
+	}
+	
+	[Test]
+	public function testSetLeft():void
+	{
+		expression = factory.newAddExpression(left, right);
+		left = factory.newNumberLiteral(24);
+		expression.leftExpression = left;
+	}
+	
+	[Test]
+	public function testSetRight():void
+	{
+		expression = factory.newAddExpression(left, right);
+		right = factory.newNumberLiteral(24);
+		expression.rightExpression = right;
 	}
 	
 	private function assertOp(expected:BinaryOperator):void

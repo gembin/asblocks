@@ -175,7 +175,7 @@ public class TokenBuilder
 	
 	public static function newShiftRightUnsigned():LinkedListToken
 	{
-		return newToken(AS3NodeKind.SRU, ">>>");
+		return newToken(AS3NodeKind.BSR, ">>>");
 	}
 	
 	public static function newMinus():LinkedListToken

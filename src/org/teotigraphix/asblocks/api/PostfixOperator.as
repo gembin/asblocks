@@ -20,9 +20,15 @@
 package org.teotigraphix.asblocks.api
 {
 
+import com.ericfeminella.collections.HashMap;
+import com.ericfeminella.collections.IMap;
+
+import flash.errors.IllegalOperationError;
+
 import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.core.LinkedListToken;
-import org.teotigraphix.as3parser.core.Token;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * Postfix operators.
@@ -33,21 +39,40 @@ import org.teotigraphix.as3parser.core.Token;
  */
 public final class PostfixOperator
 {
+	private static var OPERATORS_BY_TYPE:IMap = new HashMap();
+	
+	private static var TYPES_BY_OPERATOR:IMap = new HashMap();
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public :: Constants
 	//
 	//--------------------------------------------------------------------------
 	
-	public static const POSTDEC:PostfixOperator = PostfixOperator.create("--");
 	
-	public static const POSTINC:PostfixOperator = PostfixOperator.create("++");
+	public static const POSTDEC:PostfixOperator = PostfixOperator.create("POSTDEC");
 	
-	private static var list:Array =
-		[
-			POSTDEC,
-			POSTINC
-		];
+	public static const POSTINC:PostfixOperator = PostfixOperator.create("POSTINC");
+	
+	
+	private static var intialized:Boolean = false;
+	
+	private static function initialize():void
+	{
+		if (intialized)
+			return;
+		
+		mapOp(AS3NodeKind.POST_DEC, "--", PostfixOperator.POSTDEC);
+		mapOp(AS3NodeKind.POST_INC, "++", PostfixOperator.POSTINC);
+		
+		intialized = true;
+	}
+	
+	private static function mapOp(kind:String, text:String, operator:PostfixOperator):void
+	{
+		OPERATORS_BY_TYPE.put(kind, operator);
+		TYPES_BY_OPERATOR.put(operator, new LinkedListToken(kind, text));
+	}
 	
 	//--------------------------------------------------------------------------
 	//
@@ -115,44 +140,46 @@ public final class PostfixOperator
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @private
+	 * Creates a new PostfixOperator.
+	 * 
+	 * @param name A String indicating the name of the PostfixOperator.
+	 * @return A new PostfixOperator instance.
 	 */
-	public static function create(name:String):PostfixOperator
+	private static function create(name:String):PostfixOperator
 	{
-		for each (var element:PostfixOperator in list) 
-		{
-			if (element.name == name)
-				return element;
-		}
-		
 		return new PostfixOperator(name);
 	}
 	
-	/**
-	 * @private
-	 */
-	public static function find(type:String):PostfixOperator
+	public static function opFromKind(kind:String):PostfixOperator
 	{
-		for each (var element:PostfixOperator in list) 
+		if (!intialized)
 		{
-			if (element.name == type)
-				return element;
+			initialize();
 		}
-		return null;
+		
+		var op:PostfixOperator = OPERATORS_BY_TYPE.getValue(kind);
+		if (op == null) 
+		{
+			throw new IllegalOperationError("No operator for token-type '" + 
+				ASTUtil.tokenName(kind) + "'");
+		}
+		return op;
 	}
 	
-	/**
-	 * @private
-	 */
-	public static function initialize(operator:PostfixOperator, token:Token):void
+	public static function initializeFromOp(operator:PostfixOperator, tok:IToken):void
 	{
-		var ltok:LinkedListToken = token as LinkedListToken;
-		var op:PostfixOperator = find(operator.name);
-		if (!op)
-			return;	
+		if (!intialized)
+		{
+			initialize();
+		}
 		
-		ltok.text = op.name;
-		ltok.kind = AS3NodeKind.OP;
+		var type:LinkedListToken = TYPES_BY_OPERATOR.getValue(operator);
+		if (type == null) 
+		{
+			throw new IllegalOperationError("No operator for Op " + operator);
+		}
+		tok.kind = type.kind;
+		tok.text = type.text;
 	}
 }
 }

@@ -64,6 +64,20 @@ public interface IToken
 	function set line(value:int):void;
 	
 	//----------------------------------
+	//  kind
+	//----------------------------------
+	
+	/**
+	 * The String kind the token carries.
+	 */
+	function get kind():String;
+	
+	/**
+	 * @private
+	 */
+	function set kind(value:String):void;
+	
+	//----------------------------------
 	//  text
 	//----------------------------------
 	

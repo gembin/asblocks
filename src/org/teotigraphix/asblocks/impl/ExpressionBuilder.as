@@ -26,38 +26,25 @@ public class ExpressionBuilder
 			case AS3NodeKind.FALSE:
 				return new BooleanLiteralNode(ast);
 			
-			/*	
-				case AS3Parser.PLUS:
-				case AS3Parser.LAND:
-				case AS3Parser.BAND:
-				case AS3Parser.BOR:
-				case AS3Parser.BXOR:
-				case AS3Parser.DIV:
-				case AS3Parser.EQUAL:
-				case AS3Parser.GE:
-				case AS3Parser.GT:
-				case AS3Parser.LE:
-				case AS3Parser.LT:
-				case AS3Parser.MOD:
-				case AS3Parser.MULT:
-				case AS3Parser.NOT_EQUAL:
-				case AS3Parser.LOR:
-				case AS3Parser.SL:
-				case AS3Parser.SR:
-				case AS3Parser.BSR:
-				case AS3Parser.MINUS:
-				*/
-			case AS3NodeKind.OR:
-			case AS3NodeKind.AND:
-			case AS3NodeKind.B_OR:
-			case AS3NodeKind.B_XOR:
-			case AS3NodeKind.B_AND:
+			case AS3NodeKind.ADDITIVE:
 			case AS3NodeKind.EQUALITY:
 			case AS3NodeKind.RELATIONAL:
 			case AS3NodeKind.SHIFT:
-			case AS3NodeKind.ADDITIVE:
 			case AS3NodeKind.MULTIPLICATIVE:
+			case AS3NodeKind.AND:
+			case AS3NodeKind.OR:
+			case AS3NodeKind.B_AND:
+			case AS3NodeKind.B_OR:
+			case AS3NodeKind.B_XOR:
 				return new BinaryExpressionNode(ast);
+				
+			case AS3NodeKind.PRE_INC:
+			case AS3NodeKind.PRE_DEC:
+				return new PrefixExpressionNode(ast);
+				
+			case AS3NodeKind.POST_INC:
+			case AS3NodeKind.POST_DEC:
+				return new PostfixExpressionNode(ast);
 				
 			case AS3NodeKind.CALL:
 				return new InvocationExpressionNode(ast);
@@ -76,6 +63,9 @@ public class ExpressionBuilder
 			
 			case AS3NodeKind.ARRAY_ACCESSOR:
 				return new ArrayAccessExpressionNode(ast);
+			
+			case AS3NodeKind.DOT:
+				return new FieldAccessExpression(ast);
 				
 			default:
 				throw new IllegalOperationError("unhandled expression node type: '" + ast.kind + "'");
@@ -139,8 +129,8 @@ public class ExpressionBuilder
 			`case AS3Parser.TRUE:
 			`case AS3Parser.FALSE:
 				return new ASTASBooleanLiteral(ast);
-			`case AS3Parser.PLUS_ASSIGN:
-			`case AS3Parser.ASSIGN:
+			case AS3Parser.PLUS_ASSIGN:
+			case AS3Parser.ASSIGN:
 			case AS3Parser.BAND_ASSIGN:
 			case AS3Parser.BOR_ASSIGN:
 			case AS3Parser.BXOR_ASSIGN:

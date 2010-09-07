@@ -6,6 +6,8 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.as3parser.impl.AS3Parser;
+import org.teotigraphix.asblocks.api.BinaryOperator;
 import org.teotigraphix.asblocks.api.IAssignmentExpression;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
@@ -511,22 +513,24 @@ public class ASTBuilder
 											   left:IExpression,
 											   right:IExpression):IBinaryExpression
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.OP, op.text);
+		var ast:IParserNode = ASTUtil.newBinaryAST(op);
+		var opAST:IParserNode = ASTUtil.newTokenAST(op);
 		
 		var leftExpr:IParserNode = left.node;
 		var rightExpr:IParserNode = right.node;
 		
-		if (precidence(ast) < precidence(leftExpr))
+		if (precidence(opAST) < precidence(leftExpr))
 		{
 			leftExpr = parenthise(leftExpr);
 		}
-		if (precidence(ast) < precidence(rightExpr))
+		if (precidence(opAST) < precidence(rightExpr))
 		{
 			rightExpr = parenthise(rightExpr);
 		}
 		
 		TokenNode(ast).noUpdate = true;
 		ast.addChild(leftExpr);
+		ast.addChild(opAST);
 		ast.addChild(rightExpr);
 		TokenNode(ast).noUpdate = false;
 		

@@ -20,11 +20,12 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
 import org.teotigraphix.asblocks.api.ISimpleNameExpression;
-import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IFieldAccessExpression</code> implementation.
@@ -51,7 +52,7 @@ public class FieldAccessExpression extends ExpressionNode
 	 */
 	public function get name():String
 	{
-		return node.getLastChild().stringValue;
+		return ASTUtil.stringifyNode(node.getFirstChild())
 	}
 	
 	/**

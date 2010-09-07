@@ -5,8 +5,10 @@ import org.flexunit.Assert;
 import org.flexunit.asserts.assertEquals;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.core.TokenNode;
+import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 
 public class CodeMirror
@@ -15,6 +17,10 @@ public class CodeMirror
 											unit:ICompilationUnit):ICompilationUnit
 	{
 		var ast:IParserNode = unit.node;
+		saintyCheckTokenStream(ast);
+		saintyCheckStartStopTokens(ast);
+		// FIXME
+		//assertTokenStreamNotDisjoint(ast);
 		var writer:IASWriter = factory.newWriter();
 		var sourceCode1:SourceCode = new SourceCode();
 		try
@@ -69,6 +75,60 @@ public class CodeMirror
 		}
 	}
 	
+	public static function assertTokenStreamNotDisjoint(ast:IParserNode):Vector.<LinkedListToken>
+	{
+		var tokensFromStartToStop:Vector.<LinkedListToken> = tokenStreamToSet(ast);
+		for (var i:int=0; i<ast.numChildren; i++)
+		{
+			var child:IParserNode = ast.getChild(i);
+			var childTokens:Vector.<LinkedListToken> = assertTokenStreamNotDisjoint(child);
+			Assert.assertTrue("'"+child+"' (child "+i+" of '"+ast+
+				"') had a token stream disjoint with its parent",
+				containsAll(tokensFromStartToStop, childTokens));
+		}
+		
+		return tokensFromStartToStop;
+	}
+	
+	private static function containsAll(one:Vector.<LinkedListToken>, 
+										two:Vector.<LinkedListToken>):Boolean
+	{
+		var test:Array = [];
+		var len:int = one.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var node:IParserNode = one[i] as IParserNode;
+			var lenj:int = two.length;
+			for (var j:int = 0; j < lenj; j++)
+			{
+				if (node === two[j])
+				{
+					test.push(two[j]);
+					break;
+				}
+			}
+		}
+		
+		return two.length == test.length;
+	}
+	
+	private static function tokenStreamToSet(ast:IParserNode):Vector.<LinkedListToken>
+	{
+		var tokens:Vector.<LinkedListToken> = new Vector.<LinkedListToken>();
+		
+		var tok:LinkedListToken = ast.startToken;
+		while (tok != null)
+		{
+			tokens.push(tok);
+			if (tok == ast.stopToken)
+			{
+				break;
+			}
+			tok = tok.next;
+		}
+		return tokens;
+	}
+	
 	private static function pathTo(ast:IParserNode):String
 	{
 		var buffer:String = "";
@@ -109,6 +169,39 @@ public class CodeMirror
 		buffer += ")";
 		return buffer;
 	}
-
+	
+	private static function saintyCheckTokenStream(ast:IParserNode):void
+	{
+		var last:LinkedListToken = null;
+		for (var tok:LinkedListToken=ast.startToken; tok!=null; tok=tok.next)
+		{
+			if (last != null && last != tok.previous)
+			{
+				Assert.fail("last["+last+"].next=>["+tok+"] but next.prev=>["+tok.previous+"]");
+			}
+			last = tok;
+		}
+	}
+	private static function saintyCheckStartStopTokens(ast:IParserNode):void
+	{
+		assertStopNotBeforeStart(ast);
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			saintyCheckStartStopTokens(i.next());
+		}
+	}
+	
+	private static function assertStopNotBeforeStart(ast:IParserNode):void
+	{
+		var start:LinkedListToken = ast.startToken;
+		var stop:LinkedListToken = ast.stopToken;
+		if (stop == start) return;
+		for (var tok:LinkedListToken=stop; tok!=null; tok=tok.next)
+		{
+			Assert.assertFalse("Found stopToken preceeding startToken: "+ast+"("+start+" - "+stop+")",
+				tok==start);
+		}
+	}
 }
 }

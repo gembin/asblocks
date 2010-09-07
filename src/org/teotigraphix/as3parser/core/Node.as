@@ -307,7 +307,7 @@ public class Node extends NestedNode implements IParserNode
 	 */
 	public function toString():String
 	{
-		return null;
+		return kind;
 	}
 	
 	//--------------------------------------------------------------------------

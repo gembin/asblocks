@@ -238,12 +238,6 @@ public class AS3NodeKind
 	public static const SR:String = "sr";
 	
 	/**
-	 * FIXME is this in BinaryOperator ?
-	 * <code>>>></code>
-	 */
-	public static const SRU:String = "sru";
-	
-	/**
 	 * <code><<<</code>
 	 */
 	public static const SSL:String = "ssl";

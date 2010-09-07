@@ -198,6 +198,52 @@ public class ASTUtil
 		return adapter.create(kind, text);
 	}
 	
+	
+	public static function newBinaryAST(op:LinkedListToken):IParserNode
+	{
+		if (AS3Parser.additiveMap.containsValue(op.kind))
+		{
+			return newAST(AS3NodeKind.ADDITIVE);
+		}
+		else if (AS3Parser.equalityMap.containsValue(op.kind))
+		{
+			return newAST(AS3NodeKind.EQUALITY);
+		}
+		else if (AS3Parser.relationMap.containsValue(op.kind))
+		{
+			return newAST(AS3NodeKind.RELATIONAL);
+		}
+		else if (AS3Parser.shiftMap.containsValue(op.kind))
+		{
+			return newAST(AS3NodeKind.SHIFT);
+		}
+		else if (AS3Parser.multiplicativeMap.containsValue(op.kind))
+		{
+			return newAST(AS3NodeKind.MULTIPLICATIVE);
+		}
+		else if (op.kind == AS3NodeKind.LAND)
+		{
+			return newAST(AS3NodeKind.AND);
+		}
+		else if (op.kind == AS3NodeKind.LOR)
+		{
+			return newAST(AS3NodeKind.OR);
+		}
+		else if (op.kind == AS3NodeKind.BAND)
+		{
+			return newAST(AS3NodeKind.B_AND);
+		}
+		else if (op.kind == AS3NodeKind.BOR)
+		{
+			return newAST(AS3NodeKind.B_OR);
+		}
+		else if (op.kind == AS3NodeKind.BXOR)
+		{
+			return newAST(AS3NodeKind.B_XOR);
+		}
+		return null;
+	}
+	
 	public static function newTokenAST(token:LinkedListToken):IParserNode
 	{
 		return adapter.createNode(token);
@@ -453,7 +499,11 @@ public class ASTUtil
 		var result:String = "";
 		for (var tok:LinkedListToken =  ast.startToken; tok != null && tok.kind != null; tok = tok.next)
 		{
-			result += tok.text;
+			if (tok.text != null)
+			{
+				result += tok.text;
+			}
+			
 			if (tok == ast.stopToken)
 			{
 				break;

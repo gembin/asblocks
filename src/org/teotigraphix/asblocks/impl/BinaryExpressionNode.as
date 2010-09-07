@@ -79,7 +79,7 @@ public class BinaryExpressionNode extends ExpressionNode
 	 */
 	public function set rightExpression(value:IExpression):void
 	{
-		setExpression(value, 1);
+		setExpression(value, 2);
 	}
 	
 	//----------------------------------
@@ -91,7 +91,8 @@ public class BinaryExpressionNode extends ExpressionNode
 	 */
 	public function get operator():BinaryOperator
 	{
-		return BinaryOperator.find(node.kind);
+		// TODO node.kind is additive, middle child is the kind of additive
+		return BinaryOperator.opFromKind(node.getChild(1).kind);
 	}
 	
 	/**
@@ -99,7 +100,7 @@ public class BinaryExpressionNode extends ExpressionNode
 	 */
 	public function set operator(value:BinaryOperator):void
 	{
-		BinaryOperator.initialize(value, TokenNode(node).token);
+		BinaryOperator.initializeFromOp(value, TokenNode(node.getChild(1)).token);
 	}
 	
 	//--------------------------------------------------------------------------

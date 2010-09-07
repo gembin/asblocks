@@ -102,6 +102,31 @@ public class Token implements IToken
 	}
 	
 	//----------------------------------
+	//  kind
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _kind:String;
+	
+	/**
+	 * The token's kind.
+	 */
+	public function get kind():String
+	{
+		return _kind;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set kind(value:String):void
+	{
+		_kind = value;
+	}
+	
+	//----------------------------------
 	//  text
 	//----------------------------------
 	

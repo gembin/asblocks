@@ -71,7 +71,7 @@ public class PostfixExpressionNode extends ExpressionNode
 	 */
 	public function get operator():PostfixOperator
 	{
-		return PostfixOperator.find(node.stringValue);
+		return PostfixOperator.opFromKind(node.kind);
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public class PostfixExpressionNode extends ExpressionNode
 	 */
 	public function set operator(value:PostfixOperator):void
 	{
-		PostfixOperator.initialize(value, TokenNode(node).token);
+		PostfixOperator.initializeFromOp(value, TokenNode(node).token);
 	}
 	
 	//--------------------------------------------------------------------------

@@ -12,6 +12,7 @@ import org.teotigraphix.asblocks.impl.TestFieldNode;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
 import org.teotigraphix.asblocks.impl.TestLiteralNodes;
 import org.teotigraphix.asblocks.impl.TestPackageNode;
+import org.teotigraphix.asblocks.impl.TestTokenBoundaries;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
@@ -30,6 +31,7 @@ public class AS3BlocksTestSuite
 	// 
 	public var testArrayAccessExpression:TestArrayAccessExpression;
 	public var testBinaryExpression:TestBinaryExpression;
+	public var testTokenBoundaries:TestTokenBoundaries;
 	public var testFieldNode:TestFieldNode;
 	
 }

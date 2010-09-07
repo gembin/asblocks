@@ -23,10 +23,12 @@ package org.teotigraphix.asblocks.api
 import com.ericfeminella.collections.HashMap;
 import com.ericfeminella.collections.IMap;
 
+import flash.errors.IllegalOperationError;
+
 import org.teotigraphix.as3parser.api.AS3NodeKind;
-import org.teotigraphix.as3parser.api.Operators;
+import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.core.LinkedListToken;
-import org.teotigraphix.as3parser.core.Token;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * Binary operators.
@@ -37,7 +39,9 @@ import org.teotigraphix.as3parser.core.Token;
  */
 public final class BinaryOperator
 {
-	private static var map:IMap;
+	private static var OPERATORS_BY_TYPE:IMap = new HashMap();
+	
+	private static var TYPES_BY_OPERATOR:IMap = new HashMap();
 	
 	//--------------------------------------------------------------------------
 	//
@@ -45,63 +49,78 @@ public final class BinaryOperator
 	//
 	//--------------------------------------------------------------------------
 	
-	public static const ADD:BinaryOperator = BinaryOperator.create(Operators.PLUS);
+	public static var ADD:BinaryOperator = BinaryOperator.create("ADD");
 	
-	public static const AND:BinaryOperator = BinaryOperator.create(Operators.LAND);
+	public static var AND:BinaryOperator = BinaryOperator.create("AND");
 	
-	public static const BITAND:BinaryOperator = BinaryOperator.create(Operators.BAND);
+	public static var BITAND:BinaryOperator = BinaryOperator.create("BITAND");
 	
-	public static const BITOR:BinaryOperator = BinaryOperator.create(Operators.BOR);
+	public static var BITOR:BinaryOperator = BinaryOperator.create("BITOR");
 	
-	public static const BITXOR:BinaryOperator = BinaryOperator.create(Operators.BXOR);
+	public static var BITXOR:BinaryOperator = BinaryOperator.create("BITXOR");
 	
-	public static const DIV:BinaryOperator = BinaryOperator.create(Operators.DIV);
+	public static var DIV:BinaryOperator = BinaryOperator.create("DIV");
 	
-	public static const EQ:BinaryOperator = BinaryOperator.create(Operators.EQUAL);
+	public static var EQ:BinaryOperator = BinaryOperator.create("EQ");
 	
-	public static const GE:BinaryOperator = BinaryOperator.create(Operators.GE);
+	public static var GE:BinaryOperator = BinaryOperator.create("GE");
 	
-	public static const GT:BinaryOperator = BinaryOperator.create(Operators.GT);
+	public static var GT:BinaryOperator = BinaryOperator.create("GT");
 	
-	public static const LE:BinaryOperator = BinaryOperator.create(Operators.LE);
+	public static var LE:BinaryOperator = BinaryOperator.create("LE");
 	
-	public static const LT:BinaryOperator = BinaryOperator.create(Operators.LT);
+	public static var LT:BinaryOperator = BinaryOperator.create("LT");
 	
-	public static const MOD:BinaryOperator = BinaryOperator.create(Operators.MOD);
+	public static var MOD:BinaryOperator = BinaryOperator.create("MOD");
 	
-	public static const MUL:BinaryOperator = BinaryOperator.create(Operators.STAR);
+	public static var MUL:BinaryOperator = BinaryOperator.create("MUL");
 	
-	public static const NE:BinaryOperator = BinaryOperator.create(Operators.NOT_EQUAL);
+	public static var NE:BinaryOperator = BinaryOperator.create("NE");
 	
-	public static const OR:BinaryOperator = BinaryOperator.create(Operators.LOR);
+	public static var OR:BinaryOperator = BinaryOperator.create("OR");
 	
-	public static const SL:BinaryOperator = BinaryOperator.create(Operators.SL);
+	public static var SL:BinaryOperator = BinaryOperator.create("SL");
 	
-	public static const SR:BinaryOperator = BinaryOperator.create(Operators.SR);
+	public static var SR:BinaryOperator = BinaryOperator.create("SR");
 	
-	public static const SRU:BinaryOperator = BinaryOperator.create(Operators.BSR);
+	public static var SRU:BinaryOperator = BinaryOperator.create("SRU");
 	
-	public static const SUB:BinaryOperator = BinaryOperator.create(Operators.MINUS);
+	public static var SUB:BinaryOperator = BinaryOperator.create("SUB");
 	
 	private static var intialized:Boolean = false;
 	
-	private static function init():void
+	private static function initialize():void
 	{
 		if (intialized)
 			return;
 		
-		map = new HashMap();
-		map.put(AS3NodeKind.ADDITIVE, ADD);
-		map.put(AS3NodeKind.AND, AND);
-		map.put(AS3NodeKind.B_AND, BITAND);
-		map.put(AS3NodeKind.B_OR, BITOR);
-		map.put(AS3NodeKind.B_XOR, BITXOR);
-		map.put(AS3NodeKind.MULTIPLICATIVE, DIV);
-		map.put(AS3NodeKind.RELATIONAL, EQ);
-		//map.put(AS3NodeKind.B_XOR, BITXOR);
-		
+		mapOp(AS3NodeKind.PLUS, "+", BinaryOperator.ADD);
+		mapOp(AS3NodeKind.LAND, "&&", BinaryOperator.AND);
+		mapOp(AS3NodeKind.BAND, "&", BinaryOperator.BITAND);
+		mapOp(AS3NodeKind.BOR, "|", BinaryOperator.BITOR);
+		mapOp(AS3NodeKind.BXOR, "^", BinaryOperator.BITXOR);
+		mapOp(AS3NodeKind.DIV, "/", BinaryOperator.DIV);
+		mapOp(AS3NodeKind.EQUAL, "==", BinaryOperator.EQ);
+		mapOp(AS3NodeKind.GE, ">=", BinaryOperator.GE);
+		mapOp(AS3NodeKind.GT, ">", BinaryOperator.GT);
+		mapOp(AS3NodeKind.LE, "<=", BinaryOperator.LE);
+		mapOp(AS3NodeKind.LT, "<", BinaryOperator.LT);
+		mapOp(AS3NodeKind.MOD, "%", BinaryOperator.MOD);
+		mapOp(AS3NodeKind.STAR, "*", BinaryOperator.MUL);
+		mapOp(AS3NodeKind.NOT_EQUAL, "!=", BinaryOperator.NE);
+		mapOp(AS3NodeKind.LOR, "||", BinaryOperator.OR);
+		mapOp(AS3NodeKind.SL, "<<", BinaryOperator.SL);
+		mapOp(AS3NodeKind.SR, ">>", BinaryOperator.SR);
+		mapOp(AS3NodeKind.BSR, ">>>", BinaryOperator.SRU);
+		mapOp(AS3NodeKind.MINUS, "-", BinaryOperator.SUB);
 		
 		intialized = true;
+	}
+	
+	private static function mapOp(kind:String, text:String, operator:BinaryOperator):void
+	{
+		OPERATORS_BY_TYPE.put(kind, operator);
+		TYPES_BY_OPERATOR.put(operator, new LinkedListToken(kind, text));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -177,33 +196,39 @@ public final class BinaryOperator
 	 */
 	private static function create(name:String):BinaryOperator
 	{
-		if (!map)
-			map = new HashMap();
-		
-		var op:BinaryOperator = map.getValue(name);
-		if (op)
-			return op;
-		
 		return new BinaryOperator(name);
 	}
 	
-	public static function find(type:String):BinaryOperator
+	public static function opFromKind(kind:String):BinaryOperator
 	{
 		if (!intialized)
-			init();
+		{
+			initialize();
+		}
 		
-		return map.getValue(type);
+		var op:BinaryOperator = OPERATORS_BY_TYPE.getValue(kind);
+		if (op == null) 
+		{
+			throw new IllegalOperationError("No operator for token-type '" + 
+				ASTUtil.tokenName(kind) + "'");
+		}
+		return op;
 	}
 	
-	public static function initialize(operator:BinaryOperator, token:Token):void
+	public static function initializeFromOp(operator:BinaryOperator, tok:IToken):void
 	{
-		var ltok:LinkedListToken = token as LinkedListToken;
-		var op:BinaryOperator = find(operator.name);
-		if (!op)
-			return;
+		if (!intialized)
+		{
+			initialize();
+		}
 		
-		ltok.text = op.name;
-		ltok.kind = AS3NodeKind.OP;
+		var type:LinkedListToken = TYPES_BY_OPERATOR.getValue(operator);
+		if (type == null) 
+		{
+			throw new IllegalOperationError("No operator for Op " + operator);
+		}
+		tok.kind = type.kind;
+		tok.text = type.text;
 	}
 }
 }
