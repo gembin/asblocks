@@ -48,9 +48,9 @@ public class TestIfStatement extends AbstractStatementTest
 		assertStatementPrint(input);
 		assertStatement("2", input,
 			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\">" +
-			"<relation line=\"1\" column=\"5\"><string line=\"1\" column=\"5\">" +
-			"\"property\"</string><op line=\"1\" column=\"16\">in</op><primary " +
-			"line=\"1\" column=\"19\">object</primary></relation></condition>" +
+			"<relational line=\"1\" column=\"5\"><string line=\"1\" column=\"5\">" +
+			"\"property\"</string><in line=\"1\" column=\"16\">in</in><primary " +
+			"line=\"1\" column=\"19\">object</primary></relational></condition>" +
 			"<block line=\"1\" column=\"27\"></block></if>");
 		
 		input = "if (obj.my_namespace::namespaceProperty) {obj.my_namespace::_prop = NaN;}";
@@ -61,12 +61,13 @@ public class TestIfStatement extends AbstractStatementTest
 			"</primary><double-column line=\"1\" column=\"21\"><primary line=\"1\" " +
 			"column=\"9\">my_namespace</primary><primary line=\"1\" column=\"23\">" +
 			"namespaceProperty</primary></double-column></dot></condition><block " +
-			"line=\"1\" column=\"42\"><dot line=\"1\" column=\"46\"><primary line=\"1\" " +
-			"column=\"43\">obj</primary><double-column line=\"1\" column=\"59\">" +
-			"<primary line=\"1\" column=\"47\">my_namespace</primary><assign line=\"1\" " +
-			"column=\"61\"><primary line=\"1\" column=\"61\">_prop</primary><op " +
-			"line=\"1\" column=\"67\">=</op><number line=\"1\" column=\"69\">NaN</number>" +
-			"</assign></double-column></dot></block></if>");
+			"line=\"1\" column=\"42\"><dot line=\"1\" column=\"46\"><primary " +
+			"line=\"1\" column=\"43\">obj</primary><double-column line=\"1\" " +
+			"column=\"59\"><primary line=\"1\" column=\"47\">my_namespace</primary>" +
+			"<assignment line=\"1\" column=\"61\"><primary line=\"1\" column=\"61\">" +
+			"_prop</primary><assign line=\"1\" column=\"67\">=</assign><number " +
+			"line=\"1\" column=\"69\">NaN</number></assignment></double-column>" +
+			"</dot></block></if>");
 	}
 	
 	[Test]
@@ -93,25 +94,27 @@ public class TestIfStatement extends AbstractStatementTest
 		assertStatementPrint(input);
 		assertStatement("1", input,
 			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\">" +
-			"<relation line=\"1\" column=\"6\"><arr-acc line=\"1\" column=\"7\">" +
-			"<primary line=\"1\" column=\"6\">a</primary><primary line=\"1\" " +
-			"column=\"9\">xField</primary><primary line=\"1\" column=\"20\">xy" +
-			"</primary></arr-acc><op line=\"1\" column=\"25\">&gt;</op>" +
-			"<primary line=\"1\" column=\"27\">targetXFieldValue</primary>" +
-			"</relation></condition><block line=\"1\" column=\"46\"></block></if>");
+			"<relational line=\"1\" column=\"6\"><arr-acc line=\"1\" " +
+			"column=\"7\"><primary line=\"1\" column=\"6\">a</primary>" +
+			"<primary line=\"1\" column=\"9\">xField</primary><primary " +
+			"line=\"1\" column=\"20\">xy</primary></arr-acc><gt line=\"1\" " +
+			"column=\"25\">&gt;</gt><primary line=\"1\" column=\"27\">" +
+			"targetXFieldValue</primary></relational></condition><block " +
+			"line=\"1\" column=\"46\"></block></if>");
 		
 		input = "if ( chart.getItemAt( 0 )[ xField ] [ xy ] > targetXFieldValue ){}";
 		assertStatementPrint(input);
 		assertStatement("2", input,
-			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\"><dot line=\"1\" " +
-			"column=\"11\"><primary line=\"1\" column=\"6\">chart</primary><relation " +
-			"line=\"1\" column=\"12\"><call line=\"1\" column=\"21\"><primary line=\"1\" " +
-			"column=\"12\">getItemAt</primary><arguments line=\"1\" column=\"21\"><number " +
-			"line=\"1\" column=\"23\">0</number></arguments><array line=\"1\" " +
-			"column=\"26\"><primary line=\"1\" column=\"28\">xField</primary></array>" +
-			"<array line=\"1\" column=\"37\"><primary line=\"1\" column=\"39\">xy" +
-			"</primary></array></call><op line=\"1\" column=\"44\">&gt;</op><primary " +
-			"line=\"1\" column=\"46\">targetXFieldValue</primary></relation></dot>" +
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\">" +
+			"<dot line=\"1\" column=\"11\"><primary line=\"1\" column=\"6\">" +
+			"chart</primary><relational line=\"1\" column=\"12\"><call line=\"1\" " +
+			"column=\"21\"><primary line=\"1\" column=\"12\">getItemAt</primary>" +
+			"<arguments line=\"1\" column=\"21\"><number line=\"1\" column=\"23\">" +
+			"0</number></arguments><array line=\"1\" column=\"26\"><primary " +
+			"line=\"1\" column=\"28\">xField</primary></array><array line=\"1\" " +
+			"column=\"37\"><primary line=\"1\" column=\"39\">xy</primary></array>" +
+			"</call><gt line=\"1\" column=\"44\">&gt;</gt><primary line=\"1\" " +
+			"column=\"46\">targetXFieldValue</primary></relational></dot>" +
 			"</condition><block line=\"1\" column=\"65\"></block></if>");
 	}
 	

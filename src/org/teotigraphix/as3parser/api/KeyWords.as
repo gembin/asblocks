@@ -82,7 +82,7 @@ public class KeyWords
 	
 	public static const INCLUDE:String = "include";
 	
-	public static const INSTANCE_OF:String = "instanceOf";
+	public static const INSTANCE_OF:String = "instanceof";
 	
 	public static const INTERFACE:String = "interface";
 	

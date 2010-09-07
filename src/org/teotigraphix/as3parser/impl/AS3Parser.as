@@ -20,6 +20,9 @@
 package org.teotigraphix.as3parser.impl
 {
 
+import com.ericfeminella.collections.HashMap;
+import com.ericfeminella.collections.IMap;
+
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
@@ -37,10 +40,80 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
  * 
  * <p>Initial Implementation; Adobe Systems, Incorporated</p>
  * 
- * @author Michael Schmalle LinkedList implementation
+ * @author Michael Schmalle LinkedList implementation, continual 
+ * language additions, refactor of toplevel (compunit, package, type) parsing
  */
 public class AS3Parser extends ParserBase
 {
+	public static var additiveMap:IMap;
+	
+	public static var assignmentMap:IMap;
+	
+	public static var equalityMap:IMap;
+	
+	public static var relationMap:IMap;
+	
+	public static var shiftMap:IMap;
+	
+	public static var multiplicativeMap:IMap;
+	
+	private static var initialized:Boolean = maps();
+	
+	private static function maps():Boolean
+	{
+		if (initialized)
+			return true;
+		
+		additiveMap = new HashMap();
+		additiveMap.put(Operators.PLUS, AS3NodeKind.PLUS);
+		additiveMap.put(Operators.MINUS, AS3NodeKind.MINUS);
+		
+		assignmentMap = new HashMap();
+		assignmentMap.put(Operators.ASSIGN, AS3NodeKind.ASSIGN);
+		assignmentMap.put(Operators.STAR_ASSIGN, AS3NodeKind.STAR_ASSIGN);
+		assignmentMap.put(Operators.DIV_ASSIGN, AS3NodeKind.DIV_ASSIGN);
+		assignmentMap.put(Operators.MOD_ASSIGN, AS3NodeKind.MOD_ASSIGN);
+		assignmentMap.put(Operators.PLUS_ASSIGN, AS3NodeKind.PLUS_ASSIGN);
+		assignmentMap.put(Operators.MINUS_ASSIGN, AS3NodeKind.MINUS_ASSIGN);
+		assignmentMap.put(Operators.SL_ASSIGN, AS3NodeKind.SL_ASSIGN);
+		assignmentMap.put(Operators.SR_ASSIGN, AS3NodeKind.SR_ASSIGN);
+		assignmentMap.put(Operators.BSR_ASSIGN, AS3NodeKind.BSR_ASSIGN);
+		assignmentMap.put(Operators.BAND_ASSIGN, AS3NodeKind.BAND_ASSIGN);
+		assignmentMap.put(Operators.BXOR_ASSIGN, AS3NodeKind.BXOR_ASSIGN);
+		assignmentMap.put(Operators.BOR_ASSIGN, AS3NodeKind.BOR_ASSIGN);
+		assignmentMap.put(Operators.LAND_ASSIGN, AS3NodeKind.LAND_ASSIGN);
+		assignmentMap.put(Operators.LOR_ASSIGN, AS3NodeKind.LOR_ASSIGN);
+		
+		equalityMap = new HashMap();
+		equalityMap.put(Operators.EQUAL, AS3NodeKind.EQUAL);
+		equalityMap.put(Operators.NOT_EQUAL, AS3NodeKind.NOT_EQUAL);
+		equalityMap.put(Operators.STRICT_EQUAL, AS3NodeKind.STRICT_EQUAL);
+		equalityMap.put(Operators.STRICT_NOT_EQUAL, AS3NodeKind.STRICT_NOT_EQUAL);
+		
+		relationMap = new HashMap();
+		relationMap.put(KeyWords.IN, AS3NodeKind.IN);
+		relationMap.put(Operators.LT, AS3NodeKind.LT);
+		relationMap.put(Operators.LE, AS3NodeKind.LE);
+		relationMap.put(Operators.GT, AS3NodeKind.GT);
+		relationMap.put(Operators.GE, AS3NodeKind.GE);
+		relationMap.put(KeyWords.IS, AS3NodeKind.IS);
+		relationMap.put(KeyWords.AS, AS3NodeKind.AS);
+		relationMap.put(KeyWords.INSTANCE_OF, AS3NodeKind.INSTANCE_OF);
+		
+		shiftMap = new HashMap();
+		shiftMap.put(Operators.SL, AS3NodeKind.SL);
+		shiftMap.put(Operators.SR, AS3NodeKind.SR);
+		shiftMap.put(Operators.SSL, AS3NodeKind.SSL);
+		shiftMap.put(Operators.BSR, AS3NodeKind.BSR);
+		
+		multiplicativeMap = new HashMap();
+		multiplicativeMap.put(Operators.STAR, AS3NodeKind.STAR);
+		multiplicativeMap.put(Operators.DIV, AS3NodeKind.DIV);
+		multiplicativeMap.put(Operators.MOD, AS3NodeKind.MOD);
+		
+		return true;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Private :: Constants
@@ -1029,7 +1102,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(Operators.BXOR_ASSIGN) || tokIs(Operators.BOR_ASSIGN)
 			|| tokIs(Operators.LAND_ASSIGN) || tokIs(Operators.LOR_ASSIGN))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(assignmentMap.getValue(token.text), token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseExpression());
 		}
@@ -1066,7 +1139,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.LOR))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.LOR, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseAndExpression());
 		}
@@ -1083,7 +1156,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.LAND))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.LAND, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseBitwiseOrExpression());
 		}
@@ -1100,7 +1173,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.BOR))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.BOR, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseBitwiseXorExpression());
 		}
@@ -1117,7 +1190,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.BXOR))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.BXOR, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseBitwiseAndExpression());
 		}
@@ -1134,7 +1207,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.BAND))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.BAND, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseEqualityExpression());
 		}
@@ -1152,7 +1225,7 @@ public class AS3Parser extends ParserBase
 		while (tokIs(Operators.EQUAL) || tokIs(Operators.NOT_EQUAL)
 			|| tokIs(Operators.STRICT_EQUAL) || tokIs(Operators.STRICT_NOT_EQUAL))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(equalityMap.getValue(token.text), token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseRelationalExpression());
 		}
@@ -1170,10 +1243,10 @@ public class AS3Parser extends ParserBase
 		while (!isInFor && tokIs(KeyWords.IN) 
 			|| tokIs(Operators.LT) || tokIs(Operators.GT)
 			|| tokIs(Operators.LE) || tokIs(Operators.GE)
-			|| tokIs(KeyWords.IS) || tokIs( KeyWords.AS) 
+			|| tokIs(KeyWords.IS) || tokIs(KeyWords.AS) 
 			|| tokIs(KeyWords.INSTANCE_OF))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(relationMap.getValue(token.text), token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseShiftExpression());
 		}
@@ -1191,7 +1264,7 @@ public class AS3Parser extends ParserBase
 		while (tokIs(Operators.SL) || tokIs(Operators.SR)
 			|| tokIs(Operators.SSL) || tokIs(Operators.BSR))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(shiftMap.getValue(token.text), token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseAdditiveExpression());
 		}
@@ -1208,7 +1281,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.PLUS) || tokIs(Operators.MINUS))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(additiveMap.getValue(token.text), token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseMultiplicativeExpression());
 		}
@@ -1228,7 +1301,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(Operators.DIV) 
 			|| tokIs(Operators.MOD))
 		{
-			result.addChild(adapter.copy(AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(multiplicativeMap.getValue(token.text), token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseUnaryExpression(result));
 		}

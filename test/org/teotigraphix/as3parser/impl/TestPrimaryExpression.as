@@ -218,19 +218,19 @@ public class TestPrimaryExpression
 		var input:String = "( world as Ball )";
 		assertPrimaryPrint(input, "( world as Ball )");
 		assertPrimary( input,
-			"<encapsulated line=\"1\" " +
-			"column=\"1\"><relation line=\"1\" column=\"3\"><primary line=\"1\" " +
-			"column=\"3\">world</primary><op line=\"1\" column=\"9\">as</op>" +
-			"<primary line=\"1\" column=\"12\">Ball</primary></relation>" +
-			"</encapsulated>");
+			"<encapsulated line=\"1\" column=\"1\"><relational line=\"1\" " +
+			"column=\"3\"><primary line=\"1\" column=\"3\">world</primary><as " +
+			"line=\"1\" column=\"9\">as</as><primary line=\"1\" column=\"12\">" +
+			"Ball</primary></relational></encapsulated>");
 		
 		input = "( \"world\" in myBall )";
 		assertPrimaryPrint(input, "( \"world\" in myBall )");
 		assertPrimary( input,
-			"<encapsulated line=\"1\" column=\"1\"><relation line=\"1\" " +
-			"column=\"3\"><string line=\"1\" column=\"3\">\"world\"</string>" +
-			"<op line=\"1\" column=\"11\">in</op><primary line=\"1\" " +
-			"column=\"14\">myBall</primary></relation></encapsulated>");
+			"<encapsulated line=\"1\" " +
+			"column=\"1\"><relational line=\"1\" column=\"3\"><string " +
+			"line=\"1\" column=\"3\">\"world\"</string><in line=\"1\" " +
+			"column=\"11\">in</in><primary line=\"1\" column=\"14\">myBall" +
+			"</primary></relational></encapsulated>");
 	}
 	
 	//--------------------------------------------------------------------------

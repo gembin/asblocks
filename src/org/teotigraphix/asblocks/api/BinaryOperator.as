@@ -93,6 +93,13 @@ public final class BinaryOperator
 		map = new HashMap();
 		map.put(AS3NodeKind.ADDITIVE, ADD);
 		map.put(AS3NodeKind.AND, AND);
+		map.put(AS3NodeKind.B_AND, BITAND);
+		map.put(AS3NodeKind.B_OR, BITOR);
+		map.put(AS3NodeKind.B_XOR, BITXOR);
+		map.put(AS3NodeKind.MULTIPLICATIVE, DIV);
+		map.put(AS3NodeKind.RELATIONAL, EQ);
+		//map.put(AS3NodeKind.B_XOR, BITXOR);
+		
 		
 		intialized = true;
 	}

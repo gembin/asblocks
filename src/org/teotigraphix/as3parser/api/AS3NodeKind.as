@@ -69,7 +69,7 @@ public class AS3NodeKind
 	
 	public static const ACCESSOR_ROLE:String = "accessor-role";
 	
-	public static const ADDITIVE:String = "add";
+	public static const ADDITIVE:String = "additive";
 	
 	public static const AND:String = "and";
 	
@@ -83,7 +83,97 @@ public class AS3NodeKind
 	
 	public static const BLOCK_DOC:String = "block-doc";
 	
-	public static const ASSIGNMENT:String = "assign";
+	//--------------------------------------------------------------------------
+	
+	public static const ASSIGNMENT:String = "assignment";
+	
+	public static const ASSIGN:String = "assign";
+	
+	public static const STAR_ASSIGN:String = "star-assign";
+	
+	public static const DIV_ASSIGN:String = "div-assign";
+	
+	public static const MOD_ASSIGN:String = "mod-assign";
+	
+	public static const PLUS_ASSIGN:String = "plus-assign";
+	
+	public static const MINUS_ASSIGN:String = "minus-assign";
+	
+	public static const SL_ASSIGN:String = "sl-assign";
+	
+	public static const SR_ASSIGN:String = "sr-assign";
+	
+	public static const BSR_ASSIGN:String = "bsr-assign";
+	
+	public static const BAND_ASSIGN:String = "band-assign";
+	
+	public static const BXOR_ASSIGN:String = "bxor-assign";
+	
+	public static const BOR_ASSIGN:String = "bor-assign";
+	
+	public static const LAND_ASSIGN:String = "land-assign";
+	
+	public static const LOR_ASSIGN:String = "lor-assign";
+	
+	//--------------------------------------------------------------------------
+	
+	public static const LOR:String = "lor";
+	
+	public static const LAND:String = "land";
+
+	public static const BOR:String = "bor";
+	
+	public static const BXOR:String = "bxor";
+	
+	public static const BAND:String = "band";
+	
+	//--------------------------------------------------------------------------
+	
+	public static const EQUAL:String = "land";
+	
+	public static const NOT_EQUAL:String = "not-equal";
+	
+	public static const STRICT_EQUAL:String = "strict-equal";
+	
+	public static const STRICT_NOT_EQUAL:String = "strict-not-equal";
+	
+	//--------------------------------------------------------------------------
+	
+	public static const IN:String = "in";
+	
+	public static const LT:String = "lt";
+	
+	public static const LE:String = "le";
+	
+	public static const GT:String = "gt";
+	
+	public static const GE:String = "ge";
+	
+	public static const IS:String = "is";
+	
+	public static const AS:String = "as";
+	
+	public static const INSTANCE_OF:String = "instance-of";
+	
+	//--------------------------------------------------------------------------
+	
+	public static const SL:String = "sl";
+	
+	public static const SR:String = "sr";
+	
+	public static const SSL:String = "ssl";
+	
+	public static const BSR:String = "bsr";
+	
+	//--------------------------------------------------------------------------
+	
+	public static const STAR:String = "star";
+	
+	public static const DIV:String = "div";
+	
+	public static const MOD:String = "mod";
+	
+	//--------------------------------------------------------------------------
 	
 	public static const B_AND:String = "b-and"; 
 	
@@ -185,8 +275,6 @@ public class AS3NodeKind
 	
 	public static const IMPORT:String = "import";
 	
-	public static const IN:String = "in";
-	
 	public static const INCLUDE:String = "include";
 	
 	public static const INIT:String = "init";
@@ -207,7 +295,7 @@ public class AS3NodeKind
 	
 	public static const MODIFIER:String = "mod";
 	
-	public static const MULTIPLICATIVE:String = "mul";
+	public static const MULTIPLICATIVE:String = "multiplicative";
 	
 	public static const NAME:String = "name";
 	
@@ -249,7 +337,7 @@ public class AS3NodeKind
 	
 	public static const REG_EXP:String = "reg-exp";
 	
-	public static const RELATIONAL:String = "relation";
+	public static const RELATIONAL:String = "relational";
 	
 	public static const REST:String = "rest";
 	
@@ -258,8 +346,6 @@ public class AS3NodeKind
 	public static const SET:String = "set";
 	
 	public static const SHIFT:String = "shift";
-	
-	public static const STAR:String = "star";
 	
 	public static const STMT_EMPTY:String = "stmt-empty";
 	

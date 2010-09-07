@@ -201,16 +201,16 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parseStatement("for(i=0;i<len;i--){}");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<for><init><assign><primary>i</primary><op>=</op>" +
-			"<number>0</number></assign></init><cond><relation><primary>i" +
-			"</primary><op>&lt;</op><primary>len</primary></relation></cond>" +
-			"<iter><post-dec><primary>i</primary></post-dec></iter><block>" +
+		Assert.assertEquals("<for><init><assignment><primary>i</primary><assign>=" +
+			"</assign><number>0</number></assignment></init><cond><relational>" +
+			"<primary>i</primary><lt>&lt;</lt><primary>len</primary></relational>" +
+			"</cond><iter><post-dec><primary>i</primary></post-dec></iter><block>" +
 			"</block></for>", result);
 		
 		ast = AS3FragmentParser.parseStatement("for each(a in obj){}");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<foreach><name>a</name><in><primary>obj</primary>" +
-			"</in><block></block></foreach>", result);
+		Assert.assertEquals("<foreach><name>a</name><in><primary>obj</primary></in>" +
+			"<block></block></foreach>", result);
 		
 		//------------------------------
 		// if()
@@ -586,22 +586,21 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parseCondition("a!=42");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<condition><equality><primary>a</primary><op>!=" +
-			"</op><number>42</number></equality></condition>", result);
+		Assert.assertEquals("<condition><equality><primary>a</primary><not-equal>!=" +
+			"</not-equal><number>42</number></equality></condition>", result);
 		
 		ast = AS3FragmentParser.parseCondition("a<11&&b>11");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<condition><and><relation><primary>a</primary>" +
-			"<op>&lt;</op><number>11</number></relation><op>&&</op><relation>" +
-			"<primary>b</primary><op>&gt;</op><number>11</number></relation>" +
-			"</and></condition>", result);
+		Assert.assertEquals("<condition><and><relational><primary>a</primary><lt>&lt;" +
+			"</lt><number>11</number></relational><land>&&</land><relational><primary>" +
+			"b</primary><gt>&gt;</gt><number>11</number></relational></and></condition>", result);
 		
 		ast = AS3FragmentParser.parseCondition("value & uint(1 << posval)");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<condition><b-and><primary>value</primary><op>&</op>" +
-			"<call><primary>uint</primary><arguments><shift><number>1</number>" +
-			"<op>&lt;&lt;</op><primary>posval</primary></shift></arguments>" +
-			"</call></b-and></condition>", result);
+		Assert.assertEquals("<condition><b-and><primary>value</primary><band>&" +
+			"</band><call><primary>uint</primary><arguments><shift><number>1" +
+			"</number><sl>&lt;&lt;</sl><primary>posval</primary></shift>" +
+			"</arguments></call></b-and></condition>", result);
 		
 	}
 }

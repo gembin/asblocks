@@ -36,34 +36,32 @@ public class TestForStatement extends AbstractStatementTest
 		var input:String = "for( var i : int = 0; i < length; i++ ){ trace( i ); }";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<for line=\"1\" column=\"1\"><init line=\"1\" column=\"6\">" +
-			"<dec-list line=\"1\" column=\"6\"><dec-role line=\"1\" " +
-			"column=\"6\"><var line=\"1\" column=\"6\"></var></dec-role>" +
-			"<name-type-init line=\"1\" column=\"10\"><name line=\"1\" " +
-			"column=\"10\">i</name><type line=\"1\" column=\"14\">int</type>" +
-			"<init line=\"1\" column=\"20\"><number line=\"1\" column=\"20\">0" +
-			"</number></init></name-type-init></dec-list></init><cond " +
-			"line=\"1\" column=\"23\"><relation line=\"1\" column=\"23\">" +
-			"<primary line=\"1\" column=\"23\">i</primary><op line=\"1\" " +
-			"column=\"25\">&lt;</op><primary line=\"1\" column=\"27\">length" +
-			"</primary></relation></cond><iter line=\"1\" column=\"35\">" +
-			"<post-inc line=\"1\" column=\"36\"><primary line=\"1\" " +
-			"column=\"35\">i</primary></post-inc></iter><block line=\"1\" " +
-			"column=\"40\"><call line=\"1\" column=\"47\"><primary line=\"1\" " +
-			"column=\"42\">trace</primary><arguments line=\"1\" column=\"47\">" +
-			"<primary line=\"1\" column=\"49\">i</primary></arguments></call>" +
-			"</block></for>");
+			"<for line=\"1\" column=\"1\"><init line=\"1\" column=\"6\"><dec-list " +
+			"line=\"1\" column=\"6\"><dec-role line=\"1\" column=\"6\"><var line=\"1\" " +
+			"column=\"6\"></var></dec-role><name-type-init line=\"1\" column=\"10\">" +
+			"<name line=\"1\" column=\"10\">i</name><type line=\"1\" column=\"14\">" +
+			"int</type><init line=\"1\" column=\"20\"><number line=\"1\" " +
+			"column=\"20\">0</number></init></name-type-init></dec-list></init>" +
+			"<cond line=\"1\" column=\"23\"><relational line=\"1\" column=\"23\">" +
+			"<primary line=\"1\" column=\"23\">i</primary><lt line=\"1\" " +
+			"column=\"25\">&lt;</lt><primary line=\"1\" column=\"27\">length" +
+			"</primary></relational></cond><iter line=\"1\" column=\"35\">" +
+			"<post-inc line=\"1\" column=\"36\"><primary line=\"1\" column=\"35\">" +
+			"i</primary></post-inc></iter><block line=\"1\" column=\"40\"><call " +
+			"line=\"1\" column=\"47\"><primary line=\"1\" column=\"42\">trace" +
+			"</primary><arguments line=\"1\" column=\"47\"><primary line=\"1\" " +
+			"column=\"49\">i</primary></arguments></call></block></for>");
 		
 		input = "for (i = 0; i < n; i++)";
 		//assertStatementPrint(input);
 		assertStatement("2", input,
-			"<for line=\"1\" column=\"1\"><init line=\"1\" column=\"6\">" +
-			"<assign line=\"1\" column=\"6\"><primary line=\"1\" column=\"6\">" +
-			"i</primary><op line=\"1\" column=\"8\">=</op><number line=\"1\" " +
-			"column=\"10\">0</number></assign></init><cond line=\"1\" " +
-			"column=\"13\"><relation line=\"1\" column=\"13\"><primary " +
-			"line=\"1\" column=\"13\">i</primary><op line=\"1\" column=\"15\">" +
-			"&lt;</op><primary line=\"1\" column=\"17\">n</primary></relation>" +
+			"<for line=\"1\" column=\"1\"><init line=\"1\" column=\"6\"><assignment " +
+			"line=\"1\" column=\"6\"><primary line=\"1\" column=\"6\">i</primary>" +
+			"<assign line=\"1\" column=\"8\">=</assign><number line=\"1\" " +
+			"column=\"10\">0</number></assignment></init><cond line=\"1\" " +
+			"column=\"13\"><relational line=\"1\" column=\"13\"><primary " +
+			"line=\"1\" column=\"13\">i</primary><lt line=\"1\" column=\"15\">" +
+			"&lt;</lt><primary line=\"1\" column=\"17\">n</primary></relational>" +
 			"</cond><iter line=\"1\" column=\"20\"><post-inc line=\"1\" " +
 			"column=\"21\"><primary line=\"1\" column=\"20\">i</primary>" +
 			"</post-inc></iter><primary line=\"2\" column=\"0\">__END__" +
@@ -80,13 +78,13 @@ public class TestForStatement extends AbstractStatementTest
 			"<dec-role line=\"1\" column=\"11\"><var line=\"1\" column=\"11\">" +
 			"</var></dec-role><name-type-init line=\"1\" column=\"15\"><name " +
 			"line=\"1\" column=\"15\">obj</name><type line=\"1\" column=\"21\">" +
-			"Object</type></name-type-init></dec-list><in line=\"1\" " +
-			"column=\"28\"><primary line=\"1\" column=\"31\">list</primary>" +
-			"</in><block line=\"1\" column=\"37\"><dot line=\"1\" column=\"42\">" +
-			"<primary line=\"1\" column=\"39\">obj</primary><call line=\"1\" " +
-			"column=\"48\"><primary line=\"1\" column=\"43\">print</primary>" +
-			"<arguments line=\"1\" column=\"48\"><primary line=\"1\" " +
-			"column=\"50\">i</primary></arguments></call></dot></block></foreach>");
+			"Object</type></name-type-init></dec-list><in line=\"1\" column=\"28\">" +
+			"<primary line=\"1\" column=\"31\">list</primary></in><block line=\"1\" " +
+			"column=\"37\"><dot line=\"1\" column=\"42\"><primary line=\"1\" " +
+			"column=\"39\">obj</primary><call line=\"1\" column=\"48\"><primary " +
+			"line=\"1\" column=\"43\">print</primary><arguments line=\"1\" " +
+			"column=\"48\"><primary line=\"1\" column=\"50\">i</primary></arguments>" +
+			"</call></dot></block></foreach>");
 		
 		input = "for each( obj in list ){}";
 		assertStatementPrint(input);

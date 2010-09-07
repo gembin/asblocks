@@ -52,17 +52,53 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testLogicalAdd():void
+	public function testAdd():void
 	{
 		expression = factory.newAddExpression(left, right);
 		assertOp(BinaryOperator.ADD);
 	}
 	
+	[Test]
+	public function testAnd():void
+	{
+		expression = factory.newAndExpression(left, right);
+		assertOp(BinaryOperator.AND);
+	}
 	
+	[Test]
+	public function testBitAnd():void
+	{
+		expression = factory.newBitAndExpression(left, right);
+		assertOp(BinaryOperator.BITAND);
+	}
 	
+	[Test]
+	public function testBitOr():void
+	{
+		expression = factory.newBitOrExpression(left, right);
+		assertOp(BinaryOperator.BITOR);
+	}
 	
+	[Test]
+	public function testBitXor():void
+	{
+		expression = factory.newBitXorExpression(left, right);
+		assertOp(BinaryOperator.BITXOR);
+	}
 	
+	[Test]
+	public function testDivision():void
+	{
+		expression = factory.newDivisionExpression(left, right);
+		assertOp(BinaryOperator.DIV);
+	}
 	
+	[Test]
+	public function testEquals():void
+	{
+		//expression = factory.newEqualsExpression(left, right);
+		//assertOp(BinaryOperator.EQ);
+	}
 	
 	
 	
@@ -81,7 +117,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testLogicalAnd():void
+	public function _testLogicalAnd():void
 	{
 		//expression = factory.newExpression("a && b && c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
@@ -101,7 +137,7 @@ public class TestBinaryExpression
 	
 	
 	[Test]
-	public function testBitOr():void
+	public function _testBitOr():void
 	{
 		//expression = factory.newExpression("a | b | c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
@@ -109,7 +145,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testXor():void
+	public function _testXor():void
 	{
 		//expression = factory.newExpression("a ^ b ^ c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
@@ -117,7 +153,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testBitAnd():void
+	public function _testBitAnd():void
 	{
 		//expression = factory.newExpression("a & b & c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
@@ -125,7 +161,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testEquality():void
+	public function _testEquality():void
 	{
 		//expression = factory.newExpression("a == b == c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
@@ -133,7 +169,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testRelational():void
+	public function _testRelational():void
 	{
 		//expression = factory.newExpression("a < b < c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
@@ -141,7 +177,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testShift():void
+	public function _testShift():void
 	{
 		//expression = factory.newExpression("a << b << c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
@@ -149,7 +185,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testAdditivePlus():void
+	public function _testAdditivePlus():void
 	{
 		//expression = factory.newExpression("a + b + c") as IBinaryExpression;
 		//assertEquals(BinaryOperator.ADD, expression.operator.name);
@@ -158,7 +194,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testAdditiveMinus():void
+	public function _testAdditiveMinus():void
 	{
 		//expression = factory.newExpression("a - b - c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
@@ -166,7 +202,7 @@ public class TestBinaryExpression
 	}
 	
 	[Test]
-	public function testMultiplicative():void
+	public function _testMultiplicative():void
 	{
 		//expression = factory.newExpression("a * b * c") as IBinaryExpression;
 		//var left:IExpression = factory.newExpression("foo");
