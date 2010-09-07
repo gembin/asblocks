@@ -33,12 +33,12 @@ import org.teotigraphix.as3parser.core.TokenNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class BinaryOperatorNode extends ExpressionNode 
+public class BinaryExpressionNode extends ExpressionNode 
 	implements IBinaryExpression
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ISimpleNameExpressionNode API :: Properties
+	//  IBinaryExpression API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -91,7 +91,7 @@ public class BinaryOperatorNode extends ExpressionNode
 	 */
 	public function get operator():BinaryOperator
 	{
-		return BinaryOperator.find(node.stringValue);
+		return BinaryOperator.find(node.kind);
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class BinaryOperatorNode extends ExpressionNode
 	/**
 	 * Constructor.
 	 */
-	public function BinaryOperatorNode(node:IParserNode)
+	public function BinaryExpressionNode(node:IParserNode)
 	{
 		super(node);
 	}

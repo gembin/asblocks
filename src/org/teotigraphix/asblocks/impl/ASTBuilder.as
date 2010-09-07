@@ -538,7 +538,7 @@ public class ASTBuilder
 		
 		spaceEitherSide(op);
 		
-		return new BinaryOperatorNode(ast);
+		return new BinaryExpressionNode(ast);
 	}
 	
 	

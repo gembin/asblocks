@@ -192,9 +192,9 @@ public class FieldNode extends MemberNode
 	//  Private :: Methods
 	//
 	//--------------------------------------------------------------------------
-	/**
 	
-	 *  * @private
+	/**
+	 * @private
 	 */	
 	private function setInitAST(expression:IParserNode):void
 	{

@@ -448,6 +448,20 @@ public class ASTUtil
 		return buffer;
 	}
 	
+	public static function stringifyNode(ast:IParserNode):String
+	{
+		var result:String = "";
+		for (var tok:LinkedListToken =  ast.startToken; tok != null && tok.kind != null; tok = tok.next)
+		{
+			result += tok.text;
+			if (tok == ast.stopToken)
+			{
+				break;
+			}
+		}
+		return result;
+	}
+	
 	public static function tokenName(kind:String):String
 	{
 		return kind;

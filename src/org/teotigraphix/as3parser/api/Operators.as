@@ -43,8 +43,6 @@ package org.teotigraphix.as3parser.api
  */
 public class Operators
 {
-	public static const AND:String = "&&";
-	
 	public static const AND_EQUAL:String = "&=";
 	
 	public static const AT:String = "@";
@@ -90,6 +88,8 @@ public class Operators
 	public static const LEFT_PARENTHESIS:String = "(";
 	
 	public static const LEFT_SQUARE_BRACKET:String = "[";
+	
+	public static const LOGICAL_AND:String = "&&";
 	
 	public static const LOGICAL_OR:String = "||";
 	

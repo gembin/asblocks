@@ -1,9 +1,11 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpression;
+import flash.errors.IllegalOperationError;
+
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IExpression;
 
 public class ExpressionBuilder
 {
@@ -23,6 +25,39 @@ public class ExpressionBuilder
 			case AS3NodeKind.TRUE:
 			case AS3NodeKind.FALSE:
 				return new BooleanLiteralNode(ast);
+			
+			/*	
+				case AS3Parser.PLUS:
+				case AS3Parser.LAND:
+				case AS3Parser.BAND:
+				case AS3Parser.BOR:
+				case AS3Parser.BXOR:
+				case AS3Parser.DIV:
+				case AS3Parser.EQUAL:
+				case AS3Parser.GE:
+				case AS3Parser.GT:
+				case AS3Parser.LE:
+				case AS3Parser.LT:
+				case AS3Parser.MOD:
+				case AS3Parser.MULT:
+				case AS3Parser.NOT_EQUAL:
+				case AS3Parser.LOR:
+				case AS3Parser.SL:
+				case AS3Parser.SR:
+				case AS3Parser.BSR:
+				case AS3Parser.MINUS:
+				*/
+			case AS3NodeKind.OR:
+			case AS3NodeKind.AND:
+			case AS3NodeKind.B_OR:
+			case AS3NodeKind.B_XOR:
+			case AS3NodeKind.B_AND:
+			case AS3NodeKind.EQUALITY:
+			case AS3NodeKind.RELATION:
+			case AS3NodeKind.SHIFT:
+			case AS3NodeKind.ADD:
+			case AS3NodeKind.MULTIPLICATION:
+				return new BinaryExpressionNode(ast);
 				
 			case AS3NodeKind.CALL:
 				return new InvocationExpressionNode(ast);
@@ -43,7 +78,7 @@ public class ExpressionBuilder
 				return new ArrayAccessExpressionNode(ast);
 				
 			default:
-				throw new Error("unhandled expression node type: " + ast.kind);
+				throw new IllegalOperationError("unhandled expression node type: '" + ast.kind + "'");
 			
 			/*
 			

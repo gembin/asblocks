@@ -41,7 +41,6 @@ public class TestExpressionNodes
 		project = new ASProject(factory);
 	}
 	
-	
 	[Test]
 	public function testClass():void
 	{

@@ -1027,8 +1027,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(Operators.MODULO_EQUAL) || tokIs(Operators.AND_EQUAL) 
 			|| tokIs(Operators.OR_EQUAL) || tokIs(Operators.XOR_EQUAL))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseExpression());
 		}
@@ -1065,8 +1064,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.LOGICAL_OR))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseAndExpression());
 		}
@@ -1081,10 +1079,9 @@ public class AS3Parser extends ParserBase
 		var result:TokenNode = adapter.empty(
 			AS3NodeKind.AND, token, parseBitwiseOrExpression());
 		
-		while (tokIs(Operators.AND))
+		while (tokIs(Operators.LOGICAL_AND))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseBitwiseOrExpression());
 		}
@@ -1101,8 +1098,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.B_OR))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseBitwiseXorExpression());
 		}
@@ -1119,8 +1115,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.B_XOR))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseBitwiseAndExpression());
 		}
@@ -1137,8 +1132,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.B_AND))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseEqualityExpression());
 		}
@@ -1157,8 +1151,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(Operators.STRICTLY_EQUAL) || tokIs(Operators.NON_EQUAL)
 			|| tokIs(Operators.NON_STRICTLY_EQUAL))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseRelationalExpression());
 		}
@@ -1178,8 +1171,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(Operators.SUPERIOR_OR_EQUAL) || tokIs(KeyWords.IS) || tokIs(KeyWords.IN)
 			&& !isInFor || tokIs( KeyWords.AS) || tokIs(KeyWords.INSTANCE_OF))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseShiftExpression());
 		}
@@ -1199,8 +1191,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(Operators.TRIPLE_SHIFT_LEFT)
 			|| tokIs(Operators.TRIPLE_SHIFT_RIGHT))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseAdditiveExpression());
 		}
@@ -1218,8 +1209,7 @@ public class AS3Parser extends ParserBase
 		while (tokIs(Operators.PLUS)
 			|| tokIs(Operators.MINUS))
 		{
-			result.addChild(adapter.copy(
-				AS3NodeKind.OP, token));
+			result.addChild(adapter.copy(AS3NodeKind.OP, token));
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseMultiplicativeExpression());
 		}
