@@ -207,7 +207,7 @@ public class TestExpression extends AbstractStatementTest
 		assertStatement("equal",
 			"5==5",
 			"<equality line=\"1\" column=\"1\"><number line=\"1\" column=\"1\">" +
-			"5</number><land line=\"1\" column=\"2\">==</land><number line=\"1\" " +
+			"5</number><equal line=\"1\" column=\"2\">==</equal><number line=\"1\" " +
 			"column=\"4\">5</number></equality>");
 		
 		assertStatement("not-equal",
@@ -400,7 +400,7 @@ public class TestExpression extends AbstractStatementTest
 			"<typeof line=\"1\" column=\"8\"><primary line=\"1\" column=\"8\">" +
 			"obj</primary></typeof>");
 		
-		assertStatement("lnot",
+		assertStatement("not",
 			"!obj",
 			"<not line=\"1\" column=\"2\"><primary line=\"1\" column=\"2\">" +
 			"obj</primary></not>");

@@ -96,8 +96,8 @@ public class TestBinaryExpression
 	[Test]
 	public function testEquals():void
 	{
-		//expression = factory.newEqualsExpression(left, right);
-		//assertOp(BinaryOperator.EQ);
+		expression = factory.newEqualsExpression(left, right);
+		assertOp(BinaryOperator.EQ);
 	}
 	
 	

@@ -39,7 +39,7 @@ public class ASTBuilder
 		ast.addChild(params);
 		if (returnType)
 		{
-			ast.appendToken(TokenBuilder.newColumn());
+			ast.appendToken(TokenBuilder.newColon());
 			ast.addChild(AS3FragmentParser.parseType(returnType));
 		}
 		ast.appendToken(TokenBuilder.newSpace());
@@ -80,7 +80,7 @@ public class ASTBuilder
 		if (type)
 		{
 			// field-list/name-type-init/type
-			nti.appendToken(TokenBuilder.newColumn());
+			nti.appendToken(TokenBuilder.newColon());
 			nti.addChild(ASTUtil.newTypeAST(type));
 		}
 		ast.appendToken(TokenBuilder.newSemi());
@@ -206,7 +206,7 @@ public class ASTBuilder
 	
 	public static function newDeclaration(assignment:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.VAR_LIST, "var");
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEC_LIST, "var");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(assignment);
 		ast.appendToken(TokenBuilder.newSemi());
@@ -260,7 +260,7 @@ public class ASTBuilder
 	{
 		var field:IParserNode = ASTUtil.newAST(AS3NodeKind.PROP);
 		field.addChild(AS3FragmentParser.parsePrimaryExpression(name));
-		field.appendToken(TokenBuilder.newColumn());
+		field.appendToken(TokenBuilder.newColon());
 		field.appendToken(TokenBuilder.newSpace());
 		field.addChild(node);
 		return field;
@@ -369,7 +369,7 @@ public class ASTBuilder
 			AS3NodeKind.RPAREN, ")");
 		ast.addChild(paren);
 		// added, best practices say put :void as default
-		ast.appendToken(TokenBuilder.newColumn());
+		ast.appendToken(TokenBuilder.newColon());
 		var voidType:IParserNode = AS3FragmentParser.parseType("void");
 		var nti:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME_TYPE_INIT);
 		nti.addChild(voidType);
@@ -451,7 +451,7 @@ public class ASTBuilder
 													elseExpression:IParserNode):IParserNode
 	{
 		var op:LinkedListToken = TokenBuilder.newQuestion();
-		var colon:LinkedListToken = TokenBuilder.newColumn();
+		var colon:LinkedListToken = TokenBuilder.newColon();
 		var ast:IParserNode = ASTUtil.newTokenAST(op);
 		
 		TokenNode(ast).noUpdate = true;

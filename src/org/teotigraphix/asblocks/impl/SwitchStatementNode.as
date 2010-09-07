@@ -113,7 +113,7 @@ public class SwitchStatementNode extends ScriptNode
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CASE, "case");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(AS3FragmentParser.parseExpression(label));
-		ast.appendToken(TokenBuilder.newColumn());
+		ast.appendToken(TokenBuilder.newColon());
 		var cases:IParserNode = ASTUtil.newAST(AS3NodeKind.CASES);
 		ast.addChild(cases);
 		ASTUtil.addChildWithIndentation(block, ast);
@@ -126,7 +126,7 @@ public class SwitchStatementNode extends ScriptNode
 	public function newDefault():ISwitchDefault
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEFAULT, "default");
-		ast.appendToken(TokenBuilder.newColumn());
+		ast.appendToken(TokenBuilder.newColon());
 		var cases:IParserNode = ASTUtil.newAST(AS3NodeKind.CASES);
 		ast.addChild(cases);
 		ASTUtil.addChildWithIndentation(block, ast);

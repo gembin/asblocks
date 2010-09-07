@@ -109,12 +109,12 @@ public class FunctionCommon implements IFunctionCommon
 	{
 		var ast:IParserNode = ASTUtil.newParamterAST();
 		ast.addChild(ASTUtil.newNameAST(name));
-		ast.appendToken(TokenBuilder.newColumn());
+		ast.appendToken(TokenBuilder.newColon());
 		ast.addChild(ASTUtil.newTypeAST(type));
 		if (defaultValue)
 		{
 			ast.appendToken(TokenBuilder.newSpace());
-			ast.appendToken(TokenBuilder.newEqual());
+			ast.appendToken(TokenBuilder.newAssign());
 			ast.appendToken(TokenBuilder.newSpace());
 			ast.addChild(ASTUtil.newInitAST(defaultValue));
 		}
