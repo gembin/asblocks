@@ -47,39 +47,39 @@ public final class BinaryOperator
 	
 	public static const ADD:BinaryOperator = BinaryOperator.create(Operators.PLUS);
 	
-	public static const AND:BinaryOperator = BinaryOperator.create(Operators.LOGICAL_AND);
+	public static const AND:BinaryOperator = BinaryOperator.create(Operators.LAND);
 	
-	public static const BITAND:BinaryOperator = BinaryOperator.create(Operators.B_AND);
+	public static const BITAND:BinaryOperator = BinaryOperator.create(Operators.BAND);
 	
-	public static const BITOR:BinaryOperator = BinaryOperator.create(Operators.B_OR);
+	public static const BITOR:BinaryOperator = BinaryOperator.create(Operators.BOR);
 	
-	public static const BITXOR:BinaryOperator = BinaryOperator.create(Operators.B_XOR);
+	public static const BITXOR:BinaryOperator = BinaryOperator.create(Operators.BXOR);
 	
-	public static const DIV:BinaryOperator = BinaryOperator.create(Operators.SLASH);
+	public static const DIV:BinaryOperator = BinaryOperator.create(Operators.DIV);
 	
-	public static const EQ:BinaryOperator = BinaryOperator.create(Operators.DOUBLE_EQUAL);
+	public static const EQ:BinaryOperator = BinaryOperator.create(Operators.EQUAL);
 	
-	public static const GE:BinaryOperator = BinaryOperator.create(Operators.SUPERIOR_OR_EQUAL);
+	public static const GE:BinaryOperator = BinaryOperator.create(Operators.GE);
 	
-	public static const GT:BinaryOperator = BinaryOperator.create(Operators.SUPERIOR);
+	public static const GT:BinaryOperator = BinaryOperator.create(Operators.GT);
 	
-	public static const LE:BinaryOperator = BinaryOperator.create(Operators.INFERIOR_OR_EQUAL);
+	public static const LE:BinaryOperator = BinaryOperator.create(Operators.LE);
 	
-	public static const LT:BinaryOperator = BinaryOperator.create(Operators.INFERIOR);
+	public static const LT:BinaryOperator = BinaryOperator.create(Operators.LT);
 	
-	public static const MOD:BinaryOperator = BinaryOperator.create(Operators.MODULO);
+	public static const MOD:BinaryOperator = BinaryOperator.create(Operators.MOD);
 	
-	public static const MUL:BinaryOperator = BinaryOperator.create(Operators.TIMES);
+	public static const MUL:BinaryOperator = BinaryOperator.create(Operators.STAR);
 	
-	public static const NE:BinaryOperator = BinaryOperator.create(Operators.NON_EQUAL);
+	public static const NE:BinaryOperator = BinaryOperator.create(Operators.NOT_EQUAL);
 	
-	public static const OR:BinaryOperator = BinaryOperator.create(Operators.LOGICAL_OR);
+	public static const OR:BinaryOperator = BinaryOperator.create(Operators.LOR);
 	
-	public static const SL:BinaryOperator = BinaryOperator.create(Operators.DOUBLE_SHIFT_LEFT);
+	public static const SL:BinaryOperator = BinaryOperator.create(Operators.SL);
 	
-	public static const SR:BinaryOperator = BinaryOperator.create(Operators.DOUBLE_SHIFT_RIGHT);
+	public static const SR:BinaryOperator = BinaryOperator.create(Operators.SR);
 	
-	public static const SRU:BinaryOperator = BinaryOperator.create(Operators.TRIPLE_SHIFT_RIGHT);
+	public static const SRU:BinaryOperator = BinaryOperator.create(Operators.BSR);
 	
 	public static const SUB:BinaryOperator = BinaryOperator.create(Operators.MINUS);
 	
@@ -91,7 +91,7 @@ public final class BinaryOperator
 			return;
 		
 		map = new HashMap();
-		map.put(AS3NodeKind.ADD, ADD);
+		map.put(AS3NodeKind.ADDITIVE, ADD);
 		map.put(AS3NodeKind.AND, AND);
 		
 		intialized = true;

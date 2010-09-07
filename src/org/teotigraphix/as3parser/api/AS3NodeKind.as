@@ -69,7 +69,7 @@ public class AS3NodeKind
 	
 	public static const ACCESSOR_ROLE:String = "accessor-role";
 	
-	public static const ADD:String = "add";
+	public static const ADDITIVE:String = "add";
 	
 	public static const AND:String = "and";
 	
@@ -83,7 +83,7 @@ public class AS3NodeKind
 	
 	public static const BLOCK_DOC:String = "block-doc";
 	
-	public static const ASSIGN:String = "assign";
+	public static const ASSIGNMENT:String = "assign";
 	
 	public static const B_AND:String = "b-and"; 
 	
@@ -207,7 +207,7 @@ public class AS3NodeKind
 	
 	public static const MODIFIER:String = "mod";
 	
-	public static const MULTIPLICATION:String = "mul";
+	public static const MULTIPLICATIVE:String = "mul";
 	
 	public static const NAME:String = "name";
 	
@@ -249,7 +249,7 @@ public class AS3NodeKind
 	
 	public static const REG_EXP:String = "reg-exp";
 	
-	public static const RELATION:String = "relation";
+	public static const RELATIONAL:String = "relation";
 	
 	public static const REST:String = "rest";
 	

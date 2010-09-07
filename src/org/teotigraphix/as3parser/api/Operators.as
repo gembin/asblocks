@@ -1,33 +1,22 @@
-/**
- *    Copyright (c) 2009, Adobe Systems, Incorporated
- *    All rights reserved.
- *
- *    Redistribution  and  use  in  source  and  binary  forms, with or without
- *    modification,  are  permitted  provided  that  the  following  conditions
- *    are met:
- *
- *      * Redistributions  of  source  code  must  retain  the  above copyright
- *        notice, this list of conditions and the following disclaimer.
- *      * Redistributions  in  binary  form  must reproduce the above copyright
- *        notice,  this  list  of  conditions  and  the following disclaimer in
- *        the    documentation   and/or   other  materials  provided  with  the
- *        distribution.
- *      * Neither the name of the Adobe Systems, Incorporated. nor the names of
- *        its  contributors  may be used to endorse or promote products derived
- *        from this software without specific prior written permission.
- *
- *    THIS  SOFTWARE  IS  PROVIDED  BY THE  COPYRIGHT  HOLDERS AND CONTRIBUTORS
- *    "AS IS"  AND  ANY  EXPRESS  OR  IMPLIED  WARRANTIES,  INCLUDING,  BUT NOT
- *    LIMITED  TO,  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
- *    PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER
- *    OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,  INCIDENTAL,  SPECIAL,
- *    EXEMPLARY,  OR  CONSEQUENTIAL  DAMAGES  (INCLUDING,  BUT  NOT  LIMITED TO,
- *    PROCUREMENT  OF  SUBSTITUTE   GOODS  OR   SERVICES;  LOSS  OF  USE,  DATA,
- *    OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- *    LIABILITY,  WHETHER  IN  CONTRACT,  STRICT  LIABILITY, OR TORT (INCLUDING
- *    NEGLIGENCE  OR  OTHERWISE)  ARISING  IN  ANY  WAY  OUT OF THE USE OF THIS
- *    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.as3parser.api
 {
 
@@ -35,116 +24,314 @@ package org.teotigraphix.as3parser.api
  * The <strong>Operators</strong> enumeration of <strong>actionscript3</strong> 
  * operators.
  * 
- * <p>Initial API; Adobe Systems, Incorporated</p>
- * 
- * @author Adobe Systems, Incorporated
  * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
 public class Operators
 {
-	public static const AND_EQUAL:String = "&=";
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Constants
+	//
+	//--------------------------------------------------------------------------
 	
-	public static const AT:String = "@";
+	/**
+	 * The <code>?</code>
+	 */
+	public static const QUESTION:String = "?";
 	
-	public static const B_AND:String = "&";
+	/**
+	 * The <code>(</code>
+	 */
+	public static const LPAREN:String = "(";
 	
-	public static const B_OR:String = "|";
+	/**
+	 * The <code>)</code>
+	 */
+	public static const RPAREN:String = ")";
 	
-	public static const B_XOR:String = "^";
+	/**
+	 * The <code>[</code>
+	 */
+	public static const LBRACK:String = "[";
 	
-	public static const COLUMN:String = ":";
+	/**
+	 * The <code>]</code>
+	 */
+	public static const RBRACK:String = "]";
 	
+	/**
+	 * The <code>{</code>
+	 */
+	public static const LCURLY:String = "{";
+	
+	/**
+	 * The <code>}</code>
+	 */
+	public static const RCURLY:String = "}";
+	
+	/**
+	 * The <code>:</code>
+	 */
+	public static const COLON:String = ":";
+	
+	/**
+	 * The <code>::</code>
+	 */
+	public static const DBL_COLON:String = "::";
+	
+	/**
+	 * The <code>,</code>
+	 */
 	public static const COMMA:String = ",";
 	
-	public static const DECREMENT:String = "--";
+	/**
+	 * The <code>=</code>
+	 */
+	public static const ASSIGN:String = "=";
 	
-	public static const DIVIDED_EQUAL:String = "/=";
+	/**
+	 * The <code>==</code>
+	 */
+	public static const EQUAL:String = "==";
 	
-	public static const DOT:String = ".";
+	/**
+	 * The <code>===</code>
+	 */
+	public static const STRICT_EQUAL:String = "===";
 	
-	public static const DOUBLE_COLUMN:String = "::";
+	/**
+	 * The <code>!</code>
+	 */
+	public static const LNOT:String = "!";
 	
-	public static const DOUBLE_DOT:String = "..";
+	/**
+	 * The <code>~</code>
+	 */
+	public static const BNOT:String = "~";
 	
-	public static const DOUBLE_EQUAL:String = "==";
+	/**
+	 * The <code>!=</code>
+	 */
+	public static const NOT_EQUAL:String = "!=";
 	
-	public static const DOUBLE_QUOTE:String = "\"";
+	/**
+	 * The <code>!==</code>
+	 */
+	public static const STRICT_NOT_EQUAL:String = "!==";
 	
-	public static const DOUBLE_SHIFT_LEFT:String = "<<";
+	/**
+	 * The <code>/</code>
+	 */
+	public static const DIV:String = "/";
 	
-	public static const DOUBLE_SHIFT_RIGHT:String = ">>";
+	/**
+	 * The <code>/=</code>
+	 */
+	public static const DIV_ASSIGN:String = "/=";
 	
-	public static const EQUAL:String = "=";
-	
-	public static const INCREMENT:String = "++";
-	
-	public static const INFERIOR:String = "<";
-	
-	public static const INFERIOR_OR_EQUAL:String = "<=";
-	
-	public static const LEFT_CURLY_BRACKET:String = "{";
-	
-	public static const LEFT_PARENTHESIS:String = "(";
-	
-	public static const LEFT_SQUARE_BRACKET:String = "[";
-	
-	public static const LOGICAL_AND:String = "&&";
-	
-	public static const LOGICAL_OR:String = "||";
-	
-	public static const MINUS:String = "-";
-	
-	public static const MINUS_EQUAL:String = "-=";
-	
-	public static const MODULO:String = "%";
-	
-	public static const MODULO_EQUAL:String = "%=";
-	
-	public static const NON_EQUAL:String = "!=";
-	
-	public static const NON_STRICTLY_EQUAL:String = "!==";
-	
-	public static const OR_EQUAL:String = "|=";
-	
+	/**
+	 * The <code>+</code>
+	 */
 	public static const PLUS:String = "+";
 	
-	public static const PLUS_EQUAL:String = "+=";
+	/**
+	 * The <code>+=</code>
+	 */
+	public static const PLUS_ASSIGN:String = "+=";
 	
-	public static const QUESTION_MARK:String = "?";
+	/**
+	 * The <code>++</code>
+	 */
+	public static const INC:String = "++";
 	
+	/**
+	 * The <code>-</code>
+	 */
+	public static const MINUS:String = "-";
+	
+	/**
+	 * The <code>-=</code>
+	 */
+	public static const MINUS_ASSIGN:String = "-=";
+	
+	/**
+	 * The <code>--</code>
+	 */
+	public static const DEC:String = "--";
+	
+	/**
+	 * The <code>*</code>
+	 */
+	public static const STAR:String = "*";
+	
+	/**
+	 * The <code>*=</code>
+	 */
+	public static const STAR_ASSIGN:String = "*=";
+	
+	/**
+	 * The <code>%</code>
+	 */
+	public static const MOD:String = "%";
+	
+	/**
+	 * The <code>%=</code>
+	 */
+	public static const MOD_ASSIGN:String = "%=";
+	
+	/**
+	 * The <code>>></code>
+	 */
+	public static const SR:String = ">>";
+	
+	/**
+	 * The <code>>>=</code>
+	 */
+	public static const SR_ASSIGN:String = ">>=";
+	
+	/**
+	 * The <code>>>></code>
+	 */
+	public static const BSR:String = ">>>";
+	
+	/**
+	 * The <code>>>>=</code>
+	 */
+	public static const BSR_ASSIGN:String = ">>>=";
+	
+	/**
+	 * The <code>>=</code>
+	 */
+	public static const GE:String = ">=";
+	
+	/**
+	 * The <code>></code>
+	 */
+	public static const GT:String = ">";
+	
+	/**
+	 * The <code><<</code>
+	 */
+	public static const SL:String = "<<";
+	
+	/**
+	 * The <code><<=</code>
+	 */
+	public static const SL_ASSIGN:String = "<<=";
+	
+	/**
+	 * The <code><<<</code>
+	 */
+	public static const SSL:String = "<<<";
+	
+	/**
+	 * The <code><<<=</code>
+	 */
+	public static const SSL_ASSIGN:String = "<<<=";
+	
+	/**
+	 * The <code><=</code>
+	 */
+	public static const LE:String = "<=";
+	
+	/**
+	 * The <code><</code>
+	 */
+	public static const LT:String = "<";
+	
+	/**
+	 * The <code>^</code>
+	 */
+	public static const BXOR:String = "^";
+	
+	/**
+	 * The <code>^=</code>
+	 */
+	public static const BXOR_ASSIGN:String = "^=";
+	
+	/**
+	 * The <code>|</code>
+	 */
+	public static const BOR:String = "|";
+	
+	/**
+	 * The <code>|=</code>
+	 */
+	public static const BOR_ASSIGN:String = "|=";
+	
+	/**
+	 * The <code>||</code>
+	 */
+	public static const LOR:String = "||";
+	
+	/**
+	 * The <code>||=</code>
+	 */
+	public static const LOR_ASSIGN:String = "||=";
+	
+	/**
+	 * The <code>&</code>
+	 */
+	public static const BAND:String = "&";
+	
+	/**
+	 * The <code>&=</code>
+	 */
+	public static const BAND_ASSIGN:String = "&=";
+	
+	/**
+	 * The <code>&&</code>
+	 */
+	public static const LAND:String = "&&";
+	
+	/**
+	 * The <code>&&=</code>
+	 */
+	public static const LAND_ASSIGN:String = "&&=";
+	
+	/**
+	 * The <code>at</code>
+	 */
+	public static const E4X_ATTRI:String = "@";
+	
+	/**
+	 * The <code>;</code>
+	 */
+	public static const SEMI:String = ";";
+	
+	
+	/**
+	 * The <code>.</code>
+	 */
+	public static const DOT:String = ".";
+	
+	/**
+	 * The <code>..</code>
+	 */
+	public static const E4X_DESC:String = "..";
+	
+	/**
+	 * The <code>...</code>
+	 */
+	public static const REST:String = "...";
+	
+	
+	/**
+	 * The <code>"</code>
+	 */
 	public static const QUOTE:String = "\"";
 	
-	public static const REST_PARAMETERS:String = "...";
+	/**
+	 * The <code>'</code>
+	 */
+	public static const SQUOTE:String = "'";
 	
-	public static const RIGHT_CURLY_BRACKET:String = "}";
 	
-	public static const RIGHT_PARENTHESIS:String = ")";
-	
-	public static const RIGHT_SQUARE_BRACKET:String = "]";
-	
-	public static const SEMI_COLUMN:String = ";";
-	
-	public static const SIMPLE_QUOTE:String = "'";
-	
-	public static const SLASH:String = "/";
-	
-	public static const STRICTLY_EQUAL:String = "===";
-	
-	public static const SUPERIOR:String = ">";
-	
-	public static const SUPERIOR_OR_EQUAL:String = ">=";
-	
-	public static const TIMES:String = "*";
-	
-	public static const TIMES_EQUAL:String = "*=";
-	
-	public static const TRIPLE_SHIFT_LEFT:String = "<<<";
-	
-	public static const TRIPLE_SHIFT_RIGHT:String = ">>>";
-	
-	public static const VECTOR_START:String = ".<";
-	
-	public static const XOR_EQUAL:String = "^=";
+	/**
+	 * The <code>.<</code>
+	 */
+	public static const VECTOR:String = ".<";
 }
 }

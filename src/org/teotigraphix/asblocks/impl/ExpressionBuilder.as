@@ -53,10 +53,10 @@ public class ExpressionBuilder
 			case AS3NodeKind.B_XOR:
 			case AS3NodeKind.B_AND:
 			case AS3NodeKind.EQUALITY:
-			case AS3NodeKind.RELATION:
+			case AS3NodeKind.RELATIONAL:
 			case AS3NodeKind.SHIFT:
-			case AS3NodeKind.ADD:
-			case AS3NodeKind.MULTIPLICATION:
+			case AS3NodeKind.ADDITIVE:
+			case AS3NodeKind.MULTIPLICATIVE:
 				return new BinaryExpressionNode(ast);
 				
 			case AS3NodeKind.CALL:
@@ -68,7 +68,7 @@ public class ExpressionBuilder
 			case AS3NodeKind.OBJECT:
 				return new ObjectLiteralNode(ast);
 				
-			case AS3NodeKind.ASSIGN:
+			case AS3NodeKind.ASSIGNMENT:
 				return new AssignmentExpressionNode(ast);
 				
 			case AS3NodeKind.PRIMARY:

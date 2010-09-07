@@ -45,17 +45,17 @@ public class TokenBuilder
 	
 	public static function newSemi():LinkedListToken
 	{
-		return newToken("semi", Operators.SEMI_COLUMN);
+		return newToken("semi", Operators.SEMI);
 	}
 	
 	public static function newColumn():LinkedListToken
 	{
-		return newToken("column", Operators.COLUMN);
+		return newToken("column", Operators.COLON);
 	}
 	
 	public static function newEqual():LinkedListToken
 	{
-		return newToken("equal", Operators.EQUAL);
+		return newToken("equal", Operators.ASSIGN);
 	}
 	
 	public static function newSpace():LinkedListToken
@@ -224,17 +224,17 @@ public class TokenBuilder
 	
 	public static function newLeftBracket():LinkedListToken
 	{
-		return newToken("left-bracket", Operators.LEFT_SQUARE_BRACKET);
+		return newToken("left-bracket", Operators.LBRACK);
 	}
 	
 	public static function newRightBracket():LinkedListToken
 	{
-		return newToken("right-bracket", Operators.RIGHT_SQUARE_BRACKET);
+		return newToken("right-bracket", Operators.RBRACK);
 	}
 	
 	public static function newAssign():LinkedListToken
 	{
-		return newToken(AS3NodeKind.OP, Operators.EQUAL);
+		return newToken(AS3NodeKind.OP, Operators.ASSIGN);
 	}
 }
 }

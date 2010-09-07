@@ -605,7 +605,7 @@ public class ASTBuilder
 	{
 		switch (ast.kind) 
 		{
-			case AS3NodeKind.ASSIGN:
+			case AS3NodeKind.ASSIGNMENT:
 				return 13;
 			case AS3NodeKind.CONDITIONAL:
 				return 12;
