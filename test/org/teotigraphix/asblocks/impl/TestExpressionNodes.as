@@ -2,6 +2,8 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.Assert;
+import org.flexunit.asserts.assertFalse;
+import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.api.IArrayAccessExpression;
@@ -10,8 +12,10 @@ import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.IBlock;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IConditionalExpression;
+import org.teotigraphix.asblocks.api.IDeclarationStatement;
 import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IExpressionStatement;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
 import org.teotigraphix.asblocks.api.IINvocationExpression;
 import org.teotigraphix.asblocks.api.IIfStatement;
@@ -24,6 +28,7 @@ import org.teotigraphix.asblocks.api.ISwitchCase;
 import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
+import org.teotigraphix.asblocks.api.PostfixOperator;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestExpressionNodes
@@ -89,14 +94,18 @@ public class TestExpressionNodes
 	public function testDeclaration():void
 	{
 		var statement:IBlock = factory.newBlock();
-		// FIXME use var-list and const-list ast model
-		var expression:IAssignmentExpression = factory.
-			newAssignmentExpression(
-				factory.newSimpleNameExpression("a"),
-				factory.newNumberLiteral(42));
+		var expression:Object = 
+			statement.addStatement("var a:int = 42") as Object;
 		
-		statement.newDeclaration(expression);
-		assertPrint("{\n\tvar a = 42;\n}", statement);
+		assertPrint("{\n\tvar a:int = 42;\n}", statement);
+		assertFalse(expression.isConstant);
+		expression.isConstant = true;
+		assertPrint("{\n\tconst a:int = 42;\n}", statement);
+		assertTrue(expression.isConstant);
+		expression.isConstant = false;
+		assertPrint("{\n\tvar a:int = 42;\n}", statement);
+		expression.isConstant = false;
+		assertFalse(expression.isConstant);
 	}
 	
 	[Test]
@@ -589,7 +598,7 @@ public class TestExpressionNodes
 		
 		// FIXME
 		//expression.operator = PostfixOperator.POSTINC;
-		//assertPrintExpression("count++", expression);
+		//assertPrint("count++", expression);
 		
 		expression = factory.newPostIncExpression(factory.newSimpleNameExpression("i"));
 		assertPrint("i++", expression);

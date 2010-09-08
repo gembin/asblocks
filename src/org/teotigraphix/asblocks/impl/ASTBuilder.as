@@ -208,9 +208,14 @@ public class ASTBuilder
 	
 	public static function newDeclaration(assignment:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEC_LIST, "var");
-		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(assignment);
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEC_LIST);
+		var role:IParserNode = ASTUtil.newAST(AS3NodeKind.DEC_ROLE, "var");
+		ast.addChild(role);
+		if (assignment)
+		{
+			ast.appendToken(TokenBuilder.newSpace());
+			ast.addChild(assignment);
+		}
 		ast.appendToken(TokenBuilder.newSemi());
 		return ast;
 	}
@@ -411,7 +416,7 @@ public class ASTBuilder
 	public static function newPostfixExpression(op:LinkedListToken, 
 												subExpr:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.OP, op.text);
+		var ast:IParserNode = ASTUtil.newPostfixAST(op);
 		TokenNode(ast).noUpdate = true;
 		ast.addChild(subExpr);
 		TokenNode(ast).noUpdate = false;
@@ -423,7 +428,7 @@ public class ASTBuilder
 	public static function newPrefixExpression(op:LinkedListToken, 
 											   subExpr:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.OP, op.text);
+		var ast:IParserNode = ASTUtil.newPrefixAST(op);
 		ast.addChild(subExpr);
 		return ast;
 	}

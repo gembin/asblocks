@@ -158,12 +158,11 @@ public class TestIfStatement extends AbstractStatementTest
 		assertStatementPrint(input);
 		assertStatement("1", input,
 			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"4\">" +
-			"<true line=\"1\" column=\"6\">true</true></condition><primary " +
-			"line=\"1\" column=\"12\"><throw line=\"1\" column=\"12\"><primary " +
-			"line=\"1\" column=\"18\"><new line=\"1\" column=\"18\"><call line=\"1\" " +
-			"column=\"27\"><primary line=\"1\" column=\"22\">Error</primary>" +
-			"<arguments line=\"1\" column=\"27\"></arguments></call></new></primary>" +
-			"</throw></primary></if>");
+			"<true line=\"1\" column=\"6\">true</true></condition><throw line=\"1\" " +
+			"column=\"12\"><primary line=\"1\" column=\"18\"><new line=\"1\" " +
+			"column=\"18\"><call line=\"1\" column=\"27\"><primary line=\"1\" " +
+			"column=\"22\">Error</primary><arguments line=\"1\" column=\"27\">" +
+			"</arguments></call></new></primary></throw></if>");
 	}
 }
 }

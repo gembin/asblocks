@@ -1,9 +1,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IStatement;
 
 public class StatementBuilder
 {
@@ -14,11 +14,15 @@ public class StatementBuilder
 			case AS3NodeKind.BLOCK:
 				return new StatementList(ast);
 				
+			case AS3NodeKind.EXPR_LIST:
 			case AS3NodeKind.EXPR_STMNT:
 				return new ExpressionStatementNode(ast);
+			
+			case AS3NodeKind.DEC_LIST:
+				return new DeclarationStatementNode(ast);
 				
 			default:
-				throw new Error("unhandled expression node type: " + ast.kind);
+				throw new Error("unhandled statement node type: '" + ast.kind + "'");
 				
 				/*
 				

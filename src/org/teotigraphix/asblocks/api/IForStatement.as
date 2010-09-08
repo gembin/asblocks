@@ -17,83 +17,64 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks.impl
+package org.teotigraphix.asblocks.api
 {
 
-import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.asblocks.api.IPostfixExpression;
-import org.teotigraphix.asblocks.api.PostfixOperator;
-import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.TokenNode;
-
 /**
- * The <code>IPostfixExpression</code> implementation.
+ * TODO Docme
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class PostfixExpressionNode extends ExpressionNode 
-	implements IPostfixExpression
+public interface IForStatement extends IStatement, IStatementContainer
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IPostfixExpression API :: Properties
+	//  Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  expression
+	//  initializer
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPostfixExpression#expression
+	 * TODO Docme
 	 */
-	public function get expression():IExpression
-	{
-		return ExpressionBuilder.build(node.getFirstChild());
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set expression(value:IExpression):void
-	{
-		node.setChildAt(value.node, 0);
-	}
-	
-	//----------------------------------
-	//  operator
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IPostfixExpression#operator
-	 */
-	public function get operator():PostfixOperator
-	{
-		return PostfixOperator.opFromKind(node.kind);
-	}
+	function get initializer():IExpression;
 	
 	/**
 	 * @private
 	 */
-	public function set operator(value:PostfixOperator):void
-	{
-		PostfixOperator.initializeFromOp(value, node);
-	}
+	function set initializer(value:IExpression):void;
 	
-	//--------------------------------------------------------------------------
-	//
-	//  Constructor
-	//
-	//--------------------------------------------------------------------------
+	//----------------------------------
+	//  condition
+	//----------------------------------
 	
 	/**
-	 * Constructor.
+	 * TODO Docme
 	 */
-	public function PostfixExpressionNode(node:IParserNode)
-	{
-		super(node);
-	}
+	function get condition():IExpression;
+	
+	/**
+	 * @private
+	 */
+	function set condition(value:IExpression):void;
+	
+	//----------------------------------
+	//  update
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get update():IExpression;
+	
+	/**
+	 * @private
+	 */
+	function set update(value:IExpression):void;
 }
 }

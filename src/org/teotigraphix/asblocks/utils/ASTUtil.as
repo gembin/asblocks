@@ -198,6 +198,31 @@ public class ASTUtil
 		return adapter.create(kind, text);
 	}
 	
+	public static function newPrefixAST(op:LinkedListToken):IParserNode
+	{
+		if (op.kind == AS3NodeKind.PRE_INC)
+		{
+			return newAST(AS3NodeKind.PRE_INC, op.text);
+		}
+		else if (op.kind == AS3NodeKind.PRE_DEC)
+		{
+			return newAST(AS3NodeKind.PRE_DEC, op.text);
+		}
+		return null;
+	}
+	
+	public static function newPostfixAST(op:LinkedListToken):IParserNode
+	{
+		if (op.kind == AS3NodeKind.POST_INC)
+		{
+			return newAST(AS3NodeKind.POST_INC, op.text);
+		}
+		else if (op.kind == AS3NodeKind.POST_DEC)
+		{
+			return newAST(AS3NodeKind.POST_DEC, op.text);
+		}
+		return null;
+	}
 	
 	public static function newBinaryAST(op:LinkedListToken):IParserNode
 	{
@@ -352,12 +377,18 @@ public class ASTUtil
 	
 	public static function typeText(ast:IParserNode):String
 	{
+		if (!ast)
+			return null;
+		
 		// TYPE node, I want to change ast some day
 		return ast.stringValue;
 	}
 	
 	public static function nameText(ast:IParserNode):String
 	{
+		if (!ast)
+			return null;
+		
 		// NAME node, I want to change ast some day
 		return ast.stringValue;
 	}

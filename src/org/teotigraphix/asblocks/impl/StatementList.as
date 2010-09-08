@@ -20,6 +20,7 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.asblocks.api.IBlock;
@@ -71,8 +72,12 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function addStatement(statement:String):IStatement
 	{
-		var stmt:IParserNode = AS3FragmentParser.parseExpressionStatement(statement);
+		var stmt:IParserNode = AS3FragmentParser.parseStatement(statement);
 		stmt.stopToken.next = null;
+		if (stmt.parent && stmt.parent.isKind(AS3NodeKind.EXPR_LIST))
+		{
+			stmt = stmt.parent;
+		}
 		_addStatement(stmt);
 		return StatementBuilder.build(stmt);
 	}

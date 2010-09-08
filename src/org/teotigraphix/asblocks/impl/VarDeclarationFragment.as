@@ -20,66 +20,84 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.asblocks.api.IPostfixExpression;
-import org.teotigraphix.asblocks.api.PostfixOperator;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.TokenNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
- * The <code>IPostfixExpression</code> implementation.
- * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class PostfixExpressionNode extends ExpressionNode 
-	implements IPostfixExpression
+public class VarDeclarationFragment extends ScriptNode
+	implements IVarDeclarationFragment
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IPostfixExpression API :: Properties
+	//  IVarDeclarationFragment API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  expression
+	//  name
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPostfixExpression#expression
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#name
 	 */
-	public function get expression():IExpression
+	public function get name():String
 	{
-		return ExpressionBuilder.build(node.getFirstChild());
+		return ASTUtil.nameText(node.getKind(AS3NodeKind.NAME));
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set expression(value:IExpression):void
+	public function set name(value:String):void
 	{
-		node.setChildAt(value.node, 0);
 	}
 	
 	//----------------------------------
-	//  operator
+	//  type
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IPostfixExpression#operator
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#type
 	 */
-	public function get operator():PostfixOperator
+	public function get type():String
 	{
-		return PostfixOperator.opFromKind(node.kind);
+		return ASTUtil.typeText(node.getKind(AS3NodeKind.TYPE));
 	}
 	
 	/**
 	 * @private
-	 */
-	public function set operator(value:PostfixOperator):void
+	 */	
+	public function set type(value:String):void
 	{
-		PostfixOperator.initializeFromOp(value, node);
+	}
+	
+	//----------------------------------
+	//  initializer
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#initializer
+	 */
+	public function get initializer():IExpression
+	{
+		var init:IParserNode = node.getKind(AS3NodeKind.INIT);
+		if (!init)
+			return null;
+		return ExpressionBuilder.build(init.getFirstChild());
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set initializer(value:IExpression):void
+	{
 	}
 	
 	//--------------------------------------------------------------------------
@@ -91,7 +109,7 @@ public class PostfixExpressionNode extends ExpressionNode
 	/**
 	 * Constructor.
 	 */
-	public function PostfixExpressionNode(node:IParserNode)
+	public function VarDeclarationFragment(node:IParserNode)
 	{
 		super(node);
 	}

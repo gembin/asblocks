@@ -61,5 +61,20 @@ public class TestReturnStatement extends AbstractStatementTest
 			"<return line=\"1\" column=\"1\"><primary line=\"1\" column=\"8\">" +
 			"<array line=\"1\" column=\"8\"></array></primary></return>" );
 	}
+	
+	[Test]
+	public function testThrow():void
+	{
+		var input:String = "throw new Error('error')";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<throw line=\"1\" column=\"1\"><primary line=\"1\" " +
+			"column=\"7\"><new line=\"1\" column=\"7\"><call line=\"1\" " +
+			"column=\"16\"><primary line=\"1\" column=\"11\">Error</primary>" +
+			"<arguments line=\"1\" column=\"16\"><string line=\"1\" " +
+			"column=\"17\">'error'</string></arguments></call></new>" +
+			"</primary></throw>");
+	}
 }
 }

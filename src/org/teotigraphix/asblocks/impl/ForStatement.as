@@ -17,59 +17,47 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks.api
+package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IForStatement;
+
+/*
+for/init/dec-list
+for/init/dec-list/dec-role
+for/init/dec-list/name-type-init
+for/init/dec-list/name-type-init/name
+for/init/dec-list/name-type-init/type
+for/init/dec-list/name-type-init/init
+for/init/dec-list/dec-role
+for/cond/releational
+for/iter/post-inc
+for/block
+*/
+
 /**
- * Nex expression; <code>new foo()</code>.
+ * The <code>IForStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IDeclarationStatement 
-	extends IStatement
+public class ForStatement extends ContainerDelegate 
+	//implements IForStatement
 {
-	
-	//----------------------------------
-	//  firstVarName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get firstVarName():String;
-	
-	//----------------------------------
-	//  firstVarType
-	//----------------------------------
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function get firstVarType():String;
-	
-	//----------------------------------
-	//  vars
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get vars():Vector.<IVarDeclarationFragment>;
-	
-	//----------------------------------
-	//  isConstant
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isConstant():Boolean;
-	
-	/**
-	 * @private
-	 */
-	function set isConstant(value:Boolean):void;
+	public function ForStatement(node:IParserNode)
+	{
+		super(node);
+	}
 }
 }

@@ -1448,10 +1448,6 @@ public class AS3Parser extends ParserBase
 		{
 			result.addChild(parseLambdaExpression());
 		}
-		else if (tokIs(KeyWords.THROW))
-		{
-			result.addChild(parseThrowExpression());
-		}
 		else if (tokIs(KeyWords.NEW))
 		{
 			result.addChild(parseNewExpression());
@@ -1609,9 +1605,8 @@ public class AS3Parser extends ParserBase
 			AS3NodeKind.THROW, token);
 		
 		consume(KeyWords.THROW, result);
-		
 		result.addChild(parseExpression());
-		
+		skip(Operators.SEMI, result);
 		return result;
 	}
 	
@@ -2024,6 +2019,10 @@ public class AS3Parser extends ParserBase
 		{
 			result = parseDo();
 		}
+		// TODO implement with in as3parser
+		//else if (tokIs(KeyWords.WITH))
+		//{
+		//}
 		else if (tokIs(KeyWords.WHILE))
 		{
 			result = parseWhile();
@@ -2055,6 +2054,10 @@ public class AS3Parser extends ParserBase
 		else if (tokIs(KeyWords.RETURN))
 		{
 			result = parseReturnStatement();
+		}
+		else if (tokIs(KeyWords.THROW))
+		{
+			result = parseThrowExpression();
 		}
 		else if (tokIs(KeyWords.BREAK))
 		{

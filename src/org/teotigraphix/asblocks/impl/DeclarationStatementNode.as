@@ -20,9 +20,14 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IDeclarationStatement;
-import org.teotigraphix.asblocks.api.IScriptNode;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.Token;
+import org.teotigraphix.as3parser.core.TokenNode;
+import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.api.IDeclarationStatement;
+import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IDeclarationStatement</code> implementation.
@@ -39,16 +44,11 @@ public class DeclarationStatementNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _firstVarName:String;
-	
-	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#firstVarName
 	 */
 	public function get firstVarName():String
 	{
-		return _firstVarName;
+		return firstVar.name;
 	}
 	
 	//----------------------------------
@@ -56,11 +56,11 @@ public class DeclarationStatementNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#firstVarType
 	 */
 	public function get firstVarType():String
 	{
-		return _firstVarName;
+		return firstVar.type;
 	}
 	
 	//----------------------------------
@@ -68,16 +68,12 @@ public class DeclarationStatementNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _isConstant:Boolean;
-	
-	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#isConstant
 	 */
 	public function get isConstant():Boolean
 	{
-		return _isConstant;
+		// dec-list/dec-role
+		return node.getFirstChild().getFirstChild().isKind(AS3NodeKind.CONST);
 	}
 	
 	/**
@@ -85,10 +81,17 @@ public class DeclarationStatementNode extends ScriptNode
 	 */	
 	public function set isConstant(value:Boolean):void
 	{
-		if (_isConstant == value)
+		var roleList:IParserNode = node.getFirstChild();
+		if (value && roleList.getFirstChild().isKind(AS3NodeKind.CONST))
 			return;
 		
-		_isConstant = value;
+		var kind:String = (value) ? AS3NodeKind.CONST : AS3NodeKind.VAR;
+		var role:IParserNode = ASTUtil.newAST(AS3NodeKind.DEC_ROLE);
+		var ast:IParserNode = ASTUtil.newAST(kind);
+		role.addChild(ast);
+		role.appendToken(TokenBuilder.newToken(kind, kind));
+		node.setChildAt(role, 0);
+		role.appendToken(TokenBuilder.newSpace());
 	}
 	
 	//----------------------------------
@@ -96,11 +99,18 @@ public class DeclarationStatementNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#vars
 	 */
-	public function get vars():Vector.<IScriptNode>
+	public function get vars():Vector.<IVarDeclarationFragment>
 	{
-		return null;
+		var result:Vector.<IVarDeclarationFragment> = new Vector.<IVarDeclarationFragment>();
+		var i:ASTIterator = new ASTIterator(node);
+		i.next(); // dec-role
+		while(i.hasNext())
+		{
+			result.push(build(i.next()));
+		}
+		return result;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -115,6 +125,22 @@ public class DeclarationStatementNode extends ScriptNode
 	public function DeclarationStatementNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function get firstVar():IVarDeclarationFragment
+	{
+		return build(node.getChild(1));
+	}
+	
+	/**
+	 * @private
+	 */
+	private function build(ast:IParserNode):IVarDeclarationFragment
+	{
+		return new VarDeclarationFragment(ast);
 	}
 }
 }

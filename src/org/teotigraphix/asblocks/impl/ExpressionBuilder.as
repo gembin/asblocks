@@ -1,3 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.asblocks.impl
 {
 
@@ -6,9 +25,20 @@ import flash.errors.IllegalOperationError;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
+/**
+ * TODO DOME
+ *
+ * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
+ * @productversion 1.0
+ */
 public class ExpressionBuilder
 {
+	/**
+	 * @private
+	 */
 	public static function build(ast:IParserNode):IExpression
 	{
 		switch (ast.kind)
@@ -21,7 +51,10 @@ public class ExpressionBuilder
 				
 			case AS3NodeKind.NULL:
 				return new NullLiteralNode(ast);
-			
+				
+			case AS3NodeKind.UNDEFINED:
+				return new UndefinedLiteralNode(ast);
+				
 			case AS3NodeKind.TRUE:
 			case AS3NodeKind.FALSE:
 				return new BooleanLiteralNode(ast);
@@ -38,19 +71,32 @@ public class ExpressionBuilder
 			case AS3NodeKind.B_XOR:
 				return new BinaryExpressionNode(ast);
 				
+			case AS3NodeKind.NOT:
+			case AS3NodeKind.B_NOT:
 			case AS3NodeKind.PRE_INC:
 			case AS3NodeKind.PRE_DEC:
+			case AS3NodeKind.PLUS:
+			case AS3NodeKind.MINUS:
 				return new PrefixExpressionNode(ast);
 				
 			case AS3NodeKind.POST_INC:
 			case AS3NodeKind.POST_DEC:
 				return new PostfixExpressionNode(ast);
 				
+			case AS3NodeKind.ENCAPSULATED:
+				return build(ast.getFirstChild());
+				
+			case AS3NodeKind.CONDITIONAL:
+				return new ConditionalExpressionNode(ast);
+				
 			case AS3NodeKind.CALL:
 				return new InvocationExpressionNode(ast);
 				
 			case AS3NodeKind.ARRAY:
 				return new ArrayLiteralNode(ast);
+			
+			case AS3NodeKind.LAMBDA:
+				return new FunctionLiteralNode(ast);	
 				
 			case AS3NodeKind.OBJECT:
 				return new ObjectLiteralNode(ast);
@@ -63,141 +109,18 @@ public class ExpressionBuilder
 			
 			case AS3NodeKind.ARRAY_ACCESSOR:
 				return new ArrayAccessExpressionNode(ast);
-			
+				
+			case AS3NodeKind.NEW:
+				return new NewExpressionNode(ast);
+				
 			case AS3NodeKind.DOT:
 				return new FieldAccessExpression(ast);
 				
 			default:
-				throw new IllegalOperationError("unhandled expression node type: '" + ast.kind + "'");
+				throw new IllegalOperationError("unhandled expression node type: '" + 
+					ASTUtil.tokenName(ast.kind) + "'");
 			
 			/*
-			
-				NUMBER
-				- IntegerLiteralNode
-				STRING
-				- StringLiteralNode
-				NULL
-				- NullLiteralNode
-				TRUE
-				FALSE
-				- BooleanLiteralNode
-				ASSIGN
-				- AssignmentExpressionNode
-				OP
-				- BinaryExpressionNode
-				POST_DEC
-				POST_INC
-				- PostfixExpressionNode
-				PRE_DEC
-				PRE_INC
-				PLUS
-				MINUS
-				NOT
-				- PrefixExpressionNode
-				DOT
-				- FieldAccessExpressionNode
-				CALL
-				- InvocationExpressionNode
-				ENCAPSULATED
-				- return build(ast.getFirstChild());
-				ARRAY_ACCESSOR
-				- ArrayAccessExpressionNode
-				NEW
-				- NewExpressionNode
-				CONDITIONAL
-				- ConditionalExpressionNode
-				UNDEFINED
-				- UndefinedLiteralNode
-				FUNCTION
-				- FunctionExpressionNode
-				ARRAY
-				- ArrayLiteralNode
-				OBJECT
-				- ObjectExpressionNode
-				XML
-				- XMLExpressionNode
-				
-			*/
-				
-			/*
-			`case AS3Parser.DECIMAL_LITERAL:
-				return new ASTASIntegerLiteral(ast);
-			`case AS3Parser.STRING_LITERAL:
-				return new ASTASStringLiteral(ast);
-			`case AS3Parser.NULL:
-				return new ASTASNullLiteral(ast);
-			`case AS3Parser.TRUE:
-			`case AS3Parser.FALSE:
-				return new ASTASBooleanLiteral(ast);
-			case AS3Parser.PLUS_ASSIGN:
-			case AS3Parser.ASSIGN:
-			case AS3Parser.BAND_ASSIGN:
-			case AS3Parser.BOR_ASSIGN:
-			case AS3Parser.BXOR_ASSIGN:
-			case AS3Parser.DIV_ASSIGN:
-			case AS3Parser.MOD_ASSIGN:
-			case AS3Parser.STAR_ASSIGN:
-			case AS3Parser.SL_ASSIGN:
-			case AS3Parser.SR_ASSIGN:
-			case AS3Parser.BSR_ASSIGN:
-			case AS3Parser.MINUS_ASSIGN:
-				return new ASTASAssignmentExpression(ast);
-			case AS3Parser.PLUS:
-			case AS3Parser.LAND:
-			case AS3Parser.BAND:
-			case AS3Parser.BOR:
-			case AS3Parser.BXOR:
-			case AS3Parser.DIV:
-			case AS3Parser.EQUAL:
-			case AS3Parser.GE:
-			case AS3Parser.GT:
-			case AS3Parser.LE:
-			case AS3Parser.LT:
-			case AS3Parser.MOD:
-			case AS3Parser.MULT:
-			case AS3Parser.NOT_EQUAL:
-			case AS3Parser.LOR:
-			case AS3Parser.SL:
-			case AS3Parser.SR:
-			case AS3Parser.BSR:
-			case AS3Parser.MINUS:
-				return new ASTASBinaryExpression(ast);
-			case AS3Parser.POST_DEC:
-			case AS3Parser.POST_INC:
-				return new ASTASPostfixExpression(ast);
-			case AS3Parser.PRE_DEC:
-			case AS3Parser.PRE_INC:
-			case AS3Parser.UNARY_PLUS:
-			case AS3Parser.UNARY_MINUS:
-			case AS3Parser.LNOT:
-				return new ASTASPrefixExpression(ast);
-			//case AS3Parser.IDENT:
-			//	return new ASTASSimpleNameExpression(ast);
-			case AS3Parser.PROPERTY_OR_IDENTIFIER:
-				return new ASTASFieldAccessExpression(ast);
-			case AS3Parser.METHOD_CALL:
-				return new ASTASInvocationExpression(ast);
-			case AS3Parser.ENCPS_EXPR:
-				return build(ast.getFirstChild());
-			//case AS3Parser.ARRAY_ACC:
-			//	return new ASTASArrayAccessExpression(ast);
-			case AS3Parser.NEW:
-				return new ASTASNewExpression(ast);
-			case AS3Parser.QUESTION:
-				return new ASTASConditionalExpression(ast);
-			case AS3Parser.UNDEFINED:
-				return new ASTASUndefinedLiteral(ast);
-			case AS3Parser.FUNC_DEF:
-				return new ASTASFunctionExpression(ast);
-			case AS3Parser.ARRAY_LITERAL:
-				return new ASTASArrayLiteral(ast);
-			case AS3Parser.OBJECT_LITERAL:
-				return new ASTASObjectLiteral(ast);
-			case AS3Parser.XML_LITERAL:
-				return new ASTASXMLLiteral(ast);
-				
-				
-				
 			TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			case AS3Parser.REGEXP_LITERAL:
 				return new ASTASRegexpLiteral(ast);

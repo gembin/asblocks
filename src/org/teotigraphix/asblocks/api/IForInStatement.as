@@ -21,55 +21,46 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * Nex expression; <code>new foo()</code>.
+ * TODO Docme
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IDeclarationStatement 
-	extends IStatement
+public interface IForInStatement extends IStatement, IStatementContainer
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  firstVarName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get firstVarName():String;
-	
-	//----------------------------------
-	//  firstVarType
+	//  iterated
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get firstVarType():String;
-	
-	//----------------------------------
-	//  vars
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get vars():Vector.<IVarDeclarationFragment>;
-	
-	//----------------------------------
-	//  isConstant
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get isConstant():Boolean;
+	function get iterated():IExpression;
 	
 	/**
 	 * @private
 	 */
-	function set isConstant(value:Boolean):void;
+	function set iterated(value:IExpression):void;
+	
+	//----------------------------------
+	//  variable
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get variable():IExpression;
+	
+	/**
+	 * @private
+	 */
+	function set variable(value:IExpression):void;
 }
 }

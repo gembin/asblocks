@@ -188,7 +188,7 @@ public class AS3FragmentParser
 	 */
 	public static function parseStatement(statement:String):IParserNode
 	{
-		var parser:AS3Parser = createParser(statement);
+		var parser:AS3Parser = createParser(statement + ";");
 		parser.nextToken();
 		var node:IParserNode = parser.parseStatement();
 		return node;
@@ -205,6 +205,20 @@ public class AS3FragmentParser
 		var parser:AS3Parser = createParser(statement + ";");
 		parser.nextToken();
 		var node:IParserNode = parser.parseExpressionStatement();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code>AS3NodeKind.EXPR_LIST</code> node.
+	 * 
+	 * @param statement A String statement to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.EXPR_LIST</code> node.
+	 */
+	public static function parseExpressionList(expression:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(expression);
+		parser.nextToken();
+		var node:IParserNode = parser.parseExpressionList();
 		return node;
 	}
 	

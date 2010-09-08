@@ -26,6 +26,7 @@ import com.ericfeminella.collections.IMap;
 import flash.errors.IllegalOperationError;
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.asblocks.utils.ASTUtil;
@@ -166,7 +167,7 @@ public final class PostfixOperator
 		return op;
 	}
 	
-	public static function initializeFromOp(operator:PostfixOperator, tok:IToken):void
+	public static function initializeFromOp(operator:PostfixOperator, node:IParserNode):void
 	{
 		if (!intialized)
 		{
@@ -178,8 +179,8 @@ public final class PostfixOperator
 		{
 			throw new IllegalOperationError("No operator for Op " + operator);
 		}
-		tok.kind = type.kind;
-		tok.text = type.text;
+		node.kind = type.kind;
+		node.stringValue = type.text;
 	}
 }
 }
