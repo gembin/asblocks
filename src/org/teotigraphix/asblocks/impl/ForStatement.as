@@ -20,8 +20,13 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IForStatement;
+import org.teotigraphix.asblocks.api.IScriptNode;
+import org.teotigraphix.asblocks.api.IStatementContainer;
 
 /*
 for/init/dec-list
@@ -44,8 +49,120 @@ for/block
  * @productversion 1.0
  */
 public class ForStatement extends ContainerDelegate 
-	//implements IForStatement
+	implements IForStatement
 {
+	override protected function get statementContainer():IStatementContainer
+	{
+		return new StatementList(node.getChild(3)); // block
+	}
+	
+	private function findInit():IParserNode
+	{
+		return node.getKind(AS3NodeKind.INIT);
+	}
+	
+	private function findCondition():IParserNode
+	{
+		return node.getKind(AS3NodeKind.COND);
+	}
+	
+	private function findUpdate():IParserNode
+	{
+		return node.getKind(AS3NodeKind.ITER);
+	}
+	
+	//----------------------------------
+	//  initializer
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IForStatement#initializer
+	 */
+	public function get initializer():IScriptNode
+	{
+		var init:IParserNode = findInit();
+		if (!init)
+			return null;
+		
+		init = init.getFirstChild();
+		
+		if (init.isKind(AS3NodeKind.DEC_LIST))
+		{
+			return new DeclarationStatementNode(init);
+		}
+		else
+		{
+			return ExpressionBuilder.build(init);
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set initializer(value:IScriptNode):void
+	{
+		var init:IParserNode = findInit();
+		if (!value)
+		{
+			if (init)
+			{
+				init.removeChildAt(0);
+			}
+		}
+		else
+		{
+			init.setChildAt(value.node, 0);
+		}
+	}
+	
+	//----------------------------------
+	//  condition
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IForStatement#condition
+	 */
+	public function get condition():IExpression
+	{
+		var cond:IParserNode = findCondition();
+		if (!cond)
+			return null;
+		
+		return ExpressionBuilder.build(cond.getFirstChild());
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set condition(value:IExpression):void
+	{
+	}
+	
+	//----------------------------------
+	//  iterator
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IForStatement#update
+	 */
+	public function get update():IExpression
+	{
+		var update:IParserNode = findUpdate();
+		if (!update)
+			return null;
+		
+		return ExpressionBuilder.build(update.getFirstChild());
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set update(value:IExpression):void
+	{
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

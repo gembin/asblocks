@@ -44,6 +44,7 @@ import org.teotigraphix.asblocks.api.IObjectLiteral;
 import org.teotigraphix.asblocks.api.IPostfixExpression;
 import org.teotigraphix.asblocks.api.IPrefixExpression;
 import org.teotigraphix.asblocks.api.ISimpleNameExpression;
+import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStringLiteral;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
 import org.teotigraphix.asblocks.impl.ASParser;
@@ -66,6 +67,7 @@ import org.teotigraphix.asblocks.impl.ObjectLiteralNode;
 import org.teotigraphix.asblocks.impl.PostfixExpressionNode;
 import org.teotigraphix.asblocks.impl.PrefixExpressionNode;
 import org.teotigraphix.asblocks.impl.SimpleNameExpressionNode;
+import org.teotigraphix.asblocks.impl.StatementBuilder;
 import org.teotigraphix.asblocks.impl.StatementList;
 import org.teotigraphix.asblocks.impl.StringLiteralNode;
 import org.teotigraphix.asblocks.impl.TokenBuilder;
@@ -200,6 +202,16 @@ public class ASFactory
 		var ast:IParserNode = AS3FragmentParser.parseExpression(expression);
 		ast.parent = null;
 		return ExpressionBuilder.build(ast);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newStatement(expression:String):IStatement
+	{
+		var ast:IParserNode = AS3FragmentParser.parseStatement(expression);
+		ast.parent = null;
+		return StatementBuilder.build(ast);
 	}
 	
 	/**

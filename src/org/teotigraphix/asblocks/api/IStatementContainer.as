@@ -41,7 +41,7 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
-//	function get hasCode():Boolean;
+	//	function get hasCode():Boolean;
 	
 	//----------------------------------
 	//  statements
@@ -50,7 +50,7 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
-//	function get statements():Vector.<IStatementNode>;
+	//	function get statements():Vector.<IStatementNode>;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -58,16 +58,13 @@ public interface IStatementContainer
 	//
 	//--------------------------------------------------------------------------
 	
-//	function addComment(text:String):void;
+	//	function addComment(text:String):void;
 	
 	function addStatement(statement:String):IStatement;
 	
 	// then all the new factory methods
 	
-	/**
-	 * TODO Docme
-	 */
-	function newExpressionStatement(statement:String):IExpressionStatement;
+	
 	
 	/**
 	 * TODO Docme
@@ -93,6 +90,24 @@ public interface IStatementContainer
 	 * TODO Docme
 	 */
 	function newDoWhile(condition:IExpression):IDoWhileStatement;
+	
+	/**
+	 * TODO Docme
+	 */
+	function newExpressionStatement(statement:String):IExpressionStatement;
+	
+	/**
+	 * TODO Docme
+	 */
+	function newFor(initializer:IExpression, 
+					condition:IExpression, 
+					iterater:IExpression):IForStatement;
+	
+	/**
+	 * TODO Docme
+	 */
+	function newForEachIn(declaration:IScriptNode, 
+						  target:IExpression):IForEachInStatement;
 	
 	/**
 	 * TODO Docme

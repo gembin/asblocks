@@ -2128,6 +2128,24 @@ public class AS3Parser extends ParserBase
 		return node;
 	}
 	
+	internal function parseForInit():IParserNode
+	{
+		var result:IParserNode = adapter.empty(
+			AS3NodeKind.INIT, token);
+		
+		if (tokIs(KeyWords.VAR))
+		{
+			result.addChild(parseDeclarationList(null));
+		}
+		else
+		{
+			isInFor = true;
+			result.addChild(parseExpression());
+			isInFor = false;
+		}
+		return result;
+	}
+	
 	/**
 	 * @private
 	 */
@@ -2139,21 +2157,10 @@ public class AS3Parser extends ParserBase
 		
 		if (!tokIs(Operators.SEMI))
 		{
-			if (tokIs(KeyWords.VAR))
+			init = parseForInit() as TokenNode;
+			if (init)
 			{
-				init = adapter.empty(
-					AS3NodeKind.INIT, token);
-				init.addChild(parseDeclarationList(null));
 				node.addChild(init);
-			}
-			else
-			{
-				isInFor = true;
-				init = adapter.empty(
-					AS3NodeKind.INIT, token);
-				init.addChild(parseExpression());
-				node.addChild(init);
-				isInFor = false;
 			}
 			if (tokIs(AS3NodeKind.IN))
 			{

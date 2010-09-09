@@ -31,8 +31,11 @@ import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatement;
 import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IExpressionStatement;
+import org.teotigraphix.asblocks.api.IForEachInStatement;
+import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.IReturnStatement;
+import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
@@ -73,10 +76,16 @@ public class StatementList extends ContainerDelegate implements IBlock
 	override public function addStatement(statement:String):IStatement
 	{
 		var stmt:IParserNode = AS3FragmentParser.parseStatement(statement);
-		stmt.stopToken.next = null;
+		//stmt.stopToken.next = null;
+		// if the statement is a simple expression, the parser returns
+		// the first child, but the stmt was actually an expr-list
 		if (stmt.parent && stmt.parent.isKind(AS3NodeKind.EXPR_LIST))
 		{
 			stmt = stmt.parent;
+		}
+		else
+		{
+			stmt.parent = null;
 		}
 		_addStatement(stmt);
 		return StatementBuilder.build(stmt);
@@ -141,6 +150,48 @@ public class StatementList extends ContainerDelegate implements IBlock
 		var ast:IParserNode = AS3FragmentParser.parseExpressionStatement(statement);
 		_addStatement(ast);
 		return new ExpressionStatementNode(ast);
+	}
+	
+	/**
+	 * @private
+	 */
+	override public function newFor(initializer:IExpression,
+									condition:IExpression, 
+									iterator:IExpression):IForStatement
+	{
+		var init:IParserNode = initializer ? initializer.node : null;
+		var cond:IParserNode = condition ? condition.node : null;
+		var iter:IParserNode = iterator ? iterator.node : null;
+		
+		var ast:IParserNode = ASTBuilder.newFor(init, cond, iter);
+		appendBlock(ast);
+		_addStatement(ast);
+		return new ForStatement(ast);
+	}
+	
+	/**
+	 * @private
+	 */
+	override public function newForEachIn(declaration:IScriptNode,
+										  expression:IExpression):IForEachInStatement
+	{
+		if (!declaration)
+			throw new Error("");
+		if (!expression)
+			throw new Error("");
+		
+		var ast:IParserNode = ASTBuilder.newForEachIn(declaration.node, expression.node);
+		appendBlock(ast);
+		_addStatement(ast);
+		return new ForEachInStatement(ast);
+	}
+	
+	public function appendBlock(ast:IParserNode):IParserNode
+	{
+		ast.appendToken(TokenBuilder.newSpace());
+		var block:IParserNode = ASTBuilder.newBlock();
+		ast.addChild(block);
+		return block;
 	}
 	
 	/**

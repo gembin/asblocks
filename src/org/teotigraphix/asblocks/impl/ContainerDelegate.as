@@ -20,6 +20,7 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IBreakStatement;
 import org.teotigraphix.asblocks.api.IContinueStatement;
 import org.teotigraphix.asblocks.api.IDeclarationStatement;
@@ -27,13 +28,15 @@ import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatement;
 import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IExpressionStatement;
+import org.teotigraphix.asblocks.api.IForEachInStatement;
+import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.IReturnStatement;
-import org.teotigraphix.asblocks.api.IStatementContainer;
+import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
+import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
-import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * The <code>IStatementContainer</code> implementation.
@@ -118,6 +121,25 @@ public class ContainerDelegate extends ScriptNode
 	public function newDoWhile(condition:IExpression):IDoWhileStatement
 	{
 		return statementContainer.newDoWhile(condition);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
+	public function newFor(initializer:IExpression, 
+						   condition:IExpression, 
+						   iterater:IExpression):IForStatement
+	{
+		return statementContainer.newFor(initializer, condition, iterater);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
+	public function newForEachIn(declaration:IScriptNode, 
+								 expression:IExpression):IForEachInStatement
+	{
+		return statementContainer.newForEachIn(declaration, expression);
 	}
 	
 	/**

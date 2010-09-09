@@ -30,10 +30,13 @@ import org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatement;
 import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IExpressionStatement;
+import org.teotigraphix.asblocks.api.IForEachInStatement;
+import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IFunctionCommon;
 import org.teotigraphix.asblocks.api.IFunctionLiteral;
 import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.IReturnStatement;
+import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
@@ -212,6 +215,25 @@ public class FunctionLiteralNode extends ExpressionNode
 	public function newDoWhile(condition:IExpression):IDoWhileStatement
 	{
 		return containerMixin.newDoWhile(condition);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newFor()
+	 */
+	public function newFor(initializer:IExpression, 
+						   condition:IExpression, 
+						   iterater:IExpression):IForStatement
+	{
+		return containerMixin.newFor(initializer, condition, iterater);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newForEacIn()
+	 */
+	public function newForEachIn(declaration:IScriptNode, 
+								 expression:IExpression):IForEachInStatement
+	{
+		return containerMixin.newForEachIn(declaration, expression);
 	}
 	
 	/**

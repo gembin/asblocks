@@ -19,6 +19,95 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
 {
+	public static function newForInit(initializer:IParserNode):IParserNode
+	{
+		if (!initializer)
+			return ASTUtil.newAST(AS3NodeKind.INIT);
+		
+		var ast:IParserNode = initializer;
+		// check that node is init
+		if (!initializer.isKind(AS3NodeKind.INIT))
+		{
+			ast = ASTUtil.newAST(AS3NodeKind.INIT);
+			ast.addChild(initializer);
+		}
+		return ast;
+	}
+	
+	public static function newForCond(condition:IParserNode):IParserNode
+	{
+		if (!condition)
+			return ASTUtil.newAST(AS3NodeKind.COND);
+		
+		var ast:IParserNode = condition;
+		// check that node is cond
+		if (!condition.isKind(AS3NodeKind.COND))
+		{
+			ast = ASTUtil.newAST(AS3NodeKind.COND);
+			ast.addChild(condition);
+		}
+		return ast;
+	}
+	
+	public static function newForIter(iterator:IParserNode):IParserNode
+	{
+		if (!iterator)
+			return ASTUtil.newAST(AS3NodeKind.ITER);
+		
+		var ast:IParserNode = iterator;
+		// check that node is iter
+		if (!iterator.isKind(AS3NodeKind.ITER))
+		{
+			ast = ASTUtil.newAST(AS3NodeKind.ITER);
+			ast.addChild(iterator);
+		}
+		return ast;
+	}
+	
+	public static function newFor(initializer:IParserNode, 
+								  condition:IParserNode, 
+								  iterator:IParserNode):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOR, "for");
+		var init:IParserNode;
+		
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.appendToken(TokenBuilder.newLParen());
+		
+		ast.addChild(newForInit(initializer));
+		
+		ast.appendToken(TokenBuilder.newSemi());
+		ast.appendToken(TokenBuilder.newSpace());
+		
+		ast.addChild(newForCond(condition));
+		
+		ast.appendToken(TokenBuilder.newSemi());
+		ast.appendToken(TokenBuilder.newSpace());
+		
+		ast.addChild(newForIter(iterator));
+		
+		ast.appendToken(TokenBuilder.newRParen());
+		return ast;
+	}
+	
+	public static function newForEachIn(declaration:IParserNode, 
+										expression:IParserNode):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOR, "for");
+		
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.appendToken(TokenBuilder.newEach());
+		
+		ast.appendToken(TokenBuilder.newLParen());
+		ast.addChild(declaration);
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.appendToken(TokenBuilder.newIn());
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(expression);
+		ast.appendToken(TokenBuilder.newRParen());
+		
+		return ast;
+	}
 	
 	public static function newMethod(name:String, 
 									 visibility:Visibility, 

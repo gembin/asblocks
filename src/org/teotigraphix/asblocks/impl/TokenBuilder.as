@@ -63,6 +63,16 @@ public class TokenBuilder
 		return newToken(AS3NodeKind.CLASS, "class");
 	}
 	
+	public static function newEach():LinkedListToken
+	{
+		return newToken(AS3NodeKind.EACH, "each");
+	}
+	
+	public static function newIn():LinkedListToken
+	{
+		return newToken(AS3NodeKind.IN, "in");
+	}
+	
 	public static function newInterface():LinkedListToken
 	{
 		return newToken(AS3NodeKind.INTERFACE, "interface");
@@ -210,6 +220,16 @@ public class TokenBuilder
 		var token:LinkedListToken = newToken(AS3NodeKind.WS, string);
 		token.channel = AS3NodeKind.HIDDEN;
 		return token;
+	}
+	
+	public static function newLParen():LinkedListToken
+	{
+		return newToken(AS3NodeKind.LPAREN, "(");
+	}
+	
+	public static function newRParen():LinkedListToken
+	{
+		return newToken(AS3NodeKind.RPAREN, ")");
 	}
 	
 	public static function newComma():LinkedListToken

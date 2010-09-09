@@ -17,6 +17,8 @@ import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IExpressionStatement;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
+import org.teotigraphix.asblocks.api.IForEachInStatement;
+import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IINvocationExpression;
 import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.INewExpression;
@@ -140,13 +142,59 @@ public class TestExpressionNodes
 	[Test]
 	public function testForStatement():void
 	{
-		// TODO impl unit test
+		var statement:IBlock = factory.newBlock();
+		var forstmt:IForStatement = statement.newFor(null, null, null);
+		assertPrint("{\n\tfor (; ; ) {\n\t}\n}", forstmt);
+		
+		statement = factory.newBlock();
+		forstmt = statement.newFor(factory.newExpression("i=0"), null, null);
+		assertPrint("{\n\tfor (i=0; ; ) {\n\t}\n}", forstmt);
+		
+		statement = factory.newBlock();
+		forstmt = statement.newFor(
+			factory.newExpression("i=0"), 
+			factory.newExpression("i < len + 1"), null);
+		assertPrint("{\n\tfor (i=0; i < len + 1; ) {\n\t}\n}", forstmt);
+		
+		statement = factory.newBlock();
+		forstmt = statement.newFor(
+			factory.newExpression("i=0"), 
+			factory.newExpression("i < len + 1"), 
+			factory.newExpression("++i"));
+		assertPrint("{\n\tfor (i=0; i < len + 1; ++i) {\n\t}\n}", forstmt);
+		
+		statement = factory.newBlock();
+		forstmt = statement.newFor(
+			factory.newExpression("i=0"), 
+			factory.newExpression("i < len + 1"), 
+			factory.newExpression("++i"));
+		forstmt.addStatement("trace('Hello World ' + i)");
+		assertPrint("{\n\tfor (i=0; i < len + 1; ++i) {\n\t\t" +
+			"trace('Hello World ' + i);\n\t}\n}", forstmt);
+		
+		// TODO
+		// test setting initializer
+		
+		// test setting condition
+		
+		// test setting iteration
 	}
 	
 	[Test]
 	public function testForEachInStatement():void
 	{
-		// TODO impl unit test
+		var statement:IBlock = factory.newBlock();
+		var forstmt:IForEachInStatement = statement.newForEachIn(
+			factory.newExpression("name"), 
+			factory.newExpression("object"));
+		assertPrint("{\n\tfor each(name in object) {\n\t}\n}", forstmt);
+		
+		statement = factory.newBlock();
+		// TODO impl newForInit()
+		//forstmt = statement.newForEachIn(
+		//	factory.newForInit("var name:String"), 
+		//	factory.newExpression("object"));
+		//assertPrint("{\n\tfor each(var name:String in object) {\n\t}\n}", forstmt);
 	}
 	
 	[Test]

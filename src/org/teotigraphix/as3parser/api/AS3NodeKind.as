@@ -446,6 +446,8 @@ public class AS3NodeKind
 	
 	public static const ITER:String = "iter";
 	
+	public static const EACH:String = "each";
+	
 	public static const FOREACH:String = "foreach";
 	
 	public static const FORIN:String = "forin";

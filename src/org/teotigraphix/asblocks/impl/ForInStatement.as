@@ -17,64 +17,79 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks.api
+package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IForInStatement;
+import org.teotigraphix.asblocks.api.IStatementContainer;
+
 /**
- * TODO Docme
+ * The <code>IForInStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IForStatement extends IStatement, IStatementContainer
+public class ForInStatement extends ContainerDelegate 
+	implements IForInStatement
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//--------------------------------------------------------------------------
+	override protected function get statementContainer():IStatementContainer
+	{
+		return new StatementList(node.getChild(2)); // block
+	}
 	
 	//----------------------------------
 	//  initializer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IForInStatement#iterated
 	 */
-	function get initializer():IScriptNode;
+	public function get iterated():IExpression
+	{
+		return null;
+	}
 	
 	/**
 	 * @private
-	 */
-	function set initializer(value:IScriptNode):void;
+	 */	
+	public function set iterated(value:IExpression):void
+	{
+	}
 	
 	//----------------------------------
 	//  condition
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IForInStatement#variable
 	 */
-	function get condition():IExpression;
+	public function get variable():IExpression
+	{
+		return null;
+	}
 	
 	/**
 	 * @private
-	 */
-	function set condition(value:IExpression):void;
+	 */	
+	public function set variable(value:IExpression):void
+	{
+	}
 	
-	//----------------------------------
-	//  update
-	//----------------------------------
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function get update():IExpression;
-	
-	/**
-	 * @private
-	 */
-	function set update(value:IExpression):void;
+	public function ForInStatement(node:IParserNode)
+	{
+		super(node);
+	}
 }
 }
