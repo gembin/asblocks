@@ -20,14 +20,15 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.api.IBlock;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IIfStatement;
-import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.IStatement;
+import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.utils.ASTUtil;
-import org.teotigraphix.as3parser.api.AS3NodeKind;
-import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * The <code>IIfStatement</code> implementation.
@@ -45,19 +46,64 @@ public class IfStatementNode extends ContainerDelegate
 	//
 	//--------------------------------------------------------------------------
 	
-	private function get thenClause():IParserNode
+	private function findConditionNode():IParserNode
+	{
+		return node.getFirstChild();
+	}
+	
+	private function findThenClause():IParserNode
 	{
 		return node.getChild(1);
 	}
 	
+	private function findElseClause():IParserNode
+	{
+		return node.getChild(2);
+	}
+	
 	override protected function get statementContainer():IStatementContainer
 	{
-		var child:IParserNode = thenClause;
-		if (!child.isKind(AS3NodeKind.BLOCK))
+		var ast:IParserNode = findThenClause();
+		if (!ast.isKind(AS3NodeKind.BLOCK))
 		{
-			throw new Error("statement is not a block"); // SyntaxError
+			throw new ASBlocksSyntaxError("statement is not a block");
 		}
-		return new StatementList(child);
+		return new StatementList(ast);
+	}
+	
+	//----------------------------------
+	//  condition
+	//----------------------------------
+	
+	/**
+	 * copy org.teotigraphix.asblocks.api.IIfStatement#condition
+	 */
+	public function get condition():IExpression
+	{
+		return ExpressionBuilder.build(findConditionNode().getFirstChild());
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set condition(value:IExpression):void
+	{
+		findConditionNode().setChildAt(value.node, 0);
+	}
+	
+	//----------------------------------
+	//  thenStatement
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */	
+	public function set thenStatement(value:IStatement):void
+	{
+		var ast:IParserNode = value.node;
+		node.setChildAt(ast, 1);
+		var indent:String = ASTUtil.findIndent(node);
+		ASTUtil.increaseIndentAfterFirstLine(ast, indent);
 	}
 	
 	//----------------------------------
@@ -65,32 +111,27 @@ public class IfStatementNode extends ContainerDelegate
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _elseBlock:IBlock;
-	
-	/**
-	 * doc
+	 * copy org.teotigraphix.asblocks.api.IIfStatement#elseBlock
 	 */
 	public function get elseBlock():IBlock
 	{
-		var eclause:IParserNode = elseClause;
-		if (!eclause)
+		var ast:IParserNode = findElseClause();
+		if (!ast)
 		{
 			var indent:String = ASTUtil.findIndent(node);
-			eclause = ASTUtil.newAST(AS3NodeKind.ELSE, "else");
+			ast = ASTUtil.newAST(AS3NodeKind.ELSE, "else");
 			node.appendToken(TokenBuilder.newSpace());
-			node.addChild(eclause);
-			eclause.appendToken(TokenBuilder.newSpace());
+			node.addChild(ast);
+			ast.appendToken(TokenBuilder.newSpace());
 			var block:IParserNode = ASTBuilder.newBlock();
-			eclause.addChild(block);
+			ast.addChild(block);
 			ASTUtil.increaseIndentAfterFirstLine(block, indent);
 		}
 		
-		var stmt:IStatement = StatementBuilder.build(eclause.getFirstChild());
+		var stmt:IStatement = StatementBuilder.build(ast.getFirstChild());
 		if (!(stmt is IBlock))
 		{
-			throw new Error("Expected a block"); // SyntaxError
+			throw new ASBlocksSyntaxError("Expected a block");
 		}
 		
 		return stmt as IBlock;
@@ -101,59 +142,8 @@ public class IfStatementNode extends ContainerDelegate
 	 */	
 	public function set elseBlock(value:IBlock):void
 	{
-		if (_elseBlock == value)
-			return;
-		
-		_elseBlock = value;
+		// TODO impl elseBlock
 	}
-	
-	
-	/**
-	 * @private
-	 */	
-	public function set thenStatement(value:IStatement):void
-	{
-		var thenAST:IParserNode = value.node;
-		node.setChildAt(thenAST, 1);
-		var indent:String = ASTUtil.findIndent(node);
-		ASTUtil.increaseIndentAfterFirstLine(thenAST, indent);
-	}
-	
-	//----------------------------------
-	//  condition
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _condition:IExpression;
-	
-	private function get elseClause():IParserNode
-	{
-		return node.getChild(2);
-	}
-	
-	private function get conditionNode():IParserNode
-	{
-		return node.getFirstChild();
-	}
-	
-	/**
-	 * doc
-	 */
-	public function get condition():IExpression
-	{
-		return ExpressionBuilder.build(conditionNode.getFirstChild());
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set condition(value:IExpression):void
-	{
-		conditionNode.setChildAt(value.node, 0);
-	}
-	
 	
 	//--------------------------------------------------------------------------
 	//

@@ -35,20 +35,6 @@ public interface IIfStatement extends IStatement, IStatementContainer
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  elseBlock
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get elseBlock():IBlock;
-	
-	/**
-	 * @private
-	 */
-	function set elseBlock(value:IBlock):void;
-	
-	//----------------------------------
 	//  condition
 	//----------------------------------
 	
@@ -62,16 +48,27 @@ public interface IIfStatement extends IStatement, IStatementContainer
 	 */
 	function set condition(value:IExpression):void;
 	
+	//----------------------------------
+	//  thenStatement
+	//----------------------------------
 	
 	/**
 	 * @private
 	 */
 	function set thenStatement(value:IStatement):void;
 	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
+	//----------------------------------
+	//  elseBlock
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get elseBlock():IBlock;
+	
+	/**
+	 * @private
+	 */
+	function set elseBlock(value:IBlock):void;
 }
 }
