@@ -19,6 +19,45 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
 {
+	public static function newSwitch(condition:IParserNode):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.SWITCH, "switch");
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(newCondition(condition));
+		ast.appendToken(TokenBuilder.newSpace());
+		var block:IParserNode = newBlock(AS3NodeKind.CASES);
+		ast.addChild(block);
+		return ast;
+	}
+	/*
+	switch
+	switch/condition
+	switch/cases
+	switch/cases/case
+	switch/cases/case/label|default
+	switch/cases/case/switch-block
+	*/
+	public static function newSwitchCase(node:IParserNode, label:String):IParserNode
+	{
+		var cases:IParserNode = node.getKind(AS3NodeKind.CASES);
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CASE, "case");
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(AS3FragmentParser.parseExpression(label));
+		ast.appendToken(TokenBuilder.newColon());
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.SWITCH_BLOCK));
+		ASTUtil.addChildWithIndentation(cases, ast);
+		return ast;
+	}
+	
+	public static function newSwitchDefault(node:IParserNode):IParserNode
+	{
+		var cases:IParserNode = node.getKind(AS3NodeKind.CASES);
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEFAULT, "default");
+		ast.appendToken(TokenBuilder.newColon());
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.SWITCH_BLOCK));
+		ASTUtil.addChildWithIndentation(cases, ast);
+		return ast;
+	}
 	
 	public static function newComment(ast:IParserNode, text:String):IToken
 	{
@@ -468,16 +507,7 @@ public class ASTBuilder
 		return ast;
 	}
 	
-	public static function newSwitch(condition:IParserNode):IParserNode
-	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.SWITCH, "switch");
-		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(newCondition(condition));
-		ast.appendToken(TokenBuilder.newSpace());
-		var block:IParserNode = newBlock();
-		ast.addChild(block);
-		return ast;
-	}
+
 	
 	public static function newThrow(expression:IParserNode):IParserNode
 	{

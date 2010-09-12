@@ -20,10 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ISwitchDefault;
-import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * The <code>ISwitchDefault</code> implementation.

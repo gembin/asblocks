@@ -42,7 +42,7 @@ public class SwitchCaseNode extends ContainerDelegate implements ISwitchCase
 	
 	override protected function get statementContainer():IStatementContainer
 	{
-		return new StatementList(node.getChild(1));
+		return new StatementList(node.getLastChild());
 	}
 	
 	//----------------------------------
@@ -50,16 +50,11 @@ public class SwitchCaseNode extends ContainerDelegate implements ISwitchCase
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _label:IExpression;
-	
-	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.ISwitchCase#label
 	 */
 	public function get label():IExpression
 	{
-		return _label;
+		return ExpressionBuilder.build(node.getFirstChild());
 	}
 	
 	/**
@@ -67,10 +62,7 @@ public class SwitchCaseNode extends ContainerDelegate implements ISwitchCase
 	 */	
 	public function set label(value:IExpression):void
 	{
-		if (_label == value)
-			return;
-		
-		_label = value;
+		node.setChildAt(value.node, 0);
 	}
 	
 	//--------------------------------------------------------------------------

@@ -2333,13 +2333,14 @@ public class AS3Parser extends ParserBase
 		
 		var caseNode:TokenNode;
 		
-		var result:TokenNode = adapter.create(
+		var result:TokenNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.CASES,
-			null, 
-			token.line, 
-			token.column);
+			AS3NodeKind.LCURLY, "{",
+			AS3NodeKind.RCURLY, "}") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
 		
-		consume(Operators.LCURLY, result);
+		consumeWS(Operators.LCURLY, result, true);
 		
 		for (;;)
 		{
@@ -2388,7 +2389,7 @@ public class AS3Parser extends ParserBase
 			}
 		}
 		
-		consume(Operators.RCURLY, result);
+		consumeWS(Operators.RCURLY, result);
 		
 		return result;
 	}

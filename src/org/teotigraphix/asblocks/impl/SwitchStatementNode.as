@@ -20,15 +20,23 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.ISwitchCase;
 import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchLabel;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
-import org.teotigraphix.asblocks.utils.ASTUtil;
-import org.teotigraphix.as3parser.api.AS3NodeKind;
-import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+
+/*
+switch
+switch/condition
+switch/cases
+switch/cases/case
+switch/cases/case/label|default
+switch/cases/case/switch-block
+*/
 
 /**
  * The <code>ISwitchStatement</code> implementation.
@@ -40,7 +48,12 @@ import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 public class SwitchStatementNode extends ScriptNode 
 	implements ISwitchStatement
 {
-	private function get block():IParserNode
+	private function findCondition():IParserNode
+	{
+		return node.getFirstChild();
+	}
+	
+	private function findCases():IParserNode
 	{
 		return node.getLastChild();
 	}
@@ -55,17 +68,12 @@ public class SwitchStatementNode extends ScriptNode
 	//  condition
 	//----------------------------------
 	
-	private function get conditionNode():IParserNode
-	{
-		return node.getFirstChild();
-	}
-	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.ISwitchStatement#condition
 	 */
 	public function get condition():IExpression
 	{
-		return ExpressionBuilder.build(conditionNode.getFirstChild());
+		return ExpressionBuilder.build(findCondition().getFirstChild());
 	}
 	
 	/**
@@ -73,16 +81,34 @@ public class SwitchStatementNode extends ScriptNode
 	 */	
 	public function set condition(value:IExpression):void
 	{
-		conditionNode.setChildAt(value.node, 0);
+		findCondition().setChildAt(value.node, 0);
 	}
 	
+	//----------------------------------
+	//  labels
+	//----------------------------------
+	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.ISwitchStatement#labels
 	 */
 	public function get labels():Vector.<ISwitchLabel>
 	{
-		// TODO Impl
-		return null;
+		var result:Vector.<ISwitchLabel> = new Vector.<ISwitchLabel>();
+		var cases:IParserNode = findCases();
+		var i:ASTIterator = new ASTIterator(cases);
+		while(i.hasNext())
+		{
+			var ast:IParserNode = i.next();
+			if (ast.isKind(AS3NodeKind.CASE))
+			{
+				result.push(new SwitchCaseNode(ast));
+			}
+			else if (ast.isKind(AS3NodeKind.DEFAULT))
+			{
+				result.push(new SwitchDefaultNode(ast));
+			}
+		}
+		return result;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -101,35 +127,25 @@ public class SwitchStatementNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  ISwitchStatement API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.ISwitchStatement#newCase()
 	 */
 	public function newCase(label:String):ISwitchCase
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CASE, "case");
-		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(AS3FragmentParser.parseExpression(label));
-		ast.appendToken(TokenBuilder.newColon());
-		var cases:IParserNode = ASTUtil.newAST(AS3NodeKind.CASES);
-		ast.addChild(cases);
-		ASTUtil.addChildWithIndentation(block, ast);
+		var ast:IParserNode = ASTBuilder.newSwitchCase(node, label);
 		return new SwitchCaseNode(ast);
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.ISwitchStatement#newDefault()
 	 */
 	public function newDefault():ISwitchDefault
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEFAULT, "default");
-		ast.appendToken(TokenBuilder.newColon());
-		var cases:IParserNode = ASTUtil.newAST(AS3NodeKind.CASES);
-		ast.addChild(cases);
-		ASTUtil.addChildWithIndentation(block, ast);
+		var ast:IParserNode = ASTBuilder.newSwitchDefault(node);
 		return new SwitchDefaultNode(ast);
 	}
 }

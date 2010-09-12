@@ -14,6 +14,9 @@ public class StatementBuilder
 			case AS3NodeKind.BLOCK:
 				return new StatementList(ast);
 				
+			case AS3NodeKind.BREAK:
+				return new BreakStatementNode(ast);
+				
 			case AS3NodeKind.EXPR_LIST:
 			case AS3NodeKind.EXPR_STMNT:
 				return new ExpressionStatementNode(ast);
