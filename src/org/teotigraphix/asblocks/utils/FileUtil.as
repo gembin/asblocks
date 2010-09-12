@@ -121,7 +121,7 @@ public class FileUtil
 		{
 			name = packageName + "." + typeName;
 		}
-		return name.replace(/\\./g, separator) + ".as";
+		return name.replace(/\./g, separator) + ".as";
 	}
 	
 	public static function get isDesktop():Boolean

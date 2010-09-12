@@ -85,7 +85,7 @@ public class ModifierUtil
 		if (flag)
 		{
 			var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, modifier.name);
-			mod.appendToken(TokenBuilder.newSpace());
+			modList.appendToken(TokenBuilder.newSpace());
 			modList.addChild(mod);
 		}
 	}

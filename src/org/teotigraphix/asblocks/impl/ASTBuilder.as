@@ -14,12 +14,26 @@ import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IField;
+import org.teotigraphix.asblocks.api.IMetaData;
 import org.teotigraphix.asblocks.api.IMethod;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
 {
+	
+	public static function newMetaData(name:String):IMetaData
+	{
+		var ast:IParserNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.META, 
+			AS3NodeKind.LBRACKET, "[", 
+			AS3NodeKind.RBRACKET, "]");
+		
+		ast.addChild(ASTUtil.newNameAST(name));
+		
+		return new MetaDataNode(ast);
+	}
+	
 	public static function newSuper(arguments:Vector.<IArgument>):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.SUPER, "super");
@@ -346,6 +360,8 @@ public class ASTBuilder
 	private static function synthesizeAS3Class(className:String):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CLASS);
+		//var metas:IParserNode = ASTUtil.newAST(AS3NodeKind.META_LIST);
+		//ast.addChild(metas);
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
 		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, "public"));
 		ast.addChild(mods);
@@ -361,6 +377,8 @@ public class ASTBuilder
 	private static function synthesizeAS3Interface(name:String):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.INTERFACE);
+		//var metas:IParserNode = ASTUtil.newAST(AS3NodeKind.META_LIST);
+		//ast.addChild(metas);
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
 		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, "public"));
 		ast.addChild(mods);

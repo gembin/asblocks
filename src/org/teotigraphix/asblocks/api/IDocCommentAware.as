@@ -21,13 +21,13 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * 
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IType extends IScriptNode, IMetaDataAware//, IMetaDataAware, IDocumentAware
+public interface IDocCommentAware extends IScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -35,64 +35,5 @@ public interface IType extends IScriptNode, IMetaDataAware//, IMetaDataAware, ID
 	//
 	//--------------------------------------------------------------------------
 	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get name():String;
-	
-	/**
-	 * @private
-	 */
-	function set name(value:String):void;
-	
-	//----------------------------------
-	//  visibility
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get visibility():Visibility;
-	
-	/**
-	 * @private
-	 */
-	function set visibility(value:Visibility):void;
-	
-	//----------------------------------
-	//  methods
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get methods():Vector.<IMethod>;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function newMethod(name:String, 
-					   visibility:Visibility, 
-					   returnType:String):IMethod;
-	
-	/**
-	 * TODO Docme
-	 */
-	function getMethod(name:String):IMethod;
-	
-	/**
-	 * TODO Docme
-	 */
-	function removeMethod(name:String):Boolean;
 }
 }

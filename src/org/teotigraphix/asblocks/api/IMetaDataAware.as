@@ -56,18 +56,18 @@ public interface IMetaDataAware
 	function newMetaData(name:String):IMetaData;
 	
 	/**
-	 * Returns the first IMetaDataNode node named name.
+	 * Returns the first IMetaData node named name.
 	 * 
-	 * @param name A String indicating the first IMetaDataNode node to return.
-	 * @return An IMetaDataNode named name.
+	 * @param name A String indicating the first IMetaData node to return.
+	 * @return An IMetaData named name.
 	 */
 	function getMetaData(name:String):IMetaData;
 	
 	/**
-	 * Returns all IMetaDataNode nodes named name as a Vector.
+	 * Returns all IMetaData nodes named name as a Vector.
 	 * 
-	 * @param name A String indicating the IMetaDataNode nodes to return.
-	 * @return A Vector of IMetaDataNode named name.
+	 * @param name A String indicating the IMetaData nodes to return.
+	 * @return A Vector of IMetaData named name.
 	 */
 	function getAllMetaData(name:String):Vector.<IMetaData>;
 	
@@ -80,7 +80,7 @@ public interface IMetaDataAware
 	function hasMetaData(name:String):Boolean;
 	
 	/**
-	 * Removes an IMetaDataNode node from the host.
+	 * Removes an IMetaData node from the host.
 	 * 
 	 * @param node The metadata node to remove.
 	 */

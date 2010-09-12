@@ -86,7 +86,8 @@ public class LinkedListTreeAdaptor
 		TokenNode(result).tokenListUpdater = delegate;
 		
 		if (payload.kind == AS3NodeKind.ARRAY
-		/*|| payload.kind == AS3NodeKind.ARRAY_ACCESSOR*/)
+		/*|| payload.kind == AS3NodeKind.ARRAY_ACCESSOR*/
+			|| payload.kind == AS3NodeKind.META)
 		{
 			TokenNode(result).tokenListUpdater = 
 				new ParentheticListUpdateDelegate(AS3NodeKind.LBRACKET, AS3NodeKind.RBRACKET);

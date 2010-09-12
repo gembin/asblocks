@@ -634,12 +634,16 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseMetaData():Node
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.META, token);
+		var result:TokenNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.META,
+			AS3NodeKind.LBRACKET, "[",
+			AS3NodeKind.RBRACKET, "]") as TokenNode;
+		result.line = token.line;
+		result.column = token.column;
 		
 		addAsDoc(result);
 		
-		consume(Operators.LBRACK, result);
+		consumeWS(Operators.LBRACK, result);
 		
 		result.addChild(adapter.copy(
 			AS3NodeKind.NAME, token));
@@ -651,7 +655,7 @@ public class AS3Parser extends ParserBase
 			result.addChild(parseMetaDataParameterList())
 		}
 		
-		consume(Operators.RBRACK, result);
+		consumeWS(Operators.RBRACK, result, false);
 		
 		return result;
 	}
@@ -683,7 +687,7 @@ public class AS3Parser extends ParserBase
 			}
 		}
 		
-		consumeWS(Operators.RPAREN, result);
+		consumeWS(Operators.RPAREN, result, false);
 		
 		return result;
 	}

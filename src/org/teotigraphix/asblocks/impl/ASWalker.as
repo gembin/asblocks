@@ -128,15 +128,6 @@ public class ASWalker implements IASWalker
 		var len:int;
 		var i:int;
 		
-		var methods:Vector.<IMethod> = element.methods;
-		len = methods.length;
-		for (i = 0; i < len; i++)
-		{
-			var method:IMethod = methods[i];
-			walkMember(method);
-			walkMethod(method);
-		}
-		
 		var fields:Vector.<IField> = element.fields;
 		len = fields.length;
 		for (i = 0; i < len; i++)
@@ -144,6 +135,15 @@ public class ASWalker implements IASWalker
 			var field:IField = fields[i];
 			walkMember(field);
 			walkField(field);
+		}
+		
+		var methods:Vector.<IMethod> = element.methods;
+		len = methods.length;
+		for (i = 0; i < len; i++)
+		{
+			var method:IMethod = methods[i];
+			walkMember(method);
+			walkMethod(method);
 		}
 	}
 	

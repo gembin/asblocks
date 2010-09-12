@@ -22,7 +22,9 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.api.IMetaData;
 import org.teotigraphix.asblocks.api.IMethod;
 import org.teotigraphix.asblocks.api.IType;
 import org.teotigraphix.asblocks.api.Visibility;
@@ -128,6 +130,36 @@ public class TypeNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
+	//  IMetaDataAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  metaDatas
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#metaDatas
+	 */
+	public function get metaDatas():Vector.<IMetaData>
+	{
+		var result:Vector.<IMetaData> = new Vector.<IMetaData>();
+		
+		var list:IParserNode = findMetaList();
+		if (!list)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(list);
+		while (i.hasNext())
+		{
+			result.push(new MetaDataNode(i.next()));
+		}
+		
+		return result;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -206,6 +238,127 @@ public class TypeNode extends ScriptNode
 					i.remove();
 					return true;
 				}
+			}
+		}
+		return false;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IMetaDataAware API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	private function findMetaList():IParserNode
+	{
+		return node.getKind(AS3NodeKind.META_LIST);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#newMetaData()
+	 */
+	public function newMetaData(name:String):IMetaData
+	{
+		var metadata:IMetaData = ASTBuilder.newMetaData(name);
+		var list:IParserNode = node.getKind(AS3NodeKind.META_LIST);
+		if (!list)
+		{
+			list = ASTUtil.newAST(AS3NodeKind.META_LIST);
+			node.addChildAt(list, 0);
+		}
+		var indent:String = ASTUtil.findIndent(node);
+		
+		var indentTok:LinkedListToken = TokenBuilder.newWhiteSpace(indent);
+		
+		list.addChild(metadata.node);
+		list.appendToken(TokenBuilder.newNewline());
+		list.appendToken(indentTok);
+		return metadata;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#getMetaData()
+	 */
+	public function getMetaData(name:String):IMetaData
+	{
+		var list:IParserNode = findMetaList();
+		if (!list)
+			return null;
+		
+		var i:ASTIterator = new ASTIterator(list);
+		while (i.hasNext())
+		{
+			var meta:IParserNode = i.next();
+			if (meta.isKind(AS3NodeKind.NAME) && meta.stringValue == name)
+			{
+				return new MetaDataNode(meta);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#getAllMetaData()
+	 */
+	public function getAllMetaData(name:String):Vector.<IMetaData>
+	{
+		var result:Vector.<IMetaData> = new Vector.<IMetaData>();
+		
+		var list:IParserNode = findMetaList();
+		if (!list)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(list);
+		while (i.hasNext())
+		{
+			var meta:IParserNode = i.next();
+			if (meta.isKind(AS3NodeKind.NAME) && meta.stringValue == name)
+			{
+				result.push(new MetaDataNode(i.next()));
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#hasMetaData()
+	 */
+	public function hasMetaData(name:String):Boolean
+	{
+		var list:IParserNode = findMetaList();
+		if (!list)
+			return false;
+		
+		var i:ASTIterator = new ASTIterator(list);
+		while (i.hasNext())
+		{
+			var meta:IParserNode = i.next();
+			if (meta.isKind(AS3NodeKind.NAME) && meta.stringValue == name)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#removeMetaData()
+	 */
+	public function removeMetaData(node:IMetaData):Boolean
+	{
+		var list:IParserNode = findMetaList();
+		if (!list)
+			return false;
+		
+		var i:ASTIterator = new ASTIterator(list);
+		while (i.hasNext())
+		{
+			var meta:IParserNode = i.next();
+			if (meta === node)
+			{
+				i.remove();
+				return true;
 			}
 		}
 		return false;

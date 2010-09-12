@@ -17,82 +17,76 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks.api
+package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IMetaDataParameter;
+
 /**
- * TODO Docme
+ * The <code>IMetaDataParameter</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IType extends IScriptNode, IMetaDataAware//, IMetaDataAware, IDocumentAware
+public class MetaDataParameterNode extends ScriptNode 
+	implements IMetaDataParameter
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  IMetaDataParameter API :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  value
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataParameter#value
+	 */
+	public function get value():String
+	{
+		return null;
+	}
 	
 	//----------------------------------
 	//  name
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataParameter#name
 	 */
-	function get name():String;
-	
-	/**
-	 * @private
-	 */
-	function set name(value:String):void;
+	public function get name():String
+	{
+		return null;
+	}
 	
 	//----------------------------------
-	//  visibility
+	//  label
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataParameter#hasName
 	 */
-	function get visibility():Visibility;
-	
-	/**
-	 * @private
-	 */
-	function set visibility(value:Visibility):void;
-	
-	//----------------------------------
-	//  methods
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get methods():Vector.<IMethod>;
+	public function get hasName():Boolean
+	{
+		return false;
+	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function newMethod(name:String, 
-					   visibility:Visibility, 
-					   returnType:String):IMethod;
-	
-	/**
-	 * TODO Docme
-	 */
-	function getMethod(name:String):IMethod;
-	
-	/**
-	 * TODO Docme
-	 */
-	function removeMethod(name:String):Boolean;
+	public function MetaDataParameterNode(node:IParserNode)
+	{
+		super(node);
+	}
 }
 }

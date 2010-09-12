@@ -47,6 +47,7 @@ import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IWhileStatement;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IMember</code> implementation.
@@ -73,6 +74,11 @@ public class MethodNode extends MemberNode
 	 * @private
 	 */
 	private var containerMixin:IStatementContainer;
+	
+	private function findAccessorRoleNode():IParserNode
+	{
+		return node.getKind(AS3NodeKind.ACCESSOR_ROLE);
+	}
 	
 	//--------------------------------------------------------------------------
 	//
@@ -119,19 +125,19 @@ public class MethodNode extends MemberNode
 	 */
 	public function get accessorRole():AccessorRole
 	{
-		if (node.isKind(AS3NodeKind.FUNCTION))
+		var role:IParserNode = findAccessorRoleNode();
+		if (role.numChildren > 0)
 		{
-			return AccessorRole.NORMAL;
+			if (role.getFirstChild().isKind(AS3NodeKind.GET))
+			{
+				return AccessorRole.GETTER;
+			}
+			else if (role.getFirstChild().isKind(AS3NodeKind.GET))
+			{
+				return AccessorRole.GETTER;
+			}
 		}
-		else if (node.isKind(AS3NodeKind.GET))
-		{
-			return AccessorRole.GETTER;
-		}
-		else if (node.isKind(AS3NodeKind.SET))
-		{
-			return AccessorRole.SETTER;
-		}
-		return null;
+		return AccessorRole.NORMAL;
 	}
 	
 	/**
@@ -139,7 +145,23 @@ public class MethodNode extends MemberNode
 	 */	
 	public function set accessorRole(value:AccessorRole):void
 	{
-		// TODO impl
+		if (value.equals(accessorRole))
+		{
+			return;
+		}
+		var role:IParserNode = findAccessorRoleNode();
+		var ast:IParserNode = (value == AccessorRole.GETTER) 
+			? ASTUtil.newAST(AS3NodeKind.GET, "get")
+			: ASTUtil.newAST(AS3NodeKind.SET, "set");
+		role.appendToken(TokenBuilder.newSpace());
+		if (role.numChildren == 0)
+		{
+			role.addChild(ast);
+		}
+		else
+		{
+			role.setChildAt(ast, 0);
+		}
 	}
 	
 	//--------------------------------------------------------------------------
