@@ -157,6 +157,11 @@ public interface IStatementContainer
 	function newReturn(expression:IExpression = null):IReturnStatement
 	
 	/**
+	 * TODO Docme
+	 */
+	function newSuper(arguments:Vector.<IArgument>):ISuperStatement;
+		
+	/**
 	 * @private
 	 */
 	function newSwitch(condition:IExpression):ISwitchStatement;

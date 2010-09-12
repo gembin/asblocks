@@ -35,7 +35,7 @@ import org.teotigraphix.asblocks.api.ITryStatement;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class TryStatement extends ContainerDelegate 
+public class TryStatementNode extends ContainerDelegate 
 	implements ITryStatement
 {
 	override protected function get statementContainer():IStatementContainer
@@ -90,7 +90,7 @@ public class TryStatement extends ContainerDelegate
 	/**
 	 * Constructor.
 	 */
-	public function TryStatement(node:IParserNode)
+	public function TryStatementNode(node:IParserNode)
 	{
 		super(node);
 	}

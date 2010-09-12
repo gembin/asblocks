@@ -26,6 +26,7 @@ import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.api.IArgument;
 import org.teotigraphix.asblocks.api.IBlock;
 import org.teotigraphix.asblocks.api.IBreakStatement;
 import org.teotigraphix.asblocks.api.IContinueStatement;
@@ -42,6 +43,7 @@ import org.teotigraphix.asblocks.api.IReturnStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
+import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
@@ -366,6 +368,16 @@ public class StatementList extends ContainerDelegate implements IBlock
 	/**
 	 * @private
 	 */
+	override public function newSuper(arguments:Vector.<IArgument>):ISuperStatement
+	{
+		var result:IParserNode = ASTBuilder.newSuper(null);
+		_addStatement(result);
+		return new SuperStatementNode(result);
+	}
+	
+	/**
+	 * @private
+	 */
 	override public function newSwitch(condition:IExpression):ISwitchStatement
 	{
 		var result:IParserNode = ASTBuilder.newSwitch(condition.node);
@@ -392,7 +404,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		result.appendToken(TokenBuilder.newSpace());
 		result.addChild(ASTBuilder.newCatchClause(name, type));
 		_addStatement(result);
-		return new TryStatement(result);
+		return new TryStatementNode(result);
 	}
 	
 	/**
@@ -404,7 +416,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		result.appendToken(TokenBuilder.newSpace());
 		result.addChild(ASTBuilder.newFinallyClause());
 		_addStatement(result);
-		return new TryStatement(result);
+		return new TryStatementNode(result);
 	}
 	
 	

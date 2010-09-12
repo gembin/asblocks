@@ -8,6 +8,7 @@ import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.asblocks.api.BinaryOperator;
+import org.teotigraphix.asblocks.api.IArgument;
 import org.teotigraphix.asblocks.api.IAssignmentExpression;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
@@ -19,6 +20,18 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
 {
+	public static function newSuper(arguments:Vector.<IArgument>):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.SUPER, "super");
+		var args:IParserNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.ARGUMENTS, 
+			AS3NodeKind.LPAREN, "(", 
+			AS3NodeKind.RPAREN, ")");
+		ast.addChild(args);
+		ast.appendToken(TokenBuilder.newSemi());
+		return ast;
+	}
+	
 	public static function newSwitch(condition:IParserNode):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.SWITCH, "switch");

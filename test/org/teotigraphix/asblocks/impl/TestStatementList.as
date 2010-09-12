@@ -13,6 +13,7 @@ import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
+import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchCase;
 import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
@@ -357,6 +358,10 @@ public class TestStatementList
 	[Test]
 	public function test_newSuper():void
 	{
+		var suprstmt:ISuperStatement = block.newSuper(null);
+		
+		assertPrint("{\n\tsuper();\n}", block);
+		// TODO implement super() arguments
 	}
 	
 	[Test]

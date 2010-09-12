@@ -1607,7 +1607,21 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function parseThrowExpression():TokenNode
+	private function parseSuperStatement():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.SUPER, token);
+		
+		consume(KeyWords.SUPER, result);
+		result.addChild(parseArgumentList());
+		skip(Operators.SEMI, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseThrowStatement():TokenNode
 	{
 		var result:TokenNode = adapter.empty(
 			AS3NodeKind.THROW, token);
@@ -2063,9 +2077,13 @@ public class AS3Parser extends ParserBase
 		{
 			result = parseReturnStatement();
 		}
+		else if (tokIs(KeyWords.SUPER))
+		{
+			result = parseSuperStatement();
+		}
 		else if (tokIs(KeyWords.THROW))
 		{
-			result = parseThrowExpression();
+			result = parseThrowStatement();
 		}
 		else if (tokIs(KeyWords.BREAK))
 		{

@@ -42,6 +42,7 @@ import org.teotigraphix.asblocks.api.IReturnStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
+import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
@@ -386,6 +387,14 @@ public class MethodNode extends MemberNode
 	public function newReturn(expression:IExpression = null):IReturnStatement
 	{
 		return containerMixin.newReturn(expression);
+	}
+	
+	/**
+	 * @private
+	 */
+	public function newSuper(arguments:Vector.<IArgument>):ISuperStatement
+	{
+		return containerMixin.newSuper(arguments);
 	}
 	
 	/**

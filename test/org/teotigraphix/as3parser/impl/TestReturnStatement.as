@@ -63,6 +63,18 @@ public class TestReturnStatement extends AbstractStatementTest
 	}
 	
 	[Test]
+	public function testSuper():void
+	{
+		var input:String = "super(arg0, arg1);";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<super line=\"1\" column=\"1\"><arguments line=\"1\" column=\"6\"><primary " +
+			"line=\"1\" column=\"7\">arg0</primary><primary line=\"1\" column=\"13\">" +
+			"arg1</primary></arguments></super>");
+	}
+	
+	[Test]
 	public function testThrow():void
 	{
 		var input:String = "throw new Error('error')";
