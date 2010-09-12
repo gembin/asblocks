@@ -36,6 +36,20 @@ public interface IForEachInStatement extends IStatement, IStatementContainer
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  variable
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get variable():IScriptNode;
+	
+	/**
+	 * @private
+	 */
+	function set variable(value:IScriptNode):void;
+	
+	//----------------------------------
 	//  iterated
 	//----------------------------------
 	
@@ -48,19 +62,5 @@ public interface IForEachInStatement extends IStatement, IStatementContainer
 	 * @private
 	 */
 	function set iterated(value:IExpression):void;
-	
-	//----------------------------------
-	//  variable
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get variable():IExpression;
-	
-	/**
-	 * @private
-	 */
-	function set variable(value:IExpression):void;
 }
 }

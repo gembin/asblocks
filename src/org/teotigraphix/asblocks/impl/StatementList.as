@@ -266,7 +266,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		var ast:IParserNode = ASTBuilder.newFor(init, cond, iter);
 		appendBlock(ast);
 		_addStatement(ast);
-		return new ForStatement(ast);
+		return new ForStatementNode(ast);
 	}
 	
 	/**
@@ -298,7 +298,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		var ast:IParserNode = ASTBuilder.newFor(init, cond, iter);
 		appendBlock(ast);
 		_addStatement(ast);
-		return new ForStatement(ast);
+		return new ForStatementNode(ast);
 	}
 	
 	/**
@@ -315,7 +315,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		var ast:IParserNode = ASTBuilder.newForEachIn(declaration.node, expression.node);
 		appendBlock(ast);
 		_addStatement(ast);
-		return new ForEachInStatement(ast);
+		return new ForEachInStatementNode(ast);
 	}
 	
 	/**
@@ -332,7 +332,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		var ast:IParserNode = ASTBuilder.newForIn(declaration.node, expression.node);
 		appendBlock(ast);
 		_addStatement(ast);
-		return new ForInStatement(ast);
+		return new ForInStatementNode(ast);
 	}
 	
 	public function appendBlock(ast:IParserNode):IParserNode

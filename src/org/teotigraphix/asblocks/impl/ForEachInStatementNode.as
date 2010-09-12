@@ -21,63 +21,18 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.asblocks.api.IForInStatement;
-import org.teotigraphix.asblocks.api.IStatementContainer;
+import org.teotigraphix.asblocks.api.IForEachInStatement;
 
 /**
- * The <code>IForInStatement</code> implementation.
+ * The <code>IForEachInStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ForInStatement extends ContainerDelegate 
-	implements IForInStatement
+public class ForEachInStatementNode extends ForInStatementNodeBase 
+	implements IForEachInStatement
 {
-	override protected function get statementContainer():IStatementContainer
-	{
-		return new StatementList(node.getChild(2)); // block
-	}
-	
-	//----------------------------------
-	//  initializer
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IForInStatement#iterated
-	 */
-	public function get iterated():IExpression
-	{
-		return null;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set iterated(value:IExpression):void
-	{
-	}
-	
-	//----------------------------------
-	//  condition
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IForInStatement#variable
-	 */
-	public function get variable():IExpression
-	{
-		return null;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set variable(value:IExpression):void
-	{
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -87,7 +42,7 @@ public class ForInStatement extends ContainerDelegate
 	/**
 	 * Constructor.
 	 */
-	public function ForInStatement(node:IParserNode)
+	public function ForEachInStatementNode(node:IParserNode)
 	{
 		super(node);
 	}

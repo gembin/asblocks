@@ -49,7 +49,7 @@ for/block
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ForStatement extends ContainerDelegate 
+public class ForStatementNode extends ContainerDelegate 
 	implements IForStatement
 {
 	override protected function get statementContainer():IStatementContainer
@@ -195,7 +195,7 @@ public class ForStatement extends ContainerDelegate
 	/**
 	 * Constructor.
 	 */
-	public function ForStatement(node:IParserNode)
+	public function ForStatementNode(node:IParserNode)
 	{
 		super(node);
 	}
