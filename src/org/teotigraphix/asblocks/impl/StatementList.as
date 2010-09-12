@@ -47,6 +47,7 @@ import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
+import org.teotigraphix.asblocks.api.IWhileStatement;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
@@ -419,6 +420,15 @@ public class StatementList extends ContainerDelegate implements IBlock
 		return new TryStatementNode(result);
 	}
 	
+	/**
+	 * @private
+	 */
+	override public function newWhile(condition:IExpression):IWhileStatement
+	{
+		var result:IParserNode = ASTBuilder.newWhile(condition.node);
+		_addStatement(result);
+		return new WhileStatementNode(result);
+	}
 	
 	
 	

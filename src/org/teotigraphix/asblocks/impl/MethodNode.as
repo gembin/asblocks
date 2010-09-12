@@ -46,6 +46,7 @@ import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
+import org.teotigraphix.asblocks.api.IWhileStatement;
 
 /**
  * The <code>IMember</code> implementation.
@@ -429,11 +430,12 @@ public class MethodNode extends MemberNode
 		return containerMixin.newTryFinally();
 	}
 	
-	//--------------------------------------------------------------------------
-	//
-	//  Private :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newWhile()
+	 */
+	public function newWhile(condition:IExpression):IWhileStatement
+	{
+		return containerMixin.newWhile(condition);
+	}
 }
 }

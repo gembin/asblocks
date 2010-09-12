@@ -19,6 +19,7 @@ import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
+import org.teotigraphix.asblocks.api.IWhileStatement;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /*
@@ -416,6 +417,9 @@ public class TestStatementList
 	[Test]
 	public function test_newWhile():void
 	{
+		var wstmt:IWhileStatement = block.newWhile(factory.newExpression("hasNext()"));
+		
+		assertPrint("{\n\twhile (hasNext()){\n\t}\n}", block);
 	}
 	
 	[Test]

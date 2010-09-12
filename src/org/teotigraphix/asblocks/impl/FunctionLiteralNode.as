@@ -45,6 +45,7 @@ import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
+import org.teotigraphix.asblocks.api.IWhileStatement;
 
 /**
  * The <code>IFunctionLiteral</code> implementation.
@@ -383,6 +384,14 @@ public class FunctionLiteralNode extends ExpressionNode
 	public function newTryFinally():ITryStatement
 	{
 		return containerMixin.newTryFinally();
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newWhile()
+	 */
+	public function newWhile(condition:IExpression):IWhileStatement
+	{
+		return containerMixin.newWhile(condition);
 	}
 }
 }

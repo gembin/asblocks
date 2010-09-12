@@ -438,6 +438,16 @@ public class ASTBuilder
 		return ast;
 	}
 	
+	public static function newWhile(condition:IParserNode):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.WHILE, "while");
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(newCondition(condition));
+		var block:IParserNode = newBlock();
+		ast.addChild(block);
+		return ast;
+	}
+	
 	public static function newDoWhile(condition:IParserNode):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DO, "do");

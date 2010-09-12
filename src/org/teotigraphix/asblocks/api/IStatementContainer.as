@@ -180,5 +180,10 @@ public interface IStatementContainer
 	 * @private
 	 */
 	function newTryFinally():ITryStatement;
+	
+	/**
+	 * @private
+	 */
+	function newWhile(condition:IExpression):IWhileStatement;
 }
 }

@@ -42,6 +42,7 @@ import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
+import org.teotigraphix.asblocks.api.IWhileStatement;
 
 /**
  * The <code>IStatementContainer</code> implementation.
@@ -290,6 +291,14 @@ public class ContainerDelegate extends ScriptNode
 	public function newTryFinally():ITryStatement
 	{
 		return statementContainer.newTryFinally();
+	}
+	
+	/**
+	 * @private
+	 */
+	public function newWhile(condition:IExpression):IWhileStatement
+	{
+		return statementContainer.newWhile(condition);
 	}
 }
 }
