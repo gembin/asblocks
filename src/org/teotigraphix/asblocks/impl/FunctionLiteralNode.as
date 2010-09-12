@@ -22,6 +22,7 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.asblocks.api.IArgument;
 import org.teotigraphix.asblocks.api.IBreakStatement;
 import org.teotigraphix.asblocks.api.IContinueStatement;
@@ -31,6 +32,7 @@ import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IExpressionStatement;
 import org.teotigraphix.asblocks.api.IForEachInStatement;
+import org.teotigraphix.asblocks.api.IForInStatement;
 import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IFunctionCommon;
 import org.teotigraphix.asblocks.api.IFunctionLiteral;
@@ -41,6 +43,7 @@ import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
+import org.teotigraphix.asblocks.api.ITryStatement;
 
 /**
  * The <code>IFunctionLiteral</code> implementation.
@@ -67,6 +70,36 @@ public class FunctionLiteralNode extends ExpressionNode
 	 * @private
 	 */
 	private var containerMixin:IStatementContainer;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IStatementContainer API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  hasCode
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	public function get hasCode():Boolean
+	{
+		return containerMixin.hasCode;
+	}
+	
+	//----------------------------------
+	//  statements
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	public function get statements():Vector.<IStatement>
+	{
+		return containerMixin.statements;
+	}
 	
 	//--------------------------------------------------------------------------
 	//
@@ -162,11 +195,43 @@ public class FunctionLiteralNode extends ExpressionNode
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#addComment()
+	 */
+	public function addComment(text:String):IToken
+	{
+		return containerMixin.addComment(text);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#removeComment()
+	 */
+	public function removeComment(statement:IStatement):IToken
+	{
+		return containerMixin.removeComment(statement);
+	}
+	
+	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#addStatement()
 	 */
 	public function addStatement(statement:String):IStatement
 	{
 		return containerMixin.addStatement(statement);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#removeStatement()
+	 */
+	public function removeStatement(statement:IStatement):IStatement
+	{
+		return containerMixin.removeStatement(statement);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#removeStatementAt()
+	 */
+	public function removeStatementAt(index:int):IStatement
+	{
+		return containerMixin.removeStatementAt(index);
 	}
 	
 	/**
@@ -228,12 +293,31 @@ public class FunctionLiteralNode extends ExpressionNode
 	}
 	
 	/**
+	 * TODO Docme
+	 */
+	public function parseNewFor(initializer:String, 
+								condition:String, 
+								iterater:String):IForStatement
+	{
+		return containerMixin.parseNewFor(initializer, condition, iterater);
+	}
+	
+	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newForEacIn()
 	 */
 	public function newForEachIn(declaration:IScriptNode, 
 								 expression:IExpression):IForEachInStatement
 	{
 		return containerMixin.newForEachIn(declaration, expression);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newForIn()
+	 */
+	public function newForIn(declaration:IScriptNode, 
+							 expression:IExpression):IForInStatement
+	{
+		return containerMixin.newForIn(declaration, expression);
 	}
 	
 	/**
@@ -266,6 +350,22 @@ public class FunctionLiteralNode extends ExpressionNode
 	public function newThrow(expression:IExpression):IThrowStatement
 	{
 		return containerMixin.newThrow(expression);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newTryFinally()
+	 */
+	public function newTryCatch(name:String, type:String):ITryStatement
+	{
+		return containerMixin.newTryCatch(name, type);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newTryFinally()
+	 */
+	public function newTryFinally():ITryStatement
+	{
+		return containerMixin.newTryFinally();
 	}
 }
 }

@@ -4,6 +4,7 @@ package testSuites
 import org.teotigraphix.asblocks.TestASFactory;
 import org.teotigraphix.asblocks.impl.TestASProject;
 import org.teotigraphix.asblocks.impl.TestArrayAccessExpression;
+import org.teotigraphix.asblocks.impl.TestAssignmentNodes;
 import org.teotigraphix.asblocks.impl.TestBinaryExpression;
 import org.teotigraphix.asblocks.impl.TestClassTypeNode;
 import org.teotigraphix.asblocks.impl.TestCompilationUnitNode;
@@ -12,6 +13,8 @@ import org.teotigraphix.asblocks.impl.TestFieldNode;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
 import org.teotigraphix.asblocks.impl.TestLiteralNodes;
 import org.teotigraphix.asblocks.impl.TestPackageNode;
+import org.teotigraphix.asblocks.impl.TestPrefixExpression;
+import org.teotigraphix.asblocks.impl.TestStatementList;
 import org.teotigraphix.asblocks.impl.TestTokenBoundaries;
 
 [Suite]
@@ -30,9 +33,13 @@ public class AS3BlocksTestSuite
 	
 	// 
 	public var testArrayAccessExpression:TestArrayAccessExpression;
+	public var testAssignmentNodes:TestAssignmentNodes;
 	public var testBinaryExpression:TestBinaryExpression;
 	public var testTokenBoundaries:TestTokenBoundaries;
 	public var testFieldNode:TestFieldNode;
+	public var testPrefixExpression:TestPrefixExpression;
+	public var testStatementList:TestStatementList;
+	
 	
 }
 }

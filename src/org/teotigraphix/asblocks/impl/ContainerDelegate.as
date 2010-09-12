@@ -21,6 +21,7 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.asblocks.api.IBreakStatement;
 import org.teotigraphix.asblocks.api.IContinueStatement;
 import org.teotigraphix.asblocks.api.IDeclarationStatement;
@@ -29,6 +30,7 @@ import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IExpressionStatement;
 import org.teotigraphix.asblocks.api.IForEachInStatement;
+import org.teotigraphix.asblocks.api.IForInStatement;
 import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.IReturnStatement;
@@ -37,6 +39,7 @@ import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
+import org.teotigraphix.asblocks.api.ITryStatement;
 
 /**
  * The <code>IStatementContainer</code> implementation.
@@ -51,6 +54,36 @@ public class ContainerDelegate extends ScriptNode
 	protected function get statementContainer():IStatementContainer
 	{
 		return null;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IStatementContainer API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  hasCode
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	public function get hasCode():Boolean
+	{
+		return statementContainer.hasCode;
+	}
+	
+	//----------------------------------
+	//  statements
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	public function get statements():Vector.<IStatement>
+	{
+		return statementContainer.statements;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -70,9 +103,41 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
+	public function addComment(text:String):IToken
+	{
+		return statementContainer.addComment(text);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
+	public function removeComment(statement:IStatement):IToken
+	{
+		return statementContainer.removeComment(statement);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
 	public function addStatement(statement:String):IStatement
 	{
 		return statementContainer.addStatement(statement);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
+	public function removeStatement(statement:IStatement):IStatement
+	{
+		return statementContainer.removeStatement(statement);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
+	public function removeStatementAt(index:int):IStatement
+	{
+		return statementContainer.removeStatementAt(index);
 	}
 	
 	/**
@@ -136,10 +201,29 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
+	public function parseNewFor(initializer:String, 
+								condition:String, 
+								iterater:String):IForStatement
+	{
+		return statementContainer.parseNewFor(initializer, condition, iterater);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
 	public function newForEachIn(declaration:IScriptNode, 
 								 expression:IExpression):IForEachInStatement
 	{
 		return statementContainer.newForEachIn(declaration, expression);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
+	public function newForIn(declaration:IScriptNode, 
+							 expression:IExpression):IForInStatement
+	{
+		return statementContainer.newForIn(declaration, expression);
 	}
 	
 	/**
@@ -172,6 +256,22 @@ public class ContainerDelegate extends ScriptNode
 	public function newThrow(expression:IExpression):IThrowStatement
 	{
 		return statementContainer.newThrow(expression);
+	}
+	
+	/**
+	 * @private
+	 */
+	public function newTryCatch(name:String, type:String):ITryStatement
+	{
+		return statementContainer.newTryCatch(name, type);
+	}
+	
+	/**
+	 * @private
+	 */
+	public function newTryFinally():ITryStatement
+	{
+		return statementContainer.newTryFinally();
 	}
 }
 }

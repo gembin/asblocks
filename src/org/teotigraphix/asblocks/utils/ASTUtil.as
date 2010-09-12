@@ -23,14 +23,17 @@ package org.teotigraphix.asblocks.utils
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ISourceCode;
+import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.LinkedListTreeAdaptor;
+import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.as3parser.errors.NullTokenError;
 import org.teotigraphix.as3parser.errors.UnExpectedTokenError;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.impl.ASTBuilder;
+import org.teotigraphix.asblocks.impl.ASTPrinter;
 import org.teotigraphix.asblocks.impl.TokenBuilder;
 
 /**
@@ -610,6 +613,58 @@ public class ASTUtil
 		
 		return result;
 	}
+	
+	public static function findIndentForComment(ast:IParserNode):String
+	{
+		var last:IParserNode = ast.getLastChild();
+		var indent:String;
+		if (last == null)
+		{
+			indent = "\t" + findIndent(ast);
+		}
+		else
+		{
+			indent = findIndent(last);
+		}
+		return indent;
+	}
+	
+	public static function print(node:IParserNode):String
+	{
+		var printer:ASTPrinter = new ASTPrinter(new SourceCode());
+		printer.print(node);
+		return printer.flush();
+	}
+	
+	public static function removeComment(ast:IParserNode):IToken
+	{
+		// nl, sl-comment, ws, nl
+		var comment:LinkedListToken = getComment(ast);
+		if (!comment)
+		{
+			return null;
+		}
+		
+		var ws:LinkedListToken = comment.previous;
+		var nl:LinkedListToken = ws.previous;
+		
+		nl.remove();
+		ws.remove();
+		comment.remove();
+		
+		return comment;
+	}
+	
+	private static function getComment(ast:IParserNode):LinkedListToken
+	{
+		for (var tok:LinkedListToken =  ast.startToken; tok != null; tok = tok.previous)
+		{
+			if (tok.kind == "sl-comment")
+				return tok;
+		}
+		return null;
+	}
+	
 	
 }
 }

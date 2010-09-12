@@ -531,7 +531,7 @@ public class ParserBase implements IParser
 		
 		if (node)
 		{
-			tok = adapter.createToken("pnewline", "\n", 
+			tok = adapter.createToken("ws", "\n", 
 				token.line, token.column);
 		}
 		

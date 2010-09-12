@@ -265,6 +265,33 @@ public class AS3FragmentParser
 	}
 	
 	/**
+	 * Parses a <code></code> node.
+	 * 
+	 * @param statement A String statement to be parsed into AST.
+	 * @return Returns a <code></code> node.
+	 */
+	public static function parseForCond(expression:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(expression);
+		parser.nextToken();
+		var node:IParserNode = parser.parseForCond();
+		return node;
+	}
+	
+	/**
+	 * Parses a <code></code> node.
+	 * 
+	 * @param statement A String statement to be parsed into AST.
+	 * @return Returns a <code></code> node.
+	 */
+	public static function parseForIter(expression:String):IParserNode
+	{
+		var parser:AS3Parser = createParser(expression);
+		parser.nextToken();
+		var node:IParserNode = parser.parseForIter();
+		return node;
+	}
+	/**
 	 * Parses a <code>AS3NodeKind.CONDITION</code> node.
 	 * 
 	 * @param statement A String statement to be parsed into AST.

@@ -19,6 +19,7 @@
 
 package org.teotigraphix.asblocks.api
 {
+import org.teotigraphix.as3parser.api.IToken;
 
 /**
  * 
@@ -41,7 +42,7 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
-	//	function get hasCode():Boolean;
+	function get hasCode():Boolean;
 	
 	//----------------------------------
 	//  statements
@@ -50,7 +51,7 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
-	//	function get statements():Vector.<IStatementNode>;
+	function get statements():Vector.<IStatement>;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -58,9 +59,15 @@ public interface IStatementContainer
 	//
 	//--------------------------------------------------------------------------
 	
-	//	function addComment(text:String):void;
+	function addComment(text:String):IToken;
+	
+	function removeComment(statement:IStatement):IToken;
 	
 	function addStatement(statement:String):IStatement;
+	
+	function removeStatement(statement:IStatement):IStatement;
+	
+	function removeStatementAt(index:int):IStatement;
 	
 	// then all the new factory methods
 	
@@ -106,8 +113,33 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
+	function parseNewFor(initializer:String, 
+						 condition:String, 
+						 iterater:String):IForStatement;
+	
+	/**
+	 * TODO Docme
+	 */
 	function newForEachIn(declaration:IScriptNode, 
 						  target:IExpression):IForEachInStatement;
+	
+	/**
+	 * TODO Docme
+	 */
+	//function parseNewForEachIn(declaration:String, 
+	//						   target:String):IForEachInStatement;
+	
+	/**
+	 * TODO Docme
+	 */
+	function newForIn(declaration:IScriptNode, 
+					  target:IExpression):IForInStatement;
+	
+	/**
+	 * TODO Docme
+	 */
+	//function parseNewForIn(declaration:String, 
+	//					   target:String):IForInStatement;
 	
 	/**
 	 * TODO Docme
@@ -128,5 +160,15 @@ public interface IStatementContainer
 	 * @private
 	 */
 	function newThrow(expression:IExpression):IThrowStatement;
+	
+	/**
+	 * @private
+	 */
+	function newTryCatch(name:String, type:String):ITryStatement;
+	
+	/**
+	 * @private
+	 */
+	function newTryFinally():ITryStatement;
 }
 }

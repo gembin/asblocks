@@ -2,36 +2,126 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.Assert;
-import org.flexunit.asserts.assertFalse;
-import org.flexunit.asserts.assertTrue;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.api.IArrayAccessExpression;
-import org.teotigraphix.asblocks.api.IAssignmentExpression;
-import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.IBlock;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IConditionalExpression;
-import org.teotigraphix.asblocks.api.IDeclarationStatement;
-import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.asblocks.api.IExpressionStatement;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
-import org.teotigraphix.asblocks.api.IForEachInStatement;
 import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IINvocationExpression;
-import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.INewExpression;
-import org.teotigraphix.asblocks.api.IPostfixExpression;
-import org.teotigraphix.asblocks.api.IPrefixExpression;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.ISimpleNameExpression;
-import org.teotigraphix.asblocks.api.ISwitchCase;
-import org.teotigraphix.asblocks.api.ISwitchDefault;
-import org.teotigraphix.asblocks.api.ISwitchStatement;
-import org.teotigraphix.asblocks.api.IThrowStatement;
-import org.teotigraphix.asblocks.api.PostfixOperator;
 import org.teotigraphix.asblocks.utils.ASTUtil;
+
+/*
+
+Core
+
+* newParser()
+* newWriter()
+
+* newEmptyASProject()
+
+* newClass()
+* newInterface()
+
+* newBlock()
+
+* newExpression()
+
+ILiteral
+
+* newArrayLiteral()
+* newBooleanLiteral()
+* newFunctionLiteral()
+* newNullLiteral()
+* newNumberLiteral()
+* newObjectLiteral()
+* newRegexpLiteral()
+* newStringLiteral()
+* newUndefinedLiteral()
+* newXMLLiteral()
+
+IBinaryExpression
+
+* newAddExpression()
+* newAndExpression()
+* newBitAndExpression()
+* newBitOrExpression()
+* newBitXorExpression()
+* newDivisionExpression()
+* newEqualsExpression()
+* newGreaterEqualsExpression()
+* newGreaterThanExpression()
+* newLessEqualsExpression()
+* newLessThanExpression()
+* newModuloExpression()
+* newMultiplyExpression()
+* newNotEqualsExpression()
+* newOrExpression()
+* newShiftLeftExpression()
+* newShiftRightExpression()
+* newShiftRightUnsignedExpression()
+* newSubtractExpression()
+
+IAssignmentExpression
+
+* newAddAssignExpression()
+* newAssignExpression()
+* newBitAndAssignExpression()
+* newBitOrAssignExpression()
+* newBitXorAssignExpression()
+* newDivideAssignExpression()
+* newModuloAssignExpression()
+* newMultiplyAssignExpression()
+* newShiftLeftAssignExpression()
+* newShiftRightAssignExpression()
+* newShiftRightUnsignedAssignExpression()
+* newSubtractAssignExpression()
+
+IPrefixExpression
+
+* newNegativeExpression()
+* newNotExpression()
+* newPositiveExpression()
+* newPreDecExpression()
+* newPreIncExpression()
+
+IPostfixExpression
+
+* newPostDecExpression()
+* newPostIncExpression()
+
+Misc.
+
+* newArrayAccessExpression()
+* newConditionalExpression()
+* newFieldAccessExpression()
+* newInvocationExpression()
+* newNewExpression()
+* newSimpleName()
+
+XML
+
+* newDescendantExpression()
+* newExpressionAttribute()
+* newFilterExpression()
+* newPropertyAttribute()
+* newStarAttribute()
+
+ */
+
+
+// TODO impl unit test DescendentExpression
+// TODO impl unit test ExpressionAttribute
+// TODO impl unit test FilterExpression
+// TODO impl unit test PropertyAttribute
+// TODO impl unit test StarAttribute
+// TODO impl unit test AttributeExpression
 
 public class TestExpressionNodes
 {
@@ -77,230 +167,12 @@ public class TestExpressionNodes
 	}
 	
 	[Test]
-	public function testBreakStatement():void
+	public function testParseForStatement():void
 	{
+		// TODO implement
 		var statement:IBlock = factory.newBlock();
-		statement.newBreak();
-		assertPrint("{\n\tbreak;\n}", statement);
-	}
-	
-	[Test]
-	public function testContinueStatement():void
-	{
-		var statement:IBlock = factory.newBlock();
-		statement.newContinue();
-		assertPrint("{\n\tcontinue;\n}", statement);
-	}
-	
-	[Test]
-	public function testDeclaration():void
-	{
-		var statement:IBlock = factory.newBlock();
-		var expression:Object = 
-			statement.addStatement("var a:int = 42") as Object;
-		
-		assertPrint("{\n\tvar a:int = 42;\n}", statement);
-		assertFalse(expression.isConstant);
-		expression.isConstant = true;
-		assertPrint("{\n\tconst a:int = 42;\n}", statement);
-		assertTrue(expression.isConstant);
-		expression.isConstant = false;
-		assertPrint("{\n\tvar a:int = 42;\n}", statement);
-		expression.isConstant = false;
-		assertFalse(expression.isConstant);
-	}
-	
-	[Test]
-	public function testXMLNamespace():void
-	{
-		var statement:IBlock = factory.newBlock();
-		
-		statement.newDefaultXMLNamespace("my_namespace");
-		assertPrint("{\n\tdefault xml namespace = \"my_namespace\";\n}", statement);
-	}
-	
-	[Test]
-	public function testDoWhile():void
-	{
-		var statement:IBlock = factory.newBlock();
-		
-		var result:IDoWhileStatement = statement.newDoWhile(factory.newExpression("hasNext()"));
-		assertPrint("{\n\tdo {\n\t} while (hasNext());\n}", statement);
-		
-		result.newExpressionStatement("trace('Hello World')");
-		assertPrint("{\n\tdo {\n\t\ttrace('Hello World');\n\t} while (hasNext());\n}", statement);
-	}
-	
-	[Test]
-	public function testExpressionStatement():void
-	{
-		var statement:IBlock = factory.newBlock();
-		statement.newExpressionStatement("hasNext()");
-		assertPrint("{\n\thasNext();\n}", statement);
-	}
-	
-	[Test]
-	public function testForStatement():void
-	{
-		var statement:IBlock = factory.newBlock();
-		var forstmt:IForStatement = statement.newFor(null, null, null);
-		assertPrint("{\n\tfor (; ; ) {\n\t}\n}", forstmt);
-		
-		statement = factory.newBlock();
-		forstmt = statement.newFor(factory.newExpression("i=0"), null, null);
-		assertPrint("{\n\tfor (i=0; ; ) {\n\t}\n}", forstmt);
-		
-		statement = factory.newBlock();
-		forstmt = statement.newFor(
-			factory.newExpression("i=0"), 
-			factory.newExpression("i < len + 1"), null);
-		assertPrint("{\n\tfor (i=0; i < len + 1; ) {\n\t}\n}", forstmt);
-		
-		statement = factory.newBlock();
-		forstmt = statement.newFor(
-			factory.newExpression("i=0"), 
-			factory.newExpression("i < len + 1"), 
-			factory.newExpression("++i"));
-		assertPrint("{\n\tfor (i=0; i < len + 1; ++i) {\n\t}\n}", forstmt);
-		
-		statement = factory.newBlock();
-		forstmt = statement.newFor(
-			factory.newExpression("i=0"), 
-			factory.newExpression("i < len + 1"), 
-			factory.newExpression("++i"));
-		forstmt.addStatement("trace('Hello World ' + i)");
-		assertPrint("{\n\tfor (i=0; i < len + 1; ++i) {\n\t\t" +
-			"trace('Hello World ' + i);\n\t}\n}", forstmt);
-		
-		// TODO
-		// test setting initializer
-		
-		// test setting condition
-		
-		// test setting iteration
-	}
-	
-	[Test]
-	public function testForEachInStatement():void
-	{
-		var statement:IBlock = factory.newBlock();
-		var forstmt:IForEachInStatement = statement.newForEachIn(
-			factory.newExpression("name"), 
-			factory.newExpression("object"));
-		assertPrint("{\n\tfor each(name in object) {\n\t}\n}", forstmt);
-		
-		statement = factory.newBlock();
-		// TODO impl newForInit()
-		//forstmt = statement.newForEachIn(
-		//	factory.newForInit("var name:String"), 
-		//	factory.newExpression("object"));
-		//assertPrint("{\n\tfor each(var name:String in object) {\n\t}\n}", forstmt);
-	}
-	
-	[Test]
-	public function testForInStatement():void
-	{
-		// TODO impl unit test
-	}
-	
-	[Test]
-	public function testIfStatement():void
-	{
-		var statement:IBlock = factory.newBlock();
-		
-		assertPrint("{\n}", statement);
-		
-		var ifst:IIfStatement = statement.newIf(factory.newExpression("test()"));
-		ifst.addStatement("trace('test succeeded')");
-		
-		assertPrint("{\n\tif (test()) {\n\t\ttrace('test succeeded');\n\t}\n}", ifst);
-		
-		ifst.elseBlock.addStatement("trace('test failed')");
-		
-		assertPrint("{\n\tif (test()) {\n\t\ttrace('test succeeded');\n\t} else " +
-			"{\n\t\ttrace('test failed');\n\t}\n}", ifst);
-		
-		var ifstSub:IIfStatement = ifst.newIf(factory.newExpression("test2()"));
-		ifstSub.addStatement("trace('sub test succeeded')");
-		ifstSub.elseBlock.addStatement("trace('sub test failed')");
-		
-		assertPrint("{\n\tif (test()) {\n\t\ttrace('test succeeded');\n\t\tif " +
-			"(test2()) {\n\t\t\ttrace('sub test succeeded');\n\t\t} else " +
-			"{\n\t\t\ttrace('sub test failed');\n\t\t}\n\t} else {\n\t\ttrace(" +
-			"'test failed');\n\t}\n}", ifstSub);
-	}
-	
-	[Test]
-	public function testReturnStatement():void
-	{
-		var statement:IBlock = factory.newBlock();
-		statement.newReturn(factory.newExpression("result"));
-		
-		assertPrint("{\n\treturn result;\n}", statement);
-		
-		statement = factory.newBlock();
-		statement.newReturn();
-		
-		assertPrint("{\n\treturn;\n}", statement);
-	}
-	
-	[Test]
-	public function testSwitchStatement():void
-	{
-		var statement:IBlock = factory.newBlock();
-		var switchStatement:ISwitchStatement = statement.
-			newSwitch(factory.newExpression("count"));
-		
-		assertPrint("{\n\tswitch (count) {\n\t}\n}", statement);
-		
-		var cs:ISwitchCase = switchStatement.newCase("1");
-		cs.newBreak();
-		
-		cs = switchStatement.newCase("2");
-		cs.newBreak();
-		
-		assertPrint("{\n\tswitch (count) {\n\t\tcase 1:\n\t\t\tbreak;\n\t\tcase 2:" +
-			"\n\t\t\tbreak;\n\t}\n}", statement);
-		
-		var csd:ISwitchDefault = switchStatement.newDefault();
-		csd.newBreak();
-		
-		assertPrint("{\n\tswitch (count) {\n\t\tcase 1:\n\t\t\tbreak;\n\t\tcase 2:" +
-			"\n\t\t\tbreak;\n\t\tdefault:\n\t\t\tbreak;\n\t}\n}", statement);
-	}
-	
-	[Test]
-	public function testThrowStatement():void
-	{
-		var statement:IBlock = factory.newBlock();
-		var throwStatement:IThrowStatement = statement.
-			newThrow(factory.newExpression("new Error('Hello World')"));
-		
-		assertPrint("{\n\tthrow new Error('Hello World');\n}", statement);
-	}
-	
-	[Test]
-	public function testTryCatchStatement():void
-	{
-		// TODO impl unit test
-	}
-	
-	[Test]
-	public function testTryFinallyStatement():void
-	{
-		// TODO impl unit test
-	}
-	
-	[Test]
-	public function testWhileStatement():void
-	{
-		// TODO impl unit test
-	}
-	
-	[Test]
-	public function testWithStatement():void
-	{
-		// TODO impl unit test
+		var forstmt:IForStatement = statement.parseNewFor("var i:int = 0", "i < 1", "i++");
+		assertPrint("{\n\tfor (var i:int = 0; i < 1; i++) {\n\t}\n}", forstmt);
 	}
 	
 	[Test]
@@ -333,176 +205,6 @@ public class TestExpressionNodes
 		expression.subscript = subscript;
 		
 		assertPrint("myObject['myProp']", expression);
-	}
-	
-	[Test]
-	public function testAssignmentExpressionNode():void
-	{
-		var left:IExpression = factory.newExpression("myAnswer");
-		var right:IExpression = factory.newExpression("4");
-		
-		var expression:IAssignmentExpression = 
-			factory.newAssignmentExpression(left, right);
-		
-		assertPrint("myAnswer = 4", expression);
-		
-		// change right expression
-		expression.rightExpression = factory.newExpression("otherAnswer = 4");
-		
-		assertPrint("myAnswer = otherAnswer = 4", expression);
-		
-		// change left expression to an array access
-		var target:IExpression = factory.newExpression("myObject[42]");
-		var subscript:IExpression = factory.newExpression("2");
-		
-		var arrayAccessExpression:IArrayAccessExpression = 
-			factory.newArrayAccessExpression(target, subscript);
-		
-		expression.leftExpression = arrayAccessExpression;
-		
-		assertPrint("myObject[42][2] = otherAnswer = 4", expression);
-	}
-	
-	[Test]
-	public function testBinaryExpressionNode():void
-	{
-		var left:IExpression;
-		var right:IExpression;
-		
-		var expression:IBinaryExpression;
-		
-		// ADD
-		expression = factory.newAddExpression(
-			factory.newNumberLiteral(4),
-			factory.newNumberLiteral(2));
-		
-		assertPrint("4 + 2", expression);
-		
-		// AND
-		expression = factory.newAndExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a && b", expression);
-		
-		// BITAND
-		expression = factory.newBitAndExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a & b", expression);
-		
-		// BITOR
-		expression = factory.newBitOrExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a | b", expression);
-		
-		// BITXOR
-		expression = factory.newBitXorExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a ^ b", expression);
-		
-		// DIV
-		expression = factory.newDivisionExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a / b", expression);
-		
-		// EQ
-		expression = factory.newEqualsExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a == b", expression);
-		
-		// GE
-		expression = factory.newGreaterEqualsExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a >= b", expression);
-		
-		// GT
-		expression = factory.newGreaterThanExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a > b", expression);
-		
-		// LE
-		expression = factory.newLessEqualsExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a <= b", expression);
-		
-		// LT
-		expression = factory.newLessThanExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a < b", expression);
-		
-		// MOD
-		expression = factory.newModuloExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a % b", expression);
-		
-		// MUL
-		expression = factory.newMultiplyExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a * b", expression);
-		
-		// NE
-		expression = factory.newNotEqualsExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a != b", expression);
-		
-		// OR
-		expression = factory.newOrExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a || b", expression);
-		
-		// SL
-		expression = factory.newShiftLeftExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a << b", expression);
-		
-		// SR
-		expression = factory.newShiftRightExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a >> b", expression);
-		
-		// SRU
-		expression = factory.newShiftRightUnsignedExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a >>> b", expression);
-		
-		// SUB
-		expression = factory.newSubtractExpression(
-			factory.newSimpleNameExpression("a"), 
-			factory.newSimpleNameExpression("b"));
-		
-		assertPrint("a - b", expression);
 	}
 	
 	[Test]
@@ -630,42 +332,7 @@ public class TestExpressionNodes
 		
 		assertPrint("new HelloWorld(true, \"Hello World\")", expression);
 	}
-	
-	[Test]
-	public function testPostfixExpressionNode():void
-	{
-		
-		
-		var expression:IPostfixExpression;
-		
-		expression = factory.newPostDecExpression(factory.newSimpleNameExpression("i"));
-		assertPrint("i--", expression);
-		
-		expression.expression = factory.newSimpleNameExpression("count");
-		assertPrint("count--", expression);
-		
-		// FIXME
-		//expression.operator = PostfixOperator.POSTINC;
-		//assertPrint("count++", expression);
-		
-		expression = factory.newPostIncExpression(factory.newSimpleNameExpression("i"));
-		assertPrint("i++", expression);
-		
-		expression.expression = factory.newSimpleNameExpression("count");
-		assertPrint("count++", expression);
-	}
-	
-	[Test]
-	public function testPrefixExpressionNode():void
-	{
-		var expression:IPrefixExpression;
-		
-		expression = factory.newPreDecExpression(factory.newSimpleNameExpression("i"));
-		assertPrint("--i", expression);
-		
-		expression = factory.newPreIncExpression(factory.newSimpleNameExpression("i"));
-		assertPrint("++i", expression);
-	}
+
 	
 	[Test]
 	public function testPropertyAttributeNode():void

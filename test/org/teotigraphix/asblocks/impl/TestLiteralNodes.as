@@ -2,8 +2,10 @@ package org.teotigraphix.asblocks.impl
 {
 
 import org.flexunit.Assert;
+import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.api.IArrayLiteral;
-import org.teotigraphix.asblocks.api.IAssignmentExpression;
 import org.teotigraphix.asblocks.api.IBooleanLiteral;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IFunctionLiteral;
@@ -13,9 +15,19 @@ import org.teotigraphix.asblocks.api.IObjectLiteral;
 import org.teotigraphix.asblocks.api.IPropertyField;
 import org.teotigraphix.asblocks.api.IStringLiteral;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
-import org.teotigraphix.as3parser.api.AS3NodeKind;
-import org.teotigraphix.as3parser.core.SourceCode;
-import org.teotigraphix.asblocks.ASFactory;
+
+/*
+* newArrayLiteral()
+* newBooleanLiteral()
+* newFunctionLiteral()
+* newNullLiteral()
+* newNumberLiteral()
+* newObjectLiteral()
+* newRegexpLiteral()
+* newStringLiteral()
+* newUndefinedLiteral()
+* newXMLLiteral()
+*/
 
 public class TestLiteralNodes
 {
@@ -163,7 +175,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testRegExpLiteralNode():void
 	{
-		
+		// FIXME Impl testRegExpLiteralNode() unit test
 	}
 	
 	[Test]
@@ -188,7 +200,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testXMLLiteralNode():void
 	{
-		
+		// FIXME Impl testXMLLiteralNode() unit test
 	}
 	
 	protected function assertPrintExpression(expected:String, 

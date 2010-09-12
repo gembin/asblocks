@@ -69,6 +69,19 @@ public class ASTIterator
 		parent.setChildAt(replacement, index);
 	}
 	
+	public function moveTo(index:int):IParserNode
+	{
+		while (hasNext())
+		{
+			var ast:IParserNode = next();
+			if (this.index == index)
+			{
+				return ast;
+			}
+		}
+		return null;
+	}
+	
 	public function search(tokenKind:String):IParserNode
 	{
 		while (hasNext())

@@ -598,9 +598,5 @@ public class AS3NodeKind
 
 	// FIXME
 	public static const EXPR_STMNT:String = "expr-stmnt";
-
-	// FIXME
-	public static const OP:String = "op";
-
 }
 }

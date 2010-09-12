@@ -1,16 +1,44 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import flexunit.framework.Assert;
+
 import org.flexunit.asserts.assertEquals;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.api.BinaryOperator;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.utils.ASTUtil;
+
+/*
+* newAddExpression()
+* newAndExpression()
+* newBitAndExpression()
+* newBitOrExpression()
+* newBitXorExpression()
+* newDivisionExpression()
+* newEqualsExpression()
+* newGreaterEqualsExpression()
+* newGreaterThanExpression()
+* newLessEqualsExpression()
+* newLessThanExpression()
+* newModuloExpression()
+* newMultiplyExpression()
+* newNotEqualsExpression()
+* newOrExpression()
+* newShiftLeftExpression()
+* newShiftRightExpression()
+* newShiftRightUnsignedExpression()
+* newSubtractExpression()
+*/
 
 public class TestBinaryExpression
 {
+	private var printer:ASTPrinter;
+	
 	private var factory:ASFactory = new ASFactory();
 	
 	private var expression:IBinaryExpression;
@@ -22,6 +50,8 @@ public class TestBinaryExpression
 	[Before]
 	public function setUp():void
 	{
+		printer = new ASTPrinter(new SourceCode());
+		
 		left = factory.newNumberLiteral(1);
 		right = factory.newNumberLiteral(2);
 		expression = null;
@@ -35,6 +65,148 @@ public class TestBinaryExpression
 			assertEquals(left.node, expression.leftExpression.node);
 			assertEquals(right.node, expression.rightExpression.node);
 		}
+	}
+	
+	[Test]
+	public function testBinaryExpressionNode():void
+	{
+		var left:IExpression;
+		var right:IExpression;
+		
+		var expression:IBinaryExpression;
+		
+		// ADD
+		expression = factory.newAddExpression(
+			factory.newNumberLiteral(4),
+			factory.newNumberLiteral(2));
+		
+		assertPrint("4 + 2", expression);
+		
+		// AND
+		expression = factory.newAndExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a && b", expression);
+		
+		// BITAND
+		expression = factory.newBitAndExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a & b", expression);
+		
+		// BITOR
+		expression = factory.newBitOrExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a | b", expression);
+		
+		// BITXOR
+		expression = factory.newBitXorExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a ^ b", expression);
+		
+		// DIV
+		expression = factory.newDivisionExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a / b", expression);
+		
+		// EQ
+		expression = factory.newEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a == b", expression);
+		
+		// GE
+		expression = factory.newGreaterEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a >= b", expression);
+		
+		// GT
+		expression = factory.newGreaterThanExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a > b", expression);
+		
+		// LE
+		expression = factory.newLessEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a <= b", expression);
+		
+		// LT
+		expression = factory.newLessThanExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a < b", expression);
+		
+		// MOD
+		expression = factory.newModuloExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a % b", expression);
+		
+		// MUL
+		expression = factory.newMultiplyExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a * b", expression);
+		
+		// NE
+		expression = factory.newNotEqualsExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a != b", expression);
+		
+		// OR
+		expression = factory.newOrExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a || b", expression);
+		
+		// SL
+		expression = factory.newShiftLeftExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a << b", expression);
+		
+		// SR
+		expression = factory.newShiftRightExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a >> b", expression);
+		
+		// SRU
+		expression = factory.newShiftRightUnsignedExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a >>> b", expression);
+		
+		// SUB
+		expression = factory.newSubtractExpression(
+			factory.newSimpleNameExpression("a"), 
+			factory.newSimpleNameExpression("b"));
+		
+		assertPrint("a - b", expression);
 	}
 	
 	[Test]
@@ -200,6 +372,13 @@ public class TestBinaryExpression
 		var ast:IParserNode = expression.node;
 		var expr:IExpression = factory.newExpression(ASTUtil.stringifyNode(ast));
 		assertEquals(expected, IBinaryExpression(expr).operator);
+	}
+	
+	protected function assertPrint(expected:String, 
+								   expression:IScriptNode):void
+	{
+		printer.print(expression.node);
+		Assert.assertEquals(expected, printer.flush());
 	}
 }
 }

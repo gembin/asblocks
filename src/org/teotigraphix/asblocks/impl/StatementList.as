@@ -22,7 +22,10 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.IToken;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IBlock;
 import org.teotigraphix.asblocks.api.IBreakStatement;
 import org.teotigraphix.asblocks.api.IContinueStatement;
@@ -32,6 +35,7 @@ import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IExpressionStatement;
 import org.teotigraphix.asblocks.api.IForEachInStatement;
+import org.teotigraphix.asblocks.api.IForInStatement;
 import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.IReturnStatement;
@@ -40,6 +44,7 @@ import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
+import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
@@ -58,6 +63,42 @@ public class StatementList extends ContainerDelegate implements IBlock
 	
 	//--------------------------------------------------------------------------
 	//
+	//  IStatementContainer API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  hasCode
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	override public function get hasCode():Boolean
+	{
+		return node.getFirstChild() != null;
+	}
+	
+	//----------------------------------
+	//  statements
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	override public function get statements():Vector.<IStatement>
+	{
+		var result:Vector.<IStatement> = new Vector.<IStatement>();
+		var i:ASTIterator = new ASTIterator(node);
+		while (i.hasNext())
+		{
+			result.push(StatementBuilder.build(i.next()));
+		}
+		return result;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -68,6 +109,22 @@ public class StatementList extends ContainerDelegate implements IBlock
 	public function StatementList(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	/**
+	 * @private
+	 */
+	override public function addComment(text:String):IToken
+	{
+		return ASTBuilder.newComment(node, text);
+	}
+	
+	/**
+	 * @private
+	 */
+	override public function removeComment(statement:IStatement):IToken
+	{
+		return ASTUtil.removeComment(statement.node);
 	}
 	
 	/**
@@ -89,6 +146,39 @@ public class StatementList extends ContainerDelegate implements IBlock
 		}
 		_addStatement(stmt);
 		return StatementBuilder.build(stmt);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#removeStatement()
+	 */
+	override public function removeStatement(statement:IStatement):IStatement
+	{
+		var i:ASTIterator = new ASTIterator(node);
+		while (i.hasNext())
+		{
+			var ast:IParserNode = i.next();
+			if (statement.node === ast)
+			{
+				i.remove();
+				return StatementBuilder.build(ast);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#removeStatementAt()
+	 */
+	override public function removeStatementAt(index:int):IStatement
+	{
+		var i:ASTIterator = new ASTIterator(node);
+		var ast:IParserNode = i.moveTo(index);
+		if (ast)
+		{
+			i.remove();
+			return StatementBuilder.build(ast);
+		}
+		return null;
 	}
 	
 	/**
@@ -172,6 +262,38 @@ public class StatementList extends ContainerDelegate implements IBlock
 	/**
 	 * @private
 	 */
+	override public function parseNewFor(initializer:String,
+										 condition:String, 
+										 iterator:String):IForStatement
+	{
+		var init:IParserNode;
+		var cond:IParserNode;
+		var iter:IParserNode;
+		
+		if (initializer)
+		{
+			init = AS3FragmentParser.parseForInit(initializer);
+		}
+		
+		if (condition)
+		{
+			cond = AS3FragmentParser.parseForCond(condition);
+		}
+		
+		if (iterator)
+		{
+			iter = AS3FragmentParser.parseForIter(iterator);
+		}
+		
+		var ast:IParserNode = ASTBuilder.newFor(init, cond, iter);
+		appendBlock(ast);
+		_addStatement(ast);
+		return new ForStatement(ast);
+	}
+	
+	/**
+	 * @private
+	 */
 	override public function newForEachIn(declaration:IScriptNode,
 										  expression:IExpression):IForEachInStatement
 	{
@@ -184,6 +306,23 @@ public class StatementList extends ContainerDelegate implements IBlock
 		appendBlock(ast);
 		_addStatement(ast);
 		return new ForEachInStatement(ast);
+	}
+	
+	/**
+	 * @private
+	 */
+	override public function newForIn(declaration:IScriptNode,
+									  expression:IExpression):IForInStatement
+	{
+		if (!declaration)
+			throw new Error("");
+		if (!expression)
+			throw new Error("");
+		
+		var ast:IParserNode = ASTBuilder.newForIn(declaration.node, expression.node);
+		appendBlock(ast);
+		_addStatement(ast);
+		return new ForInStatement(ast);
 	}
 	
 	public function appendBlock(ast:IParserNode):IParserNode
@@ -234,6 +373,29 @@ public class StatementList extends ContainerDelegate implements IBlock
 		return new ThrowStatementNode(result);
 	}
 	
+	/**
+	 * @private
+	 */
+	override public function newTryCatch(name:String, type:String):ITryStatement
+	{
+		var result:IParserNode = ASTBuilder.newTry();
+		result.appendToken(TokenBuilder.newSpace());
+		result.addChild(ASTBuilder.newCatchClause(name, type));
+		_addStatement(result);
+		return new TryStatement(result);
+	}
+	
+	/**
+	 * @private
+	 */
+	override public function newTryFinally():ITryStatement
+	{
+		var result:IParserNode = ASTBuilder.newTry();
+		result.appendToken(TokenBuilder.newSpace());
+		result.addChild(ASTBuilder.newFinallyClause());
+		_addStatement(result);
+		return new TryStatement(result);
+	}
 	
 	
 	

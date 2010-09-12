@@ -3,10 +3,10 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
-import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.asblocks.api.BinaryOperator;
 import org.teotigraphix.asblocks.api.IAssignmentExpression;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
@@ -19,6 +19,50 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
 {
+	
+	public static function newComment(ast:IParserNode, text:String):IToken
+	{
+		var comment:LinkedListToken = TokenBuilder.newSLComment("//" + text);
+		var indent:String = ASTUtil.findIndentForComment(ast);
+		ast.appendToken(TokenBuilder.newNewline());
+		ast.appendToken(TokenBuilder.newWhiteSpace(indent));
+		ast.appendToken(comment);
+		return comment;
+	}
+	
+	public static function newTry():IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.TRY, "try");
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(newBlock());
+		return ast;
+	}
+	
+	public static function newCatchClause(name:String, type:String):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CATCH, "catch");
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.appendToken(TokenBuilder.newLParen());
+		ast.addChild(ASTUtil.newNameAST(name));
+		if (type)
+		{
+			ast.appendToken(TokenBuilder.newColon());
+			ast.addChild(ASTUtil.newTypeAST(type));
+		}
+		ast.appendToken(TokenBuilder.newRParen());
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(newBlock());
+		return ast;
+	}
+	
+	public static function newFinallyClause():IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FINALLY, "finally");
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(newBlock());
+		return ast;
+	}
+	
 	public static function newForInit(initializer:IParserNode):IParserNode
 	{
 		if (!initializer)
@@ -97,6 +141,24 @@ public class ASTBuilder
 		
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newEach());
+		
+		ast.appendToken(TokenBuilder.newLParen());
+		ast.addChild(declaration);
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.appendToken(TokenBuilder.newIn());
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(expression);
+		ast.appendToken(TokenBuilder.newRParen());
+		
+		return ast;
+	}
+	
+	public static function newForIn(declaration:IParserNode, 
+									expression:IParserNode):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOR, "for");
+		
+		ast.appendToken(TokenBuilder.newSpace());
 		
 		ast.appendToken(TokenBuilder.newLParen());
 		ast.addChild(declaration);
@@ -703,69 +765,60 @@ public class ASTBuilder
 	{
 		switch (ast.kind) 
 		{
-			case AS3NodeKind.ASSIGNMENT:
+			case AS3NodeKind.ASSIGN:
+			case AS3NodeKind.STAR_ASSIGN:
+			case AS3NodeKind.DIV_ASSIGN:
+			case AS3NodeKind.MOD_ASSIGN:
+			case AS3NodeKind.PLUS_ASSIGN:
+			case AS3NodeKind.MINUS_ASSIGN:
+			case AS3NodeKind.SL_ASSIGN:
+			case AS3NodeKind.SR_ASSIGN:
+			case AS3NodeKind.BSR_ASSIGN:
+			case AS3NodeKind.BAND_ASSIGN:
+			case AS3NodeKind.BXOR_ASSIGN:
+			case AS3NodeKind.BOR_ASSIGN:
+			case AS3NodeKind.LAND_ASSIGN:
+			case AS3NodeKind.LOR_ASSIGN:
 				return 13;
-			case AS3NodeKind.CONDITIONAL:
+			case AS3NodeKind.QUESTION:
 				return 12;
+			case AS3NodeKind.LOR:
+				return 11;
+			case AS3NodeKind.LAND:
+				return 10;
+			case AS3NodeKind.BOR:
+				return 9;
+			case AS3NodeKind.BXOR:
+				return 8;
+			case AS3NodeKind.BAND:
+				return 7;
+			case AS3NodeKind.STRICT_EQUAL:
+			case AS3NodeKind.STRICT_NOT_EQUAL:
+			case AS3NodeKind.NOT_EQUAL:
+			case AS3NodeKind.EQUAL:
+				return 6;
+			case AS3NodeKind.IN:
+			case AS3NodeKind.LT:
+			case AS3NodeKind.GT:
+			case AS3NodeKind.LE:
+			case AS3NodeKind.GE:
+			case AS3NodeKind.IS:
+			case AS3NodeKind.AS:
+			case AS3NodeKind.INSTANCE_OF:
+				return 5;
+			case AS3NodeKind.SL:
+			case AS3NodeKind.SR:
+			case AS3NodeKind.BSR:
+				return 4;
+			case AS3NodeKind.PLUS:
+			case AS3NodeKind.MINUS:
+				return 3;
+			case AS3NodeKind.STAR:
+			case AS3NodeKind.DIV:
+			case AS3NodeKind.MOD:
+				return 2;
 			default:
 				return 1;
-				
-				/*
-				case AS3Parser.ASSIGN:
-				case AS3Parser.STAR_ASSIGN:
-				case AS3Parser.DIV_ASSIGN:
-				case AS3Parser.MOD_ASSIGN:
-				case AS3Parser.PLUS_ASSIGN:
-				case AS3Parser.MINUS_ASSIGN:
-				case AS3Parser.SL_ASSIGN:
-				case AS3Parser.SR_ASSIGN:
-				case AS3Parser.BSR_ASSIGN:
-				case AS3Parser.BAND_ASSIGN:
-				case AS3Parser.BXOR_ASSIGN:
-				case AS3Parser.BOR_ASSIGN:
-				case AS3Parser.LAND_ASSIGN:
-				case AS3Parser.LOR_ASSIGN:
-				return 13;
-				case AS3Parser.QUESTION:
-				return 12;
-				case AS3Parser.LOR:
-				return 11;
-				case AS3Parser.LAND:
-				return 10;
-				case AS3Parser.BOR:
-				return 9;
-				case AS3Parser.BXOR:
-				return 8;
-				case AS3Parser.BAND:
-				return 7;
-				case AS3Parser.STRICT_EQUAL:
-				case AS3Parser.STRICT_NOT_EQUAL:
-				case AS3Parser.NOT_EQUAL:
-				case AS3Parser.EQUAL:
-				return 6;
-				case AS3Parser.IN:
-				case AS3Parser.LT:
-				case AS3Parser.GT:
-				case AS3Parser.LE:
-				case AS3Parser.GE:
-				case AS3Parser.IS:
-				case AS3Parser.AS:
-				case AS3Parser.INSTANCEOF:
-				return 5;
-				case AS3Parser.SL:
-				case AS3Parser.SR:
-				case AS3Parser.BSR:
-				return 4;
-				case AS3Parser.PLUS:
-				case AS3Parser.MINUS:
-				return 3;
-				case AS3Parser.STAR:
-				case AS3Parser.DIV:
-				case AS3Parser.MOD:
-				return 2;
-				default:
-				return 1;
-				*/
 		}
 	}
 }
