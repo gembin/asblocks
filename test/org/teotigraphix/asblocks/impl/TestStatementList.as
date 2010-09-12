@@ -5,6 +5,7 @@ import org.flexunit.Assert;
 import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.asblocks.ASFactory;
 import org.teotigraphix.asblocks.api.IBlock;
+import org.teotigraphix.asblocks.api.IDeclarationStatement;
 import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IForEachInStatement;
 import org.teotigraphix.asblocks.api.IForInStatement;
@@ -24,7 +25,10 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 * statementList
 
 * addComment()
+* removeComment()
 * addStatement()
+* removeStatement()
+* removeStatementAt()
 * containsCode()
 
 * newBreak()
@@ -123,6 +127,13 @@ public class TestStatementList
 	}
 	
 	[Test]
+	public function test_addStatement():void
+	{
+		block.addStatement("trace('Hello World')");
+		assertPrint("{\n\ttrace('Hello World');\n}", block);
+	}
+	
+	[Test]
 	public function test_removeStatement():void
 	{
 		var statement1:IStatement = block.addStatement("trace('Hello World 1')");
@@ -159,13 +170,6 @@ public class TestStatementList
 	}
 	
 	[Test]
-	public function test_addStatement():void
-	{
-		block.addStatement("trace('Hello World')");
-		assertPrint("{\n\ttrace('Hello World');\n}", block);
-	}
-	
-	[Test]
 	public function test_newBreak():void
 	{
 		block.newBreak();
@@ -182,8 +186,21 @@ public class TestStatementList
 	[Test]
 	public function test_newDeclaration():void
 	{
-		//block.newDeclaration(factory.newStatement("var i:int = 0;"));
-		//assertPrint("{\n\tcontinue;\n}", block);
+		// FIXME there is no real way with the parser to use an IExpression here
+		block.newDeclaration(factory.newExpression("i:int = 0"));
+		//assertPrint("{\n\tvar i:int = 0;\n}", block);
+	}
+	
+	[Test]
+	public function test_parseDeclaration():void
+	{
+		var dec:IDeclarationStatement = block.parseNewDeclaration("i:int = 0");
+		Assert.assertNotNull(dec);
+		assertPrint("{\n\tvar i:int = 0;\n}", block);
+		dec = block.parseNewDeclaration("i:int = 0, j:int = 42, k:String = \"test\"");
+		Assert.assertNotNull(dec);
+		assertPrint("{\n\tvar i:int = 0;\n\tvar i:int = 0, j:int = 42, " +
+			"k:String = \"test\";\n}", block);
 	}
 	
 	[Test]
@@ -199,7 +216,7 @@ public class TestStatementList
 		var result:IDoWhileStatement = block.newDoWhile(factory.newExpression("hasNext()"));
 		assertPrint("{\n\tdo {\n\t} while (hasNext());\n}", block);
 		
-		result.newExpressionStatement("trace('Hello World')");
+		result.addStatement("trace('Hello World')");
 		assertPrint("{\n\tdo {\n\t\ttrace('Hello World');\n\t} while (hasNext());\n}", block);
 	}
 	
@@ -242,12 +259,27 @@ public class TestStatementList
 		assertPrint("{\n\tfor (i=0; i < len + 1; ++i) {\n\t\t" +
 			"trace('Hello World ' + i);\n\t}\n}", forstmt);
 		
-		// TODO
 		// test setting initializer
+		// can be either IDeclarationStatement or IExpression (assignment)
+		forstmt.initializer = factory.parseDeclarationStatement("j:int = 0");
+		assertPrint("{\n\tfor (var j:int = 0; i < len + 1; ++i) {\n\t\ttrace" +
+			"('Hello World ' + i);\n\t}\n}", forstmt);
 		
 		// test setting condition
+		forstmt.condition = factory.newExpression("j < (j + 2)");
+		assertPrint("{\n\tfor (var j:int = 0; j < (j + 2); ++i) {\n\t\ttrace" +
+			"('Hello World ' + i);\n\t}\n}", forstmt);
 		
-		// test setting iteration
+		// test setting update
+		forstmt.update = factory.newExpression("next(j)");
+		assertPrint("{\n\tfor (var j:int = 0; j < (j + 2); next(j)) {\n\t\ttrace" +
+			"('Hello World ' + i);\n\t}\n}", forstmt);
+	}
+	
+	[Test]
+	public function test_parseNewFor():void
+	{
+		
 	}
 	
 	[Test]

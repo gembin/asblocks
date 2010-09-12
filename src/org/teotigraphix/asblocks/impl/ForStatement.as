@@ -22,6 +22,7 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IForStatement;
@@ -104,15 +105,19 @@ public class ForStatement extends ContainerDelegate
 	public function set initializer(value:IScriptNode):void
 	{
 		var init:IParserNode = findInit();
-		if (!value)
+		if (!value && init)
 		{
-			if (init)
-			{
-				init.removeChildAt(0);
-			}
+			init.removeChildAt(0);
 		}
-		else
+		else if (value)
 		{
+			var last:LinkedListToken = value.node.stopToken;
+			if (last.text == ";")
+			{
+				var prev:LinkedListToken = last.previous;
+				last.remove();
+				value.node.stopToken = prev;
+			}
 			init.setChildAt(value.node, 0);
 		}
 	}
@@ -138,6 +143,15 @@ public class ForStatement extends ContainerDelegate
 	 */	
 	public function set condition(value:IExpression):void
 	{
+		var cond:IParserNode = findCondition();
+		if (!value && cond)
+		{
+			cond.removeChildAt(0);
+		}
+		else if (value)
+		{
+			cond.setChildAt(value.node, 0);
+		}
 	}
 	
 	//----------------------------------
@@ -161,6 +175,15 @@ public class ForStatement extends ContainerDelegate
 	 */	
 	public function set update(value:IExpression):void
 	{
+		var updt:IParserNode = findUpdate();
+		if (!value && updt)
+		{
+			updt.removeChildAt(0);
+		}
+		else if (value)
+		{
+			updt.setChildAt(value.node, 0);
+		}
 	}
 	
 	//--------------------------------------------------------------------------

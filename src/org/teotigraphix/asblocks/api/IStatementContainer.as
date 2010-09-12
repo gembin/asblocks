@@ -91,6 +91,11 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
+	function parseNewDeclaration(assignment:String):IDeclarationStatement;
+	
+	/**
+	 * TODO Docme
+	 */
 	function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement;
 	
 	/**

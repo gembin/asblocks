@@ -113,7 +113,6 @@ public class ASTBuilder
 								  iterator:IParserNode):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOR, "for");
-		var init:IParserNode;
 		
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newLParen());

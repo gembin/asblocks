@@ -267,6 +267,14 @@ public class FunctionLiteralNode extends ExpressionNode
 	}
 	
 	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newDeclaration()
+	 */
+	public function parseNewDeclaration(assignment:String):IDeclarationStatement
+	{
+		return containerMixin.parseNewDeclaration(assignment);
+	}
+	
+	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newDefaultXMLNamespace()
 	 */
 	public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement

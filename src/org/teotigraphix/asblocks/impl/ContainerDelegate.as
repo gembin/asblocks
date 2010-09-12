@@ -175,6 +175,14 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
+	public function parseNewDeclaration(assignment:String):IDeclarationStatement
+	{
+		return statementContainer.parseNewDeclaration(assignment);
+	}
+	
+	/**
+	 * TODO Docme
+	 */
 	public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement
 	{
 		return statementContainer.newDefaultXMLNamespace(namespace);

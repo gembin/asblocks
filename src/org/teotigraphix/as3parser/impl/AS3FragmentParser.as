@@ -306,6 +306,14 @@ public class AS3FragmentParser
 		return node;
 	}
 	
+	public static function parseDecList(assignment:String):IParserNode
+	{
+		var parser:AS3Parser = createParser("var " + assignment + ";");
+		parser.nextToken();
+		var node:IParserNode = parser.parseDecList();
+		return node;
+	}
+	
 	public static function parseType(typeName:String):IParserNode
 	{
 		var parser:AS3Parser = createParser(typeName);

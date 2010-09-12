@@ -32,6 +32,7 @@ import org.teotigraphix.asblocks.api.IBlock;
 import org.teotigraphix.asblocks.api.IBooleanLiteral;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IConditionalExpression;
+import org.teotigraphix.asblocks.api.IDeclarationStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
 import org.teotigraphix.asblocks.api.IFunctionLiteral;
@@ -55,6 +56,7 @@ import org.teotigraphix.asblocks.impl.ArrayAccessExpressionNode;
 import org.teotigraphix.asblocks.impl.ArrayLiteralNode;
 import org.teotigraphix.asblocks.impl.BooleanLiteralNode;
 import org.teotigraphix.asblocks.impl.ConditionalExpressionNode;
+import org.teotigraphix.asblocks.impl.DeclarationStatementNode;
 import org.teotigraphix.asblocks.impl.ExpressionBuilder;
 import org.teotigraphix.asblocks.impl.FieldAccessExpression;
 import org.teotigraphix.asblocks.impl.FunctionLiteralNode;
@@ -546,6 +548,17 @@ public class ASFactory
 		var ast:IParserNode = ASTBuilder.newBlock();
 		return new StatementList(ast);
 	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function parseDeclarationStatement(assignment:String):IDeclarationStatement
+	{
+		var ast:IParserNode = AS3FragmentParser.parseDecList(assignment);
+		return new DeclarationStatementNode(ast);
+	}
+	
+	
 	
 	
 	/**

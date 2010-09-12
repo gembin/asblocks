@@ -815,6 +815,14 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
+	internal function parseDecList():IParserNode
+	{
+		return parseVar();
+	}
+	
+	/**
+	 * @private
+	 */
 	private function parseDeclarationList(result:TokenNode):TokenNode
 	{
 		if (!result)
