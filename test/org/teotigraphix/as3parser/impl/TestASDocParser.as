@@ -29,13 +29,13 @@ public class TestASDocParser
 				"/**A short comment.*/"
 			];
 		
-		//assertPrint(input);
-		assertComment("1", 
-			input,
-			"<compilation-unit line=\"-1\" column=\"-1\"><content line=\"1\" " +
-			"column=\"4\"><short-list line=\"1\" column=\"4\"><text line=\"1\" " +
-			"column=\"4\">A short comment.</text></short-list></content>" +
-			"</compilation-unit>");
+		assertPrint(input);
+		//assertComment("1", 
+		//	input,
+		//	"<compilation-unit line=\"-1\" column=\"-1\"><content line=\"1\" " +
+		//	"column=\"4\"><short-list line=\"1\" column=\"4\"><text line=\"1\" " +
+		//	"column=\"4\">A short comment.</text></short-list></content>" +
+		//	"</compilation-unit>");
 	}
 	
 	[Test]
@@ -49,13 +49,13 @@ public class TestASDocParser
 				" */"
 			];
 		
-		//assertPrint(input);
-		assertComment("1",
-			input,
-			"<compilation-unit line=\"-1\" column=\"-1\"><content line=\"2\" " +
-			"column=\"4\"><short-list line=\"2\" column=\"4\">" +
-			"<text line=\"2\" column=\"4\">A short comment  on another line.</text>" +
-			"</short-list></content></compilation-unit>");
+		assertPrint(input);
+		//assertComment("1",
+		//	input,
+		//	"<compilation-unit line=\"-1\" column=\"-1\"><content line=\"2\" " +
+		//	"column=\"4\"><short-list line=\"2\" column=\"4\">" +
+		//	"<text line=\"2\" column=\"4\">A short comment  on another line.</text>" +
+		//	"</short-list></content></compilation-unit>");
 	}
 	
 	/**
@@ -74,10 +74,22 @@ public class TestASDocParser
 	 *           - text
 	 *           - code-text
 	 */
+	/** NEW AST
+	 * compilation-unit
+	 *   - body
+	 *     - |text
+	 *     - |code-text
+	 *     - doctag-list
+	 *       - doctag
+	 *         - name
+	 *         - body
+	 *           - |text
+	 *           - |code-text
+	 */
 	[Test]
 	public function test_parseCompilationUnit():void
 	{
-		var lines:Array =
+		var input:Array =
 			[
 				"/**", 
 				" * A short <code>document()</code> comment",
@@ -92,6 +104,8 @@ public class TestASDocParser
 				" */"
 			];
 		
+		assertPrint(input);
+		/*
 		scanner.setLines(Vector.<String>(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
@@ -116,6 +130,7 @@ public class TestASDocParser
 			+ "<name line=\"10\" column=\"5\">private</name></doctag>"
 			+ "</doctag-list></content></compilation-unit>",
 			result);
+		*/
 	}
 	
 	[Test]
@@ -132,6 +147,8 @@ public class TestASDocParser
 				" */"
 			];
 		
+		assertPrint(lines);
+		/*
 		scanner.setLines(Vector.<String>(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
@@ -143,6 +160,7 @@ public class TestASDocParser
 			"&lt;p&gt;Long description 1.&lt;/p&gt; &lt;p&gt;Long description 2.&lt;/p&gt;" +
 			"</text></long-list></content></compilation-unit>",
 			result);
+		*/
 	}
 	
 	[Test]
@@ -153,6 +171,8 @@ public class TestASDocParser
 				"/** Class comment. */",
 			];
 		
+		assertPrint(lines);
+		/*
 		scanner.setLines(Vector.<String>(lines));
 		
 		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
@@ -162,6 +182,7 @@ public class TestASDocParser
 			"<text line=\"1\" column=\"5\">Class comment. </text></short-list>" +
 			"</content></compilation-unit>",
 			result);
+		*/
 	}
 	
 	protected function assertPrint(input:Array):void

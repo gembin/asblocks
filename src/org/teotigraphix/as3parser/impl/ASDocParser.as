@@ -25,7 +25,8 @@ import mx.utils.StringUtil;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
-import org.teotigraphix.as3parser.core.Node;
+import org.teotigraphix.as3parser.core.ASDocLinkedListTreeAdaptor;
+import org.teotigraphix.as3parser.core.TokenNode;
 
 /**
  * The default implementation of an asdoc comment parser.
@@ -120,6 +121,13 @@ public class ASDocParser extends ParserBase
 	public function ASDocParser()
 	{
 		super();
+		
+		adapter = new ASDocLinkedListTreeAdaptor();
+	}
+	
+	override protected function consumeWhitespace(node:TokenNode):Boolean
+	{
+		return false;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -133,8 +141,7 @@ public class ASDocParser extends ParserBase
 	 */
 	override public function parseCompilationUnit():IParserNode
 	{
-		var result:Node =
-			Node.create(ASDocNodeKind.COMPILATION_UNIT, -1, -1);
+		var result:TokenNode = adapter.create(ASDocNodeKind.COMPILATION_UNIT);
 		
 		nextToken();
 		if (token.text == "/") // didn't find /** just /*
@@ -142,11 +149,9 @@ public class ASDocParser extends ParserBase
 			return result; // is the AS3Parser really saving /* comments? check
 		}
 		
-		consume(ML_COMMENT_START);
-		
+		consume(ML_COMMENT_START, result);
 		result.addChild(parseContent());
-		
-		consume(ML_COMMENT_END);
+		consume(ML_COMMENT_END, result);
 		
 		return result;
 	}
@@ -206,20 +211,16 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseContent():Node
+	internal function parseContent():TokenNode
 	{
+		var result:TokenNode = adapter.empty(ASDocNodeKind.CONTENT, token);
 		// token after /**
 		// if the token is not valid, move to next valid token
 		// this should just advance the parser to the first identifier right of
 		// the astrix, or if just a single line comment, make the next token
 		// valid by setting _rightSideOfAtrix = true
 		if (!tokIsValid())
-			nextTokenEatRight();
-		
-		var result:Node =
-			Node.create(ASDocNodeKind.CONTENT,
-				token.line,
-				token.column);
+			consumeRight(result);
 		
 		while (!tokIs(ML_COMMENT_END))
 		{
@@ -240,6 +241,7 @@ public class ASDocParser extends ParserBase
 			}
 			else
 			{
+				append(result);
 				nextToken();
 			}
 		}
@@ -255,15 +257,12 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseShortList():Node
+	internal function parseShortList():TokenNode
 	{
-		if (!tokIsValid())
-			nextTokenEatRight();
+		var result:TokenNode = adapter.empty(ASDocNodeKind.SHORT_LIST, token);
 		
-		var result:Node =
-			Node.create(ASDocNodeKind.SHORT_LIST,
-				token.line,
-				token.column);
+		if (!tokIsValid())
+			consumeRight(result);
 		
 		while (!tokIs(DOT_NL) && !tokIs(AT) && !tokIs(ML_COMMENT_END))
 		{
@@ -275,10 +274,8 @@ public class ASDocParser extends ParserBase
 					
 					if (!_shortListFound && tokIs(DOT_NL))
 					{
-						result.addChild(Node.create(ASDocNodeKind.TEXT,
-							token.line,
-							token.column,
-							DOT));
+						result.addChild(adapter.create(
+							ASDocNodeKind.TEXT, DOT, token.line, token.column));
 						_shortListFound = true;
 						break;
 					}
@@ -300,7 +297,7 @@ public class ASDocParser extends ParserBase
 			}
 			else
 			{
-				nextTokenEatRight();
+				consumeRight(result);
 			}
 		}
 		
@@ -312,7 +309,7 @@ public class ASDocParser extends ParserBase
 		// the "/**" or "@" happens when a short ends with a ". "
 		if (!tokIs(ML_COMMENT_END) && !tokIs(AT))
 		{
-			consume(DOT_NL);
+			consume(DOT_NL, result);
 		}
 		
 		return result;
@@ -325,15 +322,12 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseLongList():Node
+	internal function parseLongList():TokenNode
 	{
-		if (!tokIsValid())
-			nextTokenEatRight();
+		var result:TokenNode = adapter.empty(ASDocNodeKind.LONG_LIST, token);
 		
-		var result:Node =
-			Node.create(ASDocNodeKind.LONG_LIST,
-				token.line,
-				token.column);
+		if (!tokIsValid())
+			consumeRight(result);
 		
 		while (!tokIs(AT) && !tokIs(ML_COMMENT_END))
 		{
@@ -358,14 +352,14 @@ public class ASDocParser extends ParserBase
 			}
 			else
 			{
-				nextTokenEatRight();
+				consumeRight(result);
 			}
 		}
 		
-		if (result.numChildren == 0)
-		{
-			return null;
-		}
+		//if (result.numChildren == 0)
+		//{
+		//	return null;
+		//}
 		
 		_longListFound = true;
 		
@@ -375,12 +369,15 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseText():Node
+	internal function parseText():TokenNode
 	{
 		var line:int = token.line;
 		var column:int = token.column;
 		
 		var text:String = "";
+		
+		var result:TokenNode = adapter.create(ASDocNodeKind.TEXT, null, line, column);
+		
 		
 		while (!tokIs(ML_COMMENT_END) && !tokIs(AT) && !tokIs("<code")
 			&& !tokIs("<pre") && !tokIs("<listing"))
@@ -390,6 +387,7 @@ public class ASDocParser extends ParserBase
 				text += token.text;
 			}
 			
+			append(result);
 			nextToken();
 			
 			if (!_shortListFound && tokIs(DOT_NL))
@@ -405,9 +403,6 @@ public class ASDocParser extends ParserBase
 			return null;
 		}
 		
-		var result:Node =
-			Node.create(ASDocNodeKind.TEXT, line, column, text);
-		
 		return result;
 	}
 	
@@ -418,32 +413,27 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseCodeText():Node
+	internal function parseCodeText():TokenNode
 	{
 		var line:int = token.line;
 		var column:int = token.column;
-		
+		var result:TokenNode = adapter.create(ASDocNodeKind.CODE_TEXT, text, line, column);
 		var text:String = "";
 		
-		consume("<code");
-		consume(">");
+		consume("<code", result);
+		consume(">", result);
 		
 		// token : <code
 		while (!tokIs(DOT_NL) && !tokIs("</") && !tokIs(ML_COMMENT_END))
 		{
 			text += token.text;
+			append(result);
 			nextToken();
 		}
 		
-		consume("</");
-		consume("code");
-		consume(">");
-		
-		var result:Node =
-			Node.create(ASDocNodeKind.CODE_TEXT,
-				line,
-				column,
-				text);
+		consume("</", result);
+		consume("code", result);
+		consume(">", result);
 		
 		return result;
 	}
@@ -455,7 +445,7 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parsePreText(name:String):Node
+	internal function parsePreText(name:String):TokenNode
 	{
 		var line:int = token.line;
 		var column:int = token.column;
@@ -507,11 +497,7 @@ public class ASDocParser extends ParserBase
 		consume(name);
 		consume(">");
 		
-		var result:Node =
-			Node.create(ASDocNodeKind.PRE_TEXT,
-				line,
-				column,
-				text);
+		var result:TokenNode = adapter.create(ASDocNodeKind.PRE_TEXT, text, line, column);
 		
 		return result;
 	}
@@ -523,14 +509,11 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseDocTagList():Node
+	internal function parseDocTagList():TokenNode
 	{
 		// token @
-		var result:Node =
-			Node.create(ASDocNodeKind.DOCTAG_LIST,
-				token.line,
-				token.column);
-		
+		var result:TokenNode = adapter.empty(ASDocNodeKind.DOCTAG_LIST, token);
+
 		while (!tokIs(ML_COMMENT_END) && !tokIs("__END__"))
 		{
 			result.addChild(parseDocTag());
@@ -546,24 +529,29 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseDocTag():Node
+	internal function parseDocTag():TokenNode
 	{
-		var result:Node =
-			Node.create(ASDocNodeKind.DOCTAG,
-				token.line,
-				token.column);
+		var result:TokenNode = adapter.empty(ASDocNodeKind.DOCTAG, token);
 		
-		consume(AT);
+		consume(AT, result);
 		
 		while (!tokIs(AT) && !tokIs(ML_COMMENT_END))
 		{
 			if (tokIsValid())
 			{
 				result.addChild(parseDocTagName());
-				var body:Node = parseDocTagBody();
-				if (body != null)
+				
+				if (!tokIs(NL))
 				{
-					result.addChild(body);
+					var body:TokenNode = parseDocTagBody();
+					if (body != null)
+					{
+						result.addChild(body);
+					}
+				}
+				else
+				{
+					consumeRight(result);
 				}
 			}
 			else
@@ -582,13 +570,9 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseDocTagName():Node
+	internal function parseDocTagName():TokenNode
 	{
-		var result:Node =
-			Node.create(ASDocNodeKind.NAME,
-				token.line,
-				token.column,
-				token.text);
+		var result:TokenNode = adapter.copy(ASDocNodeKind.NAME, token);
 		
 		nextToken(); // the doctag name
 		
@@ -602,12 +586,15 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	internal function parseDocTagBody():Node
+	internal function parseDocTagBody():TokenNode
 	{
-		var result:Node =
-			Node.create(ASDocNodeKind.BODY,
-				token.line,
-				token.column);
+		var result:TokenNode = adapter.empty(ASDocNodeKind.BODY, token);
+		
+		//if (tokIs("\n"))
+		//{
+		//	append(result);
+		//	return result;
+		//}
 		
 		while (!tokIs(AT) && !tokIs(ML_COMMENT_END))
 		{
@@ -629,10 +616,10 @@ public class ASDocParser extends ParserBase
 			}
 		}
 		
-		if (result.numChildren == 0)
-		{
-			return null;
-		}
+		//if (result.numChildren == 0)
+		//{
+		//	return null;
+		//}
 		
 		return result;
 	}
@@ -640,7 +627,7 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function nextTokenEatRight():void
+	private function consumeRight(node:TokenNode):void
 	{
 		var spaceFound:Boolean = false;
 		
@@ -659,7 +646,8 @@ public class ASDocParser extends ParserBase
 			
 			if (_rightSideOfAtrix && token.text == SPACE)
 			{
-				nextToken(); // clear the " "
+				//nextToken(); // clear the " "
+				//append(node);
 				spaceFound = true;
 			}
 			
@@ -674,10 +662,15 @@ public class ASDocParser extends ParserBase
 				break;
 			}
 			
+			if (!tokIs(ML_COMMENT_END))
+			{
+				append(node);
+			}
+			
 			nextToken();
 		}
 		while (!_rightSideOfAtrix
-			|| ((_rightSideOfAtrix && token.text == ASTRIX) || (!spaceFound)));
+			|| ((_rightSideOfAtrix && token.text == ASTRIX) || !spaceFound));
 	}
 	
 	/**
