@@ -17,47 +17,80 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks.api
+package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.ASDocNodeKind;
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IDocTag;
+import org.teotigraphix.asblocks.utils.ASTUtil;
+
 /**
- * 
+ * The <code>IDocTag</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IDocComment extends IScriptNode
+public class DocTagNode extends ScriptNode 
+	implements IDocTag
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  IDocTag API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  description
+	//  name
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IDocTag#name
 	 */
-	function get description():String;
+	public function get name():String
+	{
+		return ASTUtil.nameText(node.getKind(ASDocNodeKind.NAME));
+	}
 	
 	/**
 	 * @private
+	 */	
+	public function set name(value:String):void
+	{
+	}
+	
+	//----------------------------------
+	//  body
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IDocTag#body
 	 */
-	function set description(value:String):void;
+	public function get body():String
+	{
+		return ASTUtil.nameText(node.getKind(ASDocNodeKind.BODY));
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set body(value:String):void
+	{
+	}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Constructor.
 	 */
-	function newDocTag(name:String, body:String = null):IDocTag;
+	public function DocTagNode(node:IParserNode)
+	{
+		super(node);
+	}
 }
 }

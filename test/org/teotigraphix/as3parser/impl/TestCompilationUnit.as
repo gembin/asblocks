@@ -339,13 +339,13 @@ public class TestCompilationUnit
 			"<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
 			"column=\"2\"><content line=\"1\" column=\"10\"><class line=\"1\" " +
 			"column=\"77\"><meta-list line=\"1\" column=\"37\"><meta line=\"1\" " +
-			"column=\"37\"><as-doc line=\"1\" column=\"12\">/** Metadata comment. " +
-			"*/</as-doc><name line=\"1\" column=\"38\">MetaData</name></meta>" +
-			"</meta-list><mod-list line=\"1\" column=\"70\"><mod line=\"1\" " +
-			"column=\"70\">public</mod></mod-list><as-doc line=\"1\" column=\"48\">" +
-			"/** Class comment. */</as-doc><name line=\"1\" column=\"83\">A</name>" +
-			"<content line=\"1\" column=\"85\"></content></class></content>" +
-			"</package></compilation-unit>");
+			"column=\"37\"><as-doc line=\"1\" column=\"12\">/** Metadata comment. */" +
+			"</as-doc><name line=\"1\" column=\"38\">MetaData</name></meta>" +
+			"</meta-list><as-doc line=\"1\" column=\"48\">/** Class comment. */" +
+			"</as-doc><mod-list line=\"1\" column=\"70\"><mod line=\"1\" " +
+			"column=\"70\">public</mod></mod-list><name line=\"1\" column=\"83\">" +
+			"A</name><content line=\"1\" column=\"85\"></content></class>" +
+			"</content></package></compilation-unit>");
 	}
 	
 	[Test]
@@ -382,11 +382,11 @@ public class TestCompilationUnit
 		assertCompilationUnit("1", input,
 			"<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
 			"column=\"2\"><content line=\"1\" column=\"10\"><class line=\"1\" " +
-			"column=\"49\"><mod-list line=\"1\" column=\"42\"><mod line=\"1\" " +
-			"column=\"42\">public</mod></mod-list><as-doc line=\"1\" column=\"12\">" +
-			"/** A Class asdoc comment. */</as-doc><name line=\"1\" column=\"55\">" +
-			"A</name><content line=\"1\" column=\"57\"></content></class>" +
-			"</content></package></compilation-unit>");
+			"column=\"49\"><as-doc line=\"1\" column=\"12\">/** A Class asdoc " +
+			"comment. */</as-doc><mod-list line=\"1\" column=\"42\"><mod " +
+			"line=\"1\" column=\"42\">public</mod></mod-list><name line=\"1\" " +
+			"column=\"55\">A</name><content line=\"1\" column=\"57\"></content>" +
+			"</class></content></package></compilation-unit>");
 	}
 	
 	//--------------------------------------------------------------------------

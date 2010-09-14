@@ -30,6 +30,7 @@ import org.teotigraphix.asblocks.api.IMethod;
 import org.teotigraphix.asblocks.api.IType;
 import org.teotigraphix.asblocks.api.Visibility;
 import org.teotigraphix.asblocks.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.DocCommentUtil;
 import org.teotigraphix.asblocks.utils.ModifierUtil;
 
 /**
@@ -182,7 +183,7 @@ public class TypeNode extends ScriptNode
 	 */	
 	public function set description(value:String):void
 	{
-		trace('');
+		documentation.description = value;
 	}
 	
 	//----------------------------------
@@ -194,7 +195,7 @@ public class TypeNode extends ScriptNode
 	 */
 	public function get documentation():IDocComment
 	{
-		return null;
+		return DocCommentUtil.createDocComment(node);
 	}
 	
 	//--------------------------------------------------------------------------

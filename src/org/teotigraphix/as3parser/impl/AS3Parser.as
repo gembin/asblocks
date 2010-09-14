@@ -341,6 +341,11 @@ public class AS3Parser extends ParserBase
 			{
 				if (!tokIsWhitespace())
 				{
+					if (currentAsDoc)
+					{
+						addAsDoc(pendingType);
+					}
+					
 					if (!pendingType.hasKind(AS3NodeKind.MOD_LIST))
 					{
 						pendingModList = adapter.empty(AS3NodeKind.MOD_LIST, token);
@@ -372,7 +377,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseClass(result:TokenNode):TokenNode
 	{
-		addAsDoc(result);
+		//addAsDoc(result);
 		
 		result.kind = AS3NodeKind.CLASS;
 		result.line = token.line;
