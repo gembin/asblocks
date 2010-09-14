@@ -3,6 +3,9 @@ package org.teotigraphix.as3parser.impl
 
 import flexunit.framework.Assert;
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.asblocks.impl.ASTPrinter;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class TestASDocParser
@@ -21,23 +24,38 @@ public class TestASDocParser
 	[Test]
 	public function test_shortNoSpace():void
 	{
-		var lines:Array =
+		var input:Array =
 			[
 				"/**A short comment.*/"
 			];
 		
-		scanner.setLines(Vector.<String>(lines));
+		//assertPrint(input);
+		assertComment("1", 
+			input,
+			"<compilation-unit line=\"-1\" column=\"-1\"><content line=\"1\" " +
+			"column=\"4\"><short-list line=\"1\" column=\"4\"><text line=\"1\" " +
+			"column=\"4\">A short comment.</text></short-list></content>" +
+			"</compilation-unit>");
+	}
+	
+	[Test]
+	public function test_short2Lines():void
+	{
+		var input:Array =
+			[
+				"/**",
+				" * A short comment ",
+				" * on another line.",
+				" */"
+			];
 		
-		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
-		
-		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
-			"<content line=\"1\" column=\"4\">" +
-			"<short-list line=\"1\" column=\"4\">" +
-			"<text line=\"1\" column=\"4\">A short comment.</text>" +
-			"</short-list>" +
-			"</content>" +
-			"</compilation-unit>",
-			result);
+		//assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit line=\"-1\" column=\"-1\"><content line=\"2\" " +
+			"column=\"4\"><short-list line=\"2\" column=\"4\">" +
+			"<text line=\"2\" column=\"4\">A short comment  on another line.</text>" +
+			"</short-list></content></compilation-unit>");
 	}
 	
 	/**
@@ -144,6 +162,32 @@ public class TestASDocParser
 			"<text line=\"1\" column=\"5\">Class comment. </text></short-list>" +
 			"</content></compilation-unit>",
 			result);
+	}
+	
+	protected function assertPrint(input:Array):void
+	{
+		var printer:ASTPrinter = createPrinter();
+		printer.print(parse(input));
+		Assert.assertEquals(input.join("\n"), printer.flush());
+	}
+	
+	protected function assertComment(message:String, 
+									 input:Array, 
+									 expected:String):void
+	{
+		var result:String = ASTUtil.convert(parse(input));
+		Assert.assertEquals(message, expected, result);
+	}
+	
+	protected function parse(input:Array):IParserNode
+	{
+		parser.scanner.setLines(Vector.<String>(input));
+		return parser.parseCompilationUnit();
+	}
+	
+	protected function createPrinter():ASTPrinter
+	{
+		return new ASTPrinter(new SourceCode());
 	}
 }
 }

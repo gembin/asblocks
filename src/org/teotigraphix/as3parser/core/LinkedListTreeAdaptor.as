@@ -10,7 +10,7 @@ public class LinkedListTreeAdaptor
 	{
 	}
 	
-	private var delegate:TokenListUpdateDelegate = new TokenListUpdateDelegate();
+	protected var delegate:TokenListUpdateDelegate = new TokenListUpdateDelegate();
 	
 	public function createToken(kind:String, 
 								text:String = null,

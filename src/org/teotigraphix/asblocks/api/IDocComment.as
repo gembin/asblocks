@@ -27,7 +27,7 @@ package org.teotigraphix.asblocks.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IDocCommentAware extends IScriptNode
+public interface IDocComment extends IScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -48,14 +48,5 @@ public interface IDocCommentAware extends IScriptNode
 	 * @private
 	 */
 	function set description(value:String):void;
-	
-	//----------------------------------
-	//  documentation
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get documentation():IDocComment;
 }
 }

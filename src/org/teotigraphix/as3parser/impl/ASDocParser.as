@@ -1,18 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and 
+// See the License for the specific language governing permissions and
 // limitations under the License
-// 
+//
 // Author: Michael Schmalle, Principal Architect
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ import org.teotigraphix.as3parser.core.Node;
 
 /**
  * The default implementation of an asdoc comment parser.
- * 
+ *
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
@@ -38,7 +38,7 @@ public class ASDocParser extends ParserBase
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Public :: Constants
+	// Public :: Constants
 	//
 	//--------------------------------------------------------------------------
 	
@@ -89,7 +89,7 @@ public class ASDocParser extends ParserBase
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Public :: Constants
+	// Public :: Constants
 	//
 	//--------------------------------------------------------------------------
 	
@@ -110,7 +110,7 @@ public class ASDocParser extends ParserBase
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Constructor
+	// Constructor
 	//
 	//--------------------------------------------------------------------------
 	
@@ -124,7 +124,7 @@ public class ASDocParser extends ParserBase
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Overridden Public :: Methods
+	// Overridden Public :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
@@ -171,7 +171,7 @@ public class ASDocParser extends ParserBase
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Overridden Protected :: Methods
+	// Overridden Protected :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
@@ -195,12 +195,12 @@ public class ASDocParser extends ParserBase
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Internal Parse :: Methods
+	// Internal Parse :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  content
+	// content
 	//----------------------------------
 	
 	/**
@@ -249,7 +249,7 @@ public class ASDocParser extends ParserBase
 	
 	
 	//----------------------------------
-	//  short-list
+	// short-list
 	//----------------------------------
 	
 	/**
@@ -319,7 +319,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	//  long-list
+	// long-list
 	//----------------------------------
 	
 	/**
@@ -412,7 +412,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	//  code-text
+	// code-text
 	//----------------------------------
 	
 	/**
@@ -449,7 +449,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	//  pre-text
+	// pre-text
 	//----------------------------------
 	
 	/**
@@ -517,7 +517,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	//  doctag-list
+	// doctag-list
 	//----------------------------------
 	
 	/**
@@ -540,7 +540,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	//  doctag
+	// doctag
 	//----------------------------------
 	
 	/**
@@ -576,7 +576,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	//  doctag-name
+	// doctag-name
 	//----------------------------------
 	
 	/**
@@ -596,7 +596,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	//  doctag-body
+	// doctag-body
 	//----------------------------------
 	
 	/**
@@ -605,8 +605,8 @@ public class ASDocParser extends ParserBase
 	internal function parseDocTagBody():Node
 	{
 		var result:Node =
-			Node.create(ASDocNodeKind.BODY, 
-				token.line, 
+			Node.create(ASDocNodeKind.BODY,
+				token.line,
 				token.column);
 		
 		while (!tokIs(AT) && !tokIs(ML_COMMENT_END))
@@ -735,7 +735,7 @@ public class ASDocParser extends ParserBase
 	protected function isIdentifierCharacter(currentCharacter:String):Boolean
 	{
 		return (currentCharacter != " " && currentCharacter != "*"
-			&& currentCharacter != ".\n"  && currentCharacter != "\n");
+			&& currentCharacter != ".\n" && currentCharacter != "\n");
 	}
 }
 }

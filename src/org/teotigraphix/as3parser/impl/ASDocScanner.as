@@ -100,6 +100,8 @@ public class ASDocScanner extends ScannerBase
 	public function ASDocScanner()
 	{
 		super();
+		
+		allowWhiteSpace = true;
 	}
 	
 	//--------------------------------------------------------------------------
