@@ -3,7 +3,9 @@ package org.teotigraphix.as3parser.impl
 
 import flexunit.framework.Assert;
 
+import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.asblocks.impl.ASTPrinter;
 import org.teotigraphix.asblocks.utils.ASTUtil;
@@ -44,10 +46,16 @@ public class TestASDocParser
 		var input:Array =
 			[
 				"/**",
-				" * A short comment ",
+				" * A short comment",
 				" * on another line.",
 				" */"
 			];
+		
+		var ast:IParserNode = parse(input);
+		var content:IParserNode = ast.getKind(ASDocNodeKind.CONTENT);
+		var body:IParserNode = content.getKind(ASDocNodeKind.BODY);
+		
+		var t:String = stringifyNode(body);
 		
 		assertPrint(input);
 		//assertComment("1",
@@ -56,6 +64,24 @@ public class TestASDocParser
 		//	"column=\"4\"><short-list line=\"2\" column=\"4\">" +
 		//	"<text line=\"2\" column=\"4\">A short comment  on another line.</text>" +
 		//	"</short-list></content></compilation-unit>");
+	}
+	
+	public static function stringifyNode(ast:IParserNode):String
+	{
+		var result:String = "";
+		for (var tok:LinkedListToken =  ast.startToken; tok != null && tok.kind != null; tok = tok.next)
+		{
+			if (tok.text != null && tok.channel != "hidden")
+			{
+				result += tok.text;
+			}
+			
+			if (tok == ast.stopToken)
+			{
+				break;
+			}
+		}
+		return result;
 	}
 	
 	/**
@@ -76,9 +102,10 @@ public class TestASDocParser
 	 */
 	/** NEW AST
 	 * compilation-unit
-	 *   - body
-	 *     - |text
-	 *     - |code-text
+	 *   - content
+	 *     - body
+	 *       - |text
+	 *       - |code-text
 	 *     - doctag-list
 	 *       - doctag
 	 *         - name
@@ -105,6 +132,8 @@ public class TestASDocParser
 			];
 		
 		assertPrint(input);
+		
+		var result:String = ASTUtil.convert(parse(input));
 		/*
 		scanner.setLines(Vector.<String>(lines));
 		

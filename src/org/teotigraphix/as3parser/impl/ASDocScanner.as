@@ -162,7 +162,7 @@ public class ASDocScanner extends ScannerBase
 			
 			return token;
 		}
-		
+		/*
 		if (currentCharacter == '.' && _inShort)
 		{
 			token = scanCharacterSequence(currentCharacter, [".\n", ".\t"]);
@@ -175,7 +175,7 @@ public class ASDocScanner extends ScannerBase
 			
 			return token;
 		}
-		
+		*/
 		if (currentCharacter == '{')
 		{
 			token = scanCharacterSequence(currentCharacter, ["{@"]);

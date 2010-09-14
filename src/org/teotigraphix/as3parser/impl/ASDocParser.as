@@ -26,6 +26,7 @@ import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IScanner;
 import org.teotigraphix.as3parser.core.ASDocLinkedListTreeAdaptor;
+import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
 
 /**
@@ -97,17 +98,17 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	private var _rightSideOfAtrix:Boolean = false;
+	private var _consumingRight:Boolean = false;
 	
 	/**
 	 * @private
 	 */
-	private var _shortListFound:Boolean = false;
+	//private var _shortListFound:Boolean = false;
 	
 	/**
 	 * @private
 	 */
-	private var _longListFound:Boolean = false;
+	private var _bodyFound:Boolean = false;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -149,9 +150,16 @@ public class ASDocParser extends ParserBase
 			return result; // is the AS3Parser really saving /* comments? check
 		}
 		
+		_bodyFound = false;
+		_consumingRight = false;
+		
 		consume(ML_COMMENT_START, result);
 		result.addChild(parseContent());
 		consume(ML_COMMENT_END, result);
+		
+		// HACK
+		// */ " " /n
+		result.stopToken.previous.previous.channel = "hidden";
 		
 		return result;
 	}
@@ -165,12 +173,12 @@ public class ASDocParser extends ParserBase
 		
 		if (token.text == ASTRIX)
 		{
-			_rightSideOfAtrix = true;
+			_consumingRight = true;
 		}
 		
 		if (token.text == NL || token.text == DOT_NL)
 		{
-			_rightSideOfAtrix = false;
+			_consumingRight = false;
 		}
 	}
 	
@@ -193,9 +201,8 @@ public class ASDocParser extends ParserBase
 	 */
 	override protected function initialize():void
 	{
-		_shortListFound = false;
-		_longListFound = false;
-		_rightSideOfAtrix = false;
+		_bodyFound = false;
+		_consumingRight = false;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -226,105 +233,49 @@ public class ASDocParser extends ParserBase
 		{
 			if (token.text == AT)
 			{
-				_shortListFound = true;
-				_longListFound = true;
+				_bodyFound = true;
 				
 				result.addChild(parseDocTagList());
 			}
-			else if (!_shortListFound)
+			else if (!_bodyFound)
 			{
-				result.addChild(parseShortList());
-			}
-			else if (!_longListFound)
-			{
-				result.addChild(parseLongList());
+				result.addChild(parseBody());
 			}
 			else
 			{
-				append(result);
-				nextToken();
+				nextTokenAppend(result);
 			}
 		}
 		
 		return result;
 	}
 	
-	
-	//----------------------------------
-	// short-list
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	internal function parseShortList():TokenNode
+	private function nextTokenAppend(node:TokenNode):void
 	{
-		var result:TokenNode = adapter.empty(ASDocNodeKind.SHORT_LIST, token);
+		var token:LinkedListToken = adapter.createToken(
+			token.text, token.text,
+			token.line, token.column);
 		
-		if (!tokIsValid())
-			consumeRight(result);
+		if (!spaceFound)
+			token.channel = "hidden";
+		else
+			token.channel = "real";
 		
-		while (!tokIs(DOT_NL) && !tokIs(AT) && !tokIs(ML_COMMENT_END))
-		{
-			if (tokIsValid())
-			{
-				if (token.text== "<code")
-				{
-					result.addChild(parseCodeText());
-					
-					if (!_shortListFound && tokIs(DOT_NL))
-					{
-						result.addChild(adapter.create(
-							ASDocNodeKind.TEXT, DOT, token.line, token.column));
-						_shortListFound = true;
-						break;
-					}
-				}
-				else if (token.text == "<listing")
-				{
-					result.addChild(parsePreText("listing"));
-				}
-				else
-				{
-					result.addChild(parseText());
-					
-					if (!_shortListFound && tokIs(AT))
-					{
-						_shortListFound = true;
-						break;
-					}
-				}
-			}
-			else
-			{
-				consumeRight(result);
-			}
-		}
+		node.appendToken(token);
 		
-		if (result.numChildren == 0)
-		{
-			return null;
-		}
-		
-		// the "/**" or "@" happens when a short ends with a ". "
-		if (!tokIs(ML_COMMENT_END) && !tokIs(AT))
-		{
-			consume(DOT_NL, result);
-		}
-		
-		return result;
+		nextToken();
 	}
 	
 	//----------------------------------
-	// long-list
+	// body
 	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	internal function parseLongList():TokenNode
+	internal function parseBody():TokenNode
 	{
-		var result:TokenNode = adapter.empty(ASDocNodeKind.LONG_LIST, token);
+		var result:TokenNode = adapter.empty(ASDocNodeKind.BODY, token);
 		
 		if (!tokIsValid())
 			consumeRight(result);
@@ -352,16 +303,11 @@ public class ASDocParser extends ParserBase
 			}
 			else
 			{
-				consumeRight(result);
+				nextTokenAppend(result);
 			}
 		}
 		
-		//if (result.numChildren == 0)
-		//{
-		//	return null;
-		//}
-		
-		_longListFound = true;
+		_bodyFound = true;
 		
 		return result;
 	}
@@ -387,14 +333,14 @@ public class ASDocParser extends ParserBase
 				text += token.text;
 			}
 			
-			append(result);
-			nextToken();
-			
-			if (!_shortListFound && tokIs(DOT_NL))
+			if (tokIs(NL))
 			{
-				text += DOT;
-				_shortListFound = true;
-				break;
+				nextTokenAppend(result);
+				consumeRight(result);
+			}
+			else
+			{
+				nextTokenAppend(result);
 			}
 		}
 		
@@ -427,8 +373,7 @@ public class ASDocParser extends ParserBase
 		while (!tokIs(DOT_NL) && !tokIs("</") && !tokIs(ML_COMMENT_END))
 		{
 			text += token.text;
-			append(result);
-			nextToken();
+			nextTokenAppend(result);
 		}
 		
 		consume("</", result);
@@ -481,7 +426,7 @@ public class ASDocParser extends ParserBase
 				}
 			}
 			
-			if (_rightSideOfAtrix || tokIs(NL))
+			if (_consumingRight || tokIs(NL))
 			{
 				text += token.text;
 			}
@@ -590,12 +535,6 @@ public class ASDocParser extends ParserBase
 	{
 		var result:TokenNode = adapter.empty(ASDocNodeKind.BODY, token);
 		
-		//if (tokIs("\n"))
-		//{
-		//	append(result);
-		//	return result;
-		//}
-		
 		while (!tokIs(AT) && !tokIs(ML_COMMENT_END))
 		{
 			if (token.text == "<code")
@@ -622,14 +561,17 @@ public class ASDocParser extends ParserBase
 		//}
 		
 		return result;
+		
 	}
+	
+	private var spaceFound:Boolean = false;
 	
 	/**
 	 * @private
 	 */
 	private function consumeRight(node:TokenNode):void
 	{
-		var spaceFound:Boolean = false;
+		spaceFound = false;
 		
 		do
 		{
@@ -640,37 +582,31 @@ public class ASDocParser extends ParserBase
 			
 			if (token.text == ASTRIX)
 			{
-				_rightSideOfAtrix = true;
+				_consumingRight = true;
 				spaceFound = false;
 			}
 			
-			if (_rightSideOfAtrix && token.text == SPACE)
+			if (_consumingRight && token.text == SPACE)
 			{
-				//nextToken(); // clear the " "
-				//append(node);
 				spaceFound = true;
+				break;
 			}
 			
-			if (token.text == NL || token.text == DOT_NL)
+			if (token.text == NL)
 			{
-				_rightSideOfAtrix = false;
+				_consumingRight = false;
 			}
 			
 			if (isIdentifierCharacter(token.text))
 			{
-				_rightSideOfAtrix = true;
+				_consumingRight = true;
 				break;
 			}
 			
-			if (!tokIs(ML_COMMENT_END))
-			{
-				append(node);
-			}
-			
-			nextToken();
+			nextTokenAppend(node);
 		}
-		while (!_rightSideOfAtrix
-			|| ((_rightSideOfAtrix && token.text == ASTRIX) || !spaceFound));
+		while (!_consumingRight
+			|| ((_consumingRight && token.text == ASTRIX) || !spaceFound));
 	}
 	
 	/**
@@ -689,16 +625,16 @@ public class ASDocParser extends ParserBase
 			
 			if (token.text == NL || token.text == DOT_NL)
 			{
-				_rightSideOfAtrix = false;
+				_consumingRight = false;
 				break; // <pre> needs newlines
 			}
 			
-			if (!_rightSideOfAtrix)
+			if (!_consumingRight)
 			{
 				if (token.text == ASTRIX)
 				{
 					nextToken(); // " "
-					_rightSideOfAtrix = true;
+					_consumingRight = true;
 					if (tokIs(SPACE))
 					{
 						nextToken(); // start of pre text on the newline
@@ -711,7 +647,7 @@ public class ASDocParser extends ParserBase
 				}
 			}
 		}
-		while (!_rightSideOfAtrix);
+		while (!_consumingRight);
 	}
 	
 	/**
@@ -719,10 +655,10 @@ public class ASDocParser extends ParserBase
 	 */
 	protected function tokIsValid():Boolean
 	{
-		if (!_rightSideOfAtrix && isIdentifierCharacter(token.text))
-			_rightSideOfAtrix = true;
+		if (!_consumingRight && isIdentifierCharacter(token.text))
+			_consumingRight = true;
 		
-		return _rightSideOfAtrix;
+		return _consumingRight;
 	}
 	
 	protected function isIdentifierCharacter(currentCharacter:String):Boolean
