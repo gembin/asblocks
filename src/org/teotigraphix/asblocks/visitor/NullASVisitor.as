@@ -17,7 +17,7 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.teotigraphix.asblocks.impl
+package org.teotigraphix.asblocks.visitor
 {
 
 import org.teotigraphix.asblocks.IASProject;

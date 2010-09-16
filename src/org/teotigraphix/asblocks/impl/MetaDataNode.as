@@ -58,6 +58,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function get parameter():String
 	{
+		// FIXME impl IMetaData
 		return null;
 	}
 	
@@ -70,6 +71,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function get parameters():Vector.<IMetaDataParameter>
 	{
+		// FIXME impl IMetaData
 		return null;
 	}
 	
@@ -82,6 +84,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function get hasName():Boolean
 	{
+		// FIXME impl IMetaData
 		return false;
 	}
 	
@@ -148,6 +151,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function addParameter(value:String):IMetaDataParameter
 	{
+		// FIXME impl IMetaData
 		return null;
 	}
 	
@@ -156,6 +160,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function addNamedParameter(name:String, value:String):IMetaDataParameter
 	{
+		// FIXME impl IMetaData
 		return null;
 	}
 	
@@ -194,6 +199,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function getParameter(name:String):IMetaDataParameter
 	{
+		// FIXME impl IMetaData
 		return null;
 	}
 	
@@ -202,6 +208,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function getParameterAt(index:int):IMetaDataParameter
 	{
+		// FIXME impl IMetaData
 		return null;
 	}
 	
@@ -210,6 +217,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function getParameterValue(name:String):String
 	{
+		// FIXME impl IMetaData
 		return null;
 	}
 	
@@ -218,6 +226,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function hasParameter(name:String):Boolean
 	{
+		// FIXME impl IMetaData
 		return false;
 	}
 }

@@ -239,7 +239,7 @@ public class AS3Parser extends ParserBase
 			result.addChild(parsePackageContent());
 		}
 		
-		result.appendToken(adapter.createToken("__END__"));
+		result.appendToken(adapter.createToken(KeyWords.EOF));
 		
 		return result;
 	}
