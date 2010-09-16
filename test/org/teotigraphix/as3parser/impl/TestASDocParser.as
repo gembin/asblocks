@@ -3,9 +3,7 @@ package org.teotigraphix.as3parser.impl
 
 import flexunit.framework.Assert;
 
-import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.SourceCode;
 import org.teotigraphix.asblocks.impl.ASTPrinter;
 import org.teotigraphix.asblocks.utils.ASTUtil;
@@ -32,16 +30,14 @@ public class TestASDocParser
 			];
 		
 		assertPrint(input);
-		//assertComment("1", 
-		//	input,
-		//	"<compilation-unit line=\"-1\" column=\"-1\"><content line=\"1\" " +
-		//	"column=\"4\"><short-list line=\"1\" column=\"4\"><text line=\"1\" " +
-		//	"column=\"4\">A short comment.</text></short-list></content>" +
-		//	"</compilation-unit>");
+		assertComment("1", 
+			input,
+			"<compilation-unit><description><body><text-block><text>A short comment." +
+			"</text></text-block></body></description></compilation-unit>");
 	}
 	
 	[Test]
-	public function test_short2Lines():void
+	public function test_MultipleLines():void
 	{
 		var input:Array =
 			[
@@ -51,70 +47,87 @@ public class TestASDocParser
 				" */"
 			];
 		
-		var ast:IParserNode = parse(input);
-		var content:IParserNode = ast.getKind(ASDocNodeKind.CONTENT);
-		var body:IParserNode = content.getKind(ASDocNodeKind.BODY);
-		
-		var t:String = stringifyNode(body);
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><text-block><text> A short comment" +
+			"</text><nl></nl><text> on another line.</text><nl></nl></text-block>" +
+			"</body></description></compilation-unit>");
+	}
+	
+	[Test]
+	public function test_MultipleLinesAndPara():void
+	{
+		var input:Array =
+			[
+				"/**",
+				" * A short comment",
+				" * on another line.",
+				" * ",
+				" * <p>A paragraph 1.</p>",
+				" * ",
+				" * <p>A paragraph 2.</p>",
+				" */"
+			];
 		
 		assertPrint(input);
-		//assertComment("1",
-		//	input,
-		//	"<compilation-unit line=\"-1\" column=\"-1\"><content line=\"2\" " +
-		//	"column=\"4\"><short-list line=\"2\" column=\"4\">" +
-		//	"<text line=\"2\" column=\"4\">A short comment  on another line.</text>" +
-		//	"</short-list></content></compilation-unit>");
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><text-block><text> A short comment" +
+			"</text><nl></nl><text> on another line.</text><nl></nl><text> </text><nl>" +
+			"</nl><text> &lt;p&gt;A paragraph 1.&lt;/p&gt;</text><nl></nl><text> </text>" +
+			"<nl></nl><text> &lt;p&gt;A paragraph 2.&lt;/p&gt;</text><nl></nl>" +
+			"</text-block></body></description></compilation-unit>");
 	}
 	
-	public static function stringifyNode(ast:IParserNode):String
+	//[Test]
+	public function test_InlineTags():void
 	{
-		var result:String = "";
-		for (var tok:LinkedListToken =  ast.startToken; tok != null && tok.kind != null; tok = tok.next)
-		{
-			if (tok.text != null && tok.channel != "hidden")
-			{
-				result += tok.text;
-			}
-			
-			if (tok == ast.stopToken)
-			{
-				break;
-			}
-		}
-		return result;
+		var input:Array =
+			[
+				"/**",
+				" * A short comment",
+				" * on {@link another} line.",
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"");
 	}
 	
-	/**
-	 * compilation-unit
-	 *   - content
-	 *     - short-list
-	 *       - text
-	 *       - code-text
-	 *     - long-list
-	 *       - text
-	 *       - code-text
-	 *     - doctag-list
-	 *       - doctag
-	 *         - name
-	 *         - body
-	 *           - text
-	 *           - code-text
-	 */
-	/** NEW AST
-	 * compilation-unit
-	 *   - content
-	 *     - body
-	 *       - |text
-	 *       - |code-text
-	 *     - doctag-list
-	 *       - doctag
-	 *         - name
-	 *         - body
-	 *           - |text
-	 *           - |code-text
-	 */
 	[Test]
-	public function test_parseCompilationUnit():void
+	public function test_parseMultiParasAndCodeBlocks():void
+	{
+		var input:Array =
+			[
+				"/**", 
+				" * A short <code>document()</code> comment",
+				" * span 2.", 
+				" * ",
+				" * <p>Long <code>document()</code> description.</p>", 
+				" * ",
+				" * <p>Long <code>create()</code> description two.</p>", 
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><text-block><text> A short </text>" +
+			"</text-block><code-block><text>document()</text></code-block><text-block>" +
+			"<text> comment</text><nl></nl><text> span 2.</text><nl></nl><text> " +
+			"</text><nl></nl><text> &lt;p&gt;Long </text></text-block><code-block>" +
+			"<text>document()</text></code-block><text-block><text> description." +
+			"&lt;/p&gt;</text><nl></nl><text> </text><nl></nl><text> &lt;p&gt;Long " +
+			"</text></text-block><code-block><text>create()</text></code-block>" +
+			"<text-block><text> description two.&lt;/p&gt;</text><nl></nl></text-block>" +
+			"</body></description></compilation-unit>");
+	}
+	
+	[Test]
+	public function test_parseMultiParasAndCodeBlocksAndDocTags():void
 	{
 		var input:Array =
 			[
@@ -132,86 +145,47 @@ public class TestASDocParser
 			];
 		
 		assertPrint(input);
-		
-		var result:String = ASTUtil.convert(parse(input));
-		/*
-		scanner.setLines(Vector.<String>(lines));
-		
-		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
-		
-		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">"
-			+ "<content line=\"2\" column=\"4\"><short-list line=\"2\" "
-			+ "column=\"4\"><text line=\"2\" column=\"4\">A short "
-			+ "</text><code-text line=\"2\" column=\"12\">document()"
-			+ "</code-text><text line=\"2\" column=\"35\"> comment span 2."
-			+ "</text></short-list><long-list line=\"5\" column=\"4\">"
-			+ "<text line=\"5\" column=\"4\">&lt;p&gt;Long </text><code-text "
-			+ "line=\"5\" column=\"12\">document()</code-text><text line=\"5\" "
-			+ "column=\"35\"> description.&lt;/p&gt;  &lt;p&gt;Long </text>"
-			+ "<code-text line=\"7\" column=\"12\">create()</code-text>"
-			+ "<text line=\"7\" column=\"33\"> description two.&lt;/p&gt;  "
-			+ "</text></long-list><doctag-list line=\"9\" column=\"4\">"
-			+ "<doctag line=\"9\" column=\"4\"><name line=\"9\" column=\"5\">"
-			+ "author</name><body line=\"9\" column=\"11\"><text line=\"9\" "
-			+ "column=\"11\"> The </text><code-text line=\"9\" column=\"16\">"
-			+ "document()</code-text><text line=\"9\" column=\"39\"> Author "
-			+ "</text></body></doctag><doctag line=\"10\" column=\"4\">"
-			+ "<name line=\"10\" column=\"5\">private</name></doctag>"
-			+ "</doctag-list></content></compilation-unit>",
-			result);
-		*/
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><text-block><text> A short " +
+			"</text></text-block><code-block><text>document()</text></code-block>" +
+			"<text-block><text> comment</text><nl></nl><text> span 2.</text>" +
+			"<nl></nl><text> </text><nl></nl><text> &lt;p&gt;Long </text>" +
+			"</text-block><code-block><text>document()</text></code-block>" +
+			"<text-block><text> description.&lt;/p&gt;</text><nl></nl><text> " +
+			"</text><nl></nl><text> &lt;p&gt;Long </text></text-block><code-block>" +
+			"<text>create()</text></code-block><text-block><text> description " +
+			"two.&lt;/p&gt;</text><nl></nl><text> </text><nl></nl><text> </text>" +
+			"</text-block></body><doctag-list><doctag><name>author</name><body>" +
+			"<text-block><text> The </text></text-block><code-block><text>document()" +
+			"</text></code-block><text-block><text> Author</text><nl></nl><text> " +
+			"</text></text-block></body></doctag><doctag><name>private</name>" +
+			"</doctag></doctag-list></description></compilation-unit>");
 	}
 	
-	[Test]
-	public function test_parseContentShortLongMultiple():void
+	//[Test]
+	public function test_parseMultiParasAndPreBlock():void
 	{
-		var lines:Array =
+		var input:Array =
 			[
-				"/**",
-				" * A short document comment",
-				" * that spans two.",
+				"/**", 
+				" * A short <code>document()</code> comment",
+				" * span 2.", 
 				" * ",
-				" * <p>Long description 1.</p>",
-				" * <p>Long description 2.</p>", 
+				" * <p>Long <code>document()</code> description.</p>", 
+				" * ",
+				" * <pre>",
+				" * class HelloWorld {",
+				" *    public function HelloWorld() {",
+				" *    }",
+				" * }</pre>", 
 				" */"
 			];
 		
-		assertPrint(lines);
-		/*
-		scanner.setLines(Vector.<String>(lines));
-		
-		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
-		
-		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
-			"<content line=\"2\" column=\"4\"><short-list line=\"2\" column=\"4\">" +
-			"<text line=\"2\" column=\"4\">A short document comment that spans two.</text>" +
-			"</short-list><long-list line=\"5\" column=\"4\"><text line=\"5\" column=\"4\">" +
-			"&lt;p&gt;Long description 1.&lt;/p&gt; &lt;p&gt;Long description 2.&lt;/p&gt;" +
-			"</text></long-list></content></compilation-unit>",
-			result);
-		*/
-	}
-	
-	[Test]
-	public function test_parseCompilationUnit_bug1():void
-	{
-		var lines:Array =
-			[
-				"/** Class comment. */",
-			];
-		
-		assertPrint(lines);
-		/*
-		scanner.setLines(Vector.<String>(lines));
-		
-		var result:String = ASTUtil.convert(parser.parseCompilationUnit());
-		
-		Assert.assertEquals("<compilation-unit line=\"-1\" column=\"-1\">" +
-			"<content line=\"1\" column=\"5\"><short-list line=\"1\" column=\"5\">" +
-			"<text line=\"1\" column=\"5\">Class comment. </text></short-list>" +
-			"</content></compilation-unit>",
-			result);
-		*/
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"");
 	}
 	
 	protected function assertPrint(input:Array):void
@@ -225,7 +199,7 @@ public class TestASDocParser
 									 input:Array, 
 									 expected:String):void
 	{
-		var result:String = ASTUtil.convert(parse(input));
+		var result:String = ASTUtil.convert(parse(input), false);
 		Assert.assertEquals(message, expected, result);
 	}
 	

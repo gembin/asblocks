@@ -1,3 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// Copyright 2010 Michael Schmalle - Teoti Graphix, LLC
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and 
+// limitations under the License
+// 
+// Author: Michael Schmalle, Principal Architect
+// mschmalle at teotigraphix dot com
+////////////////////////////////////////////////////////////////////////////////
+
 package org.teotigraphix.as3parser.core
 {
 
@@ -5,21 +24,55 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.ITokenListUpdateDelegate;
 
+/**
+ * TODO Docme
+ * 
+ * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
+ * @productversion 1.0
+ */
 public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 {
-	// TODO: many methods simply duplicate those in
-	//       BasicListUpdateDelegate, maybe just subclass it?
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Variable
+	//
+	//--------------------------------------------------------------------------
 	
-	private var tokenTypeOpen:String;
-	private var tokenTypeClose:String;
+	/**
+	 * @private
+	 */
+	private var open:String;
 	
-	public function ParentheticListUpdateDelegate(tokenTypeOpen:String, 
-												  tokenTypeClose:String)
+	/**
+	 * @private
+	 */
+	private var close:String;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 */
+	public function ParentheticListUpdateDelegate(open:String, close:String)
 	{
-		this.tokenTypeOpen = tokenTypeOpen;
-		this.tokenTypeClose = tokenTypeClose;
+		this.open = open;
+		this.close = close;
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
 	public function addedChild(parent:IParserNode, 
 							   child:IParserNode):void
 	{
@@ -28,81 +81,29 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		insertAfter(insert, insert.next, child.startToken, child.stopToken);
 	}
 	
-	private function findOpen(parent:IParserNode):LinkedListToken
-	{
-		for (var tok:LinkedListToken = parent.startToken; tok != null; tok = tok.next)
-		{
-			if (tok.kind == tokenTypeOpen)
-			{
-				return tok;
-			}
-		}
-		return null;
-	}
-	
-	private function findClose(parent:IParserNode):LinkedListToken
-	{
-		for (var tok:LinkedListToken = parent.stopToken; tok != null; tok = tok.previous)
-		{
-			if (tok.kind == tokenTypeClose)
-			{
-				return maybeSkiptoLinePreceeding(tok);
-			}
-		}
-		return null;
-	}
-	
-	private function maybeSkiptoLinePreceeding(target:LinkedListToken):LinkedListToken
-	{
-		for (var tok:LinkedListToken = target.previous; tok != null; tok = tok.previous)
-		{
-			switch (tok.kind) 
-			{
-				case AS3NodeKind.WS:
-					continue;
-				case AS3NodeKind.NL:
-					return tok;
-				default:
-					return target;
-			}
-		}
-		return target;
-	}
-	
-	protected static function insertAfter(lcurly:LinkedListToken, 
-										  rcurly:LinkedListToken,
-										  startToken:LinkedListToken, 
-										  stopToken:LinkedListToken):void
-	{
-		if (lcurly == null && rcurly == null) 
-		{
-			// IllegalArgumentException
-			throw new Error("At least one of target and targetNext must be non-null");
-		}
-		if (startToken != null) 
-		{
-			// i.e. we're not adding an imaginary node that currently
-			//      has no real children
-			if (lcurly != null) {
-				lcurly.next = startToken;
-			}
-			stopToken.next = rcurly;
-			if (rcurly != null) 
-			{
-				rcurly.previous = stopToken;
-			}
-		}
-	}
-	
-	public function addedChildAt(tree:IParserNode, index:int, child:IParserNode):void
+	/**
+	 * @private
+	 */
+	public function addedChildAt(tree:IParserNode, 
+								 index:int, 
+								 child:IParserNode):void
 	{
 		var target:LinkedListToken;
 		var targetNext:LinkedListToken;
 		
 		if (index == 0) 
 		{
-			target = findOpen(tree);
-			targetNext = target.next;
+			var tn:TokenNode = tree as TokenNode;
+			if (!tn.absolute)
+			{
+				target = findOpen(tree);
+				targetNext = target.next;
+			}
+			else
+			{
+				target = tree.startToken.previous;
+				targetNext = target.next;
+			}
 		} 
 		else 
 		{
@@ -113,6 +114,9 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		insertAfter(target, targetNext, child.startToken, child.stopToken);
 	}
 	
+	/**
+	 * @private
+	 */
 	public function appendToken(parent:IParserNode, 
 								append:LinkedListToken):void
 	{
@@ -120,7 +124,12 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		insertAfter(close, close.next, append, append);
 	}
 	
-	public function addToken(parent:IParserNode, index:int, append:LinkedListToken):void
+	/**
+	 * @private
+	 */
+	public function addToken(parent:IParserNode, 
+							 index:int, 
+							 append:LinkedListToken):void
 	{
 		var target:LinkedListToken;
 		var targetNext:LinkedListToken;
@@ -155,7 +164,12 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		insertAfter(target, targetNext,	append, append);
 	}
 	
-	public function deletedChild(parent:IParserNode, index:int, child:IParserNode):void
+	/**
+	 * @private
+	 */
+	public function deletedChild(parent:IParserNode, 
+								 index:int, 
+								 child:IParserNode):void
 	{
 		var start:LinkedListToken = child.startToken;
 		var stop:LinkedListToken = child.stopToken;
@@ -175,7 +189,13 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		stop.next = null;
 	}
 	
-	public function replacedChild(tree:IParserNode, index:int, child:IParserNode, oldChild:IParserNode):void
+	/**
+	 * @private
+	 */
+	public function replacedChild(tree:IParserNode, 
+								  index:int, 
+								  child:IParserNode, 
+								  oldChild:IParserNode):void
 	{
 		// link the new child's tokens in place of the old,
 		oldChild.startToken.previous.next = child.startToken;
@@ -186,5 +206,88 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 		oldChild.stopToken.next = null;
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findOpen(parent:IParserNode):LinkedListToken
+	{
+		for (var tok:LinkedListToken = parent.startToken; tok != null; tok = tok.next)
+		{
+			if (tok.kind == open)
+			{
+				return tok;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findClose(parent:IParserNode):LinkedListToken
+	{
+		for (var tok:LinkedListToken = parent.stopToken; tok != null; tok = tok.previous)
+		{
+			if (tok.kind == close)
+			{
+				return maybeSkiptoLinePreceeding(tok);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function maybeSkiptoLinePreceeding(target:LinkedListToken):LinkedListToken
+	{
+		for (var tok:LinkedListToken = target.previous; tok != null; tok = tok.previous)
+		{
+			switch (tok.kind) 
+			{
+				case AS3NodeKind.WS:
+					continue;
+				case AS3NodeKind.NL:
+					return tok;
+				default:
+					return target;
+			}
+		}
+		return target;
+	}
+	
+	/**
+	 * @private
+	 */
+	protected static function insertAfter(left:LinkedListToken, 
+										  right:LinkedListToken,
+										  startToken:LinkedListToken, 
+										  stopToken:LinkedListToken):void
+	{
+		if (left == null && right == null) 
+		{
+			// IllegalArgumentException
+			throw new Error("At least one of target and targetNext must be non-null");
+		}
+		if (startToken != null) 
+		{
+			// i.e. we're not adding an imaginary node that currently
+			//      has no real children
+			if (left != null) {
+				left.next = startToken;
+			}
+			stopToken.next = right;
+			if (right != null) 
+			{
+				right.previous = stopToken;
+			}
+		}
+	}
 }
 }

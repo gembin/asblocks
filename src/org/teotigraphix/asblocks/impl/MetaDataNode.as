@@ -22,9 +22,11 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IDocComment;
 import org.teotigraphix.asblocks.api.IMetaData;
 import org.teotigraphix.asblocks.api.IMetaDataParameter;
 import org.teotigraphix.asblocks.utils.ASTUtil;
+import org.teotigraphix.asblocks.utils.DocCommentUtil;
 
 /**
  * The <code>IMetaData</code> implementation.
@@ -81,6 +83,44 @@ public class MetaDataNode extends ScriptNode
 	public function get hasName():Boolean
 	{
 		return false;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IDocCommentAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IDocCommentAware#description
+	 */
+	public function get description():String
+	{
+		return null;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set description(value:String):void
+	{
+		documentation.description = value;
+	}
+	
+	//----------------------------------
+	//  documentation
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IDocCommentAware#documentation
+	 */
+	public function get documentation():IDocComment
+	{
+		return DocCommentUtil.createDocComment(node);
 	}
 	
 	//--------------------------------------------------------------------------

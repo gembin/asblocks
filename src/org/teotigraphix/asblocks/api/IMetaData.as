@@ -27,7 +27,7 @@ package org.teotigraphix.asblocks.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IMetaData extends IScriptNode
+public interface IMetaData extends IScriptNode, IDocCommentAware
 {
 	//--------------------------------------------------------------------------
 	//

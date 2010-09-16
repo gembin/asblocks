@@ -59,5 +59,7 @@ public interface IDocComment extends IScriptNode
 	 * TODO Docme
 	 */
 	function newDocTag(name:String, body:String = null):IDocTag;
+	
+	function removeDocTag(tag:IDocTag):Boolean;
 }
 }

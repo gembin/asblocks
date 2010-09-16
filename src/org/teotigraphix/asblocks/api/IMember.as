@@ -28,7 +28,7 @@ package org.teotigraphix.asblocks.api
  * @productversion 1.0
  */
 public interface IMember 
-	extends IScriptNode /*, IDocumentAware, IMetaDataAware*/
+	extends IScriptNode, IDocCommentAware /*, IDocumentAware, IMetaDataAware*/
 {
 	//--------------------------------------------------------------------------
 	//

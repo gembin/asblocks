@@ -18,6 +18,11 @@ public class TokenBuilder
 		return newToken("sl-comment", text);
 	}
 	
+	public static function newMLComment(text:String):LinkedListToken
+	{
+		return newToken("ml-comment", text);
+	}
+	
 	public static function newPostDec():LinkedListToken
 	{
 		return newToken(AS3NodeKind.POST_DEC, "--");

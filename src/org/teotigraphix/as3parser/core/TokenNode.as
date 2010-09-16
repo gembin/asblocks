@@ -31,6 +31,8 @@ import org.teotigraphix.as3parser.api.IParserNode;
  */
 public class TokenNode extends Node
 {
+	public var absolute:Boolean = false;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Public :: Properties

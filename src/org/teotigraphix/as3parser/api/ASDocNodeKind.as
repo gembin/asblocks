@@ -22,6 +22,14 @@ package org.teotigraphix.as3parser.api
 
 public class ASDocNodeKind
 {
+	public static const ML_START:String = "ml-start";
+	
+	public static const ML_END:String = "ml-end";
+	
+	public static const CODE_BLOCK:String = "code-block";
+	
+	public static const TEXT_BLOCK:String = "text-block";
+	
 	public static const BODY:String = "body";
 	
 	public static const CODE_TEXT:String = "code-text";
@@ -29,6 +37,8 @@ public class ASDocNodeKind
 	public static const COMPILATION_UNIT:String = "compilation-unit";
 	
 	public static const CONTENT:String = "content";
+	
+	public static const DESCRIPTION:String = "description";
 	
 	public static const DOCTAG:String = "doctag";
 	

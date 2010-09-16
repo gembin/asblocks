@@ -20,12 +20,25 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
+import org.teotigraphix.as3parser.core.TokenNode;
+import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IDocComment;
 import org.teotigraphix.asblocks.api.IDocTag;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.asblocks.utils.DocCommentUtil;
+
+/*
+
+What needs to happen.
+
+- asdoc AST is created by parsing the as-doc node of the parent
+- the description is the /compilation-unit/content/body
+- 
+*/
 
 /**
  * The <code>IDocComment</code> implementation.
@@ -92,7 +105,7 @@ public class DocCommentNode extends ScriptNode
 		if (!asdoc)
 			return null;
 		
-		return asdoc.getKind(ASDocNodeKind.CONTENT);
+		return asdoc.getKind(ASDocNodeKind.DESCRIPTION);
 	}
 	
 	private function findShortList():IParserNode
@@ -132,19 +145,39 @@ public class DocCommentNode extends ScriptNode
 		//compilation-unit/content/doctag-list/doctag/name
 		//compilation-unit/content/doctag-list/doctag/body
 		
-		var list:IParserNode = findDoctagList();
+		var list:TokenNode = findDoctagList() as TokenNode;
 		if (!list)
 		{
-			list = ASTUtil.newAST(ASDocNodeKind.DOCTAG_LIST);
-			asdoc.addChild(list);
+			list = ASTUtil.newAST(ASDocNodeKind.DOCTAG_LIST) as TokenNode;
+			var content:IParserNode = asdoc.getKind(ASDocNodeKind.DESCRIPTION);
+
+			content.addChild(list);
 		}
 		
 		var tag:IParserNode = ASTUtil.newAST(ASDocNodeKind.DOCTAG);
+		//tag.appendToken(TokenBuilder.newToken("\t", "\t"));
+		tag.appendToken(TokenBuilder.newToken("*", "*"));
+		tag.appendToken(TokenBuilder.newToken(" ", " "));
+		tag.appendToken(TokenBuilder.newToken("@", "@"));
 		tag.addChild(ASTUtil.newNameAST(name));
 		if (body)
 		{
+			tag.appendToken(TokenBuilder.newSpace());
+			var newline:String = DocCommentUtil.getNewlineText(node, tag);
+			//if (description.indexOf("\n") != 0)
+			//{
+			//	description = "\n" + description;
+			//}
+			
+			body = body.replace(/\n/g, newline);
 			tag.addChild(ASTUtil.newAST(ASDocNodeKind.BODY, body));
 		}
+		
+		tag.appendToken(TokenBuilder.newToken("\n", "\n"));
+		var indent:String = ASTUtil.findIndent(node);
+		//tag.appendToken(TokenBuilder.newToken("\t", "\t"));
+		tag.appendToken(TokenBuilder.newToken("ws", indent));
+		tag.appendToken(TokenBuilder.newToken(" ", " "));
 		list.addChild(tag);
 		
 		commitAST();
@@ -152,10 +185,40 @@ public class DocCommentNode extends ScriptNode
 		return new DocTagNode(tag);
 	}
 	
+	public function removeDocTag(tag:IDocTag):Boolean
+	{
+		var list:TokenNode = findDoctagList() as TokenNode;
+		if (!list)
+			return false;
+		
+		var i:ASTIterator = new ASTIterator(list);
+		while (i.hasNext())
+		{
+			var t:IParserNode = i.next();
+			if (t === tag.node)
+			{
+				list.removeChild(t);
+				commitAST();
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private function commitAST():void
 	{
 		// the asdoc ast needs to go back into the node's as-doc node.stringValue
+		var content:IParserNode = asdoc.getKind(ASDocNodeKind.DESCRIPTION);
+		var body:IParserNode = content.getKind(ASDocNodeKind.BODY);
 		
+		var t:String = ASTUtil.stringifyNode(asdoc);
+		
+		var anode:IParserNode = node.getKind(AS3NodeKind.AS_DOC);
+		//var nast:IParserNode = ASTUtil.newAST("as-doc", t);
+		//node.setChildAt(nast, node.getChildIndex(anode));
+		anode.stringValue = t;
 	}
+	
+
 }
 }
