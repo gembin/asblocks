@@ -30,6 +30,8 @@ import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.asblocks.impl.TokenBuilder;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
+// TODO create ASDocFragmentParser
+
 /**
  * The default implementation of an asdoc comment parser.
  *
@@ -248,7 +250,7 @@ public class ASDocParser extends ParserBase
 		
 		consume(ML_END); // */
 		
-		// HACK
+		// FIXME HACK need to drop last nl
 		// */ " " /n
 		result.stopToken.previous.previous.channel = "hidden";
 		
@@ -485,7 +487,7 @@ public class ASDocParser extends ParserBase
 		// token @
 		var result:TokenNode = adapter.empty(ASDocNodeKind.DOCTAG_LIST, token);
 
-		while (!tokIs(ML_END) && !tokIs("__END__"))
+		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END))
 		{
 			result.addChild(parseDocTag());
 		}
@@ -506,7 +508,7 @@ public class ASDocParser extends ParserBase
 		
 		consume(AT, result);
 		
-		while (!tokIs(AT) && !tokIs(ML_END))
+		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END) && !tokIs(AT))
 		{
 			if (tokIsValid())
 			{
@@ -514,11 +516,7 @@ public class ASDocParser extends ParserBase
 				
 				if (!tokIs(NL))
 				{
-					var body:TokenNode = parseDocTagBody();
-					if (body != null)
-					{
-						result.addChild(body);
-					}
+					result.addChild(parseDocTagBody());
 				}
 				else
 				{
