@@ -178,6 +178,13 @@ public class MetaDataNode extends ScriptNode
 		ast.addChild(ASTUtil.newNameAST(name));
 		ast.appendToken(TokenBuilder.newAssign());
 		ast.addChild(ASTUtil.newAST(AS3NodeKind.STRING, ASTBuilder.escapeString(value)));
+		
+		if (list.numChildren > 0)
+		{
+			list.appendToken(TokenBuilder.newComma());
+			list.appendToken(TokenBuilder.newSpace());
+		}
+		
 		list.addChild(ast);
 		return new MetaDataParameterNode(ast);
 	}
