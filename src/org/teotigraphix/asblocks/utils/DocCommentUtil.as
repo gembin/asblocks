@@ -26,6 +26,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
+import org.teotigraphix.as3parser.impl.ASDocFragmentParser;
 import org.teotigraphix.as3parser.impl.ASDocParser;
 import org.teotigraphix.asblocks.api.IDocComment;
 import org.teotigraphix.asblocks.impl.DocCommentNode;
@@ -84,19 +85,13 @@ public class DocCommentUtil
 	
 	private static function parse(input:String):IParserNode
 	{
-		var parser:ASDocParser = new ASDocParser();
-		parser.scanner.setLines(Vector.<String>(input.split("\n")));
-		parser.nextToken();
-		var ast:IParserNode = parser.parseDescription();
+		var ast:IParserNode = ASDocFragmentParser.parseDescription(input);
 		return ast;
 	}
 	
 	private static function parseDescription(input:String):IParserNode
 	{
-		var parser:ASDocParser = new ASDocParser();
-		parser.scanner.setLines(Vector.<String>(input.split("\n")));
-		parser.nextToken();
-		var ast:IParserNode = parser.parseBody();
+		var ast:IParserNode = ASDocFragmentParser.parseBody(input);
 		return ast;
 	}
 	

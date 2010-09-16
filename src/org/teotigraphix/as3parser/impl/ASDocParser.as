@@ -30,8 +30,6 @@ import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.asblocks.impl.TokenBuilder;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
-// TODO create ASDocFragmentParser
-
 /**
  * The default implementation of an asdoc comment parser.
  *
@@ -212,9 +210,8 @@ public class ASDocParser extends ParserBase
 	
 	/**
 	 * @private
-	 * TODO Make this internal parseBody()
 	 */
-	public function parseDescription():TokenNode
+	internal function parseDescription():IParserNode
 	{
 		var result:TokenNode = ASTUtil.newParentheticAST(
 			ASDocNodeKind.DESCRIPTION,
@@ -264,9 +261,8 @@ public class ASDocParser extends ParserBase
 	
 	/**
 	 * @private
-	 * TODO Make this internal parseBody()
 	 */
-	public function parseBody():TokenNode
+	internal function parseBody():IParserNode
 	{
 		var result:TokenNode = adapter.empty(ASDocNodeKind.BODY, token);
 		
@@ -501,9 +497,8 @@ public class ASDocParser extends ParserBase
 	
 	/**
 	 * @private
-	 * TODO Make this internal parseBody()
 	 */
-	private function parseDocTagList():TokenNode
+	internal function parseDocTagList():IParserNode
 	{
 		// token @
 		var result:TokenNode = adapter.empty(ASDocNodeKind.DOCTAG_LIST, token);
@@ -522,9 +517,8 @@ public class ASDocParser extends ParserBase
 	
 	/**
 	 * @private
-	 * TODO Make this internal parseBody()
 	 */
-	private function parseDocTag():TokenNode
+	internal function parseDocTag():TokenNode
 	{
 		var result:TokenNode = adapter.empty(ASDocNodeKind.DOCTAG, token);
 		
