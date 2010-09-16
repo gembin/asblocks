@@ -87,7 +87,7 @@ public class DocCommentUtil
 		var parser:ASDocParser = new ASDocParser();
 		parser.scanner.setLines(Vector.<String>(input.split("\n")));
 		parser.nextToken();
-		var ast:IParserNode = parser.parseContent();
+		var ast:IParserNode = parser.parseDescription();
 		return ast;
 	}
 	

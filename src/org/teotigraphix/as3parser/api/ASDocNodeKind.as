@@ -30,13 +30,11 @@ public class ASDocNodeKind
 	
 	public static const TEXT_BLOCK:String = "text-block";
 	
+	public static const PRE_BLOCK:String = "pre-block";
+	
 	public static const BODY:String = "body";
 	
-	public static const CODE_TEXT:String = "code-text";
-	
 	public static const COMPILATION_UNIT:String = "compilation-unit";
-	
-	public static const CONTENT:String = "content";
 	
 	public static const DESCRIPTION:String = "description";
 	
@@ -48,14 +46,10 @@ public class ASDocNodeKind
 	
 	public static const LISTING:String = "listing";
 	
-	public static const LONG_LIST:String = "long-list";
-	
 	public static const NAME:String = "name";
 	
-	public static const PRE_TEXT:String = "pre-text";
-	
-	public static const SHORT_LIST:String = "short-list";
-	
 	public static const TEXT:String = "text";
+	
+	public static const NL:String = "nl";
 }
 }

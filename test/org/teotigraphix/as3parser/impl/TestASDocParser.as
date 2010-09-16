@@ -163,7 +163,7 @@ public class TestASDocParser
 			"</doctag></doctag-list></description></compilation-unit>");
 	}
 	
-	//[Test]
+	[Test]
 	public function test_parseMultiParasAndPreBlock():void
 	{
 		var input:Array =
@@ -185,7 +185,45 @@ public class TestASDocParser
 		assertPrint(input);
 		assertComment("1",
 			input,
-			"");
+			"<compilation-unit><description><body><text-block><text> A short </text>" +
+			"</text-block><code-block><text>document()</text></code-block><text-block>" +
+			"<text> comment</text><nl></nl><text> span 2.</text><nl></nl><text> </text>" +
+			"<nl></nl><text> &lt;p&gt;Long </text></text-block><code-block><text>" +
+			"document()</text></code-block><text-block><text> description.&lt;/p&gt;" +
+			"</text><nl></nl><text> </text><nl></nl><text> </text></text-block>" +
+			"<pre-block><text> class HelloWorld {</text><nl></nl>" +
+			"<text>    public function HelloWorld() {</text><nl></nl><text>    }</text>" +
+			"<nl></nl><text> }</text></pre-block></body></description></compilation-unit>");
+	}
+	
+	[Test]
+	public function test_parsePreBlockWithXML():void
+	{
+		var input:Array =
+			[
+				"/**", 
+				" * A short <code>document()</code> comment",
+				" * span 2.", 
+				" * ",
+				" * <pre>",
+				" * <s:Rect>",
+				" *    <s:fill>",
+				" *    </s:fill>",
+				" * </s:Rect>",
+				" * </pre>", 
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><text-block><text> A short </text>" +
+			"</text-block><code-block><text>document()</text></code-block><text-block>" +
+			"<text> comment</text><nl></nl><text> span 2.</text><nl></nl><text> </text>" +
+			"<nl></nl><text> </text></text-block><pre-block><text> &lt;s:Rect&gt;</text>" +
+			"<nl></nl><text>    &lt;s:fill&gt;</text><nl></nl><text>    &lt;/s:fill&gt;" +
+			"</text><nl></nl><text> &lt;/s:Rect&gt;</text><nl></nl><text> </text>" +
+			"</pre-block></body></description></compilation-unit>");
 	}
 	
 	protected function assertPrint(input:Array):void

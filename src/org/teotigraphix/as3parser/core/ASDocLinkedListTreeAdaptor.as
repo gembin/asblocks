@@ -1,5 +1,6 @@
 package org.teotigraphix.as3parser.core
 {
+
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 
 public class ASDocLinkedListTreeAdaptor extends LinkedListTreeAdaptor
@@ -21,10 +22,11 @@ public class ASDocLinkedListTreeAdaptor extends LinkedListTreeAdaptor
 		
 		TokenNode(result).tokenListUpdater = delegate;
 		
-		if (payload.kind == ASDocNodeKind.CONTENT)
+		if (payload.kind == ASDocNodeKind.DESCRIPTION)
 		{
 			TokenNode(result).tokenListUpdater = 
-				new ParentheticListUpdateDelegate("ml-start", "ml-end");
+				new ParentheticListUpdateDelegate(
+					ASDocNodeKind.ML_START, ASDocNodeKind.ML_END);
 		}
 		
 		if (payload is LinkedListToken) 

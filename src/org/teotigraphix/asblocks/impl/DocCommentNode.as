@@ -23,7 +23,6 @@ package org.teotigraphix.asblocks.impl
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.ASDocNodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IDocComment;
@@ -106,16 +105,6 @@ public class DocCommentNode extends ScriptNode
 			return null;
 		
 		return asdoc.getKind(ASDocNodeKind.DESCRIPTION);
-	}
-	
-	private function findShortList():IParserNode
-	{
-		var content:IParserNode = findContent();
-		
-		if (!content)
-			return null;
-		
-		return content.getKind(ASDocNodeKind.SHORT_LIST);
 	}
 	
 	private function findDoctagList():IParserNode

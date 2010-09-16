@@ -96,7 +96,7 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	private var spaceFound:Boolean = false;
+	private var _spaceFound:Boolean = false;
 	
 	/**
 	 * @private
@@ -146,7 +146,7 @@ public class ASDocParser extends ParserBase
 		_bodyFound = false;
 		_consumedLeft = false;
 		
-		result.addChild(parseContent());
+		result.addChild(parseDescription());
 		
 		return result;
 	}
@@ -207,13 +207,14 @@ public class ASDocParser extends ParserBase
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	// content
+	// description
 	//----------------------------------
 	
 	/**
 	 * @private
+	 * TODO Make this internal parseBody()
 	 */
-	public function parseContent():TokenNode
+	public function parseDescription():TokenNode
 	{
 		var result:TokenNode = ASTUtil.newParentheticAST(
 			ASDocNodeKind.DESCRIPTION,
@@ -263,7 +264,7 @@ public class ASDocParser extends ParserBase
 	
 	/**
 	 * @private
-	 * TODO Make this internal
+	 * TODO Make this internal parseBody()
 	 */
 	public function parseBody():TokenNode
 	{
@@ -304,6 +305,10 @@ public class ASDocParser extends ParserBase
 		return result;
 	}
 	
+	//----------------------------------
+	// text-block
+	//----------------------------------
+	
 	/**
 	 * @private
 	 */
@@ -336,7 +341,7 @@ public class ASDocParser extends ParserBase
 				
 				text = "";
 				
-				var nl:TokenNode = adapter.create("nl");
+				var nl:TokenNode = adapter.create(ASDocNodeKind.NL);
 				nl.appendToken(TokenBuilder.newNewline())
 				result.addChild(nl);
 				
@@ -355,7 +360,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	// code-text
+	// code-block
 	//----------------------------------
 	
 	/**
@@ -393,7 +398,7 @@ public class ASDocParser extends ParserBase
 	}
 	
 	//----------------------------------
-	// pre-text
+	// pre-block
 	//----------------------------------
 	
 	/**
@@ -401,8 +406,7 @@ public class ASDocParser extends ParserBase
 	 */
 	private function parsePreText(name:String):TokenNode
 	{
-		var result:TokenNode = adapter.create("pre-block", 
-			text, token.line, token.column);
+		var result:TokenNode = adapter.empty(ASDocNodeKind.PRE_BLOCK, token);
 		
 		var text:String = "";
 		
@@ -439,20 +443,36 @@ public class ASDocParser extends ParserBase
 				}
 				else
 				{
-					text += token.text;
+					text += "</";
 				}
 			}
 			
+			if (tokIsValid() && !tokIs(ASTRIX) && _spaceFound)
+			{
+				text += token.text;
+			}
+			else
+			{
+				appendToken(result, ASDocNodeKind.TEXT, token.text);
+			}
 			
-			text += token.text;
 			nextToken();
 			
-			//if (_consumedLeft || tokIs(NL))
-			//{
-			//	text += token.text;
-			//}
-			
-			//consumeLeftPre(result);
+			if (tokIs(NL))
+			{
+				if (text != "")
+				{
+					result.addChild(adapter.create(ASDocNodeKind.TEXT, text));
+				}
+				
+				text = "";
+				
+				var nl:TokenNode = adapter.create(ASDocNodeKind.NL);
+				nl.appendToken(TokenBuilder.newNewline())
+				result.addChild(nl);
+				
+				consumeLeftPre(result);
+			}
 		}
 		
 		if (text != "")
@@ -481,6 +501,7 @@ public class ASDocParser extends ParserBase
 	
 	/**
 	 * @private
+	 * TODO Make this internal parseBody()
 	 */
 	private function parseDocTagList():TokenNode
 	{
@@ -501,6 +522,7 @@ public class ASDocParser extends ParserBase
 	
 	/**
 	 * @private
+	 * TODO Make this internal parseBody()
 	 */
 	private function parseDocTag():TokenNode
 	{
@@ -588,7 +610,7 @@ public class ASDocParser extends ParserBase
 	 */
 	private function consumeLeft(node:TokenNode):void
 	{
-		spaceFound = false;
+		_spaceFound = false;
 		
 		do
 		{
@@ -600,12 +622,12 @@ public class ASDocParser extends ParserBase
 			if (token.text == ASTRIX)
 			{
 				_consumedLeft = true;
-				spaceFound = false;
+				_spaceFound = false;
 			}
 			
 			if (_consumedLeft && token.text == SPACE)
 			{
-				spaceFound = true;
+				_spaceFound = true;
 				break;
 			}
 			
@@ -623,7 +645,7 @@ public class ASDocParser extends ParserBase
 			nextTokenAppend(node);
 		}
 		while (!_consumedLeft
-			|| ((_consumedLeft && token.text == ASTRIX) || !spaceFound));
+			|| ((_consumedLeft && token.text == ASTRIX) || !_spaceFound));
 	}
 	
 	/**
@@ -649,10 +671,9 @@ public class ASDocParser extends ParserBase
 			if (!_consumedLeft)
 			{
 				nextTokenAppend(node);
+				
 				if (token.text == ASTRIX)
 				{
-					//nextToken(); // " "
-					//nextTokenAppend(node);
 					_consumedLeft = true;
 					if (tokIs(SPACE))
 					{
@@ -689,7 +710,7 @@ public class ASDocParser extends ParserBase
 	{
 		var token:LinkedListToken = appendToken(node, token.text, token.text);
 		
-		if (!spaceFound)
+		if (!_spaceFound)
 			token.channel = "hidden";
 		else
 			token.channel = "real";
@@ -700,7 +721,7 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	protected function tokIsValid():Boolean
+	private function tokIsValid():Boolean
 	{
 		if (!_consumedLeft && isIdentifierCharacter(token.text))
 			_consumedLeft = true;
@@ -711,11 +732,10 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	protected function isIdentifierCharacter(currentCharacter:String):Boolean
+	private function isIdentifierCharacter(currentCharacter:String):Boolean
 	{
 		return (currentCharacter != " " && currentCharacter != "*"
-			&& currentCharacter != ".\n" && currentCharacter != "\n"
-			&& currentCharacter != "\t");
+				&& currentCharacter != "\t" && currentCharacter != "\n");
 	}
 }
 }
