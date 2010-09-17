@@ -40,7 +40,7 @@ public interface IArgument extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The arguments default value that is read after an <code>=</code> sign.
 	 */
 	function get defaultValue():String;
 	
@@ -54,7 +54,10 @@ public interface IArgument extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The asdoc description for the argument.
+	 * 
+	 * <p>Setting this value will update the documentation <strong>param</strong>
+	 * tag for the function owner.</p>
 	 */
 	function get description():String;
 	
@@ -68,7 +71,7 @@ public interface IArgument extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The name of the argument; after the <code>(</code> or <code>,</code>.
 	 */
 	function get name():String;
 	
@@ -77,7 +80,7 @@ public interface IArgument extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type of the argument; after the <code>:</code>.
 	 */
 	function get type():String;
 	
@@ -86,15 +89,9 @@ public interface IArgument extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether this argument is a rest that appears at the end of the argument
+	 * list.
 	 */
 	function get isRest():Boolean;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
 }
 }

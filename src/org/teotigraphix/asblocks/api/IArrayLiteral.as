@@ -23,6 +23,15 @@ package org.teotigraphix.asblocks.api
 /**
  * A Array literal; <code>[1,2,3]</code>.
  * 
+ * <pre>
+ * var al:IArrayLiteral = factory.newArrayLiteral();
+ * al.add(factory.newNumberLiteral(1));
+ * al.add(factory.newStringLiteral("two"));
+ * al.add(factory.newNumberLiteral(3));
+ * </pre>
+ * 
+ * <p>Will produce; <code>[1,"two",3]</code>.</p>
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
@@ -37,7 +46,16 @@ public interface IArrayLiteral
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * The Vector of <code>IExpression</code> entries in the array literal.
 	 * 
+	 * <p>The entries appear between the <code>[</code> and <code>]</code> 
+	 * brackets and are separated by commas.</p>
+	 * 
+	 * <p><strong>Note:</strong> - Do not attempt to add or remove items from 
+	 * this Vector, the AST will not be updated.</p>
+	 * 
+	 * @see #add()
+	 * @see #remove()
 	 */
 	function get entries():Vector.<IExpression>;
 	
@@ -48,12 +66,18 @@ public interface IArrayLiteral
 	//--------------------------------------------------------------------------
 	
 	/**
+	 * Add an <code>IExpression</code> entry to the array literal.
 	 * 
+	 * @param expression An <code>IExpression</code> to add to the array literal.
 	 */
 	function add(expression:IExpression):void;
 	
 	/**
+	 * Remove an <code>IExpression</code> entry from the array literal at the
+	 * specified index.
 	 * 
+	 * @param index The index to remove, returns the <code>IExpression</code>
+	 * if successfull, <code>null</code> if not.
 	 */
 	function remove(index:int):IExpression;
 }

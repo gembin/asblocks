@@ -24,6 +24,23 @@ package org.teotigraphix.asblocks.api
  * An assigment expression; <code>a = b;</code>, <code>a += b;</code>
  * or <code>a -= b;</code>.
  * 
+ * <pre>
+ * var left:IExpression = factory.newExpression("myAnswer");
+ * var right:IExpression = factory.newExpression("4");
+ * var expression:IAssignmentExpression = factory.newAssignmentExpression(left, right);
+ * </pre>
+ * 
+ * <p>Will produce <code>myAnswer = 4</code>.</p>
+ * 
+ * <pre>
+ * var left:IExpression = factory.newExpression("myAnswer");
+ * var right:IExpression = factory.newExpression("4");
+ * var expression:IAssignmentExpression = factory.newAssignmentExpression(left, right);
+ * expression.rightExpression = factory.newExpression("otherAnswer = 4");
+ * </pre>
+ * 
+ * <p>Will produce <code>myAnswer = otherAnswer = 4</code>.</p>
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
@@ -41,7 +58,7 @@ public interface IAssignmentExpression extends IExpression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The <code>IExpression</code> contained on the left side of the assignment.
 	 */
 	function get leftExpression():IExpression;
 	
@@ -55,7 +72,7 @@ public interface IAssignmentExpression extends IExpression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The assignment's operator.
 	 */
 	function get operator():String;
 	
@@ -69,7 +86,7 @@ public interface IAssignmentExpression extends IExpression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The <code>IExpression</code> contained on the right side of the assignment.
 	 */
 	function get rightExpression():IExpression;
 	

@@ -36,7 +36,7 @@ public class AssignmentExpressionNode extends ExpressionNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ISimpleNameExpressionNode API :: Properties
+	//  IAssignmentExpression API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	

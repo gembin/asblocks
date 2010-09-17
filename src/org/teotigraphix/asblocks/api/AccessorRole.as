@@ -21,7 +21,8 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * Function accessor roles.
+ * Function accessor <strong>NORMAL</strong>, <strong>GETTER</strong> and
+ * <strong>SETTER</strong> roles.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -35,12 +36,24 @@ public final class AccessorRole
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * A function using the normal <code>function</code> keyword.
+	 */
 	public static const NORMAL:AccessorRole = AccessorRole.create("normal");
 	
+	/**
+	 * A function using the normal <code>function [get]</code> keyword.
+	 */
 	public static const GETTER:AccessorRole = AccessorRole.create("getter");
 	
+	/**
+	 * A function using the normal <code>function [set]</code> keyword.
+	 */
 	public static const SETTER:AccessorRole = AccessorRole.create("setter");
 	
+	/**
+	 * @private
+	 */
 	private static var list:Array =
 		[
 			NORMAL,
@@ -64,7 +77,8 @@ public final class AccessorRole
 	private var _name:String;
 	
 	/**
-	 * The role name.
+	 * The role name; either <strong>normal</strong>, <strong>getter</strong> or
+	 * <strong>setter</strong>.
 	 */
 	public function get name():String
 	{
@@ -114,10 +128,10 @@ public final class AccessorRole
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Creates a new AccessorRole.
+	 * Creates a new <code>AccessorRole</code>.
 	 * 
-	 * @param name A String indicating the name of the role.
-	 * @return A new AccessorRole instance.
+	 * @param name A <code>String</code> indicating the name of the role.
+	 * @return A new <code>AccessorRole</code> instance.
 	 */
 	public static function create(name:String):AccessorRole
 	{

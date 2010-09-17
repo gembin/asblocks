@@ -21,7 +21,16 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * Array access; <code>foo["bar"]</code> - <code>target</code>[<code>subscript</code>].
+ * Array access; <code>foo["bar"]</code> - <code>target</code>
+ * [<code>subscript</code>].
+ * 
+ * <pre>
+ * var target:IExpression = factory.newExpression("myObject[42]");
+ * var subscript:IExpression = factory.newExpression("0");
+ * var aae:IArrayAccessExpression = factory.newArrayAccessExpression(target, subscript);
+ * </pre>
+ * 
+ * <p>Will produce; <code>myObject[42][0]</code>.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

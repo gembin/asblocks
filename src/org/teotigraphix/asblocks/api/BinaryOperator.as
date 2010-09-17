@@ -38,57 +38,132 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
  * @productversion 1.0
  */
 public final class BinaryOperator
-{
-	private static var OPERATORS_BY_TYPE:IMap = new HashMap();
-	
-	private static var TYPES_BY_OPERATOR:IMap = new HashMap();
-	
+{	
 	//--------------------------------------------------------------------------
 	//
 	//  Public :: Constants
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * The <code>+</code> operator.
+	 */
 	public static var ADD:BinaryOperator = BinaryOperator.create("ADD");
 	
+	/**
+	 * The <code>&&</code> operator.
+	 */
 	public static var AND:BinaryOperator = BinaryOperator.create("AND");
 	
+	/**
+	 * The <code>&</code> operator.
+	 */
 	public static var BITAND:BinaryOperator = BinaryOperator.create("BITAND");
 	
+	/**
+	 * The <code>|</code> operator.
+	 */
 	public static var BITOR:BinaryOperator = BinaryOperator.create("BITOR");
 	
+	/**
+	 * The <code>^</code> operator.
+	 */
 	public static var BITXOR:BinaryOperator = BinaryOperator.create("BITXOR");
 	
+	/**
+	 * The <code>/</code> operator.
+	 */
 	public static var DIV:BinaryOperator = BinaryOperator.create("DIV");
 	
+	/**
+	 * The <code>==</code> operator.
+	 */
 	public static var EQ:BinaryOperator = BinaryOperator.create("EQ");
 	
+	/**
+	 * The <code>>=</code> operator.
+	 */
 	public static var GE:BinaryOperator = BinaryOperator.create("GE");
 	
+	/**
+	 * The <code>></code> operator.
+	 */
 	public static var GT:BinaryOperator = BinaryOperator.create("GT");
 	
+	/**
+	 * The <code<=</code> operator.
+	 */
 	public static var LE:BinaryOperator = BinaryOperator.create("LE");
 	
+	/**
+	 * The <code><</code> operator.
+	 */
 	public static var LT:BinaryOperator = BinaryOperator.create("LT");
 	
+	/**
+	 * The <code>%</code> operator.
+	 */
 	public static var MOD:BinaryOperator = BinaryOperator.create("MOD");
 	
+	/**
+	 * The <code>*</code> operator.
+	 */
 	public static var MUL:BinaryOperator = BinaryOperator.create("MUL");
 	
+	/**
+	 * The <code>!=</code> operator.
+	 */
 	public static var NE:BinaryOperator = BinaryOperator.create("NE");
 	
+	/**
+	 * The <code>||</code> operator.
+	 */
 	public static var OR:BinaryOperator = BinaryOperator.create("OR");
 	
+	/**
+	 * The <code><<</code> operator.
+	 */
 	public static var SL:BinaryOperator = BinaryOperator.create("SL");
 	
+	/**
+	 * The <code>>></code> operator.
+	 */
 	public static var SR:BinaryOperator = BinaryOperator.create("SR");
 	
+	/**
+	 * The <code>>>></code> operator.
+	 */
 	public static var SRU:BinaryOperator = BinaryOperator.create("SRU");
 	
+	/**
+	 * The <code>-</code> operator.
+	 */
 	public static var SUB:BinaryOperator = BinaryOperator.create("SUB");
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Private Static :: Variables
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private static var OPERATORS_BY_TYPE:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 */
+	private static var TYPES_BY_OPERATOR:IMap = new HashMap();
+	
+	/**
+	 * @private
+	 */
 	private static var intialized:Boolean = false;
 	
+	/**
+	 * @private
+	 */
 	private static function initialize():void
 	{
 		if (intialized)
@@ -117,6 +192,9 @@ public final class BinaryOperator
 		intialized = true;
 	}
 	
+	/**
+	 * @private
+	 */
 	private static function mapOp(kind:String, text:String, operator:BinaryOperator):void
 	{
 		OPERATORS_BY_TYPE.put(kind, operator);
@@ -189,16 +267,13 @@ public final class BinaryOperator
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Creates a new BinaryOperator.
+	 * Returns the operator from a node kind.
 	 * 
-	 * @param name A String indicating the name of the BinaryOperator.
-	 * @return A new BinaryOperator instance.
+	 * @param The node kind.
+	 * @return The <code>BinaryOperator</code> for the node kind or throws
+	 * an error.
+	 * @throws IllegalOperationError No operator for token-kind
 	 */
-	private static function create(name:String):BinaryOperator
-	{
-		return new BinaryOperator(name);
-	}
-	
 	public static function opFromKind(kind:String):BinaryOperator
 	{
 		if (!intialized)
@@ -209,13 +284,22 @@ public final class BinaryOperator
 		var op:BinaryOperator = OPERATORS_BY_TYPE.getValue(kind);
 		if (op == null) 
 		{
-			throw new IllegalOperationError("No operator for token-type '" + 
+			throw new IllegalOperationError("No operator for token-kind '" + 
 				ASTUtil.tokenName(kind) + "'");
 		}
 		return op;
 	}
 	
-	public static function initializeFromOp(operator:BinaryOperator, tok:IToken):void
+	/**
+	 * Initializes a token from an operator.
+	 * 
+	 * @param operator The <code>BinaryOperator</code> to initialize the token.
+	 * an error.
+	 * @param token The <code>IToken</code> to initialize.
+	 * @throws IllegalOperationError No operator for Op
+	 */
+	public static function initializeFromOp(operator:BinaryOperator, 
+											token:IToken):void
 	{
 		if (!intialized)
 		{
@@ -227,8 +311,27 @@ public final class BinaryOperator
 		{
 			throw new IllegalOperationError("No operator for Op " + operator);
 		}
-		tok.kind = type.kind;
-		tok.text = type.text;
+		
+		token.kind = type.kind;
+		token.text = type.text;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private Class :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Creates a new <code>BinaryOperator</code>.
+	 * 
+	 * @param name A <code>String</code> indicating the name of the 
+	 * <code>BinaryOperator</code>.
+	 * @return A new <code>BinaryOperator</code> instance.
+	 */
+	private static function create(name:String):BinaryOperator
+	{
+		return new BinaryOperator(name);
 	}
 }
 }
