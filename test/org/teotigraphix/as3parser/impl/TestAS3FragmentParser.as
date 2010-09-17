@@ -75,13 +75,13 @@ public class TestAS3FragmentParser
 		ast = AS3FragmentParser.parseClassContent("private var hello:World = null; " +
 			"flash_proxy function getProperty():Object{return null;}");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<content><field-list><mod-list><mod>private</mod>" +
-			"</mod-list><field-role><var></var></field-role><name-type-init>" +
-			"<name>hello</name><type>World</type><init><null>null</null>" +
-			"</init></name-type-init></field-list><function><mod-list>" +
-			"<mod>flash_proxy</mod></mod-list><accessor-role></accessor-role>" +
-			"<name>getProperty</name><parameter-list></parameter-list>" +
-			"<type>Object</type></function></content>", result);
+		Assert.assertEquals("<content><field-list><mod-list><mod>private</mod></mod-list>" +
+			"<field-role><var></var></field-role><name-type-init><name>hello</name>" +
+			"<type>World</type><init><null>null</null></init></name-type-init></field-list>" +
+			"<function><mod-list><mod>flash_proxy</mod></mod-list><accessor-role>" +
+			"</accessor-role><name>getProperty</name><parameter-list></parameter-list>" +
+			"<type>Object</type><block><return><null>null</null></return></block>" +
+			"</function></content>", result);
 	}
 	
 	[Test]

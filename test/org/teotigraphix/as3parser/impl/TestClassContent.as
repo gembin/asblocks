@@ -70,66 +70,88 @@ public class TestClassContent
 	}
 	
 	[Test]
+	public function testMethodBug1():void
+	{
+		assertClassContent("1",
+			"model_internal static function initRemoteClassAliasSingle( cz : Class ) : void { } ",
+			"<function line=\"2\" column=\"1\">" +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">model_internal" +
+			"</mod><mod line=\"2\" column=\"16\">static</mod></mod-list><accessor-role " +
+			"line=\"2\" column=\"32\"></accessor-role><name line=\"2\" column=\"32\">" +
+			"initRemoteClassAliasSingle</name><parameter-list line=\"2\" column=\"58\">" +
+			"<parameter line=\"2\" column=\"60\"><name-type-init line=\"2\" " +
+			"column=\"60\"><name line=\"2\" column=\"60\">cz</name><type line=\"2\" " +
+			"column=\"65\">Class</type></name-type-init></parameter></parameter-list>" +
+			"<type line=\"2\" column=\"75\">void</type><block line=\"2\" column=\"80\">" +
+			"</block></function>");
+	}
+	
+	[Test]
 	public function testMethods():void
 	{
 		assertClassContent("1",
 			"function a(){}",
 			"<function line=\"2\" column=\"1\"><accessor-role line=\"2\" " +
-			"column=\"10\"></accessor-role><name line=\"2\" column=\"10\">a</name>" +
-			"<parameter-list line=\"2\" column=\"11\"></parameter-list></function>");
+			"column=\"10\"></accessor-role><name line=\"2\" column=\"10\">a" +
+			"</name><parameter-list line=\"2\" column=\"11\"></parameter-list>" +
+			"<block line=\"2\" column=\"13\"></block></function>");
 
 		assertClassContent("2",
 			"function set a( value : int ) : void {}",
-			"<function line=\"2\" column=\"1\"><accessor-role line=\"2\" " +
-			"column=\"10\"><set line=\"2\" column=\"10\"></set></accessor-role><" +
-			"name line=\"2\" column=\"14\">a</name><parameter-list line=\"2\" " +
-			"column=\"15\"><parameter line=\"2\" column=\"17\"><name-type-init " +
-			"line=\"2\" column=\"17\"><name line=\"2\" column=\"17\">value</name>" +
-			"<type line=\"2\" column=\"25\">int</type></name-type-init></parameter>" +
-			"</parameter-list></function>");
+			"<function line=\"2\" column=\"1\">" +
+			"<accessor-role line=\"2\" column=\"10\"><set line=\"2\" column=\"10\">" +
+			"</set></accessor-role><name line=\"2\" column=\"14\">a</name>" +
+			"<parameter-list line=\"2\" column=\"15\"><parameter line=\"2\" " +
+			"column=\"17\"><name-type-init line=\"2\" column=\"17\"><name line=\"2\" " +
+			"column=\"17\">value</name><type line=\"2\" column=\"25\">int</type>" +
+			"</name-type-init></parameter></parameter-list><type line=\"2\" " +
+			"column=\"33\">void</type><block line=\"2\" column=\"38\"></block>" +
+			"</function>");
 		
 		assertClassContent("3",
 			"function get a() : int {}",
 			"<function line=\"2\" column=\"1\"><accessor-role line=\"2\" " +
 			"column=\"10\"><get line=\"2\" column=\"10\"></get></accessor-role>" +
 			"<name line=\"2\" column=\"14\">a</name><parameter-list line=\"2\" " +
-			"column=\"15\"></parameter-list></function>");
+			"column=\"15\"></parameter-list><type line=\"2\" column=\"20\">int" +
+			"</type><block line=\"2\" column=\"24\"></block></function>");
 		
-		assertClassContent( "function with default parameter",
-			"public function newLine ( height:*='' ):void{}",
+		assertClassContent("function with default parameter",
+			"public function newLine ( height : * = '' ) : void { } ",
 			"<function line=\"2\" column=\"1\"><mod-list line=\"2\" column=\"1\">" +
 			"<mod line=\"2\" column=\"1\">public</mod></mod-list><accessor-role " +
-			"line=\"2\" column=\"17\"></accessor-role><name line=\"2\" " +
-			"column=\"17\">newLine</name><parameter-list line=\"2\" " +
-			"column=\"25\"><parameter line=\"2\" column=\"27\">" +
-			"<name-type-init line=\"2\" column=\"27\"><name line=\"2\" " +
-			"column=\"27\">height</name><type line=\"2\" column=\"34\">*</type>" +
-			"<init line=\"2\" column=\"36\"><string line=\"2\" column=\"36\">''" +
-			"</string></init></name-type-init></parameter></parameter-list>" +
-			"<type line=\"2\" column=\"41\">void</type></function>" );
+			"line=\"2\" column=\"17\"></accessor-role><name line=\"2\" column=\"17\">" +
+			"newLine</name><parameter-list line=\"2\" column=\"25\"><parameter " +
+			"line=\"2\" column=\"27\"><name-type-init line=\"2\" column=\"27\">" +
+			"<name line=\"2\" column=\"27\">height</name><type line=\"2\" " +
+			"column=\"36\">*</type><init line=\"2\" column=\"40\"><string " +
+			"line=\"2\" column=\"40\">''</string></init></name-type-init>" +
+			"</parameter></parameter-list><type line=\"2\" column=\"47\">void" +
+			"</type><block line=\"2\" column=\"52\"></block></function>");
 		
 		assertClassContent("4",
-			"/** Asdoc comment. */ public function a():void{}",
+			"/** Asdoc comment. */ public function a ( ) : void { }",
 			"<function line=\"2\" column=\"23\"><as-doc line=\"2\" " +
 			"column=\"1\">/** Asdoc comment. */</as-doc><mod-list line=\"2\" " +
 			"column=\"23\"><mod line=\"2\" column=\"23\">public</mod>" +
 			"</mod-list><accessor-role line=\"2\" column=\"39\"></accessor-role>" +
 			"<name line=\"2\" column=\"39\">a</name><parameter-list line=\"2\" " +
-			"column=\"40\"></parameter-list><type line=\"2\" column=\"43\">" +
-			"void</type></function>");
+			"column=\"41\"></parameter-list><type line=\"2\" column=\"47\">void" +
+			"</type><block line=\"2\" column=\"52\"></block></function>");
 		
 		assertClassContent("5",
-			"public function log(message:String, ... rest):void{}",
-			"<function line=\"2\" column=\"1\"><mod-list line=\"2\" column=\"1\">" +
-			"<mod line=\"2\" column=\"1\">public</mod></mod-list><accessor-role " +
-			"line=\"2\" column=\"17\"></accessor-role><name line=\"2\" " +
-			"column=\"17\">log</name><parameter-list line=\"2\" column=\"20\">" +
-			"<parameter line=\"2\" column=\"21\"><name-type-init line=\"2\" " +
-			"column=\"21\"><name line=\"2\" column=\"21\">message</name><type " +
-			"line=\"2\" column=\"29\">String</type></name-type-init></parameter>" +
-			"<parameter line=\"2\" column=\"37\"><rest line=\"2\" column=\"41\">" +
-			"rest</rest></parameter></parameter-list><type line=\"2\" " +
-			"column=\"47\">void</type></function>");
+			"public function log ( message : String , ... rest ) : void { } ",
+			"<function line=\"2\" column=\"1\">" +
+			"<mod-list line=\"2\" column=\"1\"><mod line=\"2\" column=\"1\">" +
+			"public</mod></mod-list><accessor-role line=\"2\" column=\"17\">" +
+			"</accessor-role><name line=\"2\" column=\"17\">log</name><parameter-list " +
+			"line=\"2\" column=\"21\"><parameter line=\"2\" column=\"23\">" +
+			"<name-type-init line=\"2\" column=\"23\"><name line=\"2\" column=\"23\">" +
+			"message</name><type line=\"2\" column=\"33\">String</type></name-type-init>" +
+			"</parameter><parameter line=\"2\" column=\"42\"><rest line=\"2\" " +
+			"column=\"46\">rest</rest></parameter></parameter-list><type line=\"2\" " +
+			"column=\"55\">void</type><block line=\"2\" column=\"60\"></block>" +
+			"</function>");
 	}
 	
 	[Test]

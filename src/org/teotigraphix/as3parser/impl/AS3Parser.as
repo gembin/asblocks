@@ -493,28 +493,23 @@ public class AS3Parser extends ParserBase
 			else if (tokIs(KeyWords.VAR))
 			{
 				result.addChild(parseClassField(pendingMember));
-				pendingMember = null;
+				pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
 			}
 			else if (tokIs(KeyWords.CONST))
 			{
 				result.addChild(parseClassConstant(pendingMember));
-				pendingMember = null;
+				pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
 			}
 			else if (tokIs(KeyWords.FUNCTION))
 			{
 				result.addChild(parseClassFunction(pendingMember));
-				pendingMember = null;
+				pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
 			}
 			else
 			{
 				var isWhitespace:Boolean = tokIsWhitespace();
 				if (!tokIsWhitespace())
 				{
-					if (!pendingMember)
-					{
-						pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
-					}
-					
 					addAsDoc(pendingMember);
 					
 					if (!pendingMember.hasKind(AS3NodeKind.MOD_LIST))
@@ -1047,34 +1042,45 @@ public class AS3Parser extends ParserBase
 	{
 		result.kind = AS3NodeKind.FUNCTION;
 		
-		var role:TokenNode = adapter.empty(
-			AS3NodeKind.ACCESSOR_ROLE, token);
+		var role:TokenNode = adapter.empty(AS3NodeKind.ACCESSOR_ROLE, token);
 		result.addChild(role);
 		
+		// function role
 		if (tokIs(KeyWords.GET) || tokIs(KeyWords.SET))
 		{
 			role.addChild(adapter.empty(token.text, token));
 			consume(token.text, role);
 		}
 		
+		// function name
 		result.addChild(adapter.copy(AS3NodeKind.NAME, token));
 		
-		nextNonWhiteSpaceToken(result);
+		nextNonWhiteSpaceToken(result); // should be (
 		
+		// function parameters
 		result.addChild(parseParameterList());
-		result.addChild(parseOptionalType(result));
 		
-		if (tokIs(Operators.SEMI))
+		// tokens between the ) and possible :
+		consumeWhitespace(result); // spaces, tabs
+		
+		// has type, should be a colon
+		if (tokIs(Operators.COLON))
 		{
-			consume(Operators.SEMI, result);
+			result.addChild(parseOptionalType(result));
+			consumeWhitespace(result);
+		}
+		
+		// interface function; return
+		if (!tokIs(Operators.LCURLY) || tokIs(Operators.SEMI))
+		{
+			skip(Operators.SEMI, result);
 			return result;
 		}
 		
-		nextNonWhiteSpaceToken(result);
-		
 		if (!tokIs(Operators.LCURLY))
 		{
-			return result;
+			// {
+			nextNonWhiteSpaceToken(result);
 		}
 		
 		result.addChild(parseBlock());
@@ -1722,12 +1728,13 @@ public class AS3Parser extends ParserBase
 		while (!tokIs(Operators.RPAREN))
 		{
 			result.addChild(parseParameter());
-			if (tokIs(Operators.COMMA))
-			{
-				consume(Operators.COMMA, result);
-			}
+			//if (tokIs(Operators.COMMA))
+			//{
+			//	consume(Operators.COMMA, result);
+			//}
+			skip(Operators.COMMA, result);
 		}
-		consume(Operators.RPAREN);
+		consumeWS(Operators.RPAREN, result, false);
 		
 		return result;
 	}
