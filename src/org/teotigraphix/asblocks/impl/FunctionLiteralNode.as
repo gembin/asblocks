@@ -183,11 +183,11 @@ public class FunctionLiteralNode extends ExpressionNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addRestParam()
+	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addRestParameter()
 	 */
-	public function addRestParam(name:String):IArgument
+	public function addRestParameter(name:String):IArgument
 	{
-		return functionMixin.addRestParam(name);
+		return functionMixin.addRestParameter(name);
 	}
 	
 	//--------------------------------------------------------------------------

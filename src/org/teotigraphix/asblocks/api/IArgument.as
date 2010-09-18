@@ -49,6 +49,11 @@ public interface IArgument extends IScriptNode
 	 */
 	function set defaultValue(value:String):void;
 	
+	/**
+	 * Returns <code>true</code> if a default value exist.
+	 */
+	function get hasDefaultValue():Boolean;
+	
 	//----------------------------------
 	//  description
 	//----------------------------------

@@ -2626,16 +2626,13 @@ public class AS3Parser extends ParserBase
 	 */
 	internal function parseExpressionStatement():IParserNode
 	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.EXPR_STMNT,
-			null, 
-			token.line, 
-			token.column);
+		var result:TokenNode = adapter.empty(AS3NodeKind.EXPR_STMNT, token);
 		
 		result.addChild(parseAssignmentExpression());
 		
 		while (tokIs(Operators.COMMA))
 		{
+			// FIXME eat comma
 			nextNonWhiteSpaceToken(result);
 			result.addChild(parseAssignmentExpression());
 		}

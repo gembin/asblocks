@@ -82,6 +82,6 @@ public interface IFunctionCommon
 	/**
 	 * TODO Docme
 	 */
-	function addRestParam(name:String):IArgument;
+	function addRestParameter(name:String):IArgument;
 }
 }

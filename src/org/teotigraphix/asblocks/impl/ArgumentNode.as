@@ -20,9 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IArgument;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IArgument;
 
 /**
  * The <code>IArgument</code> implementation.
@@ -36,7 +36,7 @@ public class ArgumentNode extends ScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ISimpleNameExpressionNode API :: Properties
+	//  IArgument API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -45,10 +45,19 @@ public class ArgumentNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IArgument#defaultValue
 	 */
 	public function get defaultValue():String
 	{
+		if (!isRest)
+		{
+			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
+			var init:IParserNode = ast.getKind(AS3NodeKind.INIT);
+			if (init)
+			{
+				return init.stringValue;
+			}
+		}
 		return null;
 	}
 	
@@ -60,12 +69,27 @@ public class ArgumentNode extends ScriptNode
 		// TODO impl
 	}
 	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IArgument#hasDefaultValue
+	 */
+	public function get hasDefaultValue():Boolean
+	{
+		if (!isRest)
+		{
+			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
+			var init:IParserNode = ast.getKind(AS3NodeKind.INIT);
+			
+			return init != null;
+		}
+		return false;
+	}
+	
 	//----------------------------------
 	//  description
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IArgument#description
 	 */
 	public function get description():String
 	{
@@ -85,22 +109,24 @@ public class ArgumentNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IArgument#name
 	 */
 	public function get name():String
 	{
+		if (isRest)
+		{
+			var rest:IParserNode = node.getKind(AS3NodeKind.REST);
+			return rest.stringValue;
+		}
+		
 		var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
 		var name:IParserNode = ast.getKind(AS3NodeKind.NAME);
-		if (ast)
+		if (name)
 		{
-			if (isRest)
-			{
-				return "...";
-			}
-			// IllegalStateException
-			throw new Error("No parameter name, and not a 'rest' parameter");
+			return name.stringValue;
 		}
-		return name.stringValue;
+		// IllegalStateException
+		throw new Error("No parameter name, and not a 'rest' parameter");
 	}
 	
 	//----------------------------------
@@ -108,15 +134,18 @@ public class ArgumentNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IArgument#type
 	 */
 	public function get type():String
 	{
-		var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-		var type:IParserNode = ast.getKind(AS3NodeKind.TYPE);
-		if (type)
+		if (!isRest)
 		{
-			return type.stringValue;
+			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
+			var type:IParserNode = ast.getKind(AS3NodeKind.TYPE);
+			if (type)
+			{
+				return type.stringValue;
+			}
 		}
 		return null;
 	}
@@ -126,16 +155,11 @@ public class ArgumentNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _isRest:Boolean;
-	
-	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IArgument#isRest
 	 */
 	public function get isRest():Boolean
 	{
-		return _isRest; 		// TODO impl
+		return node.hasKind(AS3NodeKind.REST);
 	}
 	
 	//--------------------------------------------------------------------------

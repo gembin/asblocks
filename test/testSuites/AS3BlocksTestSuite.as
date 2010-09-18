@@ -12,6 +12,7 @@ import org.teotigraphix.asblocks.impl.TestExpressionNodes;
 import org.teotigraphix.asblocks.impl.TestFieldNode;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
 import org.teotigraphix.asblocks.impl.TestLiteralNodes;
+import org.teotigraphix.asblocks.impl.TestMethodNode;
 import org.teotigraphix.asblocks.impl.TestPackageNode;
 import org.teotigraphix.asblocks.impl.TestPrefixExpression;
 import org.teotigraphix.asblocks.impl.TestStatementList;
@@ -37,6 +38,7 @@ public class AS3BlocksTestSuite
 	public var testBinaryExpression:TestBinaryExpression;
 	public var testTokenBoundaries:TestTokenBoundaries;
 	public var testFieldNode:TestFieldNode;
+	public var testMethodNode:TestMethodNode;
 	public var testPrefixExpression:TestPrefixExpression;
 	public var testStatementList:TestStatementList;
 	
