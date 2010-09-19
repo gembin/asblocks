@@ -63,6 +63,61 @@ public class TestReturnStatement extends AbstractStatementTest
 	}
 	
 	[Test]
+	public function testLabelBlock():void
+	{
+		var input:String = "foo : { }";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<label line=\"1\" column=\"5\"><expr-stmnt line=\"1\" column=\"1\">" +
+			"<primary line=\"1\" column=\"1\">foo</primary></expr-stmnt><block " +
+			"line=\"1\" column=\"7\"></block></label>");
+		
+		input = "foo : { break foo; }";
+		assertStatementPrint(input);
+		assertStatement("2",
+			input,
+			"<label line=\"1\" column=\"5\"><expr-stmnt line=\"1\" column=\"1\">" +
+			"<primary line=\"1\" column=\"1\">foo</primary></expr-stmnt><block " +
+			"line=\"1\" column=\"7\"><break line=\"1\" column=\"9\"><primary " +
+			"line=\"1\" column=\"15\">foo</primary></break></block></label>");
+	}
+	
+	[Test]
+	public function testBreak():void
+	{
+		var input:String = "break;";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<break line=\"1\" column=\"1\"></break>");
+		
+		input = "break myLoop;";
+		assertStatementPrint(input);
+		assertStatement("2",
+			input,
+			"<break line=\"1\" column=\"1\"><primary line=\"1\" column=\"7\">myLoop" +
+			"</primary></break>");
+	}
+	
+	[Test]
+	public function testContinue():void
+	{
+		var input:String = "continue;";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<continue line=\"1\" column=\"1\"></continue>");
+		
+		input = "continue myLoop;";
+		assertStatementPrint(input);
+		assertStatement("2",
+			input,
+			"<continue line=\"1\" column=\"1\"><primary line=\"1\" column=\"10\">myLoop" +
+			"</primary></continue>");
+	}
+	
+	[Test]
 	public function testThis():void
 	{
 		var input:String = "this;";

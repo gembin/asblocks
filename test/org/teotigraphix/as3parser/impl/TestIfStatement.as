@@ -32,6 +32,22 @@ package org.teotigraphix.as3parser.impl
 public class TestIfStatement extends AbstractStatementTest
 {
 	[Test]
+	public function testConditionalCompilationIf():void
+	{
+		var input:String = "CONFIG :: DEBUG { if( true ){ trace( true ); } }";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<config line=\"1\" column=\"1\"><name line=\"-1\" column=\"-1\">DEBUG" +
+			"</name><block line=\"1\" column=\"17\"><if line=\"1\" column=\"19\">" +
+			"<condition line=\"1\" column=\"21\"><true line=\"1\" column=\"23\">true" +
+			"</true></condition><block line=\"1\" column=\"29\"><expr-stmnt line=\"1\" " +
+			"column=\"31\"><call line=\"1\" column=\"36\"><primary line=\"1\" column=\"31\">" +
+			"trace</primary><arguments line=\"1\" column=\"36\"><true line=\"1\" " +
+			"column=\"38\">true</true></arguments></call></expr-stmnt></block></if>" +
+			"</block></config>");
+	}
+	
+	[Test]
 	public function testIf():void
 	{
 		var input:String = "if( true ){ trace( true ); }";

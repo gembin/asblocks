@@ -45,6 +45,28 @@ public class TestForStatement extends AbstractStatementTest
 	}
 	
 	[Test]
+	public function testSimpleForWithLabel():void
+	{
+		var input:String = "myLoop : for( var i : int = 0; i < length; i++ ){ }";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<label line=\"1\" column=\"8\"><expr-stmnt line=\"1\" column=\"1\"><primary " +
+			"line=\"1\" column=\"1\">myLoop</primary></expr-stmnt><for line=\"1\" " +
+			"column=\"10\"><init line=\"1\" column=\"15\"><dec-list line=\"1\" " +
+			"column=\"15\"><dec-role line=\"1\" column=\"15\"><var line=\"1\" " +
+			"column=\"15\"></var></dec-role><name-type-init line=\"1\" column=\"19\">" +
+			"<name line=\"1\" column=\"19\">i</name><type line=\"1\" column=\"23\">" +
+			"int</type><init line=\"1\" column=\"29\"><number line=\"1\" column=\"29\">" +
+			"0</number></init></name-type-init></dec-list></init><cond line=\"1\" " +
+			"column=\"32\"><relational line=\"1\" column=\"32\"><primary line=\"1\" " +
+			"column=\"32\">i</primary><lt line=\"1\" column=\"34\">&lt;</lt>" +
+			"<primary line=\"1\" column=\"36\">length</primary></relational></cond>" +
+			"<iter line=\"1\" column=\"44\"><post-inc line=\"1\" column=\"45\">" +
+			"<primary line=\"1\" column=\"44\">i</primary></post-inc></iter>" +
+			"<block line=\"1\" column=\"49\"></block></for></label>");
+	}
+	
+	[Test]
 	public function testSimpleForEach():void
 	{
 		var input:String = "for each( var obj : Object in list ){ obj.print( i ); }";

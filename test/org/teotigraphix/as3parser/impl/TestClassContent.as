@@ -15,6 +15,21 @@ public class TestClassContent
 	}
 	
 	[Test]
+	public function testConditionalCompilation():void
+	{
+		assertClassContent( "with conditional compilation",
+			"CONFIG::DEBUG { function output():String { return null; } } ",
+			"<config line=\"2\" column=\"1\">" +
+			"<name line=\"-1\" column=\"-1\">DEBUG</name><function line=\"2\" " +
+			"column=\"1\"><accessor-role line=\"2\" column=\"26\"></accessor-role>" +
+			"<name line=\"2\" column=\"26\">output</name><parameter-list line=\"2\" " +
+			"column=\"32\"></parameter-list><type line=\"2\" column=\"35\">String" +
+			"</type><block line=\"2\" column=\"42\"><return line=\"2\" column=\"44\">" +
+			"<null line=\"2\" column=\"51\">null</null></return></block></function>" +
+			"</config>" );
+	}
+	
+	[Test]
 	public function testConstDeclarations():void
 	{
 		assertClassContent("1",

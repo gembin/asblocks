@@ -35,7 +35,6 @@ import org.teotigraphix.as3parser.core.Node;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
-// FIXME implement label
 // FIXME XML and RegExp
 
 /**
@@ -461,11 +460,13 @@ public class AS3Parser extends ParserBase
 		
 		consumeWS(Operators.LCURLY, result);
 		
+		var originalResult:TokenNode;
+		var configResult:TokenNode;
 		var pendingMember:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
 		var pendingMetaList:TokenNode;
 		var pendingModList:TokenNode;
 		
-		while (!tokIs(Operators.RCURLY))
+		while (!tokIs(Operators.RCURLY) || configResult && tokIs(Operators.RCURLY))
 		{
 			if (tokenStartsWith(ASDOC_COMMENT))
 			{
@@ -507,6 +508,22 @@ public class AS3Parser extends ParserBase
 			{
 				result.addChild(parseClassFunction(pendingMember));
 				pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
+			}
+			else if (tokIs(KeyWords.CONFIG))
+			{
+				originalResult = result;
+				result = configResult = adapter.empty(AS3NodeKind.CONFIG, token);
+				originalResult.addChild(configResult);
+				consume(KeyWords.CONFIG, result);
+				consume(Operators.DBL_COLON, result);
+				configResult.addChild(parseName());
+				consume(Operators.LCURLY, result);
+			}
+			else if (configResult && tokIs(Operators.RCURLY))
+			{
+				result = originalResult;
+				configResult = null;
+				consume(Operators.RCURLY);
 			}
 			else
 			{
@@ -816,6 +833,17 @@ public class AS3Parser extends ParserBase
 		consume(KeyWords.FUNCTION, result);
 		parseFunction(result);
 		
+		return result;
+	}
+	
+	private function parseConfig():TokenNode
+	{
+		var result:TokenNode = adapter.empty(AS3NodeKind.CONFIG, token);
+		consume(KeyWords.CONFIG, result);
+		consume(Operators.DBL_COLON, result);
+		result.addChild(parseName());
+		consumeWhitespace(result);
+		result.addChild(parseBlock());
 		return result;
 	}
 	
@@ -1870,8 +1898,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseIncrement(node:TokenNode):TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.POST_INC, token);
+		var result:TokenNode = adapter.empty(AS3NodeKind.POST_INC, token);
 		
 		result.addChild(node);
 		consume(Operators.INC, result);
@@ -1883,11 +1910,22 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseDecrement(node:TokenNode):TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.POST_DEC, token);
+		var result:TokenNode = adapter.empty(AS3NodeKind.POST_DEC, token);
 		
 		result.addChild(node);
 		consume(Operators.DEC, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseLabel(node:TokenNode):TokenNode
+	{
+		var result:TokenNode = adapter.empty(AS3NodeKind.LABEL, token);
+		result.addChild(node);
+		consume(Operators.COLON, result);
+		result.addChild(parseStatement());
 		return result;
 	}
 	
@@ -2103,6 +2141,10 @@ public class AS3Parser extends ParserBase
 		{
 			result = parseCatch();
 		}
+		else if (tokIs(KeyWords.CONFIG))
+		{
+			result = parseConfig();
+		}
 		else if (tokIs(KeyWords.FINALLY))
 		{
 			result = parseFinally();
@@ -2139,6 +2181,14 @@ public class AS3Parser extends ParserBase
 		{
 			result = parseBreakStatement();
 		}
+		else if (tokIs(KeyWords.CONTINUE))
+		{
+			result = parseContinueStatement();
+		}
+		else if (tokIs(Operators.COLON))
+		{
+			result = parseLabel(null);
+		}
 		else if (tokIs(Operators.SEMI))
 		{
 			result = parseEmptyStatement();
@@ -2146,7 +2196,14 @@ public class AS3Parser extends ParserBase
 		else
 		{
 			result = parseExpressionStatement() as TokenNode;
-			skip(Operators.SEMI, result);
+			if (tokIs(Operators.COLON))
+			{
+				result = parseLabel(result);
+			}
+			else
+			{
+				skip(Operators.SEMI, result);
+			}
 		}
 		return result;
 	}
@@ -2363,9 +2420,27 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseBreakStatement():TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.BREAK, token);
+		var result:TokenNode = adapter.empty(AS3NodeKind.BREAK, token);
 		consume(KeyWords.BREAK, result);
+		if (!tokIs(Operators.SEMI))
+		{
+			result.addChild(parseExpression());
+		}
+		skip(Operators.SEMI, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseContinueStatement():TokenNode
+	{
+		var result:TokenNode = adapter.empty(AS3NodeKind.CONTINUE, token);
+		consume(KeyWords.CONTINUE, result);
+		if (!tokIs(Operators.SEMI))
+		{
+			result.addChild(parseExpression());
+		}
 		skip(Operators.SEMI, result);
 		return result;
 	}

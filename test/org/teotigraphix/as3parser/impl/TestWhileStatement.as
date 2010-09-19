@@ -45,6 +45,21 @@ public class TestWhileStatement extends AbstractStatementTest
 	}
 	
 	[Test]
+	public function testWhileWithLabel():void
+	{
+		var input:String = "myLoop : while( i++ ){ break myLoop; }";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<label line=\"1\" column=\"8\"><expr-stmnt line=\"1\" column=\"1\">" +
+			"<primary line=\"1\" column=\"1\">myLoop</primary></expr-stmnt><while " +
+			"line=\"1\" column=\"10\"><condition line=\"1\" column=\"15\"><post-inc " +
+			"line=\"1\" column=\"18\"><primary line=\"1\" column=\"17\">i</primary>" +
+			"</post-inc></condition><block line=\"1\" column=\"22\"><break line=\"1\" " +
+			"column=\"24\"><primary line=\"1\" column=\"30\">myLoop</primary>" +
+			"</break></block></while></label>");
+	}
+	
+	[Test]
 	public function testWhileWithEmptyStatement():void
 	{
 		var input:String = "while( i++ ); ";

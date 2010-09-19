@@ -41,15 +41,17 @@ public class TestInterfaceContent
 		parser = new AS3Parser();
 	}
 	
-	// FIXME testConditionalCompilation()
-	//[Test]
+	[Test]
 	public function testConditionalCompilation():void
 	{
 		assertInterfaceContent( "with conditional compilation",
 			"CONFIG::DEBUG { function output():String; } ",
-			"<function line=\"2\" column=\"43\"><name line=\"2\" column=\"26\">"
-			+ "output</name><parameter-list line=\"2\" column=\"33\"></parameter-list>"
-			+ "<type line=\"2\" column=\"35\">String</type></function>" );
+			"<config line=\"2\" column=\"1\">" +
+			"<name line=\"-1\" column=\"-1\">DEBUG</name><function line=\"2\" " +
+			"column=\"1\"><accessor-role line=\"2\" column=\"26\"></accessor-role>" +
+			"<name line=\"2\" column=\"26\">output</name><parameter-list line=\"2\" " +
+			"column=\"32\"></parameter-list><type line=\"2\" column=\"35\">String</type>" +
+			"</function></config>" );
 	}
 	
 	[Test]

@@ -42,7 +42,11 @@ public class KeyWords
 	
 	public static const CLASS:String = "class";
 	
+	public static const CONFIG:String = "CONFIG";
+	
 	public static const CONST:String = "const";
+	
+	public static const CONTINUE:String = "continue";
 	
 	public static const DEFAULT:String = "default";
 	

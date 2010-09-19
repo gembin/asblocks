@@ -335,6 +335,8 @@ public class AS3NodeKind
 	
 	public static const COMMA:String = "comma";
 	
+	public static const CONFIG:String = "config";
+	
 	public static const NAMESPACE:String = "namespace";
 	
 	public static const SEMI:String = "semi";
@@ -437,6 +439,8 @@ public class AS3NodeKind
 	//----------------------------------
 	//  Statement
 	//----------------------------------
+	
+	public static const LABEL:String = "label";
 	
 	public static const FOR:String = "for";
 	
