@@ -72,6 +72,7 @@ import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
 import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
 import org.teotigraphix.asblocks.api.IWhileStatement;
+import org.teotigraphix.asblocks.api.IWithStatement;
 
 /**
  * A default null visitor implementation that can be subclassed.
@@ -283,6 +284,10 @@ public class NullASBlockVisitor implements IASBlockVisitor
 	}
 	
 	public function visitWhileStatement(element:IWhileStatement):void
+	{
+	}
+	
+	public function visitWithStatement(element:IWithStatement):void
 	{
 	}
 }

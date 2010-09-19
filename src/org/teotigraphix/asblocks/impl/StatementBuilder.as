@@ -89,11 +89,11 @@ public class StatementBuilder
 			case AS3NodeKind.TRY:
 				return new TryStatementNode(ast);
 				
-			//case AS3NodeKind.WHILE:
-			//	return new WhileStatementNode(ast);
+			case AS3NodeKind.WHILE:
+				return new WhileStatementNode(ast);
 			
-			//case AS3NodeKind.WITH:
-			//	return new WithStatementNode(ast);
+			case AS3NodeKind.WITH:
+				return new WithStatementNode(ast);
 				
 			default:
 				throw new Error("unhandled statement node type: '" + ast.kind + "'");

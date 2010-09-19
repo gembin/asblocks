@@ -43,6 +43,7 @@ import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IWhileStatement;
+import org.teotigraphix.asblocks.api.IWithStatement;
 
 /**
  * The <code>IStatementContainer</code> implementation.
@@ -299,6 +300,14 @@ public class ContainerDelegate extends ScriptNode
 	public function newWhile(condition:IExpression):IWhileStatement
 	{
 		return statementContainer.newWhile(condition);
+	}
+	
+	/**
+	 * @private
+	 */
+	public function newWith(condition:IExpression):IWithStatement
+	{
+		return statementContainer.newWith(condition);
 	}
 }
 }

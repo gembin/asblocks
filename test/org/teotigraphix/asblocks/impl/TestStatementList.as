@@ -20,6 +20,7 @@ import org.teotigraphix.asblocks.api.ISwitchStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IWhileStatement;
+import org.teotigraphix.asblocks.api.IWithStatement;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /*
@@ -425,6 +426,12 @@ public class TestStatementList
 	[Test]
 	public function test_newWith():void
 	{
+		var wistmt:IWithStatement = block.newWith(factory.newExpression("Math"));
+		
+		assertPrint("{\n\twith (Math){\n\t}\n}", block);
+		
+		wistmt.addStatement("a = PI * pow(r, 2)");
+		assertPrint("{\n\twith (Math){\n\t\ta = PI * pow(r, 2);\n\t}\n}", block);
 	}
 	
 	protected function assertPrint(expected:String, 

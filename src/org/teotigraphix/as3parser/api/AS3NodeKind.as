@@ -472,6 +472,8 @@ public class AS3NodeKind
 	
 	public static const WHILE:String = "while";
 	
+	public static const WITH:String = "with";
+	
 	public static const TRY:String = "try";
 	
 	public static const FINALLY:String = "finally";

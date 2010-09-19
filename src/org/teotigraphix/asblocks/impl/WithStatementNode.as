@@ -24,21 +24,21 @@ import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
-import org.teotigraphix.asblocks.api.IWhileStatement;
+import org.teotigraphix.asblocks.api.IWithStatement;
 
 /**
- * The <code>IWhileStatement</code> implementation.
+ * The <code>IWithStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class WhileStatementNode extends ContainerDelegate 
-	implements IWhileStatement
+public class WithStatementNode extends ContainerDelegate 
+	implements IWithStatement
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IWhileStatement API :: Properties
+	//  IDoWhileStatementNode API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -62,7 +62,7 @@ public class WhileStatementNode extends ContainerDelegate
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IWhileStatement#condition
+	 * @copy org.teotigraphix.asblocks.api.IWithStatement#condition
 	 */
 	public function get condition():IExpression
 	{
@@ -82,7 +82,7 @@ public class WhileStatementNode extends ContainerDelegate
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IWhileStatement#body
+	 * @copy org.teotigraphix.asblocks.api.IWithStatement#body
 	 */
 	public function get body():IStatement
 	{
@@ -98,7 +98,7 @@ public class WhileStatementNode extends ContainerDelegate
 	/**
 	 * Constructor.
 	 */
-	public function WhileStatementNode(node:IParserNode)
+	public function WithStatementNode(node:IParserNode)
 	{
 		super(node);
 	}

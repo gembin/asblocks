@@ -35,7 +35,7 @@ import org.teotigraphix.as3parser.core.Node;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
-// FIXME implement with(){}
+// FIXME implement label
 // FIXME XML and RegExp
 
 /**
@@ -2015,11 +2015,11 @@ public class AS3Parser extends ParserBase
 			
 			while (braceCount != 0)
 			{
-				if (tokIs("{"))
+				if (tokIs(Operators.LCURLY))
 				{
 					braceCount++;
 				}
-				if (tokIs("}"))
+				if (tokIs(Operators.RCURLY))
 				{
 					braceCount--;
 				}
@@ -2029,7 +2029,7 @@ public class AS3Parser extends ParserBase
 					break;
 				}
 				
-				nextTokenIgnoringAsDoc(result);
+				nextNonWhiteSpaceToken(result);
 			}
 		}
 		
@@ -2087,10 +2087,10 @@ public class AS3Parser extends ParserBase
 		{
 			result = parseDo();
 		}
-		// TODO implement with in as3parser
-		//else if (tokIs(KeyWords.WITH))
-		//{
-		//}
+		else if (tokIs(KeyWords.WITH))
+		{
+			result = parseWith();
+		}
 		else if (tokIs(KeyWords.WHILE))
 		{
 			result = parseWhile();
@@ -2499,6 +2499,21 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
+	private function parseWith():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.WITH, token);
+		
+		consume(KeyWords.WITH, result);
+		result.addChild(parseCondition());
+		consumeWhitespace(result);
+		result.addChild(parseStatement());
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
 	private function parseWhile():TokenNode
 	{
 		var result:TokenNode = adapter.empty(
@@ -2599,26 +2614,6 @@ public class AS3Parser extends ParserBase
 		var result:TokenNode = parseDeclarationList(null);
 		skip(Operators.SEMI, result);
 		return result;
-	}
-	
-	/**
-	 * @private
-	 */
-	private function nextTokenIgnoringAsDoc(node:TokenNode):void
-	{
-		do
-		{
-			nextToken();
-			if (tokIs(" "))
-			{
-				appendSpace(node);
-			}
-			else if (tokIs("\t"))
-			{
-				appendTab(node);
-			}
-		}
-		while (tokenStartsWith(MULTIPLE_LINES_COMMENT));
 	}
 	
 	/**

@@ -137,5 +137,7 @@ public class KeyWords
 	public static const VOID:String = "void";
 	
 	public static const WHILE:String = "while";
+	
+	public static const WITH:String = "with";
 }
 }

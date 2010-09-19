@@ -35,7 +35,13 @@ public class TestWhileStatement extends AbstractStatementTest
 		var input:String = "while( i++ ){ trace( i ); }";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<while line=\"1\" column=\"1\"><condition line=\"1\" column=\"6\"><post-inc line=\"1\" column=\"9\"><primary line=\"1\" column=\"8\">i</primary></post-inc></condition><block line=\"1\" column=\"13\"><expr-stmnt line=\"1\" column=\"15\"><call line=\"1\" column=\"20\"><primary line=\"1\" column=\"15\">trace</primary><arguments line=\"1\" column=\"20\"><primary line=\"1\" column=\"22\">i</primary></arguments></call></expr-stmnt></block></while>");
+			"<while line=\"1\" column=\"1\"><condition line=\"1\" column=\"6\">" +
+			"<post-inc line=\"1\" column=\"9\"><primary line=\"1\" column=\"8\">i" +
+			"</primary></post-inc></condition><block line=\"1\" column=\"13\">" +
+			"<expr-stmnt line=\"1\" column=\"15\"><call line=\"1\" column=\"20\">" +
+			"<primary line=\"1\" column=\"15\">trace</primary><arguments line=\"1\" " +
+			"column=\"20\"><primary line=\"1\" column=\"22\">i</primary></arguments>" +
+			"</call></expr-stmnt></block></while>");
 	}
 	
 	[Test]
@@ -44,7 +50,10 @@ public class TestWhileStatement extends AbstractStatementTest
 		var input:String = "while( i++ ); ";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<while line=\"1\" column=\"1\"><condition line=\"1\" column=\"6\"><post-inc line=\"1\" column=\"9\"><primary line=\"1\" column=\"8\">i</primary></post-inc></condition><stmt-empty line=\"1\" column=\"13\">;</stmt-empty></while>");
+			"<while line=\"1\" column=\"1\"><condition line=\"1\" column=\"6\">" +
+			"<post-inc line=\"1\" column=\"9\"><primary line=\"1\" column=\"8\">i" +
+			"</primary></post-inc></condition><stmt-empty line=\"1\" column=\"13\">;" +
+			"</stmt-empty></while>");
 	}
 	
 	[Test]
@@ -53,7 +62,12 @@ public class TestWhileStatement extends AbstractStatementTest
 		var input:String = "while( i++ ) trace( i ); ";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<while line=\"1\" column=\"1\"><condition line=\"1\" column=\"6\"><post-inc line=\"1\" column=\"9\"><primary line=\"1\" column=\"8\">i</primary></post-inc></condition><expr-stmnt line=\"1\" column=\"14\"><call line=\"1\" column=\"19\"><primary line=\"1\" column=\"14\">trace</primary><arguments line=\"1\" column=\"19\"><primary line=\"1\" column=\"21\">i</primary></arguments></call></expr-stmnt></while>");
+			"<while line=\"1\" column=\"1\"><condition line=\"1\" column=\"6\"><post-inc " +
+			"line=\"1\" column=\"9\"><primary line=\"1\" column=\"8\">i</primary></post-inc>" +
+			"</condition><expr-stmnt line=\"1\" column=\"14\"><call line=\"1\" column=\"19\">" +
+			"<primary line=\"1\" column=\"14\">trace</primary><arguments line=\"1\" " +
+			"column=\"19\"><primary line=\"1\" column=\"21\">i</primary></arguments>" +
+			"</call></expr-stmnt></while>");
 	}
 }
 }

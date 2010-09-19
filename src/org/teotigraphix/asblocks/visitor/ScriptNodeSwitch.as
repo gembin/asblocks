@@ -76,6 +76,7 @@ import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
 import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
 import org.teotigraphix.asblocks.api.IWhileStatement;
+import org.teotigraphix.asblocks.api.IWithStatement;
 
 /**
  * A <code>ScriptNode</code> switch handler that calls 
@@ -303,6 +304,10 @@ public class ScriptNodeSwitch implements IScriptNodeStrategy
 		else if (element is IWhileStatement)
 		{
 			visitor.visitWhileStatement(IWhileStatement(element));
+		}
+		else if (element is IWithStatement)
+		{
+			visitor.visitWithStatement(IWithStatement(element));
 		}
 		else
 		{

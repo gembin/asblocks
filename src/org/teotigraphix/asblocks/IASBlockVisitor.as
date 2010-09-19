@@ -71,6 +71,7 @@ import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
 import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
 import org.teotigraphix.asblocks.api.IWhileStatement;
+import org.teotigraphix.asblocks.api.IWithStatement;
 
 /**
  * TODO DOCME
@@ -549,7 +550,7 @@ public interface IASBlockVisitor
 	 * 
 	 * @param element The <code>IWithStatement</code>.
 	 */
-	//function visitWithStatement(element:IWithStatement):void;
+	function visitWithStatement(element:IWithStatement):void;
 	
 	/**
 	 * Visits an <code>IXMLLiteral</code> and recurses through all nodes

@@ -185,5 +185,10 @@ public interface IStatementContainer
 	 * @private
 	 */
 	function newWhile(condition:IExpression):IWhileStatement;
+	
+	/**
+	 * @private
+	 */
+	function newWith(condition:IExpression):IWithStatement;
 }
 }
