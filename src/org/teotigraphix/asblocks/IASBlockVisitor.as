@@ -65,6 +65,7 @@ import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchCase;
 import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
+import org.teotigraphix.asblocks.api.IThisStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
@@ -493,6 +494,14 @@ public interface IASBlockVisitor
 	 * @param element The <code>ISwitchStatement</code>.
 	 */
 	function visitSwitchStatement(element:ISwitchStatement):void;
+	
+	/**
+	 * Visits an <code>IThisStatement</code> and recurses through all nodes
+	 * in the AST tree.
+	 * 
+	 * @param element The <code>IThisStatement</code>.
+	 */
+	function visitThisStatement(element:IThisStatement):void;
 	
 	/**
 	 * Visits an <code>IThrowStatement</code> and recurses through all nodes

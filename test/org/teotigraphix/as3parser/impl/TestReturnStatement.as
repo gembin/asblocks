@@ -63,6 +63,34 @@ public class TestReturnStatement extends AbstractStatementTest
 	}
 	
 	[Test]
+	public function testThis():void
+	{
+		var input:String = "this;";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<this line=\"1\" column=\"1\"></this>");
+		
+		input = "this.property = 42;";
+		assertStatementPrint(input);
+		assertStatement("2",
+			input,
+			"<this line=\"1\" column=\"1\"><assignment line=\"1\" column=\"6\">" +
+			"<primary line=\"1\" column=\"6\">property</primary><assign line=\"1\" " +
+			"column=\"15\">=</assign><number line=\"1\" column=\"17\">42</number>" +
+			"</assignment></this>");
+		
+		input = "this.method(arg0, arg1);";
+		assertStatementPrint(input);
+		assertStatement("2",
+			input,
+			"<this line=\"1\" column=\"1\"><call line=\"1\" column=\"12\">" +
+			"<primary line=\"1\" column=\"6\">method</primary><arguments line=\"1\" " +
+			"column=\"12\"><primary line=\"1\" column=\"13\">arg0</primary><primary " +
+			"line=\"1\" column=\"19\">arg1</primary></arguments></call></this>");
+	}
+	
+	[Test]
 	public function testSuper():void
 	{
 		var input:String = "super(arg0, arg1);";
@@ -88,7 +116,7 @@ public class TestReturnStatement extends AbstractStatementTest
 		
 		input = "super.property = 42;";
 		assertStatementPrint(input);
-		assertStatement("1",
+		assertStatement("2",
 			input,
 			"<super line=\"1\" column=\"1\"><assignment line=\"1\" column=\"7\">" +
 			"<primary line=\"1\" column=\"7\">property</primary><assign line=\"1\" " +

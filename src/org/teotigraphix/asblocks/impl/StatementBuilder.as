@@ -80,6 +80,9 @@ public class StatementBuilder
 			case AS3NodeKind.SWITCH:
 				return new SwitchStatementNode(ast);
 				
+			case AS3NodeKind.THIS:
+				return new ThisStatementNode(ast);
+			
 			case AS3NodeKind.THROW:
 				return new ThrowStatementNode(ast);
 			

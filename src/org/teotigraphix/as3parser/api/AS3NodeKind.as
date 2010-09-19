@@ -504,6 +504,8 @@ public class AS3NodeKind
 	
 	public static const SUPER:String = "super";
 	
+	public static const THIS:String = "this";
+	
 	public static const THROW:String = "throw";
 	
 	public static const NEW:String = "new";

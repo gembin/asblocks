@@ -118,6 +118,8 @@ public class KeyWords
 	
 	public static const SWITCH:String = "switch";
 	
+	public static const THIS:String = "this";
+	
 	public static const THROW:String = "throw";
 	
 	public static const TRUE:String = "true";

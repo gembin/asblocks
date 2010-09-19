@@ -66,6 +66,7 @@ import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchCase;
 import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
+import org.teotigraphix.asblocks.api.IThisStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
@@ -258,6 +259,10 @@ public class NullASBlockVisitor implements IASBlockVisitor
 	}
 	
 	public function visitSwitchStatement(element:ISwitchStatement):void
+	{
+	}
+	
+	public function visitThisStatement(element:IThisStatement):void
 	{
 	}
 	

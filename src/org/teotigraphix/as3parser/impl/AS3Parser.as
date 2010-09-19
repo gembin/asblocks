@@ -36,8 +36,6 @@ import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 // FIXME implement with(){}
-// FIXME implement this statement
-// FIXME implement this super.member() and super.member
 // FIXME XML and RegExp
 
 /**
@@ -1627,6 +1625,24 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
+	private function parseThisStatement():TokenNode
+	{
+		var result:TokenNode = adapter.empty(AS3NodeKind.THIS, token);
+		consume(KeyWords.THIS, result);
+		if (tokIs(Operators.DOT))
+		{
+			consume(Operators.DOT, result);
+			result.addChild(parseExpression());
+			skip(Operators.SEMI, result);
+			return result;
+		}
+		skip(Operators.SEMI, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
 	private function parseSuperStatement():TokenNode
 	{
 		var result:TokenNode = adapter.empty(AS3NodeKind.SUPER, token);
@@ -2106,6 +2122,10 @@ public class AS3Parser extends ParserBase
 		else if (tokIs(KeyWords.RETURN))
 		{
 			result = parseReturnStatement();
+		}
+		else if (tokIs(KeyWords.THIS))
+		{
+			result = parseThisStatement();
 		}
 		else if (tokIs(KeyWords.SUPER))
 		{

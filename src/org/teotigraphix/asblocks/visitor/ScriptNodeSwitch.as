@@ -70,6 +70,7 @@ import org.teotigraphix.asblocks.api.ISuperStatement;
 import org.teotigraphix.asblocks.api.ISwitchCase;
 import org.teotigraphix.asblocks.api.ISwitchDefault;
 import org.teotigraphix.asblocks.api.ISwitchStatement;
+import org.teotigraphix.asblocks.api.IThisStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
@@ -278,6 +279,10 @@ public class ScriptNodeSwitch implements IScriptNodeStrategy
 		else if (element is ISwitchStatement)
 		{
 			visitor.visitSwitchStatement(ISwitchStatement(element));
+		}
+		else if (element is IThisStatement)
+		{
+			visitor.visitThisStatement(IThisStatement(element));
 		}
 		else if (element is IThrowStatement)
 		{
