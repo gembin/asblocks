@@ -20,11 +20,11 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.asblocks.api.BinaryOperator;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.TokenNode;
 
 /**
  * The <code>IBinaryExpression</code> implementation.
@@ -91,7 +91,6 @@ public class BinaryExpressionNode extends ExpressionNode
 	 */
 	public function get operator():BinaryOperator
 	{
-		// TODO node.kind is additive, middle child is the kind of additive
 		return BinaryOperator.opFromKind(node.getChild(1).kind);
 	}
 	
@@ -116,6 +115,12 @@ public class BinaryExpressionNode extends ExpressionNode
 	{
 		super(node);
 	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
 	 * @private

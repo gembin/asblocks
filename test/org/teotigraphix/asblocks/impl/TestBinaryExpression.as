@@ -6,7 +6,9 @@ import flexunit.framework.Assert;
 import org.flexunit.asserts.assertEquals;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.asblocks.ASFactory;
+import org.teotigraphix.asblocks.CodeMirror;
 import org.teotigraphix.asblocks.api.BinaryOperator;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
 import org.teotigraphix.asblocks.api.IExpression;
@@ -64,6 +66,12 @@ public class TestBinaryExpression
 		{
 			assertEquals(left.node, expression.leftExpression.node);
 			assertEquals(right.node, expression.rightExpression.node);
+			
+			var sourceCode:SourceCode = new SourceCode();
+			var ast:IParserNode = expression.node;
+			new ASTPrinter(sourceCode).print(ast);
+			var parsed:IParserNode = AS3FragmentParser.parseExpression(sourceCode.code);
+			CodeMirror.assertASTMatch(ast, parsed);
 		}
 	}
 	

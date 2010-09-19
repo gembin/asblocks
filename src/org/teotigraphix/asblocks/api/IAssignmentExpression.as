@@ -44,6 +44,19 @@ package org.teotigraphix.asblocks.api
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newAddAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newBitAndAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newBitOrAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newBitXorAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newDivideAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newModuloAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newMultiplyAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newShiftLeftAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newShiftRightAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newShiftRightUnsignedAssignExpression()
+ * @see org.teotigraphix.asblocks.ASFactory#newSubtractAssignExpression()
  */
 public interface IAssignmentExpression extends IExpression
 {
