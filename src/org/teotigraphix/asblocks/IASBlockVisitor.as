@@ -54,6 +54,7 @@ import org.teotigraphix.asblocks.api.INullLiteral;
 import org.teotigraphix.asblocks.api.INumberLiteral;
 import org.teotigraphix.asblocks.api.IObjectLiteral;
 import org.teotigraphix.asblocks.api.IPackage;
+import org.teotigraphix.asblocks.api.IParameter;
 import org.teotigraphix.asblocks.api.IPostfixExpression;
 import org.teotigraphix.asblocks.api.IPrefixExpression;
 import org.teotigraphix.asblocks.api.IPropertyField;
@@ -388,6 +389,14 @@ public interface IASBlockVisitor
 	 * @param element The <code>IPackage</code>.
 	 */
 	function visitPackage(element:IPackage):void;
+	
+	/**
+	 * Visits an <code>IParameter</code> and recurses through all nodes
+	 * in the AST tree.
+	 * 
+	 * @param element The <code>IParameter</code>.
+	 */
+	function visitParameter(element:IParameter):void;
 	
 	/**
 	 * Visits an <code>IPostfixExpression</code> and recurses through all nodes

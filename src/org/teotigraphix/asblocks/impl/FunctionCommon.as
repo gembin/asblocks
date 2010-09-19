@@ -24,7 +24,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
-import org.teotigraphix.asblocks.api.IArgument;
+import org.teotigraphix.asblocks.api.IParameter;
 import org.teotigraphix.asblocks.api.IFunctionCommon;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
@@ -52,9 +52,9 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#arguments
 	 */
-	public function get arguments():Vector.<IArgument>
+	public function get parameters():Vector.<IParameter>
 	{
-		var result:Vector.<IArgument> = new Vector.<IArgument>();
+		var result:Vector.<IParameter> = new Vector.<IParameter>();
 		var paramList:IParserNode = findParameterList();
 		if (!paramList)
 			return result;
@@ -62,7 +62,7 @@ public class FunctionCommon implements IFunctionCommon
 		var i:ASTIterator = new ASTIterator(paramList);
 		while (i.hasNext())
 		{
-			result.push(new ArgumentNode(i.next()));
+			result.push(new ParameterNode(i.next()));
 		}
 		
 		return result;
@@ -138,7 +138,7 @@ public class FunctionCommon implements IFunctionCommon
 	 */
 	public function addParameter(name:String, 
 								 type:String, 
-								 defaultValue:String = null):IArgument
+								 defaultValue:String = null):IParameter
 	{
 		var ast:IParserNode = ASTUtil.newParamterAST();
 		ast.addChild(ASTUtil.newNameAST(name));
@@ -157,7 +157,7 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#removeParameter()
 	 */
-	public function removeParameter(name:String):IArgument
+	public function removeParameter(name:String):IParameter
 	{
 		return null;
 	}
@@ -165,7 +165,7 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addRestParameter()
 	 */
-	public function addRestParameter(name:String):IArgument
+	public function addRestParameter(name:String):IParameter
 	{
 		return null;
 	}
@@ -187,7 +187,7 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * @private
 	 */
-	private function createParameter(ast:IParserNode):IArgument
+	private function createParameter(ast:IParserNode):IParameter
 	{
 		var paramList:IParserNode = node.getKind(AS3NodeKind.PARAMETER_LIST);
 		if (paramList.numChildren > 0)
@@ -196,7 +196,7 @@ public class FunctionCommon implements IFunctionCommon
 			paramList.appendToken(TokenBuilder.newSpace());
 		}
 		paramList.addChild(ast);
-		return new ArgumentNode(ast);
+		return new ParameterNode(ast);
 	}
 }
 }

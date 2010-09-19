@@ -21,7 +21,7 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * A function argument; <code>(arg0:int = 0)</code>.
+ * TODO DOCME
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -36,67 +36,17 @@ public interface IArgument extends IScriptNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  defaultValue
+	//  expression
 	//----------------------------------
 	
 	/**
-	 * The arguments default value that is read after an <code>=</code> sign.
+	 * The expression argument.
 	 */
-	function get defaultValue():String;
-	
-	/**
-	 * @private
-	 */
-	function set defaultValue(value:String):void;
-	
-	/**
-	 * Returns <code>true</code> if a default value exist.
-	 */
-	function get hasDefaultValue():Boolean;
-	
-	//----------------------------------
-	//  description
-	//----------------------------------
-	
-	/**
-	 * The asdoc description for the argument.
-	 * 
-	 * <p>Setting this value will update the documentation <strong>param</strong>
-	 * tag for the function owner.</p>
-	 */
-	function get description():String;
+	function get expression():IExpression;
 	
 	/**
 	 * @private
-	 */
-	function set description(value:String):void;
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * The name of the argument; after the <code>(</code> or <code>,</code>.
-	 */
-	function get name():String;
-	
-	//----------------------------------
-	//  type
-	//----------------------------------
-	
-	/**
-	 * The type of the argument; after the <code>:</code>.
-	 */
-	function get type():String;
-	
-	//----------------------------------
-	//  isRest
-	//----------------------------------
-	
-	/**
-	 * Whether this argument is a rest that appears at the end of the argument
-	 * list.
-	 */
-	function get isRest():Boolean;
+	 */	
+	function set expression(value:IExpression):void;
 }
 }

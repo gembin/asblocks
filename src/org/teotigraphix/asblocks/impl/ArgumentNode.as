@@ -20,9 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IArgument;
+import org.teotigraphix.asblocks.api.IExpression;
 
 /**
  * The <code>IArgument</code> implementation.
@@ -31,8 +31,7 @@ import org.teotigraphix.asblocks.api.IArgument;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ArgumentNode extends ScriptNode 
-	implements IArgument
+public class ArgumentNode extends ScriptNode implements IArgument
 {
 	//--------------------------------------------------------------------------
 	//
@@ -41,125 +40,23 @@ public class ArgumentNode extends ScriptNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  defaultValue
+	//  expression
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IArgument#defaultValue
+	 * doc
 	 */
-	public function get defaultValue():String
+	public function get expression():IExpression
 	{
-		if (!isRest)
-		{
-			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-			var init:IParserNode = ast.getKind(AS3NodeKind.INIT);
-			if (init)
-			{
-				return init.stringValue;
-			}
-		}
-		return null;
+		return ExpressionBuilder.build(node);
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set defaultValue(value:String):void
+	public function set expression(value:IExpression):void
 	{
-		// TODO impl
-	}
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IArgument#hasDefaultValue
-	 */
-	public function get hasDefaultValue():Boolean
-	{
-		if (!isRest)
-		{
-			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-			var init:IParserNode = ast.getKind(AS3NodeKind.INIT);
-			
-			return init != null;
-		}
-		return false;
-	}
-	
-	//----------------------------------
-	//  description
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IArgument#description
-	 */
-	public function get description():String
-	{
-		return null;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set description(value:String):void
-	{
-		// TODO impl
-	}
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IArgument#name
-	 */
-	public function get name():String
-	{
-		if (isRest)
-		{
-			var rest:IParserNode = node.getKind(AS3NodeKind.REST);
-			return rest.stringValue;
-		}
 		
-		var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-		var name:IParserNode = ast.getKind(AS3NodeKind.NAME);
-		if (name)
-		{
-			return name.stringValue;
-		}
-		// IllegalStateException
-		throw new Error("No parameter name, and not a 'rest' parameter");
-	}
-	
-	//----------------------------------
-	//  type
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IArgument#type
-	 */
-	public function get type():String
-	{
-		if (!isRest)
-		{
-			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-			var type:IParserNode = ast.getKind(AS3NodeKind.TYPE);
-			if (type)
-			{
-				return type.stringValue;
-			}
-		}
-		return null;
-	}
-	
-	//----------------------------------
-	//  isRest
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IArgument#isRest
-	 */
-	public function get isRest():Boolean
-	{
-		return node.hasKind(AS3NodeKind.REST);
 	}
 	
 	//--------------------------------------------------------------------------

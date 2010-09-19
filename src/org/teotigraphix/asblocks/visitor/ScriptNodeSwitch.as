@@ -58,6 +58,7 @@ import org.teotigraphix.asblocks.api.INullLiteral;
 import org.teotigraphix.asblocks.api.INumberLiteral;
 import org.teotigraphix.asblocks.api.IObjectLiteral;
 import org.teotigraphix.asblocks.api.IPackage;
+import org.teotigraphix.asblocks.api.IParameter;
 import org.teotigraphix.asblocks.api.IPostfixExpression;
 import org.teotigraphix.asblocks.api.IPrefixExpression;
 import org.teotigraphix.asblocks.api.IPropertyField;
@@ -237,6 +238,10 @@ public class ScriptNodeSwitch implements IScriptNodeStrategy
 		else if (element is IPackage)
 		{
 			visitor.visitPackage(IPackage(element));
+		}
+		else if (element is IParameter)
+		{
+			visitor.visitParameter(IParameter(element));
 		}
 		else if (element is IPostfixExpression)
 		{

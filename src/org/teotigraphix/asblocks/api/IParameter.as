@@ -21,13 +21,13 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * A common interface for IMethodNode and IFunctionLiteralNode.
+ * A function parameter; <code>(arg0:int = 0)</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IFunctionCommon
+public interface IParameter extends IScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -36,47 +36,67 @@ public interface IFunctionCommon
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  parameters
+	//  defaultValue
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The parameters default value that is read after an <code>=</code> sign.
 	 */
-	function get parameters():Vector.<IParameter>;
+	function get defaultValue():String;
+	
+	/**
+	 * @private
+	 */
+	function set defaultValue(value:String):void;
+	
+	/**
+	 * Returns <code>true</code> if a default value exist.
+	 */
+	function get hasDefaultValue():Boolean;
+	
+	//----------------------------------
+	//  description
+	//----------------------------------
+	
+	/**
+	 * The asdoc description for the parameter.
+	 * 
+	 * <p>Setting this value will update the documentation <strong>param</strong>
+	 * tag for the function owner.</p>
+	 */
+	function get description():String;
+	
+	/**
+	 * @private
+	 */
+	function set description(value:String):void;
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * The name of the parameter; after the <code>(</code> or <code>,</code>.
+	 */
+	function get name():String;
 	
 	//----------------------------------
 	//  type
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type of the parameter; after the <code>:</code>.
 	 */
-	function get returnType():String;
+	function get type():String;
+	
+	//----------------------------------
+	//  isRest
+	//----------------------------------
 	
 	/**
-	 * @private
+	 * Whether this parameter is a rest that appears at the end of the parameter
+	 * list.
 	 */
-	function set returnType(value:String):void;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function addParameter(name:String, type:String, defaultValue:String = null):IParameter;
-	
-	/**
-	 * TODO Docme
-	 */
-	function removeParameter(name:String):IParameter;
-	
-	/**
-	 * TODO Docme
-	 */
-	function addRestParameter(name:String):IParameter;
+	function get isRest():Boolean;
 }
 }

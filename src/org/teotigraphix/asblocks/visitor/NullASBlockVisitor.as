@@ -55,6 +55,7 @@ import org.teotigraphix.asblocks.api.INullLiteral;
 import org.teotigraphix.asblocks.api.INumberLiteral;
 import org.teotigraphix.asblocks.api.IObjectLiteral;
 import org.teotigraphix.asblocks.api.IPackage;
+import org.teotigraphix.asblocks.api.IParameter;
 import org.teotigraphix.asblocks.api.IPostfixExpression;
 import org.teotigraphix.asblocks.api.IPrefixExpression;
 import org.teotigraphix.asblocks.api.IPropertyField;
@@ -217,6 +218,10 @@ public class NullASBlockVisitor implements IASBlockVisitor
 	}
 	
 	public function visitPackage(element:IPackage):void
+	{
+	}
+	
+	public function visitParameter(element:IParameter):void
 	{
 	}
 	

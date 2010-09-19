@@ -45,7 +45,7 @@ public class SuperStatementNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.ISuperStatement#arguments
 	 */
 	public function get arguments():Vector.<IArgument>
 	{

@@ -37,6 +37,7 @@ import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IFunctionCommon;
 import org.teotigraphix.asblocks.api.IFunctionLiteral;
 import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.IParameter;
 import org.teotigraphix.asblocks.api.IReturnStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
@@ -116,9 +117,9 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#arguments
 	 */
-	public function get arguments():Vector.<IArgument>
+	public function get parameters():Vector.<IParameter>
 	{
-		return functionMixin.arguments;
+		return functionMixin.parameters;
 	}
 	
 	//----------------------------------
@@ -169,7 +170,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	 */
 	public function addParameter(name:String, 
 								 type:String, 
-								 defaultValue:String = null):IArgument
+								 defaultValue:String = null):IParameter
 	{
 		return functionMixin.addParameter(name, type, defaultValue);
 	}
@@ -177,7 +178,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#removeParameter()
 	 */
-	public function removeParameter(name:String):IArgument
+	public function removeParameter(name:String):IParameter
 	{
 		return functionMixin.removeParameter(name);
 	}
@@ -185,7 +186,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addRestParameter()
 	 */
-	public function addRestParameter(name:String):IArgument
+	public function addRestParameter(name:String):IParameter
 	{
 		return functionMixin.addRestParameter(name);
 	}

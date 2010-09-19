@@ -7,7 +7,6 @@ import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
-import org.teotigraphix.asblocks.api.BinaryOperator;
 import org.teotigraphix.asblocks.api.IArgument;
 import org.teotigraphix.asblocks.api.IAssignmentExpression;
 import org.teotigraphix.asblocks.api.IBinaryExpression;
