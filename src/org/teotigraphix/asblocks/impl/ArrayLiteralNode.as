@@ -20,6 +20,7 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IArrayLiteral;
@@ -36,6 +37,8 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 public class ArrayLiteralNode extends LiteralNode 
 	implements IArrayLiteral
 {
+	// node is primary/array/expressions[i]
+	
 	//--------------------------------------------------------------------------
 	//
 	//  IArrayLiteral API :: Properties
@@ -52,7 +55,7 @@ public class ArrayLiteralNode extends LiteralNode
 	public function get entries():Vector.<IExpression>
 	{
 		var entries:Vector.<IExpression> = new Vector.<IExpression>();
-		var i:ASTIterator = new ASTIterator(node);
+		var i:ASTIterator = new ASTIterator(findArray());
 		while (i.hasNext()) 
 		{
 			entries.push(ExpressionBuilder.build(i.next()));
@@ -85,12 +88,14 @@ public class ArrayLiteralNode extends LiteralNode
 	 */
 	public function add(expression:IExpression):void
 	{
-		if (node.numChildren > 0)
+		var ast:IParserNode = findArray();
+		
+		if (ast.numChildren > 0)
 		{
-			node.appendToken(TokenBuilder.newComma());
-			node.appendToken(TokenBuilder.newSpace());
+			ast.appendToken(TokenBuilder.newComma());
+			ast.appendToken(TokenBuilder.newSpace());
 		}
-		node.addChild(expression.node);
+		ast.addChild(expression.node);
 	}
 	
 	/**
@@ -98,8 +103,10 @@ public class ArrayLiteralNode extends LiteralNode
 	 */
 	public function remove(index:int):IExpression
 	{
-		var old:IParserNode = node.getChild(index);
-		if (node.numChildren - 1 > index)
+		var ast:IParserNode = findArray();
+		
+		var old:IParserNode = ast.getChild(index);
+		if (ast.numChildren - 1 > index)
 		{
 			ASTUtil.removeTrailingWhitespaceAndComma(old.stopToken);
 		} 
@@ -108,8 +115,22 @@ public class ArrayLiteralNode extends LiteralNode
 			ASTUtil.removePreceedingWhitespaceAndComma(old.startToken);
 		}
 
-		node.removeChild(old);
+		ast.removeChild(old);
 		return ExpressionBuilder.build(old);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findArray():IParserNode
+	{
+		return node.getKind(AS3NodeKind.ARRAY);
 	}
 }
 }

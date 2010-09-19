@@ -37,7 +37,6 @@ import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
 import org.teotigraphix.asblocks.api.IFunctionLiteral;
 import org.teotigraphix.asblocks.api.IINvocationExpression;
-import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.INewExpression;
 import org.teotigraphix.asblocks.api.INullLiteral;
 import org.teotigraphix.asblocks.api.INumberLiteral;
@@ -60,7 +59,6 @@ import org.teotigraphix.asblocks.impl.DeclarationStatementNode;
 import org.teotigraphix.asblocks.impl.ExpressionBuilder;
 import org.teotigraphix.asblocks.impl.FieldAccessExpression;
 import org.teotigraphix.asblocks.impl.FunctionLiteralNode;
-import org.teotigraphix.asblocks.impl.IfStatementNode;
 import org.teotigraphix.asblocks.impl.InvocationExpressionNode;
 import org.teotigraphix.asblocks.impl.NewExpressionNode;
 import org.teotigraphix.asblocks.impl.NullLiteralNode;
@@ -216,13 +214,116 @@ public class ASFactory
 		return StatementBuilder.build(ast);
 	}
 	
+	//----------------------------------
+	//  Assignment Expressions
+	//----------------------------------
+	
 	/**
 	 * TODO DOCME
 	 */
-	public function newAssignmentExpression(left:IExpression,
-											right:IExpression):IAssignmentExpression
+	public function newAssignExpression(left:IExpression,
+										right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignmentExpression(TokenBuilder.newAssign(), left, right);
+		return ASTBuilder.newAssignExpression(TokenBuilder.newAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newAddAssignExpression(left:IExpression,
+										   right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newAddAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newBitAndAssignExpression(left:IExpression,
+											  right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newBitAndAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newBitOrAssignExpression(left:IExpression,
+											 right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newBitOrAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newBitXorAssignExpression(left:IExpression,
+											  right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newBitXorAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newDivideAssignExpression(left:IExpression,
+											  right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newDivAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newModuloAssignExpression(left:IExpression,
+											  right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newModAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newMultiplyAssignExpression(left:IExpression,
+												right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newStarAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newShiftLeftAssignExpression(left:IExpression,
+												 right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newSLAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newShiftRightAssignExpression(left:IExpression,
+												  right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newSRAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newShiftRightUnsignedAssignExpression(left:IExpression,
+														  right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newSRUAssign(), left, right);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newSubtractAssignExpression(left:IExpression,
+												right:IExpression):IAssignmentExpression
+	{
+		return ASTBuilder.newAssignExpression(TokenBuilder.newSubAssign(), left, right);
 	}
 	
 	//----------------------------------

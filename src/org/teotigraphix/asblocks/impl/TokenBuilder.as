@@ -261,5 +261,61 @@ public class TokenBuilder
 	{
 		return newToken(AS3NodeKind.ASSIGN, Operators.ASSIGN);
 	}
+	
+	public static function newAddAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.PLUS_ASSIGN, Operators.PLUS_ASSIGN);
+	}
+	
+	public static function newBitAndAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.BAND_ASSIGN, Operators.BAND_ASSIGN);
+	}
+	
+	public static function newBitOrAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.BOR_ASSIGN, Operators.BOR_ASSIGN);
+	}
+	
+	public static function newBitXorAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.BXOR_ASSIGN, Operators.BXOR_ASSIGN);
+	}
+	
+	public static function newDivAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.DIV_ASSIGN, Operators.DIV_ASSIGN);
+	}
+	
+	public static function newModAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.MOD_ASSIGN, Operators.MOD_ASSIGN);
+	}
+	
+	public static function newStarAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.STAR_ASSIGN, Operators.STAR_ASSIGN);
+	}
+	
+	public static function newSLAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.SL_ASSIGN, Operators.SL_ASSIGN);
+	}
+	
+	public static function newSRAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.SR_ASSIGN, Operators.SR_ASSIGN);
+	}
+	
+	public static function newSRUAssign():LinkedListToken
+	{
+		// FIXME
+		return newToken(AS3NodeKind.SR_ASSIGN, Operators.SR_ASSIGN);
+	}
+	
+	public static function newSubAssign():LinkedListToken
+	{
+		return newToken(AS3NodeKind.MINUS_ASSIGN, Operators.MINUS_ASSIGN);
+	}
 }
 }

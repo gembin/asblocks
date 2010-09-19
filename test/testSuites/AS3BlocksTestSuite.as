@@ -4,6 +4,7 @@ package testSuites
 import org.teotigraphix.asblocks.TestASFactory;
 import org.teotigraphix.asblocks.impl.TestASProject;
 import org.teotigraphix.asblocks.impl.TestArrayAccessExpression;
+import org.teotigraphix.asblocks.impl.TestArrayLiteral;
 import org.teotigraphix.asblocks.impl.TestAssignmentNodes;
 import org.teotigraphix.asblocks.impl.TestBinaryExpression;
 import org.teotigraphix.asblocks.impl.TestClassTypeNode;
@@ -34,6 +35,7 @@ public class AS3BlocksTestSuite
 	
 	// 
 	public var testArrayAccessExpression:TestArrayAccessExpression;
+	public var testArrayLiteral:TestArrayLiteral;
 	public var testAssignmentNodes:TestAssignmentNodes;
 	public var testBinaryExpression:TestBinaryExpression;
 	public var testTokenBoundaries:TestTokenBoundaries;

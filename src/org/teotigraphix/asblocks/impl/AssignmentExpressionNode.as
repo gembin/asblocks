@@ -65,16 +65,11 @@ public class AssignmentExpressionNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _operator:String = "=";
-	
-	/**
 	 * @copy org.teotigraphix.asblocks.api.IAssignmentExpression#operator
 	 */
 	public function get operator():String
 	{
-		return _operator;
+		return node.getChild(1).stringValue;
 	}
 	
 	/**
@@ -82,7 +77,7 @@ public class AssignmentExpressionNode extends ExpressionNode
 	 */	
 	public function set operator(value:String):void
 	{
-		_operator = value;
+		node.getChild(1).stringValue = value;
 	}
 	
 	//----------------------------------
@@ -102,7 +97,7 @@ public class AssignmentExpressionNode extends ExpressionNode
 	 */	
 	public function set rightExpression(value:IExpression):void
 	{
-		setExpression(value, 1);
+		setExpression(value, 2);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -119,12 +114,21 @@ public class AssignmentExpressionNode extends ExpressionNode
 		super(node);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
 	private function setExpression(expression:IExpression, index:int):void
 	{
-		var subAST:IParserNode = expression.node;
-		//ASTBuilder.assertNoParent("expression", subExpr);
+		var ast:IParserNode = expression.node;
+		//ASTBuilder.assertNoParent("expression", ast);
 		// TODO: handle operator precedence issues
-		node.setChildAt(subAST, index);
+		node.setChildAt(ast, index);
 	}
 
 }

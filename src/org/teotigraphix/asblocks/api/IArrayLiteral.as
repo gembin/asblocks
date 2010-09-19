@@ -21,7 +21,7 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * A Array literal; <code>[1,2,3]</code>.
+ * An Array literal; <code>[1,2,3]</code>.
  * 
  * <pre>
  * var al:IArrayLiteral = factory.newArrayLiteral();
@@ -76,7 +76,7 @@ public interface IArrayLiteral
 	 * Remove an <code>IExpression</code> entry from the array literal at the
 	 * specified index.
 	 * 
-	 * @param index The index to remove, returns the <code>IExpression</code>
+	 * @param index The index to remove, returns the removed <code>IExpression</code>
 	 * if successfull, <code>null</code> if not.
 	 */
 	function remove(index:int):IExpression;

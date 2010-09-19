@@ -201,6 +201,11 @@ public class ASTUtil
 		return adapter.create(kind, text);
 	}
 	
+	public static function newPrimaryAST():IParserNode
+	{
+		return adapter.create(AS3NodeKind.PRIMARY);
+	}
+	
 	public static function newPrefixAST(op:LinkedListToken):IParserNode
 	{
 		if (op.kind == AS3NodeKind.PRE_INC)

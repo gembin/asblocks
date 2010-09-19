@@ -72,7 +72,8 @@ public interface IAssignmentExpression extends IExpression
 	//----------------------------------
 	
 	/**
-	 * The assignment's operator.
+	 * The assignment's operator eg; <code>=</code>, <code>+=</code>,
+	 * <code>&=</code>, ect.
 	 */
 	function get operator():String;
 	

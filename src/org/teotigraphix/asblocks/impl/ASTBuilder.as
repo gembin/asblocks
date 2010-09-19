@@ -584,7 +584,7 @@ public class ASTBuilder
 		return ast;
 	}
 	
-
+	
 	
 	public static function newThrow(expression:IParserNode):IParserNode
 	{
@@ -607,11 +607,13 @@ public class ASTBuilder
 	
 	public static function newArrayLiteral():IParserNode
 	{
+		var primary:IParserNode = ASTUtil.newPrimaryAST();
 		var ast:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.ARRAY, 
 			AS3NodeKind.LBRACKET, "[", 
 			AS3NodeKind.RBRACKET, "]");
-		return ast;
+		primary.addChild(ast);
+		return primary;
 		
 	}
 	
@@ -737,35 +739,30 @@ public class ASTBuilder
 	}
 	
 	
-	public static function newAssignmentExpression(op:LinkedListToken, 
-												   left:IExpression,
-												   right:IExpression):IAssignmentExpression
+	public static function newAssignExpression(op:LinkedListToken, 
+											   left:IExpression,
+											   right:IExpression):IAssignmentExpression
 	{
-		var ast:IParserNode = ASTUtil.newTokenAST(op);
-		var leftExpr:IParserNode = left.node;
-		var rightExpr:IParserNode = right.node;
+		// assignment[left,op(assign[=]),right]
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.ASSIGNMENT);
 		
-		if (precidence(ast) < precidence(leftExpr))
+		var leftAST:IParserNode = left.node;
+		var rightAST:IParserNode = right.node;
+		
+		if (precidence(ast) < precidence(leftAST))
 		{
-			leftExpr = parenthise(leftExpr);
+			leftAST = parenthise(leftAST);
 		}
-		if (precidence(ast) < precidence(rightExpr))
+		if (precidence(ast) < precidence(rightAST))
 		{
-			rightExpr = parenthise(rightExpr);
+			rightAST = parenthise(rightAST);
 		}
 		
-		TokenNode(ast).noUpdate = true;
-		ast.addChild(leftExpr);
-		ast.addChild(rightExpr);
-		TokenNode(ast).noUpdate = false;
-		
-		leftExpr.stopToken.next = op;
-		rightExpr.startToken.previous = op;
-		
-		ast.startToken = leftExpr.startToken;
-		ast.stopToken = rightExpr.stopToken;
-		
-		spaceEitherSide(op);
+		ast.addChild(leftAST);
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.ASSIGN, op.text));
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(rightAST);
 		
 		return new AssignmentExpressionNode(ast);
 	}
