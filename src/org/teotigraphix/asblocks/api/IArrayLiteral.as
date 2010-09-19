@@ -35,6 +35,8 @@ package org.teotigraphix.asblocks.api
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newArrayLiteral()
  */
 public interface IArrayLiteral 
 	extends IExpression, ILiteral, IScriptNode

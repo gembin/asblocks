@@ -23,9 +23,24 @@ package org.teotigraphix.asblocks.api
 /**
  * A Boolean literal; <code>true</code> or <code>false</code>.
  * 
+ * <pre>
+ * var bl:IBooleanLiteral = factory.newBooleanLiteral(true);
+ * </pre>
+ * 
+ * <p>Will produce; <code>true</code>.</p>
+ * 
+ * <pre>
+ * var bl:IBooleanLiteral = factory.newBooleanLiteral(true);
+ * bl.value = false;
+ * </pre>
+ * 
+ * <p>Will produce; <code>false</code>.</p>
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newBooleanLiteral()
  */
 public interface IBooleanLiteral extends ILiteral
 {

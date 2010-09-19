@@ -21,7 +21,7 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * Base interface for all liternal expressions such as strings and numbers.
+ * Base interface for all literal expressions such as strings and numbers.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

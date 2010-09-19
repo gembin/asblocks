@@ -20,12 +20,12 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IBooleanLiteral;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.KeyWords;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.core.TokenNode;
+import org.teotigraphix.asblocks.api.IBooleanLiteral;
 
 /**
  * The <code>IBooleanLiteral</code> implementation.
@@ -39,7 +39,7 @@ public class BooleanLiteralNode extends LiteralNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ISimpleNameExpressionNode API :: Properties
+	//  IBooleanLiteral API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -52,7 +52,7 @@ public class BooleanLiteralNode extends LiteralNode
 	 */
 	public function get value():Boolean
 	{
-		return Boolean(tokenText);
+		return tokenText == "true" ? true : false;
 	}
 	
 	/**

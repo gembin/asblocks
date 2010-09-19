@@ -16,7 +16,6 @@ public class TestArrayLiteral
 	
 	private var expression:IArrayLiteral;
 	
-	
 	[Before]
 	public function setUp():void
 	{
