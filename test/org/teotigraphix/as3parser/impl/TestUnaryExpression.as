@@ -83,54 +83,55 @@ public class TestUnaryExpression extends AbstractStatementTest
 	[Test]
 	public function testParseUnaryExpressions():void
 	{
-		assertStatement( "1",
+		assertStatement("1",
 			"++x",
-			"<expr-stmnt line=\"1\" column=\"1\"><pre-inc line=\"1\" column=\"3\"><primary line=\"1\" column=\"3\">x</primary></pre-inc></expr-stmnt>" );
-		assertStatement( "2",
+			"<expr-stmnt line=\"1\" column=\"1\"><pre-inc line=\"1\" column=\"3\"><primary line=\"1\" column=\"3\">x</primary></pre-inc></expr-stmnt>");
+		assertStatement("2",
 			"x++",
-			"<expr-stmnt line=\"1\" column=\"1\"><post-inc line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-inc></expr-stmnt>" );
-		// TODO uncomment tests
-		/*
-		assertStatement( "3",
+			"<expr-stmnt line=\"1\" column=\"1\"><post-inc line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-inc></expr-stmnt>");
+		assertStatement("3",
 			"--x",
-			"<pre-dec line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></pre-dec>" );
-		assertStatement( "4",
+			"<expr-stmnt line=\"1\" column=\"1\"><pre-dec line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></pre-dec></expr-stmnt>");
+		assertStatement("4",
 			"x--",
-			"<post-dec line=\"1\" column=\"1\"><primary line=\"1\" column=\"1\">x</primary></post-dec>" );
-		assertStatement( "5",
+			"<expr-stmnt line=\"1\" column=\"1\"><post-dec line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-dec></expr-stmnt>");
+		
+		// TODO column is messed up on unary +-
+		/*
+		assertStatement("5",
 			"+x",
-			"<plus line=\"1\" column=\"1\"><primary line=\"1\" column=\"2\">x</primary></plus>" );
-		assertStatement( "6",
+			"<expr-stmnt line=\"1\" column=\"1\"><plus line=\"1\" column=\"1\"><primary line=\"1\" column=\"2\">x</primary></plus></expr-stmnt>");
+		assertStatement("6",
 			"+ x",
-			"<plus line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></plus>" );
-		assertStatement( "7",
+			"<expr-stmnt line=\"1\" column=\"1\"><plus line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></plus></expr-stmnt>");
+		assertStatement("7",
 			"-x",
-			"<minus line=\"1\" column=\"1\"><primary line=\"1\" column=\"2\">x</primary></minus>" );
-		assertStatement( "8",
+			"<expr-stmnt line=\"1\" column=\"1\"><minus line=\"1\" column=\"1\"><primary line=\"1\" column=\"2\">x</primary></minus></expr-stmnt>");
+		assertStatement("8",
 			"- x",
-			"<minus line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></minus>" );
-		assertStatement( "9",
+			"<expr-stmnt line=\"1\" column=\"1\"><minus line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></minus></expr-stmnt>");
+		assertStatement("9",
 			"delete x",
-			"<delete line=\"1\" column=\"1\"><primary line=\"1\" column=\"8\">x</primary></delete>" );
-		assertStatement( "a",
+			"<expr-stmnt line=\"1\" column=\"1\"><delete line=\"1\" column=\"1\"><primary line=\"1\" column=\"8\">x</primary></delete></expr-stmnt>");
+		assertStatement("10",
 			"void x",
-			"<void line=\"1\" column=\"1\"><primary line=\"1\" column=\"6\">x</primary></void>" );
-		assertStatement( "b",
+			"<expr-stmnt line=\"1\" column=\"1\"><void line=\"1\" column=\"1\"><primary line=\"1\" column=\"6\">x</primary></void></expr-stmnt>");
+		assertStatement("11",
 			"typeof x",
-			"<typeof line=\"1\" column=\"1\"><primary line=\"1\" column=\"8\">x</primary></typeof>" );
-		assertStatement( "c",
+			"<expr-stmnt line=\"1\" column=\"1\"><typeof line=\"1\" column=\"1\"><primary line=\"1\" column=\"8\">x</primary></typeof></expr-stmnt>");
+		assertStatement("12",
 			"! x",
-			"<not line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></not>" );
-		assertStatement( "d",
+			"<expr-stmnt line=\"1\" column=\"1\"><not line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></not></expr-stmnt>");
+		assertStatement("13",
 			"~ x",
-			"<b-not line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></b-not>" );
-		assertStatement( "e",
+			"<expr-stmnt line=\"1\" column=\"1\"><b-not line=\"1\" column=\"1\"><primary line=\"1\" column=\"3\">x</primary></b-not></expr-stmnt>");
+		assertStatement("14",
 			"x++",
-			"<post-inc line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-inc>" );
-		assertStatement( "f",
+			"<expr-stmnt line=\"1\" column=\"1\"><post-inc line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-inc></expr-stmnt>");
+		assertStatement("15",
 			"x--",
-			"<post-dec line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-dec>" );
+			"<expr-stmnt line=\"1\" column=\"1\"><post-dec line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-dec></expr-stmnt>");
 		*/
-		}
+	}
 }
 }

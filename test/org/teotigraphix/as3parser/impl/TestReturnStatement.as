@@ -75,6 +75,28 @@ public class TestReturnStatement extends AbstractStatementTest
 	}
 	
 	[Test]
+	public function testSuperInvocation():void
+	{
+		var input:String = "super.method(arg0, arg1);";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<super line=\"1\" column=\"1\"><call line=\"1\" column=\"13\"><primary " +
+			"line=\"1\" column=\"7\">method</primary><arguments line=\"1\" " +
+			"column=\"13\"><primary line=\"1\" column=\"14\">arg0</primary><primary " +
+			"line=\"1\" column=\"20\">arg1</primary></arguments></call></super>");
+		
+		input = "super.property = 42;";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<super line=\"1\" column=\"1\"><assignment line=\"1\" column=\"7\">" +
+			"<primary line=\"1\" column=\"7\">property</primary><assign line=\"1\" " +
+			"column=\"16\">=</assign><number line=\"1\" column=\"18\">42</number>" +
+			"</assignment></super>");
+	}
+	
+	[Test]
 	public function testThrow():void
 	{
 		var input:String = "throw new Error('error')";

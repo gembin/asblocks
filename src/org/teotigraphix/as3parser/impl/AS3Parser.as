@@ -1629,11 +1629,21 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseSuperStatement():TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.SUPER, token);
+		var result:TokenNode = adapter.empty(AS3NodeKind.SUPER, token);
 		
 		consume(KeyWords.SUPER, result);
-		result.addChild(parseArgumentList());
+		if (tokIs(Operators.DOT))
+		{
+			consume(Operators.DOT, result);
+			result.addChild(parseExpression());
+			skip(Operators.SEMI, result);
+			return result;
+		}
+		else
+		{
+			result.addChild(parseArgumentList());
+		}
+		
 		skip(Operators.SEMI, result);
 		return result;
 	}
@@ -1870,8 +1880,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseDot(node:TokenNode):TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.DOT, token, node);
+		var result:TokenNode = adapter.empty(AS3NodeKind.DOT, token, node);
 		
 		if (tokIs(Operators.E4X_DESC))
 		{
