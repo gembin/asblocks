@@ -154,6 +154,21 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
+	function newLabel(name:String):ILabelStatement;
+	
+	/**
+	 * TODO Docme
+	 */
+	function newForLabel(name:String, kind:String):ILabelStatement;
+	
+	/**
+	 * TODO Docme
+	 */
+	//function newWhileLabel(name:String):ILabelStatement;
+	
+	/**
+	 * TODO Docme
+	 */
 	function newReturn(expression:IExpression = null):IReturnStatement
 	
 	/**

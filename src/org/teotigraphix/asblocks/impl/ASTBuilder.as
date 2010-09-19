@@ -545,6 +545,33 @@ public class ASTBuilder
 		return ifStmnt;
 	}
 	
+	
+	public static function newLabel(ast:IParserNode):IParserNode
+	{
+		var result:IParserNode = ASTUtil.newAST(AS3NodeKind.LABEL);
+		result.addChild(ast);
+		result.appendToken(TokenBuilder.newSpace());
+		result.appendToken(TokenBuilder.newColon());
+		result.appendToken(TokenBuilder.newSpace());
+		result.addChild(newBlock());
+		return result;
+	}
+	
+	public static function newForLabel(ast:IParserNode, kind:String):IParserNode
+	{
+		var result:IParserNode = ASTUtil.newAST(AS3NodeKind.LABEL);
+		result.addChild(ast);
+		result.appendToken(TokenBuilder.newSpace());
+		result.appendToken(TokenBuilder.newColon());
+		result.appendToken(TokenBuilder.newSpace());
+		if (kind == AS3NodeKind.FOR)
+		{
+			result.addChild(newFor(null, null, null));
+		}
+		
+		return result;
+	}
+	
 	public static function newReturn(expression:IParserNode = null):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.RETURN, "return");

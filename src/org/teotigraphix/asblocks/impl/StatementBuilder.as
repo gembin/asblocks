@@ -70,7 +70,10 @@ public class StatementBuilder
 				
 			case AS3NodeKind.IF:
 				return new IfStatementNode(ast);
-				
+			
+			case AS3NodeKind.LABEL:
+				return new LabelStatementNode(ast);
+			
 			case AS3NodeKind.RETURN:
 				return new ReturnStatementNode(ast);
 			

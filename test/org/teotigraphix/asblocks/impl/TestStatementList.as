@@ -9,8 +9,10 @@ import org.teotigraphix.asblocks.api.IDeclarationStatement;
 import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IForEachInStatement;
 import org.teotigraphix.asblocks.api.IForInStatement;
+import org.teotigraphix.asblocks.api.IForLabelStatement;
 import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.ILabelStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.ISuperStatement;
@@ -342,6 +344,22 @@ public class TestStatementList
 			"(test2()) {\n\t\t\ttrace('sub test succeeded');\n\t\t} else " +
 			"{\n\t\t\ttrace('sub test failed');\n\t\t}\n\t} else {\n\t\ttrace(" +
 			"'test failed');\n\t}\n}", ifstSub);
+	}
+	
+	[Test]
+	public function test_newLabel():void
+	{
+		var label:ILabelStatement = block.newLabel("foo");
+		label.addStatement("trace('Hello block label')");
+		assertPrint("{\n\tfoo : {\n\t\ttrace('Hello block label');\n\t}\n}", block);
+		
+		block = factory.newBlock();
+		label = block.newForLabel("fooLoop", "for");
+		//label.addStatement("trace('Hello block label')");
+		// TODO impl for and while labels
+		//assertPrint("{\n\tfooLoop : for (; ; )\n}", block);
+		//IForLabelStatement(label).statement.addStatement("trace('Hello for label')");
+		//assertPrint("{\n\tfooLoop : for (; ; )\n}", block);
 	}
 	
 	[Test]

@@ -24,6 +24,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.as3parser.impl.AS3Parser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.api.IArgument;
 import org.teotigraphix.asblocks.api.IBlock;
@@ -38,6 +39,7 @@ import org.teotigraphix.asblocks.api.IForEachInStatement;
 import org.teotigraphix.asblocks.api.IForInStatement;
 import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.ILabelStatement;
 import org.teotigraphix.asblocks.api.IReturnStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
@@ -349,6 +351,30 @@ public class StatementList extends ContainerDelegate implements IBlock
 		var ifStmt:IParserNode = ASTBuilder.newIf(condition.node);
 		_addStatement(ifStmt);
 		return new IfStatementNode(ifStmt);
+	}
+	
+	/**
+	 * @private
+	 */
+	override public function newLabel(name:String):ILabelStatement
+	{
+		var expr:IParserNode = ASTUtil.newAST(AS3NodeKind.EXPR_STMNT);
+		expr.addChild(AS3FragmentParser.parseExpression(name));
+		var ast:IParserNode = ASTBuilder.newLabel(expr);
+		_addStatement(ast);
+		return new LabelStatementNode(ast);
+	}
+	
+	/**
+	 * @private
+	 */
+	override public function newForLabel(name:String, kind:String):ILabelStatement
+	{
+		var expr:IParserNode = ASTUtil.newAST(AS3NodeKind.EXPR_STMNT);
+		expr.addChild(AS3FragmentParser.parseExpression(name));
+		var ast:IParserNode = ASTBuilder.newForLabel(expr, kind);
+		_addStatement(ast);
+		return new ForLabelStatementNode(ast);
 	}
 	
 	/**

@@ -37,6 +37,7 @@ import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IFunctionCommon;
 import org.teotigraphix.asblocks.api.IFunctionLiteral;
 import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.ILabelStatement;
 import org.teotigraphix.asblocks.api.IParameter;
 import org.teotigraphix.asblocks.api.IReturnStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
@@ -338,6 +339,22 @@ public class FunctionLiteralNode extends ExpressionNode
 	public function newIf(condition:IExpression):IIfStatement
 	{
 		return containerMixin.newIf(condition);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newLabel()
+	 */
+	public function newLabel(name:String):ILabelStatement
+	{
+		return containerMixin.newLabel(name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newForLabel()
+	 */
+	public function newForLabel(name:String, kind:String):ILabelStatement
+	{
+		return containerMixin.newForLabel(name, kind);
 	}
 	
 	/**

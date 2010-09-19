@@ -20,6 +20,7 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.api.IToken;
 import org.teotigraphix.asblocks.api.IArgument;
@@ -34,6 +35,7 @@ import org.teotigraphix.asblocks.api.IForEachInStatement;
 import org.teotigraphix.asblocks.api.IForInStatement;
 import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IIfStatement;
+import org.teotigraphix.asblocks.api.ILabelStatement;
 import org.teotigraphix.asblocks.api.IReturnStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatement;
@@ -244,6 +246,22 @@ public class ContainerDelegate extends ScriptNode
 	public function newIf(condition:IExpression):IIfStatement
 	{
 		return statementContainer.newIf(condition);
+	}
+	
+	/**
+	 * @private
+	 */
+	public function newLabel(name:String):ILabelStatement
+	{
+		return statementContainer.newLabel(name);
+	}
+	
+	/**
+	 * @private
+	 */
+	public function newForLabel(name:String, kind:String):ILabelStatement
+	{
+		return statementContainer.newForLabel(name, kind);
 	}
 	
 	/**
