@@ -35,12 +35,7 @@ public class TestDoStatement extends AbstractStatementTest
 		var input:String = "do{ trace( i ); } while( i++ );";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<do line=\"1\" column=\"1\"><block line=\"1\" column=\"3\"><call " +
-			"line=\"1\" column=\"10\"><primary line=\"1\" column=\"5\">trace</primary>" +
-			"<arguments line=\"1\" column=\"10\"><primary line=\"1\" column=\"12\">i" +
-			"</primary></arguments></call></block><condition line=\"1\" column=\"24\">" +
-			"<post-inc line=\"1\" column=\"27\"><primary line=\"1\" column=\"26\">i" +
-			"</primary></post-inc></condition></do>");
+			"<do line=\"1\" column=\"1\"><block line=\"1\" column=\"3\"><expr-stmnt line=\"1\" column=\"5\"><call line=\"1\" column=\"10\"><primary line=\"1\" column=\"5\">trace</primary><arguments line=\"1\" column=\"10\"><primary line=\"1\" column=\"12\">i</primary></arguments></call></expr-stmnt></block><condition line=\"1\" column=\"24\"><post-inc line=\"1\" column=\"27\"><primary line=\"1\" column=\"26\">i</primary></post-inc></condition></do>");
 	}
 	
 	[Test]
@@ -49,10 +44,7 @@ public class TestDoStatement extends AbstractStatementTest
 		var input:String = "do ; while( i++ ); ";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<do line=\"1\" column=\"1\"><stmt-empty line=\"1\" column=\"4\">;" +
-			"</stmt-empty><condition line=\"1\" column=\"11\"><post-inc line=\"1\" " +
-			"column=\"14\"><primary line=\"1\" column=\"13\">i</primary></post-inc>" +
-			"</condition></do>");
+			"<do line=\"1\" column=\"1\"><stmt-empty line=\"1\" column=\"4\">;</stmt-empty><condition line=\"1\" column=\"11\"><post-inc line=\"1\" column=\"14\"><primary line=\"1\" column=\"13\">i</primary></post-inc></condition></do>");
 	}
 	
 	[Test]
@@ -61,11 +53,7 @@ public class TestDoStatement extends AbstractStatementTest
 		var input:String = "do trace( i ); while( i++ ); ";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<do line=\"1\" column=\"1\"><call line=\"1\" column=\"9\"><primary " +
-			"line=\"1\" column=\"4\">trace</primary><arguments line=\"1\" column=\"9\">" +
-			"<primary line=\"1\" column=\"11\">i</primary></arguments></call><condition " +
-			"line=\"1\" column=\"21\"><post-inc line=\"1\" column=\"24\"><primary " +
-			"line=\"1\" column=\"23\">i</primary></post-inc></condition></do>");
+			"<do line=\"1\" column=\"1\"><expr-stmnt line=\"1\" column=\"4\"><call line=\"1\" column=\"9\"><primary line=\"1\" column=\"4\">trace</primary><arguments line=\"1\" column=\"9\"><primary line=\"1\" column=\"11\">i</primary></arguments></call></expr-stmnt><condition line=\"1\" column=\"21\"><post-inc line=\"1\" column=\"24\"><primary line=\"1\" column=\"23\">i</primary></post-inc></condition></do>");
 	}
 }
 }

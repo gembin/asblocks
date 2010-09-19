@@ -139,14 +139,8 @@ public class StatementList extends ContainerDelegate implements IBlock
 		// if the statement is a simple expression, the parser returns
 		// the first child, but the stmt was actually an expr-list
 		// FIXME !!! Have to implement expr-statement in parser
-		if (stmt.parent && stmt.parent.isKind(AS3NodeKind.EXPR_LIST))
-		{
-			stmt = stmt.parent;
-		}
-		else
-		{
-			stmt.parent = null;
-		}
+		stmt.parent = null;
+		
 		_addStatement(stmt);
 		return StatementBuilder.build(stmt);
 	}

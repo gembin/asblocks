@@ -35,9 +35,7 @@ public class TestEmptyStatement extends AbstractStatementTest
 		var input:String = "{;1;;}";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<block line=\"1\" column=\"1\"><stmt-empty line=\"1\" column=\"2\">;" +
-			"</stmt-empty><number line=\"1\" column=\"3\">1</number><stmt-empty " +
-			"line=\"1\" column=\"5\">;</stmt-empty></block>" );
+			"<block line=\"1\" column=\"1\"><stmt-empty line=\"1\" column=\"2\">;</stmt-empty><expr-stmnt line=\"1\" column=\"3\"><number line=\"1\" column=\"3\">1</number></expr-stmnt></block>" );
 	}
 	
 	[Test]

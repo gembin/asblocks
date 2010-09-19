@@ -2116,7 +2116,7 @@ public class AS3Parser extends ParserBase
 		}
 		else
 		{
-			result = parseExpressionList() as TokenNode;
+			result = parseExpressionStatement() as TokenNode;
 			skip(Operators.SEMI, result);
 		}
 		return result;

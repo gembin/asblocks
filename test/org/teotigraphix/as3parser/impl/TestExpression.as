@@ -20,8 +20,11 @@
 package org.teotigraphix.as3parser.impl
 {
 
+import org.flexunit.Assert;
+import org.teotigraphix.asblocks.utils.ASTUtil;
+
 /**
- * A <code>;</code> statement unit test.
+ * Tests all expressions.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -477,7 +480,16 @@ public class TestExpression extends AbstractStatementTest
 			"<dot line=\"1\" column=\"6\"><primary line=\"1\" column=\"1\">" +
 			"myXML</primary><e4x-attr line=\"1\" column=\"7\"><star line=\"1\" " +
 			"column=\"8\">*</star></e4x-attr></dot>");
-
+		
+	}
+	
+	override protected function assertStatement(message:String, 
+												input:String, 
+												expected:String):void
+	{
+		var result:String = ASTUtil.convert(parseStatement(input));
+		Assert.assertEquals(message, "<expr-stmnt line=\"1\" column=\"1\">" +
+			expected + "</expr-stmnt>", result);
 	}
 }
 }

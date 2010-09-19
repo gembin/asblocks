@@ -35,9 +35,7 @@ public class TestUnaryExpression extends AbstractStatementTest
 		var input:String = "x [ 0 ] ";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<arr-acc line=\"1\" column=\"3\"><primary line=\"1\" " +
-			"column=\"1\">x</primary><number line=\"1\" column=\"5\">0" +
-			"</number></arr-acc>");
+			"<expr-stmnt line=\"1\" column=\"1\"><arr-acc line=\"1\" column=\"3\"><primary line=\"1\" column=\"1\">x</primary><number line=\"1\" column=\"5\">0</number></arr-acc></expr-stmnt>");
 	}
 	
 	[Test]
@@ -46,35 +44,17 @@ public class TestUnaryExpression extends AbstractStatementTest
 		var input:String = "a.b['c'].d.e(1)";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<dot line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">a</primary>" +
-			"<dot line=\"1\" column=\"9\"><arr-acc line=\"1\" column=\"4\"><primary " +
-			"line=\"1\" column=\"3\">b</primary><string line=\"1\" column=\"5\">'c'" +
-			"</string></arr-acc><dot line=\"1\" column=\"11\"><primary line=\"1\" " +
-			"column=\"10\">d</primary><call line=\"1\" column=\"13\"><primary line=\"1\" " +
-			"column=\"12\">e</primary><arguments line=\"1\" column=\"13\"><number " +
-			"line=\"1\" column=\"14\">1</number></arguments></call></dot></dot></dot>");
+			"<expr-stmnt line=\"1\" column=\"1\"><dot line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">a</primary><dot line=\"1\" column=\"9\"><arr-acc line=\"1\" column=\"4\"><primary line=\"1\" column=\"3\">b</primary><string line=\"1\" column=\"5\">'c'</string></arr-acc><dot line=\"1\" column=\"11\"><primary line=\"1\" column=\"10\">d</primary><call line=\"1\" column=\"13\"><primary line=\"1\" column=\"12\">e</primary><arguments line=\"1\" column=\"13\"><number line=\"1\" column=\"14\">1</number></arguments></call></dot></dot></dot></expr-stmnt>");
 		
 		input = "a.b['c']['d'].e(1)";
 		assertStatementPrint(input);
 		assertStatement("2", input,
-			"<dot line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">a</primary>" +
-			"<dot line=\"1\" column=\"14\"><arr-acc line=\"1\" column=\"4\"><primary " +
-			"line=\"1\" column=\"3\">b</primary><string line=\"1\" column=\"5\">'c'" +
-			"</string><string line=\"1\" column=\"10\">'d'</string></arr-acc><call " +
-			"line=\"1\" column=\"16\"><primary line=\"1\" column=\"15\">e</primary>" +
-			"<arguments line=\"1\" column=\"16\"><number line=\"1\" column=\"17\">1" +
-			"</number></arguments></call></dot></dot>");
+			"<expr-stmnt line=\"1\" column=\"1\"><dot line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">a</primary><dot line=\"1\" column=\"14\"><arr-acc line=\"1\" column=\"4\"><primary line=\"1\" column=\"3\">b</primary><string line=\"1\" column=\"5\">'c'</string><string line=\"1\" column=\"10\">'d'</string></arr-acc><call line=\"1\" column=\"16\"><primary line=\"1\" column=\"15\">e</primary><arguments line=\"1\" column=\"16\"><number line=\"1\" column=\"17\">1</number></arguments></call></dot></dot></expr-stmnt>");
 		
 		input = "a . b [ 'c' ] [ 'd' ] . e ( 1 )";
 		assertStatementPrint(input);
 		assertStatement("3", input,
-			"<dot line=\"1\" column=\"3\"><primary line=\"1\" column=\"1\">a</primary>" +
-			"<dot line=\"1\" column=\"23\"><arr-acc line=\"1\" column=\"7\"><primary " +
-			"line=\"1\" column=\"5\">b</primary><string line=\"1\" column=\"9\">'c'" +
-			"</string><string line=\"1\" column=\"17\">'d'</string></arr-acc><call " +
-			"line=\"1\" column=\"27\"><primary line=\"1\" column=\"25\">e</primary>" +
-			"<arguments line=\"1\" column=\"27\"><number line=\"1\" column=\"29\">1" +
-			"</number></arguments></call></dot></dot>");
+			"<expr-stmnt line=\"1\" column=\"1\"><dot line=\"1\" column=\"3\"><primary line=\"1\" column=\"1\">a</primary><dot line=\"1\" column=\"23\"><arr-acc line=\"1\" column=\"7\"><primary line=\"1\" column=\"5\">b</primary><string line=\"1\" column=\"9\">'c'</string><string line=\"1\" column=\"17\">'d'</string></arr-acc><call line=\"1\" column=\"27\"><primary line=\"1\" column=\"25\">e</primary><arguments line=\"1\" column=\"27\"><number line=\"1\" column=\"29\">1</number></arguments></call></dot></dot></expr-stmnt>");
 	}
 	
 	[Test]
@@ -83,16 +63,12 @@ public class TestUnaryExpression extends AbstractStatementTest
 		var input:String = "method ( )";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<call line=\"1\" column=\"8\"><primary line=\"1\" column=\"1\">" +
-			"method</primary><arguments line=\"1\" column=\"8\"></arguments></call>");
+			"<expr-stmnt line=\"1\" column=\"1\"><call line=\"1\" column=\"8\"><primary line=\"1\" column=\"1\">method</primary><arguments line=\"1\" column=\"8\"></arguments></call></expr-stmnt>");
 		
 		input = "method ( 1, \"two\" )";
 		assertStatementPrint(input);
 		assertStatement("2", input,
-			"<call line=\"1\" column=\"8\"><primary line=\"1\" column=\"1\">" +
-			"method</primary><arguments line=\"1\" column=\"8\"><number line=\"1\" " +
-			"column=\"10\">1</number><string line=\"1\" column=\"13\">\"two\"</string>" +
-			"</arguments></call>");
+			"<expr-stmnt line=\"1\" column=\"1\"><call line=\"1\" column=\"8\"><primary line=\"1\" column=\"1\">method</primary><arguments line=\"1\" column=\"8\"><number line=\"1\" column=\"10\">1</number><string line=\"1\" column=\"13\">\"two\"</string></arguments></call></expr-stmnt>");
 	}
 	
 	[Test]
@@ -101,9 +77,7 @@ public class TestUnaryExpression extends AbstractStatementTest
 		var input:String = "method ( ) ( )";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<call line=\"1\" column=\"8\"><primary line=\"1\" column=\"1\">" +
-			"method</primary><arguments line=\"1\" column=\"8\"></arguments>" +
-			"<arguments line=\"1\" column=\"12\"></arguments></call>");
+			"<expr-stmnt line=\"1\" column=\"1\"><call line=\"1\" column=\"8\"><primary line=\"1\" column=\"1\">method</primary><arguments line=\"1\" column=\"8\"></arguments><arguments line=\"1\" column=\"12\"></arguments></call></expr-stmnt>");
 	}
 	
 	[Test]
@@ -111,12 +85,11 @@ public class TestUnaryExpression extends AbstractStatementTest
 	{
 		assertStatement( "1",
 			"++x",
-			"<pre-inc line=\"1\" column=\"3\"><primary line=\"1\" column=\"3\">" +
-			"x</primary></pre-inc>" );
+			"<expr-stmnt line=\"1\" column=\"1\"><pre-inc line=\"1\" column=\"3\"><primary line=\"1\" column=\"3\">x</primary></pre-inc></expr-stmnt>" );
 		assertStatement( "2",
 			"x++",
-			"<post-inc line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">" +
-			"x</primary></post-inc>" );
+			"<expr-stmnt line=\"1\" column=\"1\"><post-inc line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-inc></expr-stmnt>" );
+		// TODO uncomment tests
 		/*
 		assertStatement( "3",
 			"--x",
