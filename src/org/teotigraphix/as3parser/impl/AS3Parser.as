@@ -494,6 +494,10 @@ public class AS3Parser extends ParserBase
 				
 				pendingMetaList.addChild(parseMetaData());
 			}
+			else if (tokIs(Operators.LCURLY))
+			{
+				result.addChild(parseBlock());
+			}
 			else if (tokIs(KeyWords.VAR))
 			{
 				result.addChild(parseClassField(pendingMember));

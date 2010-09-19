@@ -30,6 +30,18 @@ public class TestClassContent
 	}
 	
 	[Test]
+	public function testStaticBlock():void
+	{
+		assertClassContent("1",
+			"{ MY_STATIC = 42; }",
+			"<block line=\"2\" column=\"1\">" +
+			"<expr-stmnt line=\"2\" column=\"3\"><assignment line=\"2\" " +
+			"column=\"3\"><primary line=\"2\" column=\"3\">MY_STATIC</primary>" +
+			"<assign line=\"2\" column=\"13\">=</assign><number line=\"2\" " +
+			"column=\"15\">42</number></assignment></expr-stmnt></block>");
+	}
+	
+	[Test]
 	public function testConstDeclarations():void
 	{
 		assertClassContent("1",
