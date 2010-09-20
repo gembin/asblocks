@@ -13,7 +13,6 @@ import org.teotigraphix.asblocks.CodeMirror;
 import org.teotigraphix.asblocks.api.IClassType;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IField;
-import org.teotigraphix.asblocks.api.IMethod;
 import org.teotigraphix.asblocks.api.Visibility;
 
 public class TestClassTypeNode extends BaseASFactoryTest
@@ -41,6 +40,118 @@ public class TestClassTypeNode extends BaseASFactoryTest
 			var parsed:IParserNode = AS3FragmentParser.parseCompilationUnit(sourceCode.code);
 			CodeMirror.assertASTMatch(ast, parsed);
 		}
+	}
+	
+	[Test]
+	public function test_isDynamic():void
+	{
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		assertFalse(typeNode.isDynamic);
+		typeNode.isDynamic = true;
+		assertTrue(typeNode.isDynamic);
+		assertPrint("package {\n\tpublic dynamic class A {\n\t}\n}", unit);
+		typeNode.isDynamic = false;
+		assertFalse(typeNode.isDynamic);
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+	}
+	
+	[Test]
+	public function test_isFinal():void
+	{
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		assertFalse(typeNode.isFinal);
+		typeNode.isFinal = true;
+		assertTrue(typeNode.isFinal);
+		assertPrint("package {\n\tpublic final class A {\n\t}\n}", unit);
+		typeNode.isFinal = false;
+		assertFalse(typeNode.isFinal);
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+	}
+	
+	[Test]
+	public function test_superClass():void
+	{
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		assertNull(typeNode.superClass);
+		typeNode.superClass = "ClassB";
+		assertEquals("ClassB", typeNode.superClass);
+		assertPrint("package {\n\tpublic class A extends ClassB {\n\t}\n}", unit);
+		typeNode.superClass = "ClassD";
+		assertEquals("ClassD", typeNode.superClass);
+		assertPrint("package {\n\tpublic class A extends ClassD {\n\t}\n}", unit);
+		typeNode.superClass = null;
+		assertNull(typeNode.superClass);
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+		typeNode.superClass = "my.domain.B";
+		assertEquals("my.domain.B", typeNode.superClass);
+		assertPrint("package {\n\tpublic class A extends my.domain.B {\n\t}\n}", unit);
+	}
+	
+	[Test]
+	public function test_implementedInterface():void
+	{
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		typeNode.addImplementedInterface("IInterfaceA");
+		typeNode.addImplementedInterface("IInterfaceB");
+		typeNode.addImplementedInterface("IInterfaceC");
+		
+		assertPrint("package {\n\tpublic class A implements IInterfaceA, " +
+			"IInterfaceB, IInterfaceC {\n\t}\n}", unit);
+		
+		var ifaces:Vector.<String> = typeNode.implementedInterfaces;
+		assertNotNull(ifaces);
+		assertEquals(3, ifaces.length);
+		assertEquals("IInterfaceA", ifaces[0]);
+		assertEquals("IInterfaceB", ifaces[1]);
+		assertEquals("IInterfaceC", ifaces[2]);
+		
+		typeNode.removeImplementedInterface("IInterfaceA");
+		
+		ifaces = typeNode.implementedInterfaces;
+		assertNotNull(ifaces);
+		assertEquals(2, ifaces.length);
+		assertEquals("IInterfaceB", ifaces[0]);
+		assertEquals("IInterfaceC", ifaces[1]);
+		
+		assertPrint("package {\n\tpublic class A implements " +
+			"IInterfaceB, IInterfaceC {\n\t}\n}", unit);
+	}
+	
+	[Test]
+	public function test_addImplementedInterface():void
+	{
+		// TODO block adding the same type
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		typeNode.addImplementedInterface("IInterfaceA");
+		assertPrint("package {\n\tpublic class A implements IInterfaceA {\n\t}\n}", unit);
+		typeNode.addImplementedInterface("IInterfaceB");
+		assertPrint("package {\n\tpublic class A implements IInterfaceA, IInterfaceB {\n\t}\n}", unit);
+		typeNode.removeImplementedInterface("IInterfaceA");
+		assertPrint("package {\n\tpublic class A implements IInterfaceB {\n\t}\n}", unit);
+		typeNode.removeImplementedInterface("IInterfaceB");
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+	}
+	
+	[Test]
+	public function test_removeImplementedInterface():void
+	{
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+		var typeNode:IClassType = unit.typeNode as IClassType;
+		assertEquals(0, typeNode.implementedInterfaces.length);
+		typeNode.addImplementedInterface("IInterfaceA");
+		assertEquals(1, typeNode.implementedInterfaces.length);
+		assertPrint("package {\n\tpublic class A implements IInterfaceA {\n\t}\n}", unit);
+		typeNode.addImplementedInterface("IInterfaceB");
+		assertPrint("package {\n\tpublic class A implements IInterfaceA, IInterfaceB {\n\t}\n}", unit);
+		assertEquals(2, typeNode.implementedInterfaces.length);
+		assertTrue(typeNode.removeImplementedInterface("IInterfaceA"));
+		assertEquals(1, typeNode.implementedInterfaces.length);
+		assertPrint("package {\n\tpublic class A implements IInterfaceB {\n\t}\n}", unit);
+		assertTrue(typeNode.removeImplementedInterface("IInterfaceB"));
+		assertEquals(0, typeNode.implementedInterfaces.length);
+		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
+		assertFalse(typeNode.removeImplementedInterface("IInterfaceB"));
 	}
 	
 	[Test]
@@ -78,6 +189,8 @@ public class TestClassTypeNode extends BaseASFactoryTest
 		var field1:IField = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
 		var field2:IField = typeNode.newField("fieldTwo", Visibility.PUBLIC, "String");
 		var field3:IField = typeNode.newField("fieldThree", Visibility.PUBLIC, "String");
+		assertPrint("package {\n\tpublic class A {\n\t\tpublic var fieldOne:String;" +
+			"\n\t\tpublic var fieldTwo:String;\n\t\tpublic var fieldThree:String;\n\t}\n}", unit);
 		assertEquals(3, typeNode.fields.length);
 		assertTrue(typeNode.removeField("fieldOne"));
 		assertEquals(2, typeNode.fields.length);
@@ -86,170 +199,7 @@ public class TestClassTypeNode extends BaseASFactoryTest
 		assertTrue(typeNode.removeField("fieldThree"));
 		assertEquals(0, typeNode.fields.length);
 		assertFalse(typeNode.removeField("fieldFour"));
-	}
-	
-	[Test]
-	public function test_newMethod():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		// TODO make sure dups cannot be created
-		var method:IMethod = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
-		assertNotNull(method);
-		assertEquals(Visibility.PUBLIC, method.visibility);
-		assertEquals("methodOne", method.name);
-		assertEquals("String", method.type);
-		assertPrint("package {\n\tpublic class A {\n\t\tpublic function methodOne()" +
-			":String {\n\t\t}\n\t}\n}", unit);
-		
-		assertTrue(typeNode.removeMethod("methodOne"));
 		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-		assertFalse(typeNode.removeMethod("methodOne"));
-	}
-	
-	[Test]
-	public function test_getMethod():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		var method:IMethod = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
-		assertEquals(method.name, typeNode.getMethod("methodOne").name);
-		assertNull(typeNode.getMethod("methodTwo"));
-		typeNode.removeMethod("methodOne");
-		assertNull(typeNode.getMethod("methodOne"));
-	}
-	
-	[Test]
-	public function test_removeMethod():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		var method1:IMethod = typeNode.newMethod("methodOne", Visibility.PUBLIC, "String");
-		var method2:IMethod = typeNode.newMethod("methodTwo", Visibility.PUBLIC, "String");
-		var method3:IMethod = typeNode.newMethod("methodThree", Visibility.PUBLIC, "String");
-		assertEquals(3, typeNode.methods.length);
-		assertTrue(typeNode.removeMethod("methodOne"));
-		assertEquals(2, typeNode.methods.length);
-		assertTrue(typeNode.removeMethod("methodTwo"));
-		assertEquals(1, typeNode.methods.length);
-		assertTrue(typeNode.removeMethod("methodThree"));
-		assertEquals(0, typeNode.methods.length);
-		assertFalse(typeNode.removeMethod("methodFour"));
-	}
-	
-	[Test]
-	public function test_isDynamic():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		assertFalse(typeNode.isDynamic);
-		typeNode.isDynamic = true;
-		assertTrue(typeNode.isDynamic);
-		typeNode.isDynamic = false;
-		assertFalse(typeNode.isDynamic);
-	}
-	
-	[Test]
-	public function test_isFinal():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		assertFalse(typeNode.isFinal);
-		typeNode.isFinal = true;
-		assertTrue(typeNode.isFinal);
-		typeNode.isFinal = false;
-		assertFalse(typeNode.isFinal);
-	}
-	
-	[Test]
-	public function test_visibility():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		assertEquals(Visibility.PUBLIC, typeNode.visibility);
-		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-		// TOD this shouldn' be possible, just testing right now
-		//typeNode.visibility = Visibility.INTERNAL;
-		//assertEquals(Visibility.INTERNAL, typeNode.visibility);
-		//assertPrint("package {\n\internal class A {\n\t}\n}", unit);
-	}
-	
-	[Test]
-	public function test_name():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		assertEquals("A", typeNode.name);
-		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-		typeNode.name = "TestA";
-		assertEquals("TestA", typeNode.name);
-		assertPrint("package {\n\tpublic class TestA {\n\t}\n}", unit);
-		// test that name cannot be set to null or ""
-	}
-	
-	[Test]
-	public function test_superClass():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		assertNull(typeNode.superClass);
-		typeNode.superClass = "ClassB";
-		assertEquals("ClassB", typeNode.superClass);
-		assertPrint("package {\n\tpublic class A extends ClassB {\n\t}\n}", unit);
-		typeNode.superClass = "ClassD";
-		assertEquals("ClassD", typeNode.superClass);
-		assertPrint("package {\n\tpublic class A extends ClassD {\n\t}\n}", unit);
-		typeNode.superClass = null;
-		assertNull(typeNode.superClass);
-		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-	}
-	
-	[Test]
-	public function test_addImplementedInterface():void
-	{
-		// TODO block adding the same type
-		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		typeNode.addImplementedInterface("IInterfaceA");
-		assertPrint("package {\n\tpublic class A implements IInterfaceA {\n\t}\n}", unit);
-		typeNode.addImplementedInterface("IInterfaceB");
-		assertPrint("package {\n\tpublic class A implements IInterfaceA, IInterfaceB {\n\t}\n}", unit);
-		typeNode.removeImplementedInterface("IInterfaceA");
-		assertPrint("package {\n\tpublic class A implements IInterfaceB {\n\t}\n}", unit);
-		typeNode.removeImplementedInterface("IInterfaceB");
-		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-	}
-	
-	[Test]
-	public function test_removeImplementedInterface():void
-	{
-		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		typeNode.addImplementedInterface("IInterfaceA");
-		assertPrint("package {\n\tpublic class A implements IInterfaceA {\n\t}\n}", unit);
-		typeNode.addImplementedInterface("IInterfaceB");
-		assertPrint("package {\n\tpublic class A implements IInterfaceA, IInterfaceB {\n\t}\n}", unit);
-		assertTrue(typeNode.removeImplementedInterface("IInterfaceA"));
-		assertPrint("package {\n\tpublic class A implements IInterfaceB {\n\t}\n}", unit);
-		assertTrue(typeNode.removeImplementedInterface("IInterfaceB"));
-		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
-		assertFalse(typeNode.removeImplementedInterface("IInterfaceB"));
-	}
-	
-	[Test]
-	public function test_implementedInterface():void
-	{
-		var typeNode:IClassType = unit.typeNode as IClassType;
-		typeNode.addImplementedInterface("IInterfaceA");
-		typeNode.addImplementedInterface("IInterfaceB");
-		typeNode.addImplementedInterface("IInterfaceC");
-		
-		var ifaces:Vector.<String> = typeNode.implementedInterfaces;
-		assertNotNull(ifaces);
-		assertEquals(3, ifaces.length);
-		assertEquals("IInterfaceA", ifaces[0]);
-		assertEquals("IInterfaceB", ifaces[1]);
-		assertEquals("IInterfaceC", ifaces[2]);
-		
-		typeNode.removeImplementedInterface("IInterfaceA");
-		
-		ifaces = typeNode.implementedInterfaces;
-		assertNotNull(ifaces);
-		assertEquals(2, ifaces.length);
-		assertEquals("IInterfaceB", ifaces[0]);
-		assertEquals("IInterfaceC", ifaces[1]);
 	}
 }
 }

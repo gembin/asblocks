@@ -40,9 +40,7 @@ public class ModifierUtil
 	{
 		var modList:IParserNode = findModifiers(node);
 		if (!modList)
-		{
 			return false;
-		}
 		
 		var i:ASTIterator = new ASTIterator(modList);
 		while (i.hasNext())
@@ -56,15 +54,13 @@ public class ModifierUtil
 		return false;
 	}
 	
-	public static function setModifierFlag(node:IParserNode, flag:Boolean, modifier:Modifier):void
+	public static function setModifierFlag(ast:IParserNode, flag:Boolean, modifier:Modifier):void
 	{
-		var modList:IParserNode = findModifiers(node);
-		if (!modList)
-		{
+		var list:IParserNode = findModifiers(ast);
+		if (!list)
 			return;
-		}
 		
-		var i:ASTIterator = new ASTIterator(modList);
+		var i:ASTIterator = new ASTIterator(list);
 		while (i.hasNext())
 		{
 			var child:IParserNode = i.next();
@@ -85,8 +81,8 @@ public class ModifierUtil
 		if (flag)
 		{
 			var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, modifier.name);
-			modList.appendToken(TokenBuilder.newSpace());
-			modList.addChild(mod);
+			mod.appendToken(TokenBuilder.newSpace());
+			list.addChild(mod);
 		}
 	}
 	
@@ -94,9 +90,7 @@ public class ModifierUtil
 	{
 		var modifiers:IParserNode = findModifiers(node);
 		if (modifiers.numChildren == 0)
-		{
 			return Visibility.DEFAULT;
-		}
 		
 		var i:ASTIterator = new ASTIterator(modifiers);
 		var child:IParserNode;

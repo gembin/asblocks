@@ -40,15 +40,8 @@ import org.teotigraphix.asblocks.utils.ModifierUtil;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ClassTypeNode extends TypeNode 
-	implements IClassType
+public class ClassTypeNode extends TypeNode implements IClassType
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Private :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
 	//--------------------------------------------------------------------------
 	//
 	//  IClassType API :: Properties
@@ -104,12 +97,11 @@ public class ClassTypeNode extends TypeNode
 	 */
 	public function get superClass():String
 	{
-		var list:IParserNode = node.getKind(AS3NodeKind.EXTENDS);
-		if (!list)
+		var ast:IParserNode = findExtends();
+		if (!ast)
 			return null;
 		
-		// extends/type
-		return ASTUtil.typeText(list.getFirstChild());
+		return ASTUtil.typeText(ast.getFirstChild());
 	}
 	
 	/**
@@ -123,7 +115,7 @@ public class ClassTypeNode extends TypeNode
 			return;
 		}
 		
-		var extendz:IParserNode = node.getKind(AS3NodeKind.EXTENDS);
+		var extendz:IParserNode = findExtends();
 		var type:IParserNode = AS3FragmentParser.parseType(value);
 		if (!extendz)
 		{
@@ -137,7 +129,6 @@ public class ClassTypeNode extends TypeNode
 			i.find(AS3NodeKind.NAME);
 			i.insertAfterCurrent(extendz);
 			extendz.addChild(type);
-			//extendz.appendToken(TokenBuilder.newSpace());
 		}
 		else
 		{
@@ -155,15 +146,16 @@ public class ClassTypeNode extends TypeNode
 	public function get implementedInterfaces():Vector.<String>
 	{
 		var result:Vector.<String> = new Vector.<String>();
-		var implz:IParserNode = node.getKind(AS3NodeKind.IMPLEMENTS);
-		if (implz)
+		var ast:IParserNode = findImplements();
+		if (!ast)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
 		{
-			var i:ASTIterator = new ASTIterator(implz);
-			while (i.hasNext())
-			{
-				result.push(ASTUtil.typeText(i.next()));
-			}
+			result.push(ASTUtil.typeText(i.next()));
 		}
+		
 		return result;
 	}
 	
@@ -180,8 +172,8 @@ public class ClassTypeNode extends TypeNode
 		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
 		{
-			var member:IParserNode = i.next();
-			if (member.isKind(AS3NodeKind.FIELD_LIST))
+			var member:IParserNode = i.search(AS3NodeKind.FIELD_LIST);
+			if (member)
 			{
 				result.push(new FieldNode(member));
 			}
@@ -217,24 +209,24 @@ public class ClassTypeNode extends TypeNode
 		if (containsImplementor(name))
 			return false;
 		
-		var implz:IParserNode = node.getKind(AS3NodeKind.IMPLEMENTS);
+		var ast:IParserNode = findImplements();
 		var type:IParserNode = AS3FragmentParser.parseType(name);
-		if (!implz)
+		if (!ast)
 		{
-			implz = ASTUtil.newAST(AS3NodeKind.IMPLEMENTS, "implements");
+			ast = ASTUtil.newAST(AS3NodeKind.IMPLEMENTS, "implements");
 			var i:ASTIterator = new ASTIterator(node);
 			i.find(AS3NodeKind.CONTENT);
-			i.insertBeforeCurrent(implz);
+			i.insertBeforeCurrent(ast);
 			// adds a space before the 'implements' keyword
 			var space:LinkedListToken = TokenBuilder.newSpace();
-			implz.startToken.beforeInsert(space);
+			ast.startToken.beforeInsert(space);
 		}
 		else
 		{
-			implz.appendToken(TokenBuilder.newComma());
+			ast.appendToken(TokenBuilder.newComma());
 		}
-		implz.appendToken(TokenBuilder.newSpace());
-		implz.addChild(type);
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(type);
 		return true;
 	}
 	
@@ -243,12 +235,12 @@ public class ClassTypeNode extends TypeNode
 	 */
 	public function removeImplementedInterface(name:String):Boolean
 	{
-		var implz:IParserNode = node.getKind(AS3NodeKind.IMPLEMENTS);
-		if (!implz)
+		var ast:IParserNode = findImplements();
+		if (!ast)
 			return false;
 		
 		var count:int = 0;
-		var i:ASTIterator = new ASTIterator(implz);
+		var i:ASTIterator = new ASTIterator(ast);
 		while (i.hasNext())
 		{
 			var ichild:IParserNode = i.next();
@@ -261,8 +253,8 @@ public class ClassTypeNode extends TypeNode
 				}
 				else if (count == 0)
 				{
-					var previous:LinkedListToken = implz.startToken.previous;
-					node.removeChild(implz);
+					var previous:LinkedListToken = ast.startToken.previous;
+					node.removeChild(ast);
 					// Hack, I can't figure out how to remove both spaces
 					ASTUtil.collapseWhitespace(previous)
 					return true;
@@ -347,7 +339,7 @@ public class ClassTypeNode extends TypeNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IClassType#removeField()
 	 */
-	public function removeField(name:String):Boolean
+	public function removeField(name:String):IField
 	{
 		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
@@ -359,11 +351,11 @@ public class ClassTypeNode extends TypeNode
 				if (field.name == name)
 				{
 					i.remove();
-					return true;
+					return field;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -371,6 +363,16 @@ public class ClassTypeNode extends TypeNode
 	//  Private :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	protected function findExtends():IParserNode
+	{
+		return node.getKind(AS3NodeKind.EXTENDS);
+	}
+	
+	protected function findImplements():IParserNode
+	{
+		return node.getKind(AS3NodeKind.IMPLEMENTS);
+	}
 	
 	/**
 	 * @private

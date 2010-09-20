@@ -369,9 +369,10 @@ public class ASTBuilder
 		//var metas:IParserNode = ASTUtil.newAST(AS3NodeKind.META_LIST);
 		//ast.addChild(metas);
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, "public"));
+		var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, "public");
+		mod.appendToken(TokenBuilder.newSpace());
+		mods.addChild(mod);
 		ast.addChild(mods);
-		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newClass());
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, className));
@@ -386,9 +387,10 @@ public class ASTBuilder
 		//var metas:IParserNode = ASTUtil.newAST(AS3NodeKind.META_LIST);
 		//ast.addChild(metas);
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, "public"));
+		var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, "public");
+		mod.appendToken(TokenBuilder.newSpace());
+		mods.addChild(mod);
 		ast.addChild(mods);
-		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newInterface());
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, name));

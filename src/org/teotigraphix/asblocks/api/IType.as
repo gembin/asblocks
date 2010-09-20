@@ -125,9 +125,9 @@ public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 	 * Attemps to remove an <code>IMethod</code> instance by name.
 	 * 
 	 * @param name The <code>String</code> name of the method.
-	 * @return A <code>Boolean</code> indicating whether a method by name was 
-	 * found and removed (<code>true</code>), or (<code>false</code>) if not.
+	 * @return An <code>IMethod</code> indicating whether a method by name was 
+	 * found and removed (<code>IMethod</code>), or (<code>null</code>) if not.
 	 */
-	function removeMethod(name:String):Boolean;
+	function removeMethod(name:String):IMethod;
 }
 }

@@ -251,7 +251,7 @@ public class TypeNode extends ScriptNode implements IType
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IType#removeMethod()
 	 */
-	public function removeMethod(name:String):Boolean
+	public function removeMethod(name:String):IMethod
 	{
 		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
@@ -265,11 +265,11 @@ public class TypeNode extends ScriptNode implements IType
 				if (meth.name == name)
 				{
 					i.remove();
-					return true;
+					return meth;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	//--------------------------------------------------------------------------

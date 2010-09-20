@@ -40,7 +40,11 @@ public interface IClassType extends IType
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether the class type has a <code>dynamic</code> modifier.
+	 * 
+	 * <p>Setting this property to <code>true</code> will add the <code>dynamic</code>,
+	 * setting the property to <code>false</code> will remove the <code>dynamic</code>
+	 * modifier.</p>
 	 */
 	function get isDynamic():Boolean;
 	
@@ -54,7 +58,11 @@ public interface IClassType extends IType
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether the class type has a <code>final</code> modifier.
+	 * 
+	 * <p>Setting this property to <code>true</code> will add the <code>final</code>,
+	 * setting the property to <code>false</code> will remove the <code>final</code>
+	 * modifier.</p>
 	 */
 	function get isFinal():Boolean;
 	
@@ -68,7 +76,11 @@ public interface IClassType extends IType
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The current String value located after the <code>extends</code> keyword.
+	 * 
+	 * <p>This value can be a qualified or simple name. When setting this 
+	 * property to <code>null</code> or <code>""</code>, the type will completly
+	 * remove the <code>extends</code> keyword along with the name from the AST.</p>
 	 */
 	function get superClass():String;
 	
@@ -78,22 +90,30 @@ public interface IClassType extends IType
 	function set superClass(value:String):void;
 	
 	//----------------------------------
-	//  fields
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get fields():Vector.<IField>;
-	
-	//----------------------------------
 	//  implementedInterfaces
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Returns all String values declared after the <code>implements</code>
+	 * keyword.
+	 * 
+	 * <p>These values can be a qualified or simple names. This property will
+	 * never return <code>null</code>, if implementations are not found, an
+	 * empty Vector is returned.</p>
 	 */
 	function get implementedInterfaces():Vector.<String>;
+	
+	//----------------------------------
+	//  fields
+	//----------------------------------
+	
+	/**
+	 * Returns all <code>IField</code> instances declared in the class content.
+	 * 
+	 * <p>This property will never return <code>null</code>, if fields are 
+	 * not found, an empty Vector is returned.</p>
+	 */
+	function get fields():Vector.<IField>;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -102,30 +122,55 @@ public interface IClassType extends IType
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Adds a qualified or simple name implementation to the class type.
+	 * 
+	 * <p>If no implementations exists the <code>implements</code> keyword
+	 * will be added to the token list.</p>
+	 * 
+	 * @param name A String indicating the new implementation name.
+	 * @return A Boolean indicating whether the implementation was added.
 	 */
 	function addImplementedInterface(name:String):Boolean;
 	
 	/**
-	 * TODO Docme
+	 * Removes a qualified or simple name implementation from the class type.
+	 * 
+	 * <p>If implementations exist and this implementation removed is the
+	 * last, the <code>implements</code> keyword will be removed from the 
+	 * token list.</p>
+	 * 
+	 * @param name A String indicating the new implementation name.
+	 * @return A Boolean indicating whether the implementation was added.
 	 */
 	function removeImplementedInterface(name:String):Boolean;
 	
 	/**
-	 * TODO Docme
+	 * Creates, appends and returns a new <code>IField</code> instance.
+	 * 
+	 * @param name The <code>String</code> name of the field.
+	 * @param visibility The <code>Visibility</code> of the field.
+	 * @param type The type of the field.
+	 * @return A new <code>IField</code> instance appended to the class type.
 	 */
 	function newField(name:String, 
 					  visibility:Visibility, 
 					  type:String):IField;
 	
 	/**
-	 * TODO Docme
+	 * Returns an <code>IField</code> instance if found or <code>null</code> 
+	 * if the type does not contain a field by name.
+	 * 
+	 * @return The <code>IField</code> instance by name or <code>null</code>.
 	 */
 	function getField(name:String):IField;
 	
 	/**
-	 * TODO Docme
+	 * Attemps to remove an <code>IField</code> instance by name.
+	 * 
+	 * @param name The <code>String</code> name of the field.
+	 * @return An <code>IField</code> indicating whether a field by name was 
+	 * found and removed (<code>IField</code>), or (<code>null</code>) if not.
 	 */
-	function removeField(name:String):Boolean;
+	function removeField(name:String):IField;
 }
 }
