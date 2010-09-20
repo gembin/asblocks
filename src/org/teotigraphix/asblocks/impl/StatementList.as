@@ -422,7 +422,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newTryCatch(name:String, type:String):ITryStatement
 	{
-		var result:IParserNode = ASTBuilder.newTry();
+		var result:IParserNode = ASTBuilder.newTryStatement();
 		result.appendToken(TokenBuilder.newSpace());
 		result.addChild(ASTBuilder.newCatchClause(name, type));
 		_addStatement(result);
@@ -434,7 +434,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newTryFinally():ITryStatement
 	{
-		var result:IParserNode = ASTBuilder.newTry();
+		var result:IParserNode = ASTBuilder.newTryStatement();
 		result.appendToken(TokenBuilder.newSpace());
 		result.addChild(ASTBuilder.newFinallyClause());
 		_addStatement(result);

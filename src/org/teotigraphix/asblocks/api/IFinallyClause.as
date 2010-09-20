@@ -21,11 +21,43 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * A finally statement; <code>finally { }</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var statement:ITryStatement = block.newTryFinally();
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	try {
+ * 	} finally {
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var statement:ITryStatement = block.newTryCatch("e", "Error");
+ * var fstatement:IFinallyClause = statement.newFinallyClause();
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	try {
+ * 	} catch (e:Error) {
+ * 	} finally {
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.ITryStatement#newCatchClause()
  */
 public interface IFinallyClause extends IStatement, IStatementContainer
 {

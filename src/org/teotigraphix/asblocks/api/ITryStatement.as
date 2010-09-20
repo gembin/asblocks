@@ -21,11 +21,66 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * A try statement; <code>try { } catch (e:Error) { } finally { }</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var statement:ITryStatement = block.newTryCatch("e", "Error");
+ * statement.addStatement("Try this code");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	try {
+ * 		trace("Try this code");
+ * 	} catch (e:Error) {
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var statement:ITryStatement = block.newTryFinally();
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	try {
+ * 	} finally {
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var statement:ITryStatement = block.newTryCatch("e", "Error");
+ * statement.addStatement("Try this code");
+ * statement.catchClauses[0].addStatement("Catch the Error");
+ * var fstatement:IFinallyClause = statement.newFinallyClasue();
+ * fstatement.addStatement("Always executes");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	try {
+ * 		trace("Try this code");
+ * 	} catch (e:Error) {
+ * 		trace("Catch the Error");
+ * 	} finally {
+ * 		trace("Always executes");
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newTryCatch()
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newTryFinally()
  */
 public interface ITryStatement extends IStatement, IStatementContainer
 {
@@ -40,7 +95,7 @@ public interface ITryStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The try statement's catch clauses in order of addition.
 	 */
 	function get catchClauses():Vector.<ICatchClause>;
 	
@@ -49,7 +104,7 @@ public interface ITryStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The try statement's single finally clause.
 	 */
 	function get finallyClause():IFinallyClause;
 	
@@ -60,14 +115,38 @@ public interface ITryStatement extends IStatement, IStatementContainer
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Appends and returns a new <code>ICatchClause</code> to the try statement.
+	 * 
+	 * @param name The name identifier of the error object.
+	 * @param type The type of error object.
+	 * @return A new <code>ICatchClause</code> statement.
 	 */
 	function newCatchClause(name:String, type:String):ICatchClause;
 	
 	/**
-	 * TODO Docme
+	 * Removes the catch statement and returns the statement.
+	 * 
+	 * @param statement The catch statement to remove.
+	 * @return The removed <code>ICatchClause</code> clause if found or
+	 * <code>null</code> if not found.
+	 */
+	function removeCatch(statement:ICatchClause):ICatchClause;
+	
+	/**
+	 * Adds and returns a new <code>IFinallyClause</code> to the try statement.
+	 * 
+	 * <p>Note: Only one finally statement is allowed, the method will throw an
+	 * <code>ASBlocksSyntaxError</code> error if called more than once.</p>
+	 * 
 	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError only one finally-clause allowed
 	 */
 	function newFinallyClause():IFinallyClause;
+	
+	/**
+	 * Removes the finally statement and returns the statement.
+	 * 
+	 * @return The removed <code>IFinallyClause</code> clause.
+	 */
+	function removeFinally():IFinallyClause;
 }
 }

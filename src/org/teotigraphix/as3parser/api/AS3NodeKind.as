@@ -480,6 +480,8 @@ public class AS3NodeKind
 	
 	public static const TRY:String = "try";
 	
+	public static const TRY_STMNT:String = "try-stmnt";
+	
 	public static const FINALLY:String = "finally";
 	
 	public static const CATCH:String = "catch";

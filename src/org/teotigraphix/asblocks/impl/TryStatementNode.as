@@ -22,11 +22,14 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.LinkedListToken;
+import org.teotigraphix.as3parser.impl.ASTIterator;
 import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.api.ICatchClause;
 import org.teotigraphix.asblocks.api.IFinallyClause;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.api.ITryStatement;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>ITryStatement</code> implementation.
@@ -38,10 +41,10 @@ import org.teotigraphix.asblocks.api.ITryStatement;
 public class TryStatementNode extends ContainerDelegate 
 	implements ITryStatement
 {
-	override protected function get statementContainer():IStatementContainer
-	{
-		return new StatementList(node.getChild(1)); // block
-	}
+	// try-stmnt
+	// try-stmnt/try
+	// try-stmnt/catch[i]
+	// try-stmnt/finally
 	
 	//--------------------------------------------------------------------------
 	//
@@ -58,7 +61,17 @@ public class TryStatementNode extends ContainerDelegate
 	 */
 	public function get catchClauses():Vector.<ICatchClause>
 	{
-		return null;
+		var result:Vector.<ICatchClause> = new Vector.<ICatchClause>();
+		var i:ASTIterator = new ASTIterator(node);
+		while (i.hasNext())
+		{
+			var ast:IParserNode = i.search(AS3NodeKind.CATCH);
+			if (!ast)
+				return result;
+			
+			result.push(new CatchClauseNode(ast));
+		}
+		return result;
 	}
 	
 	//----------------------------------
@@ -70,15 +83,24 @@ public class TryStatementNode extends ContainerDelegate
 	 */
 	public function get finallyClause():IFinallyClause
 	{
-		var ast:IParserNode = finallyClauseNode;
+		var ast:IParserNode = findFinallyClause();
 		if (!ast)
 			return null;
-		return new FinallyClause(ast);
+		return new FinallyClauseNode(ast);
 	}
 	
-	private function get finallyClauseNode():IParserNode
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function get statementContainer():IStatementContainer
 	{
-		return node.getKind(AS3NodeKind.FINALLY);
+		return new StatementList(findTryClause().getFirstChild()); // try-stmnt/try/block
 	}
 	
 	//--------------------------------------------------------------------------
@@ -97,7 +119,7 @@ public class TryStatementNode extends ContainerDelegate
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  ITryStatement API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
@@ -106,6 +128,40 @@ public class TryStatementNode extends ContainerDelegate
 	 */
 	public function newCatchClause(name:String, type:String):ICatchClause
 	{
+		var ast:IParserNode = ASTBuilder.newCatchClause(name, type);
+		
+		var space:LinkedListToken = TokenBuilder.newSpace();
+		// add a space before the catch keyword
+		ast.startToken.beforeInsert(space);
+		// set the start of the chain to the space
+		ast.startToken = space;
+		
+		var f:IParserNode = findFinallyClause();
+		var index:int = (f != null) ? node.getChildIndex(f) - 1 : node.numChildren;
+		// add the catch node
+		node.addChildAt(ast, index);
+		// get the current indent of the try statement
+		var indent:String = ASTUtil.findIndent(node);
+		// push the indent into the catch tokens
+		ASTUtil.increaseIndentAfterFirstLine(ast, indent);
+		return new CatchClauseNode(ast);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.ITryStatement#removeCatch()
+	 */
+	public function removeCatch(statement:ICatchClause):ICatchClause
+	{
+		var i:ASTIterator = new ASTIterator(node);
+		while (i.hasNext())
+		{
+			var ast:IParserNode = i.search(AS3NodeKind.CATCH);
+			if (ast === statement.node)
+			{
+				i.remove();
+				return statement;
+			}
+		}
 		return null;
 	}
 	
@@ -114,14 +170,58 @@ public class TryStatementNode extends ContainerDelegate
 	 */
 	public function newFinallyClause():IFinallyClause
 	{
-		var ast:IParserNode = finallyClauseNode;
+		var ast:IParserNode = findFinallyClause();
 		if (ast)
 		{
 			throw new ASBlocksSyntaxError("only one finally-clause allowed");
 		}
 		ast = ASTBuilder.newFinallyClause();
 		node.addChild(ast);
-		return new FinallyClause(ast);
+		return new FinallyClauseNode(ast);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.ITryStatement#removeFinally()
+	 */
+	public function removeFinally():IFinallyClause
+	{
+		var ast:IParserNode = findFinallyClause();
+		if (!ast)
+			return null;
+		
+		node.removeChild(ast);
+		
+		return new FinallyClauseNode(ast);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findTryClause():IParserNode
+	{
+		return node.getKind(AS3NodeKind.TRY);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findCatchClause():IParserNode
+	{
+		return node.getKind(AS3NodeKind.CATCH);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findFinallyClause():IParserNode
+	{
+		return node.getKind(AS3NodeKind.FINALLY);
 	}
 }
 }

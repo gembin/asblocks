@@ -22,65 +22,22 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.ICatchClause;
+import org.teotigraphix.asblocks.api.IFinallyClause;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 
 /**
- * The <code>ICatchClause</code> implementation.
+ * The <code>IFinallyClause</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class CatchClause extends ContainerDelegate 
-	implements ICatchClause
+public class FinallyClauseNode extends ContainerDelegate 
+	implements IFinallyClause
 {
 	override protected function get statementContainer():IStatementContainer
 	{
 		return new StatementList(node.getFirstChild()); // block
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  ICatchClause API :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * doc
-	 */
-	public function get name():String
-	{
-		return null;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set name(value:String):void
-	{
-	}
-	
-	//----------------------------------
-	//  type
-	//----------------------------------
-	
-	/**
-	 * doc
-	 */
-	public function get type():String
-	{
-		return null;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set type(value:String):void
-	{
 	}
 	
 	//--------------------------------------------------------------------------
@@ -92,7 +49,7 @@ public class CatchClause extends ContainerDelegate
 	/**
 	 * Constructor.
 	 */
-	public function CatchClause(node:IParserNode)
+	public function FinallyClauseNode(node:IParserNode)
 	{
 		super(node);
 	}

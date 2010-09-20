@@ -95,6 +95,13 @@ public class ASTBuilder
 		return comment;
 	}
 	
+	public static function newTryStatement():IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.TRY_STMNT);
+		ast.addChild(newTry());
+		return ast;
+	}
+	
 	public static function newTry():IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.TRY, "try");

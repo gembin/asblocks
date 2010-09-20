@@ -21,11 +21,29 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * A catch statement; <code>catch (e:Error) { }</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var statement:ITryStatement = block.newTryFinally();
+ * var cstatement:ICatchClause = statement.newCatchClause("e", "Error");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	try {
+ * 	} catch (e:Error) {
+ * 	} finally {
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.ITryStatement#newCatchClause()
  */
 public interface ICatchClause extends IStatement, IStatementContainer
 {
@@ -40,7 +58,7 @@ public interface ICatchClause extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The name of the caught error object.
 	 */
 	function get name():String;
 	
@@ -49,7 +67,7 @@ public interface ICatchClause extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type of the caught error object.
 	 */
 	function get type():String;
 }

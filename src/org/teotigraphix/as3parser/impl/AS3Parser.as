@@ -2031,7 +2031,7 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function parseBlock():TokenNode
+	internal function parseBlock():IParserNode
 	{
 		var result:TokenNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.BLOCK,
@@ -2139,23 +2139,15 @@ public class AS3Parser extends ParserBase
 		}
 		else if (tokIs(KeyWords.TRY))
 		{
-			result = parseTry();
-		}
-		else if (tokIs(KeyWords.CATCH))
-		{
-			result = parseCatch();
+			result = parseTryStatement();
 		}
 		else if (tokIs(KeyWords.CONFIG))
 		{
 			result = parseConfig();
 		}
-		else if (tokIs(KeyWords.FINALLY))
-		{
-			result = parseFinally();
-		}
 		else if (tokIs(Operators.LCURLY))
 		{
-			result = parseBlock();
+			result = parseBlock() as TokenNode;
 		}
 		else if (tokIs(KeyWords.VAR))
 		{
@@ -2608,14 +2600,38 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
+	private function parseTryStatement():TokenNode
+	{
+		var result:TokenNode = adapter.empty(AS3NodeKind.TRY_STMNT, token);
+		
+		result.addChild(parseTry());
+		consumeWhitespace(result);
+		
+		if (tokIs(KeyWords.CATCH))
+		{
+			while (tokIs(KeyWords.CATCH))
+			{
+				result.addChild(parseCatch());
+				consumeWhitespace(result);
+			}
+		}
+		
+		consumeWhitespace(result);
+		
+		if (tokIs(KeyWords.FINALLY))
+		{
+			result.addChild(parseFinally());
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
 	private function parseTry():TokenNode
 	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.TRY,
-			null, 
-			token.line, 
-			token.column);
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.TRY, token);
 		consume(KeyWords.TRY, result);
 		result.addChild(parseBlock());
 		return result;
@@ -2626,11 +2642,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseCatch():TokenNode
 	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.CATCH,
-			null, 
-			token.line, 
-			token.column);
+		var result:TokenNode = adapter.empty(AS3NodeKind.CATCH, token);
 		
 		consume(KeyWords.CATCH, result);
 		consume(Operators.LPAREN, result);
@@ -2663,11 +2675,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseFinally():TokenNode
 	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.FINALLY,
-			null, 
-			token.line, 
-			token.column);
+		var result:TokenNode = adapter.empty(AS3NodeKind.FINALLY, token);
 		
 		consume(KeyWords.FINALLY, result);
 		result.addChild(parseBlock());

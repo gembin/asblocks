@@ -89,7 +89,7 @@ public class StatementBuilder
 			case AS3NodeKind.THROW:
 				return new ThrowStatementNode(ast);
 			
-			case AS3NodeKind.TRY:
+			case AS3NodeKind.TRY_STMNT:
 				return new TryStatementNode(ast);
 				
 			case AS3NodeKind.WHILE:

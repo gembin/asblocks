@@ -20,6 +20,7 @@ import org.teotigraphix.asblocks.impl.TestPackageNode;
 import org.teotigraphix.asblocks.impl.TestPrefixExpression;
 import org.teotigraphix.asblocks.impl.TestStatementList;
 import org.teotigraphix.asblocks.impl.TestTokenBoundaries;
+import org.teotigraphix.asblocks.impl.TestTryStatementNode;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
@@ -42,6 +43,9 @@ public class AS3BlocksTestSuite
 	public var testBinaryExpression:TestBinaryExpression;
 	public var testBooleanLiteralNode:TestBooleanLiteralNode;
 	public var testBreakStatement:TestBreakStatement;
+	
+	
+	public var testTryStatementNode:TestTryStatementNode;
 	
 	public var testTokenBoundaries:TestTokenBoundaries;
 	public var testFieldNode:TestFieldNode;

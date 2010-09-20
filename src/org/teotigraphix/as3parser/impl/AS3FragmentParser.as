@@ -186,9 +186,10 @@ public class AS3FragmentParser
 	 * @param statement A String statement to be parsed into AST.
 	 * @return Returns a <code>AS3NodeKind.STATEMENT</code> node.
 	 */
-	public static function parseStatement(statement:String):IParserNode
+	public static function parseStatement(statement:String, useSemi:Boolean = true):IParserNode
 	{
-		var parser:AS3Parser = createParser(statement + ";");
+		var semi:String = (useSemi) ? ";" : "";
+		var parser:AS3Parser = createParser(statement + semi);
 		parser.nextToken();
 		var node:IParserNode = parser.parseStatement();
 		return node;
