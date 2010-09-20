@@ -21,13 +21,59 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
+ * A break statement with optional label; <code>break;</code> or 
+ * <code>break myLoop;</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var bs:IBreakStatement = block.newBreak();
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	break;
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var bs:IBreakStatement = block.newBreak("myLoop");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	break myLoop;
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newBreak()
  */
 public interface IBreakStatement extends IScriptNode, IStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Properties
+	//
+	//--------------------------------------------------------------------------
 	
+	//----------------------------------
+	//  label
+	//----------------------------------
+	
+	/**
+	 * The break's label identifier.
+	 */
+	function get label():IExpression;
+	
+	/**
+	 * @private
+	 */
+	function set label(value:IExpression):void;
 }
 }

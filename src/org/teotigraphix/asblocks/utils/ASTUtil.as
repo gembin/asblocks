@@ -201,9 +201,9 @@ public class ASTUtil
 		return adapter.create(kind, text);
 	}
 	
-	public static function newPrimaryAST():IParserNode
+	public static function newPrimaryAST(name:String = null):IParserNode
 	{
-		return adapter.create(AS3NodeKind.PRIMARY);
+		return adapter.create(AS3NodeKind.PRIMARY, name);
 	}
 	
 	public static function newPrefixAST(op:LinkedListToken):IParserNode

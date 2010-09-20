@@ -411,16 +411,26 @@ public class ASTBuilder
 	}
 	
 	
-	public static function newBreak():IParserNode
+	public static function newBreak(label:String = null):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.BREAK, "break");
+		if (label)
+		{
+			ast.appendToken(TokenBuilder.newSpace());
+			ast.addChild(ASTUtil.newPrimaryAST(label));
+		}
 		ast.appendToken(TokenBuilder.newSemi());
 		return ast;
 	}
 	
-	public static function newContinue():IParserNode
+	public static function newContinue(label:String = null):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CONTINUE, "continue");
+		if (label)
+		{
+			ast.appendToken(TokenBuilder.newSpace());
+			ast.addChild(ASTUtil.newPrimaryAST(label));
+		}
 		ast.appendToken(TokenBuilder.newSemi());
 		return ast;
 	}

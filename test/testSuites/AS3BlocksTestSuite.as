@@ -8,6 +8,7 @@ import org.teotigraphix.asblocks.impl.TestArrayLiteral;
 import org.teotigraphix.asblocks.impl.TestAssignmentNodes;
 import org.teotigraphix.asblocks.impl.TestBinaryExpression;
 import org.teotigraphix.asblocks.impl.TestBooleanLiteralNode;
+import org.teotigraphix.asblocks.impl.TestBreakStatement;
 import org.teotigraphix.asblocks.impl.TestClassTypeNode;
 import org.teotigraphix.asblocks.impl.TestCompilationUnitNode;
 import org.teotigraphix.asblocks.impl.TestExpressionNodes;
@@ -40,6 +41,7 @@ public class AS3BlocksTestSuite
 	public var testAssignmentNodes:TestAssignmentNodes;
 	public var testBinaryExpression:TestBinaryExpression;
 	public var testBooleanLiteralNode:TestBooleanLiteralNode;
+	public var testBreakStatement:TestBreakStatement;
 	
 	public var testTokenBoundaries:TestTokenBoundaries;
 	public var testFieldNode:TestFieldNode;

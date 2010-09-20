@@ -184,9 +184,9 @@ public class StatementList extends ContainerDelegate implements IBlock
 	/**
 	 * @private
 	 */
-	override public function newBreak():IBreakStatement
+	override public function newBreak(label:String = null):IBreakStatement
 	{
-		var ast:IParserNode = ASTBuilder.newBreak();
+		var ast:IParserNode = ASTBuilder.newBreak(label);
 		_addStatement(ast);
 		return new BreakStatementNode(ast);
 	}
@@ -194,9 +194,9 @@ public class StatementList extends ContainerDelegate implements IBlock
 	/**
 	 * @private
 	 */
-	override public function newContinue():IContinueStatement
+	override public function newContinue(label:String = null):IContinueStatement
 	{
-		var ast:IParserNode = ASTBuilder.newContinue();
+		var ast:IParserNode = ASTBuilder.newContinue(label);
 		_addStatement(ast);
 		return new ContinueStatementNode(ast);
 	}

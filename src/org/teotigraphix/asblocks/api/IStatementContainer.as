@@ -76,12 +76,12 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
-	function newBreak():IBreakStatement;
+	function newBreak(label:String = null):IBreakStatement;
 	
 	/**
 	 * TODO Docme
 	 */
-	function newContinue():IContinueStatement;
+	function newContinue(label:String = null):IContinueStatement;
 	
 	/**
 	 * TODO Docme

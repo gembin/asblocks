@@ -157,17 +157,17 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newBreak():IBreakStatement
+	public function newBreak(label:String = null):IBreakStatement
 	{
-		return statementContainer.newBreak();
+		return statementContainer.newBreak(label);
 	}
 	
 	/**
 	 * TODO Docme
 	 */
-	public function newContinue():IContinueStatement
+	public function newContinue(label:String = null):IContinueStatement
 	{
-		return statementContainer.newContinue();
+		return statementContainer.newContinue(label);
 	}
 	
 	/**

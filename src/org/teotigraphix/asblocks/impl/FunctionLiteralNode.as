@@ -250,17 +250,17 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newBreak()
 	 */
-	public function newBreak():IBreakStatement
+	public function newBreak(label:String = null):IBreakStatement
 	{
-		return containerMixin.newBreak();
+		return containerMixin.newBreak(label);
 	}
 	
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newContinue()
 	 */
-	public function newContinue():IContinueStatement
+	public function newContinue(label:String = null):IContinueStatement
 	{
-		return containerMixin.newContinue();
+		return containerMixin.newContinue(label);
 	}
 	
 	/**
