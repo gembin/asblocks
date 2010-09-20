@@ -21,11 +21,19 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * The <code>IClassType</code> is the supertype for the <code>IClassType</code>,
+ * <code>IInterfaceType</code> and <code>IFunctionType</code> types.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newClass()
+ * @see org.teotigraphix.asblocks.ASFactory#newInterface()
+ * @see org.teotigraphix.asblocks.ASFactory#newFunction()
+ * @see org.teotigraphix.asblocks.IASProject#newClass()
+ * @see org.teotigraphix.asblocks.IASProject#newInterface()
+ * @see org.teotigraphix.asblocks.IASProject#newFunction()
  */
 public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 {
@@ -40,7 +48,15 @@ public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The simple name of the type.
+	 * 
+	 * <p>If a class has the qualified name of <code>my.domain.ClassA</code>,
+	 * the name would be <code>ClassA</code>.</p>
+	 * 
+	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError Cannot set IType.name 
+	 * to null
+	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError Cannot set IType.name 
+	 * to and empty string
 	 */
 	function get name():String;
 	
@@ -54,7 +70,11 @@ public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The visibility of the <code>IType</code>, this must be <code>PUBLIC</code>, 
+	 * any other value will throw an error.
+	 * 
+	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError IType visibility must 
+	 * be public
 	 */
 	function get visibility():Visibility;
 	
@@ -68,7 +88,10 @@ public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Returns the Vector of <code>IMethod</code> held on this type.
+	 * 
+	 * <p>The property always returns a Vector regaurdless of methods defined.
+	 * The property will not return <code>null</code>.</p>
 	 */
 	function get methods():Vector.<IMethod>;
 	
@@ -79,19 +102,31 @@ public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Creates, appends and returns a new <code>IMethod</code> instance.
+	 * 
+	 * @param name The <code>String</code> name of the method.
+	 * @param visibility The <code>Visibility</code> of the method.
+	 * @param returnType The return type of the method.
+	 * @return A new <code>IMethod</code> instance appended to the type.
 	 */
 	function newMethod(name:String, 
 					   visibility:Visibility, 
 					   returnType:String):IMethod;
 	
 	/**
-	 * TODO Docme
+	 * Returns an <code>IMethod</code> instance if found or <code>null</code> 
+	 * if the type does not contain a method by name.
+	 * 
+	 * @return The <code>IMethod</code> instance by name or <code>null</code>.
 	 */
 	function getMethod(name:String):IMethod;
 	
 	/**
-	 * TODO Docme
+	 * Attemps to remove an <code>IMethod</code> instance by name.
+	 * 
+	 * @param name The <code>String</code> name of the method.
+	 * @return A <code>Boolean</code> indicating whether a method by name was 
+	 * found and removed (<code>true</code>), or (<code>false</code>) if not.
 	 */
 	function removeMethod(name:String):Boolean;
 }

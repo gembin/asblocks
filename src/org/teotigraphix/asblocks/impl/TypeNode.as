@@ -24,6 +24,7 @@ import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
 import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.api.IDocComment;
 import org.teotigraphix.asblocks.api.IMetaData;
 import org.teotigraphix.asblocks.api.IMethod;
@@ -34,29 +35,16 @@ import org.teotigraphix.asblocks.utils.DocCommentUtil;
 import org.teotigraphix.asblocks.utils.ModifierUtil;
 
 /**
- * The <code>IType</code> implementation.
+ * The <code>IType</code> implementation and abstract base class for the
+ * <code>ClassTypeNode</code>, <code>InterfaceTypeNode</code> and
+ * <code>FunctionTypeNode</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class TypeNode extends ScriptNode 
-	implements IType
+public class TypeNode extends ScriptNode implements IType
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Protected :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	protected function get contentNode():IParserNode
-	{
-		return node.getKind(AS3NodeKind.CONTENT);
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  IType API :: Properties
@@ -81,6 +69,14 @@ public class TypeNode extends ScriptNode
 	 */	
 	public function set name(value:String):void
 	{
+		if (value == "")
+		{
+			throw new ASBlocksSyntaxError("Cannot set IType.name to an empty string");
+		}
+		else if (value == null)
+		{
+			throw new ASBlocksSyntaxError("Cannot set IType.name to null");
+		}
 		var i:ASTIterator = new ASTIterator(node);
 		i.find(AS3NodeKind.NAME);
 		i.replace(ASTUtil.newAST(AS3NodeKind.NAME, value));
@@ -103,6 +99,10 @@ public class TypeNode extends ScriptNode
 	 */	
 	public function set visibility(value:Visibility):void
 	{
+		if (!value.equals(Visibility.PUBLIC))
+		{
+			throw new ASBlocksSyntaxError("IType visibility must be public");
+		}
 		return ModifierUtil.setVisibility(node, value);
 	}
 	
@@ -116,7 +116,7 @@ public class TypeNode extends ScriptNode
 	public function get methods():Vector.<IMethod>
 	{
 		var result:Vector.<IMethod> = new Vector.<IMethod>();
-		var i:ASTIterator = new ASTIterator(contentNode);
+		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
 		{
 			var member:IParserNode = i.next();
@@ -233,7 +233,7 @@ public class TypeNode extends ScriptNode
 	 */
 	public function getMethod(name:String):IMethod
 	{
-		var i:ASTIterator = new ASTIterator(contentNode);
+		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
 		{
 			var member:IParserNode = i.next();
@@ -253,10 +253,11 @@ public class TypeNode extends ScriptNode
 	
 	/**
 	 * @private
+	 * FIXME add addMethod() to public api ?
 	 */
 	public function addMethod(method:IMethod):void
 	{
-		ASTUtil.addChildWithIndentation(contentNode, method.node);
+		ASTUtil.addChildWithIndentation(findContent(), method.node);
 	}
 	
 	/**
@@ -264,7 +265,7 @@ public class TypeNode extends ScriptNode
 	 */
 	public function removeMethod(name:String):Boolean
 	{
-		var i:ASTIterator = new ASTIterator(contentNode);
+		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
 		{
 			var member:IParserNode = i.next();
@@ -288,11 +289,6 @@ public class TypeNode extends ScriptNode
 	//  IMetaDataAware API :: Methods
 	//
 	//--------------------------------------------------------------------------
-	
-	private function findMetaList():IParserNode
-	{
-		return node.getKind(AS3NodeKind.META_LIST);
-	}
 	
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#newMetaData()
@@ -402,6 +398,28 @@ public class TypeNode extends ScriptNode
 			}
 		}
 		return false;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected function findContent():IParserNode
+	{
+		return node.getKind(AS3NodeKind.CONTENT);
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function findMetaList():IParserNode
+	{
+		return node.getKind(AS3NodeKind.META_LIST);
 	}
 }
 }

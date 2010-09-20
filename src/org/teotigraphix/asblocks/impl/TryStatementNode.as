@@ -211,14 +211,6 @@ public class TryStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */
-	private function findCatchClause():IParserNode
-	{
-		return node.getKind(AS3NodeKind.CATCH);
-	}
-	
-	/**
-	 * @private
-	 */
 	private function findFinallyClause():IParserNode
 	{
 		return node.getKind(AS3NodeKind.FINALLY);

@@ -177,7 +177,7 @@ public class ClassTypeNode extends TypeNode
 	public function get fields():Vector.<IField>
 	{
 		var result:Vector.<IField> = new Vector.<IField>();
-		var i:ASTIterator = new ASTIterator(contentNode);
+		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
 		{
 			var member:IParserNode = i.next();
@@ -320,7 +320,7 @@ public class ClassTypeNode extends TypeNode
 	 */
 	public function getField(name:String):IField
 	{
-		var i:ASTIterator = new ASTIterator(contentNode);
+		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
 		{
 			var member:IParserNode = i.next();
@@ -341,7 +341,7 @@ public class ClassTypeNode extends TypeNode
 	 */
 	public function addField(field:IField):void
 	{
-		ASTUtil.addChildWithIndentation(contentNode, field.node);
+		ASTUtil.addChildWithIndentation(findContent(), field.node);
 	}
 	
 	/**
@@ -349,7 +349,7 @@ public class ClassTypeNode extends TypeNode
 	 */
 	public function removeField(name:String):Boolean
 	{
-		var i:ASTIterator = new ASTIterator(contentNode);
+		var i:ASTIterator = new ASTIterator(findContent());
 		while (i.hasNext())
 		{
 			var member:IParserNode = i.next();

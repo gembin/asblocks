@@ -21,6 +21,7 @@ import org.teotigraphix.asblocks.impl.TestPrefixExpression;
 import org.teotigraphix.asblocks.impl.TestStatementList;
 import org.teotigraphix.asblocks.impl.TestTokenBoundaries;
 import org.teotigraphix.asblocks.impl.TestTryStatementNode;
+import org.teotigraphix.asblocks.impl.TestTypeNode;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
@@ -30,6 +31,7 @@ public class AS3BlocksTestSuite
 	public var testASProject:TestASProject;
 	public var testCompilationUnitNode:TestCompilationUnitNode;
 	public var testPackageNode:TestPackageNode;
+	public var testTypeNode:TestTypeNode;
 	public var testClassTypeNode:TestClassTypeNode;
 	public var testInterfaceNodeType:TestInterfaceTypeNode;
 	

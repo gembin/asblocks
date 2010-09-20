@@ -5,8 +5,11 @@ import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertNull;
-import org.flexunit.asserts.assertStrictlyEquals;
 import org.flexunit.asserts.assertTrue;
+import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.as3parser.core.SourceCode;
+import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.asblocks.CodeMirror;
 import org.teotigraphix.asblocks.api.IClassType;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IField;
@@ -25,6 +28,19 @@ public class TestClassTypeNode extends BaseASFactoryTest
 		unit = project.newClass("A");
 		assertNotNull(unit);
 		assertNotNull(unit.typeNode);
+	}
+	
+	[After]
+	override public function tearDown():void
+	{
+		if (unit)
+		{
+			var sourceCode:SourceCode = new SourceCode();
+			var ast:IParserNode = unit.node;
+			new ASTPrinter(sourceCode).print(ast);
+			var parsed:IParserNode = AS3FragmentParser.parseCompilationUnit(sourceCode.code);
+			CodeMirror.assertASTMatch(ast, parsed);
+		}
 	}
 	
 	[Test]

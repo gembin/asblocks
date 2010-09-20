@@ -46,7 +46,8 @@ public class BaseASFactoryTest
 								   expression:IScriptNode):void
 	{
 		printer.print(expression.node);
-		Assert.assertEquals(expected, printer.flush());
+		var result:String = printer.flush();
+		Assert.assertEquals(expected, result);
 	}
 	
 	protected function assertCompilationUnit(message:String, 
