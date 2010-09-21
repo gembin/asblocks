@@ -21,6 +21,44 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
+ * The <code>ICompilationUnit</code> is the toplevel AST wrapper class that 
+ * contains a public <code>IPackage</code> and the package contains a
+ * public <code>IType</code>.
+ * 
+ * <p>Although the <code>typeNode</code> is not actually a child of the 
+ * compilation unit, the <code>typeNode</code> property is available
+ * for a shortcut instead of going through the <code>packageNode</code>.</p>
+ * 
+ * <p>The <code>packageName</code> also references the <code>packageNode.name</code>
+ * and is not found on this AST.</p>
+ * 
+ * <pre>
+ * var factory:ASFactory = new ASFactory();
+ * var project:IASProject = new ASFactory(factory);
+ * var unit:ICompilationUnit = project.newClass("my.domain.ClassType");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * package my.domain {
+ * 	public class ClassType {
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var factory:ASFactory = new ASFactory();
+ * var project:IASProject = new ASFactory(factory);
+ * var unit:ICompilationUnit = project.newInterface("my.domain.IInterfaceType");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * package my.domain {
+ * 	public interface IInterfaceType {
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -39,7 +77,9 @@ public interface ICompilationUnit extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * The public <code>package</code> node of the compilation unit.
+	 * 
+	 * <p>This node holds the public <code>IType</code> node.</p>
 	 */
 	function get packageNode():IPackage;
 	
@@ -48,7 +88,13 @@ public interface ICompilationUnit extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The qualified name of the package (<code>my</code>,
+	 * <code>my.domain</code> or <code>null</code>).
+	 * 
+	 * <p>This property can also be <code>null</code> which means the compilation
+	 * unit is located in the default <code>toplevel</code> package.</p>
+	 * 
+	 * @see org.teotigraphix.asblocks.api.IPackage#name
 	 */
 	function get packageName():String;
 	
@@ -62,7 +108,14 @@ public interface ICompilationUnit extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * A reference to the public <code>IType</code> found within the 
+	 * <code>IPackage</code>.
+	 * 
+	 * <p>This type can either be a <code>IClassType</code> or 
+	 * <code>IInterfaceType</code>.
+	 * 
+	 * @see org.teotigraphix.asblocks.api.IClassType
+	 * @see org.teotigraphix.asblocks.api.IInterfaceType
 	 */
 	function get typeNode():IType;
 }

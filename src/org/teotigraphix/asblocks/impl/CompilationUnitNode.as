@@ -20,11 +20,11 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.AS3NodeKind;
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IPackage;
 import org.teotigraphix.asblocks.api.IType;
-import org.teotigraphix.as3parser.api.AS3NodeKind;
-import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * The <code>ICompilationUnit</code> implementation.
@@ -33,8 +33,7 @@ import org.teotigraphix.as3parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class CompilationUnitNode extends ScriptNode 
-	implements ICompilationUnit
+public class CompilationUnitNode extends ScriptNode implements ICompilationUnit
 {
 	//--------------------------------------------------------------------------
 	//
@@ -67,15 +66,14 @@ public class CompilationUnitNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ICompilationUnit#packageName
+	 * @copy org.teotigraphix.asblocks.api.ICompilationUnit#packageNode
 	 */
 	public function get packageNode():IPackage
 	{
 		var ast:IParserNode = node.getKind(AS3NodeKind.PACKAGE);
 		if (!ast)
-		{
 			return null;
-		}
+		
 		return new PackageNode(ast);
 	}
 	
@@ -84,16 +82,15 @@ public class CompilationUnitNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.ICompilationUnit#packageName
+	 * @copy org.teotigraphix.asblocks.api.ICompilationUnit#typeNode
 	 */
 	public function get typeNode():IType
 	{
-		var pkg:IPackage = packageNode;
-		if (!pkg)
-		{
+		var ast:IPackage = packageNode;
+		if (!ast)
 			return null;
-		}
-		return pkg.typeNode;
+		
+		return ast.typeNode;
 	}
 	
 	//--------------------------------------------------------------------------

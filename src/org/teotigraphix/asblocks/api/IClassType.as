@@ -21,11 +21,31 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * The <code>IClassType</code> interface exposes documentation, metadata,
+ * and public members of the <code>class</code> type.
+ * 
+ * <pre>
+ * var factory:ASFactory = new ASFactory();
+ * var project:IASProject = new ASFactory(factory);
+ * var unit:ICompilationUnit = project.newClass("my.domain.ClassType");
+ * var type:IClassType = unit.typeNode as IClassType;
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * package my.domain {
+ * 	public class ClassType {
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newClass()
+ * @see org.teotigraphix.asblocks.api.IASProject#newClass()
+ * @see org.teotigraphix.asblocks.api.ICompilationUnit
  */
 public interface IClassType extends IType
 {
