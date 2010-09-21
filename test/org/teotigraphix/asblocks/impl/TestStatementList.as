@@ -286,15 +286,15 @@ public class TestStatementList
 			factory.newExpression("name"), 
 			factory.newExpression("object"));
 		
-		assertPrint("{\n\tfor each(name in object) {\n\t}\n}", forstmt);
+		assertPrint("{\n\tfor each (name in object) {\n\t}\n}", forstmt);
 		
 		// test setting variable
-		forstmt.variable = factory.parseDeclarationStatement("prop:String");
-		assertPrint("{\n\tfor each(var prop:String in object) {\n\t}\n}", forstmt);
+		forstmt.declaration = factory.parseDeclarationStatement("prop:String");
+		assertPrint("{\n\tfor each (var prop:String in object) {\n\t}\n}", forstmt);
 		
 		// test setting iterated
 		forstmt.iterated = factory.newExpression("getObject(prop)");
-		assertPrint("{\n\tfor each(var prop:String in getObject(prop)) {\n\t}\n}", forstmt);
+		assertPrint("{\n\tfor each (var prop:String in getObject(prop)) {\n\t}\n}", forstmt);
 	}
 	
 	[Test]
@@ -307,7 +307,7 @@ public class TestStatementList
 		assertPrint("{\n\tfor (name in object) {\n\t}\n}", forstmt);
 		
 		// test setting variable
-		forstmt.variable = factory.parseDeclarationStatement("prop:String");
+		forstmt.declaration = factory.parseDeclarationStatement("prop:String");
 		assertPrint("{\n\tfor (var prop:String in object) {\n\t}\n}", forstmt);
 		
 		// test setting iterated

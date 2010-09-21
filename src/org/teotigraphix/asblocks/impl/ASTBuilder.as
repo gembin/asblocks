@@ -206,39 +206,40 @@ public class ASTBuilder
 	}
 	
 	public static function newForEachIn(declaration:IParserNode, 
-										expression:IParserNode):IParserNode
+										target:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOR, "for");
-		
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOREACH, "for");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newEach());
-		
+		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newLParen());
-		ast.addChild(declaration);
+		var initAST:IParserNode = ASTUtil.newAST(AS3NodeKind.INIT);
+		initAST.addChild(declaration);
+		ast.addChild(initAST);
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.appendToken(TokenBuilder.newIn());
-		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(expression);
+		var inAST:IParserNode = ASTUtil.newAST(AS3NodeKind.IN, "in");
+		inAST.appendToken(TokenBuilder.newSpace());
+		inAST.addChild(target);
+		ast.addChild(inAST);
 		ast.appendToken(TokenBuilder.newRParen());
-		
 		return ast;
 	}
 	
 	public static function newForIn(declaration:IParserNode, 
-									expression:IParserNode):IParserNode
+									target:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOR, "for");
-		
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FORIN, "for");
 		ast.appendToken(TokenBuilder.newSpace());
-		
 		ast.appendToken(TokenBuilder.newLParen());
-		ast.addChild(declaration);
+		var initAST:IParserNode = ASTUtil.newAST(AS3NodeKind.INIT);
+		initAST.addChild(declaration);
+		ast.addChild(initAST);
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.appendToken(TokenBuilder.newIn());
-		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(expression);
+		var inAST:IParserNode = ASTUtil.newAST(AS3NodeKind.IN, "in");
+		inAST.appendToken(TokenBuilder.newSpace());
+		inAST.addChild(target);
+		ast.addChild(inAST);
 		ast.appendToken(TokenBuilder.newRParen());
-		
 		return ast;
 	}
 	

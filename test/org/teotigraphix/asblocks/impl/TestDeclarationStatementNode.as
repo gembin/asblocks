@@ -49,9 +49,9 @@ public class TestDeclarationStatementNode extends BaseASFactoryTest
 	public function testParse():void
 	{
 		block = factory.newBlock();
-		statement = factory.newDeclarationList("a:int = 0");
+		statement = factory.newDeclaration("a:int = 0");
 		assertPrint("var a:int = 0;", statement);
-		statement = factory.newDeclarationList("a:int = 0, b:String = \"foo\"");
+		statement = factory.newDeclaration("a:int = 0, b:String = \"foo\"");
 		assertPrint("var a:int = 0, b:String = \"foo\";", statement);
 		statement = block.newDeclaration("a:int = 0");
 		assertPrint("{\n\tvar a:int = 0;\n}", statement);
@@ -63,28 +63,28 @@ public class TestDeclarationStatementNode extends BaseASFactoryTest
 	[Test]
 	public function test_name():void
 	{
-		statement = factory.newDeclarationList("a:int = 0");
+		statement = factory.newDeclaration("a:int = 0");
 		Assert.assertEquals("a", statement.name);
 	}
 	
 	[Test]
 	public function test_type():void
 	{
-		statement = factory.newDeclarationList("a:int = 0");
+		statement = factory.newDeclaration("a:int = 0");
 		Assert.assertEquals("int", statement.type);
 	}
 	
 	[Test]
 	public function test_initializer():void
 	{
-		statement = factory.newDeclarationList("a:int = 0");
+		statement = factory.newDeclaration("a:int = 0");
 		Assert.assertEquals(0, INumberLiteral(statement.initializer).value);
 	}
 	
 	[Test]
 	public function test_declarations():void
 	{
-		statement = factory.newDeclarationList("foo:int = 0, bar:Number, baz:int = 1");
+		statement = factory.newDeclaration("foo:int = 0, bar:Number, baz:int = 1");
 		Assert.assertEquals(3, statement.declarations.length);
 		Assert.assertEquals("foo", statement.declarations[0].name);
 		Assert.assertEquals("bar", statement.declarations[1].name);

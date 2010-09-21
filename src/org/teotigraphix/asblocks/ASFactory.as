@@ -217,7 +217,7 @@ public class ASFactory
 	/**
 	 * TODO DOCME
 	 */
-	public function newDeclarationList(declaration:String):IDeclarationStatement
+	public function newDeclaration(declaration:String):IDeclarationStatement
 	{
 		var ast:IParserNode = AS3FragmentParser.parseDecList(declaration);
 		ast.parent = null;

@@ -72,17 +72,17 @@ public class TestForStatement extends AbstractStatementTest
 		var input:String = "for each( var obj : Object in list ){ obj.print( i ); }";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<foreach line=\"1\" column=\"1\"><dec-list line=\"1\" column=\"11\"><dec-role line=\"1\" column=\"11\"><var line=\"1\" column=\"11\"></var></dec-role><name-type-init line=\"1\" column=\"15\"><name line=\"1\" column=\"15\">obj</name><type line=\"1\" column=\"21\">Object</type></name-type-init></dec-list><in line=\"1\" column=\"28\"><primary line=\"1\" column=\"31\">list</primary></in><block line=\"1\" column=\"37\"><expr-stmnt line=\"1\" column=\"39\"><dot line=\"1\" column=\"42\"><primary line=\"1\" column=\"39\">obj</primary><call line=\"1\" column=\"48\"><primary line=\"1\" column=\"43\">print</primary><arguments line=\"1\" column=\"48\"><primary line=\"1\" column=\"50\">i</primary></arguments></call></dot></expr-stmnt></block></foreach>");
+			"<foreach line=\"1\" column=\"1\"><init line=\"1\" column=\"11\"><dec-list line=\"1\" column=\"11\"><dec-role line=\"1\" column=\"11\"><var line=\"1\" column=\"11\"></var></dec-role><name-type-init line=\"1\" column=\"15\"><name line=\"1\" column=\"15\">obj</name><type line=\"1\" column=\"21\">Object</type></name-type-init></dec-list></init><in line=\"1\" column=\"28\"><primary line=\"1\" column=\"31\">list</primary></in><block line=\"1\" column=\"37\"><expr-stmnt line=\"1\" column=\"39\"><dot line=\"1\" column=\"42\"><primary line=\"1\" column=\"39\">obj</primary><call line=\"1\" column=\"48\"><primary line=\"1\" column=\"43\">print</primary><arguments line=\"1\" column=\"48\"><primary line=\"1\" column=\"50\">i</primary></arguments></call></dot></expr-stmnt></block></foreach>");
 		
 		input = "for each( obj in list ){}";
 		assertStatementPrint(input);
 		assertStatement( "2", input,
-			"<foreach line=\"1\" column=\"1\"><name line=\"1\" column=\"11\">obj</name><in line=\"1\" column=\"15\"><primary line=\"1\" column=\"18\">list</primary></in><block line=\"1\" column=\"24\"></block></foreach>" );
+			"<foreach line=\"1\" column=\"1\"><init line=\"1\" column=\"11\"><primary line=\"1\" column=\"11\">obj</primary></init><in line=\"1\" column=\"15\"><primary line=\"1\" column=\"18\">list</primary></in><block line=\"1\" column=\"24\"></block></foreach>" );
 		
 		input = "for each (var a:XML in xml.classInfo..accessor) {}";
 		assertStatementPrint(input);
 		assertStatement("3", input,
-			"<foreach line=\"1\" column=\"1\"><dec-list line=\"1\" column=\"11\"><dec-role line=\"1\" column=\"11\"><var line=\"1\" column=\"11\"></var></dec-role><name-type-init line=\"1\" column=\"15\"><name line=\"1\" column=\"15\">a</name><type line=\"1\" column=\"17\">XML</type></name-type-init></dec-list><in line=\"1\" column=\"21\"><dot line=\"1\" column=\"27\"><primary line=\"1\" column=\"24\">xml</primary><e4x-descendent line=\"1\" column=\"37\"><primary line=\"1\" column=\"28\">classInfo</primary><primary line=\"1\" column=\"39\">accessor</primary></e4x-descendent></dot></in><block line=\"1\" column=\"49\"></block></foreach>");
+			"<foreach line=\"1\" column=\"1\"><init line=\"1\" column=\"11\"><dec-list line=\"1\" column=\"11\"><dec-role line=\"1\" column=\"11\"><var line=\"1\" column=\"11\"></var></dec-role><name-type-init line=\"1\" column=\"15\"><name line=\"1\" column=\"15\">a</name><type line=\"1\" column=\"17\">XML</type></name-type-init></dec-list></init><in line=\"1\" column=\"21\"><dot line=\"1\" column=\"27\"><primary line=\"1\" column=\"24\">xml</primary><e4x-descendent line=\"1\" column=\"37\"><primary line=\"1\" column=\"28\">classInfo</primary><primary line=\"1\" column=\"39\">accessor</primary></e4x-descendent></dot></in><block line=\"1\" column=\"49\"></block></foreach>");
 	}
 	
 	[Test]

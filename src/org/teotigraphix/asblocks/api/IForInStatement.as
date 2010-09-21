@@ -21,11 +21,48 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * A for ( in ) statement; <code>for (declaration in target) { }</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var declaration:IExpression = factory.newExpression("foo");
+ * var target:IExpression = factory.newExpression("bar");
+ * var fs:IForInStatement = block.newForIn(declaration, target);
+ * fs.addStatement("trace('do work')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	for (foo in bar) {
+ * 		trace('do work');
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var declaration:IExpression = factory.newDeclaration("foo:String");
+ * var target:IExpression = factory.newExpression("getObject(baz)");
+ * var fs:IForInStatement = block.newForIn(declaration, target);
+ * fs.addStatement("trace('do work')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	for (var foo:String in getObject(baz)) {
+ * 		trace('do work');
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newForIn()
+ * @see org.teotigraphix.asblocks.ASFactory#newDeclaration()
  */
 public interface IForInStatement extends IStatement, IStatementContainer
 {
@@ -36,25 +73,26 @@ public interface IForInStatement extends IStatement, IStatementContainer
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  variable
+	//  declaration
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The loop declaration, this can be an <code>IExpression</code> or
+	 * <code>IDeclarationStatement</code>.
 	 */
-	function get variable():IScriptNode;
+	function get declaration():IScriptNode;
 	
 	/**
 	 * @private
 	 */
-	function set variable(value:IScriptNode):void;
+	function set declaration(value:IScriptNode):void;
 	
 	//----------------------------------
 	//  iterated
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The iterated loop expression.
 	 */
 	function get iterated():IExpression;
 	

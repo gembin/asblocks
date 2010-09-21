@@ -21,46 +21,50 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * A for each ( in ) statement; <code>for each (declaration in target) { }</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var declaration:IExpression = factory.newExpression("foo");
+ * var target:IExpression = factory.newExpression("bar");
+ * var fs:IForEachInStatement = block.newForEachIn(declaration, target);
+ * fs.addStatement("trace('do work')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	for each (foo in bar) {
+ * 		trace('do work');
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var declaration:IExpression = factory.newDeclaration("foo:String");
+ * var target:IExpression = factory.newExpression("getObject(baz)");
+ * var fs:IForEachInStatement = block.newForEachIn(declaration, target);
+ * fs.addStatement("trace('do work')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	for each (var foo:String in getObject(baz)) {
+ * 		trace('do work');
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newForEachIn()
+ * @see org.teotigraphix.asblocks.ASFactory#newDeclaration()
  */
-public interface IForEachInStatement extends IStatement, IStatementContainer
+public interface IForEachInStatement extends IForInStatement
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  variable
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get variable():IScriptNode;
-	
-	/**
-	 * @private
-	 */
-	function set variable(value:IScriptNode):void;
-	
-	//----------------------------------
-	//  iterated
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get iterated():IExpression;
-	
-	/**
-	 * @private
-	 */
-	function set iterated(value:IExpression):void;
 }
 }

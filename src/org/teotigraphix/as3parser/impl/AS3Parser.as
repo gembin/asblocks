@@ -2246,66 +2246,6 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function parseForEach(node:TokenNode):TokenNode
-	{
-		consume(Operators.LPAREN, node);
-		
-		if (tokIs(KeyWords.VAR))
-		{
-			node.addChild(parseDeclarationList(null));
-		}
-		else
-		{
-			var name:TokenNode = adapter.copy(AS3NodeKind.NAME, token);
-			node.addChild(name);
-			nextNonWhiteSpaceToken(node);
-		}
-		var ini:TokenNode = adapter.empty(AS3NodeKind.IN, token);
-		
-		consume(KeyWords.IN, node);
-		ini.addChild(parseExpression());
-		node.addChild(ini);
-		
-		consume(Operators.RPAREN, node);
-		node.addChild(parseStatement());
-		node.kind = AS3NodeKind.FOREACH;
-		return node;
-	}
-	
-	internal function parseForInit():IParserNode
-	{
-		var result:IParserNode = adapter.empty(AS3NodeKind.INIT, token);
-		
-		if (tokIs(KeyWords.VAR))
-		{
-			result.addChild(parseDeclarationList(null));
-		}
-		else
-		{
-			isInFor = true;
-			result.addChild(parseExpression());
-			isInFor = false;
-		}
-		return result;
-	}
-	
-	internal function parseForCond():IParserNode
-	{
-		var result:TokenNode = adapter.empty(AS3NodeKind.COND, token);
-		result.addChild(parseExpression());
-		return result;
-	}
-	
-	internal function parseForIter():IParserNode
-	{
-		var result:TokenNode = adapter.empty(AS3NodeKind.ITER, token);
-		result.addChild(parseExpressionList());
-		return result;
-	}
-	
-	/**
-	 * @private
-	 */
 	private function parseTraditionalFor(node:TokenNode):TokenNode
 	{
 		consume(Operators.LPAREN, node);
@@ -2345,6 +2285,27 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
+	private function parseForEach(node:TokenNode):TokenNode
+	{
+		consume(Operators.LPAREN, node);
+		
+		node.addChild(parseForInit());
+		
+		var ini:TokenNode = adapter.empty(AS3NodeKind.IN, token);
+		
+		consume(KeyWords.IN, node);
+		ini.addChild(parseExpression());
+		node.addChild(ini);
+		
+		consume(Operators.RPAREN, node);
+		node.addChild(parseStatement());
+		node.kind = AS3NodeKind.FOREACH;
+		return node;
+	}
+	
+	/**
+	 * @private
+	 */
 	private function parseForIn(node:TokenNode):TokenNode
 	{
 		var result:TokenNode = adapter.empty(AS3NodeKind.IN, token);
@@ -2354,6 +2315,46 @@ public class AS3Parser extends ParserBase
 		consume(Operators.RPAREN, result);
 		node.addChild(parseStatement());
 		return node;
+	}
+	
+	/**
+	 * @private
+	 */
+	internal function parseForInit():IParserNode
+	{
+		var result:IParserNode = adapter.empty(AS3NodeKind.INIT, token);
+		
+		if (tokIs(KeyWords.VAR))
+		{
+			result.addChild(parseDeclarationList(null));
+		}
+		else
+		{
+			isInFor = true;
+			result.addChild(parseExpression());
+			isInFor = false;
+		}
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	internal function parseForCond():IParserNode
+	{
+		var result:TokenNode = adapter.empty(AS3NodeKind.COND, token);
+		result.addChild(parseExpression());
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	internal function parseForIter():IParserNode
+	{
+		var result:TokenNode = adapter.empty(AS3NodeKind.ITER, token);
+		result.addChild(parseExpressionList());
+		return result;
 	}
 	
 	/**
