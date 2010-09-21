@@ -223,7 +223,7 @@ public class TestExpressionNodes
 		assertPrint("a != b ? false : true", expression);
 		
 		// test changing the condition
-		expression.conditionExpression = factory.newEqualsExpression(
+		expression.condition = factory.newEqualsExpression(
 			factory.newSimpleNameExpression("a"), 
 			factory.newSimpleNameExpression("b"));
 		

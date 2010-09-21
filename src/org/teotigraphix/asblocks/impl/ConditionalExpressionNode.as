@@ -20,9 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IConditionalExpression;
 import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * The <code>IConditionalExpression</code> implementation.
@@ -36,18 +36,18 @@ public class ConditionalExpressionNode extends ExpressionNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  ISimpleNameExpressionNode API :: Properties
+	//  IConditionalExpression API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  conditionalExpression
+	//  condition
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IConditionalExpression#conditionExpression
+	 * @copy org.teotigraphix.asblocks.api.IConditionalExpression#condition
 	 */
-	public function get conditionExpression():IExpression
+	public function get condition():IExpression
 	{
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
@@ -55,7 +55,7 @@ public class ConditionalExpressionNode extends ExpressionNode
 	/**
 	 * @private
 	 */	
-	public function set conditionExpression(value:IExpression):void
+	public function set condition(value:IExpression):void
 	{
 		node.setChildAt(value.node, 0);
 	}

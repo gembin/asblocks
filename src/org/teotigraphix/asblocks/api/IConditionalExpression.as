@@ -21,14 +21,42 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * Conditional expression; <code>(a != b) ? true : false</code>.
+ * Conditional expression (ternary operator); <code>condition ? then : else</code>.
+ * 
+ * <pre>
+ * var condition:IExpression = factory.newExpression("foo");
+ * var thenExp:IExpression = factory.newExpression("bar");
+ * var elseExp:IExpression = factory.newExpression("baz");
+ * var ce:IConditionalExpression = factory.newConditionalExpression(condition, thenExp, elseExp);
+ * </pre>
+ * 
+ * <p>Will produce; <code>foo ? bar : baz</code>.</p>
+ * 
+ * <pre>
+ * var condition:IExpression = factory.newExpression("foo");
+ * var thenExp:IExpression = factory.newExpression("bar");
+ * var elseExp:IExpression = factory.newExpression("baz");
+ * var ce:IConditionalExpression = factory.newConditionalExpression(condition, thenExp, elseExp);
+ * ce.condition = factory.newExpression("foo < 42");
+ * ce.thenExpression = factory.newExpression("foBar()");
+ * ce.elseExpression = factory.newExpression("foBaz()");
+ * </pre>
+ * 
+ * <p>Will produce; <code>foo > 42 ? foBar() : foBaz()</code>.</p>
+ * 
+ * <pre>
+ * var ce:IConditionalExpression = factory.newExpression("foo ? bar : baz");
+ * </pre>
+ * 
+ * <p>Will produce an <code>IConditionalExpression</code>.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newConditionalExpression()
  */
-public interface IConditionalExpression 
-	extends IExpression, IScriptNode
+public interface IConditionalExpression extends IExpression, IScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -37,25 +65,27 @@ public interface IConditionalExpression
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  conditionExpression
+	//  condition
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The condition expression that resolves to the <code>thenExpression</code> 
+	 * or <code>elseExpression</code>.
 	 */
-	function get conditionExpression():IExpression;
+	function get condition():IExpression;
 	
 	/**
 	 * @private
 	 */
-	function set conditionExpression(value:IExpression):void;
+	function set condition(value:IExpression):void;
 	
 	//----------------------------------
 	//  thenExpression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The expression that is executed when the <code>condition</code> is 
+	 * <code>true</code>.
 	 */
 	function get thenExpression():IExpression;
 	
@@ -69,7 +99,8 @@ public interface IConditionalExpression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The expression that is executed when the <code>condition</code> is 
+	 * <code>false</code>.
 	 */
 	function get elseExpression():IExpression;
 	

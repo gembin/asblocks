@@ -1176,12 +1176,12 @@ public class AS3Parser extends ParserBase
 		if (tokIs(Operators.QUESTION))
 		{
 			var conditional:TokenNode = adapter.empty(
-				AS3NodeKind.CONDITIONAL, token, result);
-			nextNonWhiteSpaceToken(conditional);
+				AS3NodeKind.CONDITIONAL, token);
+			conditional.addChild(result);
+			consume(Operators.QUESTION, conditional);
 			conditional.addChild(parseExpression());
-			nextNonWhiteSpaceToken(conditional);
+			consume(Operators.COLON, conditional);
 			conditional.addChild(parseExpression());
-			
 			return conditional;
 		}
 		return result;
