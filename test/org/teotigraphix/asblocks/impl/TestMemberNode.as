@@ -39,6 +39,7 @@ public class TestMemberNode extends BaseASFactoryTest
 			new ASTPrinter(sourceCode).print(ast);
 			var parsed:IParserNode = AS3FragmentParser.parseCompilationUnit(sourceCode.code);
 			CodeMirror.assertASTMatch(ast, parsed);
+			CodeMirror.assertReflection(factory, unit);
 		}
 	}
 	

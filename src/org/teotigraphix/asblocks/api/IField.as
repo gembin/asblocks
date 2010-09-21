@@ -21,11 +21,26 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * A field.
+ * A type field.
+ * 
+ * <pre>
+ * var field:IField = type.newField("foo", Visibility.PUBLIC, "int");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * ...
+ * {
+ * 	public var foo:int = 0;
+ * }
+ * ...
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IClassType#newField()
  */
 public interface IField extends IMember
 {
@@ -40,7 +55,11 @@ public interface IField extends IMember
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether the member constains the <code>const</code> keyword.
+	 * 
+	 * <p>Setting this property to <code>true</code> will add the <code>const</code>
+	 * keyword, setting the property to <code>false</code> will remove the 
+	 * <code>const</code> keyword.</p>
 	 */
 	function get isConstant():Boolean;
 	
@@ -54,7 +73,9 @@ public interface IField extends IMember
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The field initializer expression if defined.
+	 * 
+	 * <p>This is the expression found after the <code>=</code> sign.</p>
 	 */
 	function get initializer():IExpression;
 	

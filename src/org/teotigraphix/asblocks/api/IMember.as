@@ -21,11 +21,41 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * A member, method or field.
+ * A type member; field or method.
+ * 
+ * <pre>
+ * var field:IField = type.newField("foo", Visibility.PUBLIC, "int");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * ...
+ * {
+ * 	public var foo:int = 0;
+ * }
+ * ...
+ * </pre>
+ * 
+ * <pre>
+ * var method:IMethod = type.newMethod("foo", Visibility.PUBLIC, "int");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * ...
+ * {
+ * 	public function foo():int {
+ * 	}
+ * }
+ * ...
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IClassType#newField()
+ * @see org.teotigraphix.asblocks.api.IType#newMethod()
  */
 public interface IMember 
 	extends IScriptNode, IDocCommentAware, IMetaDataAware
