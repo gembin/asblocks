@@ -1713,6 +1713,23 @@ public class AS3Parser extends ParserBase
 	/**
 	 * @private
 	 */
+	private function parseDefaultXMLNamespaceStatement():TokenNode
+	{
+		var result:TokenNode = adapter.empty(
+			AS3NodeKind.DF_XML_NS, token);
+		
+		consume(KeyWords.DEFAULT, result);
+		consume(KeyWords.XML, result);
+		consume(KeyWords.NAMESPACE, result);
+		consume(Operators.ASSIGN, result);
+		result.addChild(parseExpression());
+		skip(Operators.SEMI, result);
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
 	private function parseNewExpression():TokenNode
 	{
 		var result:TokenNode = adapter.empty(
@@ -2172,6 +2189,10 @@ public class AS3Parser extends ParserBase
 		else if (tokIs(KeyWords.THROW))
 		{
 			result = parseThrowStatement();
+		}
+		else if (tokIs(KeyWords.DEFAULT))
+		{
+			result = parseDefaultXMLNamespaceStatement();
 		}
 		else if (tokIs(KeyWords.BREAK))
 		{

@@ -193,5 +193,16 @@ public class TestReturnStatement extends AbstractStatementTest
 			"column=\"17\">'error'</string></arguments></call></new>" +
 			"</primary></throw>");
 	}
+	
+	[Test]
+	public function testDefaultXMLNamespace():void
+	{
+		var input:String = "default xml namespace = foo_namespace";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<df-xml-ns line=\"1\" column=\"1\"><primary line=\"1\" " +
+			"column=\"25\">foo_namespace</primary></df-xml-ns>");
+	}
 }
 }

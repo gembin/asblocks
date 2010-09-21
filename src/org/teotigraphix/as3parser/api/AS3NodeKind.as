@@ -538,6 +538,8 @@ public class AS3NodeKind
 	
 	public static const PRIMARY:String = "primary";
 	
+	public static const DF_XML_NS:String = "df-xml-ns";
+	
 	//----------------------------------
 	//  Invocation
 	//----------------------------------

@@ -143,5 +143,7 @@ public class KeyWords
 	public static const WHILE:String = "while";
 	
 	public static const WITH:String = "with";
+	
+	public static const XML:String = "xml";
 }
 }
