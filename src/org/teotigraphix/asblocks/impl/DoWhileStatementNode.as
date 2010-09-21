@@ -20,10 +20,10 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IDoWhileStatement;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IStatementContainer;
-import org.teotigraphix.as3parser.api.IParserNode;
 
 /**
  * The <code>IDoWhileStatement</code> implementation.
@@ -40,27 +40,17 @@ public class DoWhileStatementNode extends ContainerDelegate
 	//  IDoWhileStatementNode API :: Properties
 	//
 	//--------------------------------------------------------------------------
-
-	override protected function get statementContainer():IStatementContainer
-	{
-		return new StatementList(node.getChild(0));
-	}
-
+	
 	//----------------------------------
 	//  condition
 	//----------------------------------
 	
-	private function get conditionNode():IParserNode
-	{
-		return node.getChild(1);
-	}
-	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IDoWhileStatement#condition
 	 */
 	public function get condition():IExpression
 	{
-		return ExpressionBuilder.build(conditionNode.getFirstChild());
+		return ExpressionBuilder.build(findCondition().getFirstChild());
 	}
 	
 	/**
@@ -68,7 +58,21 @@ public class DoWhileStatementNode extends ContainerDelegate
 	 */	
 	public function set condition(value:IExpression):void
 	{
-		conditionNode.setChildAt(value.node, 1);
+		findCondition().setChildAt(value.node, 0);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function get statementContainer():IStatementContainer
+	{
+		return new StatementList(node.getFirstChild());
 	}
 	
 	//--------------------------------------------------------------------------
@@ -83,6 +87,20 @@ public class DoWhileStatementNode extends ContainerDelegate
 	public function DoWhileStatementNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findCondition():IParserNode
+	{
+		return node.getLastChild();
 	}
 }
 }

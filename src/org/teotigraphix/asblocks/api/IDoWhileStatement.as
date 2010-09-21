@@ -21,10 +21,29 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
+ * A do while statement; <code>do {} while(condition);</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var condition:IExpression = factory.newExpression("hasNext()");
+ * var dw:IDoWhileStatement = block.newDoWhile(condition);
+ * dw.addStatement("trace('do work')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	do {
+ * 		trace('do work');
+ * 	} while (hasNext());
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newDoWhile()
  */
 public interface IDoWhileStatement extends IStatement, IStatementContainer
 {
@@ -39,7 +58,7 @@ public interface IDoWhileStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The condition expression found in the <code>while</code> statement.
 	 */
 	function get condition():IExpression;
 	
