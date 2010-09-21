@@ -21,13 +21,59 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
+ * A continue statement with optional label; <code>continue;</code> or 
+ * <code>continue myLoop;</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var cs:IContinueStatement = block.newContinue();
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	continue;
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var cs:IContinueStatement = block.newContinue("myLoop");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	continue myLoop;
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newContinue()
  */
 public interface IContinueStatement extends IScriptNode, IStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Properties
+	//
+	//--------------------------------------------------------------------------
 	
+	//----------------------------------
+	//  label
+	//----------------------------------
+	
+	/**
+	 * The continue's label identifier.
+	 */
+	function get label():IExpression;
+	
+	/**
+	 * @private
+	 */
+	function set label(value:IExpression):void;
 }
 }

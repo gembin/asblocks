@@ -16,7 +16,7 @@ import org.teotigraphix.asblocks.api.IScriptNode;
 * newPreIncExpression()
 */
 
-public class TestPrefixExpression
+public class TestPrefixExpressionNode
 {
 	private var printer:ASTPrinter;
 	

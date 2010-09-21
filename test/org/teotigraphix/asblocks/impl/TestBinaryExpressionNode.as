@@ -37,7 +37,7 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 * newSubtractExpression()
 */
 
-public class TestBinaryExpression
+public class TestBinaryExpressionNode
 {
 	private var printer:ASTPrinter;
 	

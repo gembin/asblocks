@@ -10,7 +10,7 @@ import org.teotigraphix.asblocks.CodeMirror;
 import org.teotigraphix.asblocks.api.IArrayLiteral;
 import org.teotigraphix.asblocks.api.INumberLiteral;
 
-public class TestArrayLiteral
+public class TestArrayLiteralNode
 {
 	private var factory:ASFactory = new ASFactory();
 	

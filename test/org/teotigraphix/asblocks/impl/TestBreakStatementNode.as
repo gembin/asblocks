@@ -10,7 +10,7 @@ import org.teotigraphix.asblocks.CodeMirror;
 import org.teotigraphix.asblocks.api.IBlock;
 import org.teotigraphix.asblocks.api.IBreakStatement;
 
-public class TestBreakStatement
+public class TestBreakStatementNode
 {
 	private var factory:ASFactory = new ASFactory();
 	

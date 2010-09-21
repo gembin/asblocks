@@ -10,7 +10,7 @@ import org.teotigraphix.asblocks.CodeMirror;
 import org.teotigraphix.asblocks.api.IArrayAccessExpression;
 import org.teotigraphix.asblocks.api.IExpression;
 
-public class TestArrayAccessExpression
+public class TestArrayAccessExpressionNode
 {
 	private var factory:ASFactory = new ASFactory();
 	

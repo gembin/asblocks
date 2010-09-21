@@ -20,8 +20,9 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IContinueStatement;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IContinueStatement;
+import org.teotigraphix.asblocks.api.IExpression;
 
 /**
  * The <code>IContinueStatement</code> implementation.
@@ -33,6 +34,52 @@ import org.teotigraphix.as3parser.api.IParserNode;
 public class ContinueStatementNode extends ScriptNode 
 	implements IContinueStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  label
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IContinueStatement.label
+	 */
+	public function get label():IExpression
+	{
+		if (node.numChildren == 0)
+			return null;
+		
+		return ExpressionBuilder.build(node.getFirstChild());
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set label(value:IExpression):void
+	{
+		if (value == null && node.numChildren > 0)
+		{
+			node.removeChildAt(0);
+		}
+		
+		if (value == null)
+			return;
+		
+		if (node.numChildren == 0)
+		{
+			node.appendToken(TokenBuilder.newSpace());
+			node.addChild(value.node);
+		}
+		else
+		{
+			node.appendToken(TokenBuilder.newSpace());
+			node.setChildAt(value.node, 0);
+		}
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
