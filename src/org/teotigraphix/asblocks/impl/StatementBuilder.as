@@ -49,8 +49,8 @@ public class StatementBuilder
 			case AS3NodeKind.DEC_LIST:
 				return new DeclarationStatementNode(ast);
 			
-			//case AS3NodeKind.DEFAULT_XML_NAMESPACE:
-			//	return new DefaultXMLNamespaceStatementNode(ast);
+			case AS3NodeKind.DF_XML_NS:
+				return new DefaultXMLNamespaceStatementNode(ast);
 				
 			case AS3NodeKind.DO:
 				return new DoWhileStatementNode(ast);

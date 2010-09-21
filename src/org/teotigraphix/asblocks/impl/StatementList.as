@@ -217,7 +217,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	override public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement
 	{
 		var ast:IParserNode = ASTBuilder.newDefaultXMLNamespace(
-			AS3FragmentParser.parsePrimaryExpression(ASTBuilder.escapeString(namespace)));
+			AS3FragmentParser.parsePrimaryExpression(namespace));
 		_addStatement(ast);
 		return new DefaultXMLNamespaceStatementNode(ast);
 	}

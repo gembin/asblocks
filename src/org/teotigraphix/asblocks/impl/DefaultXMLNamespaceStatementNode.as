@@ -35,7 +35,7 @@ public class DefaultXMLNamespaceStatementNode extends ScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IDefaultXMLNamespaceStatementNode API :: Properties
+	//  IDefaultXMLNamespaceStatement API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -44,11 +44,19 @@ public class DefaultXMLNamespaceStatementNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IDefaultXMLNamespaceStatement#namespace
 	 */
 	public function get namespace():String
 	{
-		return null;
+		return node.getFirstChild().stringValue;
+	}
+	
+	/**
+	 * @private
+	 */
+	public function set namespace(value:String):void
+	{
+		node.getFirstChild().stringValue = value;
 	}
 	
 	//--------------------------------------------------------------------------

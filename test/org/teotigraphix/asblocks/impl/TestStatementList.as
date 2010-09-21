@@ -204,7 +204,7 @@ public class TestStatementList
 	public function test_newDefaultXMLNamespace():void
 	{
 		block.newDefaultXMLNamespace("my_namespace");
-		assertPrint("{\n\tdefault xml namespace = \"my_namespace\";\n}", block);
+		assertPrint("{\n\tdefault xml namespace = my_namespace;\n}", block);
 	}
 	
 	[Test]

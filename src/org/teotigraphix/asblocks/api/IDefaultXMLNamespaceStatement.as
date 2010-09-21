@@ -21,10 +21,25 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
+ * An xml default namespace statement; <code>default xml namespace = foo_namespace</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var dn:IDefaultXMLNamespaceStatement = block.newDefaultXMLNamespace("foo_namespace");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	default xml namespace = foo_namespace;
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newDefaultXMLNamespace()
  */
 public interface IDefaultXMLNamespaceStatement extends IStatement
 {
@@ -34,20 +49,18 @@ public interface IDefaultXMLNamespaceStatement extends IStatement
 	//
 	//--------------------------------------------------------------------------
 	
-	
 	//----------------------------------
 	//  namespace
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The primary identifier name of the xml namespace.
 	 */
 	function get namespace():String;
 	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
+	/**
+	 * @private
+	 */
+	function set namespace(value:String):void;
 }
 }
