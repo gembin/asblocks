@@ -332,17 +332,9 @@ public class MethodNode extends MemberNode
 	/**
 	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newDeclaration()
 	 */
-	public function newDeclaration(assignment:IExpression):IDeclarationStatement
+	public function newDeclaration(declaration:String):IDeclarationStatement
 	{
-		return containerMixin.newDeclaration(assignment);
-	}
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#newDeclaration()
-	 */
-	public function parseNewDeclaration(assignment:String):IDeclarationStatement
-	{
-		return containerMixin.parseNewDeclaration(assignment);
+		return containerMixin.newDeclaration(declaration);
 	}
 	
 	/**

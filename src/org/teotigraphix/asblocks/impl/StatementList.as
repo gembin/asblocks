@@ -204,19 +204,9 @@ public class StatementList extends ContainerDelegate implements IBlock
 	/**
 	 * @private
 	 */
-	override public function newDeclaration(assignment:IExpression):IDeclarationStatement
+	override public function newDeclaration(declaration:String):IDeclarationStatement
 	{
-		var ast:IParserNode = ASTBuilder.newDeclaration(assignment.node);
-		_addStatement(ast);
-		return new DeclarationStatementNode(ast);
-	}
-	
-	/**
-	 * @private
-	 */
-	override public function parseNewDeclaration(assignment:String):IDeclarationStatement
-	{
-		var ast:IParserNode = AS3FragmentParser.parseDecList(assignment);
+		var ast:IParserNode = AS3FragmentParser.parseDecList(declaration);
 		_addStatement(ast);
 		return new DeclarationStatementNode(ast);
 	}

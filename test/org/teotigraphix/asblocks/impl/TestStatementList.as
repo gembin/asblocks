@@ -191,18 +191,10 @@ public class TestStatementList
 	[Test]
 	public function test_newDeclaration():void
 	{
-		// FIXME there is no real way with the parser to use an IExpression here
-		block.newDeclaration(factory.newExpression("i:int = 0"));
-		//assertPrint("{\n\tvar i:int = 0;\n}", block);
-	}
-	
-	[Test]
-	public function test_parseDeclaration():void
-	{
-		var dec:IDeclarationStatement = block.parseNewDeclaration("i:int = 0");
+		var dec:IDeclarationStatement = block.newDeclaration("i:int = 0");
 		Assert.assertNotNull(dec);
 		assertPrint("{\n\tvar i:int = 0;\n}", block);
-		dec = block.parseNewDeclaration("i:int = 0, j:int = 42, k:String = \"test\"");
+		dec = block.newDeclaration("i:int = 0, j:int = 42, k:String = \"test\"");
 		Assert.assertNotNull(dec);
 		assertPrint("{\n\tvar i:int = 0;\n\tvar i:int = 0, j:int = 42, " +
 			"k:String = \"test\";\n}", block);

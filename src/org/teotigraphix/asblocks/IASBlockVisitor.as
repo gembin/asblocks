@@ -69,7 +69,7 @@ import org.teotigraphix.asblocks.api.IThisStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
-import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
+import org.teotigraphix.asblocks.api.IDeclaration;
 import org.teotigraphix.asblocks.api.IWhileStatement;
 import org.teotigraphix.asblocks.api.IWithStatement;
 
@@ -534,7 +534,7 @@ public interface IASBlockVisitor
 	 * 
 	 * @param element The <code>IVarDeclarationFragment</code>.
 	 */
-	function visitVarDeclarationFragment(element:IVarDeclarationFragment):void;
+	function visitVarDeclarationFragment(element:IDeclaration):void;
 	
 	/**
 	 * Visits an <code>IWhileStatement</code> and recurses through all nodes

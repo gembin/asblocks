@@ -13,6 +13,7 @@ import org.teotigraphix.asblocks.impl.TestClassTypeNode;
 import org.teotigraphix.asblocks.impl.TestCompilationUnitNode;
 import org.teotigraphix.asblocks.impl.TestConditionalExpressionNode;
 import org.teotigraphix.asblocks.impl.TestContinueStatementNode;
+import org.teotigraphix.asblocks.impl.TestDeclarationStatementNode;
 import org.teotigraphix.asblocks.impl.TestExpressionNodes;
 import org.teotigraphix.asblocks.impl.TestFieldNode;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
@@ -49,6 +50,7 @@ public class AS3BlocksTestSuite
 	public var testBreakStatement:TestBreakStatementNode;
 	public var testConditionalExpressionNode:TestConditionalExpressionNode;
 	public var testContinueStatementNode:TestContinueStatementNode;
+	public var testDeclarationStatementNode:TestDeclarationStatementNode;
 	
 	public var testTryStatementNode:TestTryStatementNode;
 	

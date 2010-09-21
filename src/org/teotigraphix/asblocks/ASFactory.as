@@ -214,6 +214,16 @@ public class ASFactory
 		return StatementBuilder.build(ast);
 	}
 	
+	/**
+	 * TODO DOCME
+	 */
+	public function newDeclarationList(declaration:String):IDeclarationStatement
+	{
+		var ast:IParserNode = AS3FragmentParser.parseDecList(declaration);
+		ast.parent = null;
+		return StatementBuilder.build(ast) as IDeclarationStatement;
+	}
+	
 	//----------------------------------
 	//  Assignment Expressions
 	//----------------------------------

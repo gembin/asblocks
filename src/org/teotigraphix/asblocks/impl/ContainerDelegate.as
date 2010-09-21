@@ -173,17 +173,9 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * TODO Docme
 	 */
-	public function newDeclaration(assignment:IExpression):IDeclarationStatement
+	public function newDeclaration(declaration:String):IDeclarationStatement
 	{
-		return statementContainer.newDeclaration(assignment);
-	}
-	
-	/**
-	 * TODO Docme
-	 */
-	public function parseNewDeclaration(assignment:String):IDeclarationStatement
-	{
-		return statementContainer.parseNewDeclaration(assignment);
+		return statementContainer.newDeclaration(declaration);
 	}
 	
 	/**

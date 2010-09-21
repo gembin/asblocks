@@ -22,8 +22,8 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
+import org.teotigraphix.asblocks.api.IDeclaration;
 import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
@@ -31,12 +31,11 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class VarDeclarationFragment extends ScriptNode
-	implements IVarDeclarationFragment
+public class Declaration extends ScriptNode	implements IDeclaration
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IVarDeclarationFragment API :: Properties
+	//  IDeclaration API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -45,7 +44,7 @@ public class VarDeclarationFragment extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#name
+	 * @copy org.teotigraphix.asblocks.api.IDeclaration#name
 	 */
 	public function get name():String
 	{
@@ -64,7 +63,7 @@ public class VarDeclarationFragment extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#type
+	 * @copy org.teotigraphix.asblocks.api.IDeclaration#type
 	 */
 	public function get type():String
 	{
@@ -83,7 +82,7 @@ public class VarDeclarationFragment extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#initializer
+	 * @copy org.teotigraphix.asblocks.api.IDeclaration#initializer
 	 */
 	public function get initializer():IExpression
 	{
@@ -109,7 +108,7 @@ public class VarDeclarationFragment extends ScriptNode
 	/**
 	 * Constructor.
 	 */
-	public function VarDeclarationFragment(node:IParserNode)
+	public function Declaration(node:IParserNode)
 	{
 		super(node);
 	}

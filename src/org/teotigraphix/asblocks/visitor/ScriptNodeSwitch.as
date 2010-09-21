@@ -74,7 +74,7 @@ import org.teotigraphix.asblocks.api.IThisStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
-import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
+import org.teotigraphix.asblocks.api.IDeclaration;
 import org.teotigraphix.asblocks.api.IWhileStatement;
 import org.teotigraphix.asblocks.api.IWithStatement;
 
@@ -297,9 +297,9 @@ public class ScriptNodeSwitch implements IScriptNodeStrategy
 		{
 			visitor.visitUndefinedLiteral(IUndefinedLiteral(element));
 		}
-		else if (element is IVarDeclarationFragment)
+		else if (element is IDeclaration)
 		{
-			visitor.visitVarDeclarationFragment(IVarDeclarationFragment(element));
+			visitor.visitVarDeclarationFragment(IDeclaration(element));
 		}
 		else if (element is IWhileStatement)
 		{

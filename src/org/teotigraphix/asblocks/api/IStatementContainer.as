@@ -86,12 +86,7 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
-	function newDeclaration(assignment:IExpression):IDeclarationStatement;
-	
-	/**
-	 * TODO Docme
-	 */
-	function parseNewDeclaration(assignment:String):IDeclarationStatement;
+	function newDeclaration(declaration:String):IDeclarationStatement;
 	
 	/**
 	 * TODO Docme

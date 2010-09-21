@@ -70,7 +70,7 @@ import org.teotigraphix.asblocks.api.IThisStatement;
 import org.teotigraphix.asblocks.api.IThrowStatement;
 import org.teotigraphix.asblocks.api.ITryStatement;
 import org.teotigraphix.asblocks.api.IUndefinedLiteral;
-import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
+import org.teotigraphix.asblocks.api.IDeclaration;
 import org.teotigraphix.asblocks.api.IWhileStatement;
 import org.teotigraphix.asblocks.api.IWithStatement;
 
@@ -279,7 +279,7 @@ public class NullASBlockVisitor implements IASBlockVisitor
 	{
 	}
 	
-	public function visitVarDeclarationFragment(element:IVarDeclarationFragment):void
+	public function visitVarDeclarationFragment(element:IDeclaration):void
 	{
 	}
 	

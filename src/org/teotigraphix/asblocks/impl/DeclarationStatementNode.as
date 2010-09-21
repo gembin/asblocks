@@ -22,11 +22,10 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.core.Token;
-import org.teotigraphix.as3parser.core.TokenNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.api.IDeclaration;
 import org.teotigraphix.asblocks.api.IDeclarationStatement;
-import org.teotigraphix.asblocks.api.IVarDeclarationFragment;
+import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
@@ -39,28 +38,65 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 public class DeclarationStatementNode extends ScriptNode 
 	implements IDeclarationStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  IDeclarationStatement API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
 	//----------------------------------
-	//  firstVarName
+	//  name
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#firstVarName
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#name
 	 */
-	public function get firstVarName():String
+	public function get name():String
 	{
-		return firstVar.name;
+		return getFirstDeclaration().name;
 	}
 	
 	//----------------------------------
-	//  firstVarType
+	//  type
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#firstVarType
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#type
 	 */
-	public function get firstVarType():String
+	public function get type():String
 	{
-		return firstVar.type;
+		return getFirstDeclaration().type;
+	}
+	
+	//----------------------------------
+	//  initializer
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#initializer
+	 */
+	public function get initializer():IExpression
+	{
+		return getFirstDeclaration().initializer;
+	}
+	
+	//----------------------------------
+	//  declarations
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#declarations
+	 */
+	public function get declarations():Vector.<IDeclaration>
+	{
+		var result:Vector.<IDeclaration> = new Vector.<IDeclaration>();
+		var i:ASTIterator = new ASTIterator(node);
+		i.next(); // dec-role
+		while(i.hasNext())
+		{
+			result.push(build(i.next()));
+		}
+		return result;
 	}
 	
 	//----------------------------------
@@ -73,7 +109,7 @@ public class DeclarationStatementNode extends ScriptNode
 	public function get isConstant():Boolean
 	{
 		// dec-list/dec-role
-		return node.getFirstChild().getFirstChild().isKind(AS3NodeKind.CONST);
+		return findDecRole().getFirstChild().isKind(AS3NodeKind.CONST);
 	}
 	
 	/**
@@ -81,7 +117,7 @@ public class DeclarationStatementNode extends ScriptNode
 	 */	
 	public function set isConstant(value:Boolean):void
 	{
-		var roleList:IParserNode = node.getFirstChild();
+		var roleList:IParserNode = findDecRole();
 		if (value && roleList.getFirstChild().isKind(AS3NodeKind.CONST))
 			return;
 		
@@ -92,25 +128,6 @@ public class DeclarationStatementNode extends ScriptNode
 		role.appendToken(TokenBuilder.newToken(kind, kind));
 		node.setChildAt(role, 0);
 		role.appendToken(TokenBuilder.newSpace());
-	}
-	
-	//----------------------------------
-	//  vars
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IDeclarationStatement#vars
-	 */
-	public function get vars():Vector.<IVarDeclarationFragment>
-	{
-		var result:Vector.<IVarDeclarationFragment> = new Vector.<IVarDeclarationFragment>();
-		var i:ASTIterator = new ASTIterator(node);
-		i.next(); // dec-role
-		while(i.hasNext())
-		{
-			result.push(build(i.next()));
-		}
-		return result;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -127,10 +144,24 @@ public class DeclarationStatementNode extends ScriptNode
 		super(node);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
 	/**
 	 * @private
 	 */
-	private function get firstVar():IVarDeclarationFragment
+	private function findDecRole():IParserNode
+	{
+		return node.getFirstChild();
+	}
+	
+	/**
+	 * @private
+	 */
+	private function getFirstDeclaration():IDeclaration
 	{
 		return build(node.getChild(1));
 	}
@@ -138,9 +169,9 @@ public class DeclarationStatementNode extends ScriptNode
 	/**
 	 * @private
 	 */
-	private function build(ast:IParserNode):IVarDeclarationFragment
+	private function build(ast:IParserNode):IDeclaration
 	{
-		return new VarDeclarationFragment(ast);
+		return new Declaration(ast);
 	}
 }
 }

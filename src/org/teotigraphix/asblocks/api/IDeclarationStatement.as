@@ -21,49 +21,102 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * Nex expression; <code>new foo()</code>.
+ * A variable or constant declaration; (<code>var foo:int 0</code>),
+ * (<code>var foo:int 0, bar:Number = 42</code>) or 
+ * (<code>const foo:int 0</code>).
+ * 
+ * <pre>
+ * var ds:IDeclarationStatement = factory.newDeclaration("foo:int = 0");
+ * </pre>
+ * 
+ * <p>Will produce; <code>var foo:int = 0;</code>.</p>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ds:IDeclarationStatement = block.newDeclaration("foo:int = 0, bar:int = 42");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	var foo:int = 0, bar:int = 42;
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var ds:IDeclarationStatement = factory.newDeclaration("foo:int = 0");
+ * ds.isConstant = true;
+ * </pre>
+ * 
+ * <p>Will produce; <code>const foo:int = 0;</code>.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newDeclaration()
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newDeclaration()
  */
-public interface IDeclarationStatement 
-	extends IStatement
+public interface IDeclarationStatement extends IStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  firstVarName
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get firstVarName():String;
-	
-	//----------------------------------
-	//  firstVarType
+	//  name
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The name of the first declaration.
+	 * 
+	 * <p>This is a shortcut for statements where there is one
+	 * known declaration.</p>
 	 */
-	function get firstVarType():String;
+	function get name():String;
+	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * The type of the first declaration.
+	 * 
+	 * <p>This is a shortcut for statements where there is one
+	 * known declaration.</p>
+	 */
+	function get type():String;
+	
+	//----------------------------------
+	//  initializer
+	//----------------------------------
+	
+	/**
+	 * The initializer of the first declaration.
+	 * 
+	 * <p>This is a shortcut for statements where there is one
+	 * known declaration.</p>
+	 */
+	function get initializer():IExpression;
 	
 	//----------------------------------
 	//  vars
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * A Vector of <code>IDeclaration</code> instances found on this statement.
 	 */
-	function get vars():Vector.<IVarDeclarationFragment>;
+	function get declarations():Vector.<IDeclaration>;
 	
 	//----------------------------------
 	//  isConstant
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * When <code>false</code> the statement begins with a <code>var</code>,
+	 * when <code>true</code> the statement begins with <code>const</code>.
 	 */
 	function get isConstant():Boolean;
 	

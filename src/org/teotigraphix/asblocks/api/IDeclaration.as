@@ -21,19 +21,29 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
+ * A <code>var</code> or <code>const</code> declaration found in an
+ * <code>IDeclarationStatement</code>.
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IDeclarationStatement
  */
-public interface IVarDeclarationFragment
+public interface IDeclaration
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
 	//  name
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The name of the declaration.
 	 */
 	function get name():String;
 	
@@ -47,7 +57,7 @@ public interface IVarDeclarationFragment
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type of the declaration.
 	 */
 	function get type():String;
 	
@@ -61,7 +71,9 @@ public interface IVarDeclarationFragment
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The <code>IExpression</code> initializer for the declaration.
+	 * 
+	 * <p>This is the expression that follows the <code>=</code> sign.</p>
 	 */
 	function get initializer():IExpression;
 	
