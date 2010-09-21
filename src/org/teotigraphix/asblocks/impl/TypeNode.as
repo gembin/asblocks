@@ -33,6 +33,7 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.asblocks.utils.DocCommentUtil;
 import org.teotigraphix.asblocks.utils.MetaDataUtil;
 import org.teotigraphix.asblocks.utils.ModifierUtil;
+import org.teotigraphix.asblocks.utils.NameTypeUtil;
 
 /**
  * The <code>IType</code> implementation and abstract base class for the
@@ -50,37 +51,6 @@ public class TypeNode extends ScriptNode implements IType
 	//  IType API :: Properties
 	//
 	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IType#name
-	 */
-	public function get name():String
-	{
-		var i:ASTIterator = new ASTIterator(node);
-		return i.find(AS3NodeKind.NAME).stringValue;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set name(value:String):void
-	{
-		if (value == "")
-		{
-			throw new ASBlocksSyntaxError("Cannot set IType.name to an empty string");
-		}
-		else if (value == null)
-		{
-			throw new ASBlocksSyntaxError("Cannot set IType.name to null");
-		}
-		var i:ASTIterator = new ASTIterator(node);
-		i.find(AS3NodeKind.NAME);
-		i.replace(ASTUtil.newAST(AS3NodeKind.NAME, value));
-	}
 	
 	//----------------------------------
 	//  visibility
@@ -104,6 +74,26 @@ public class TypeNode extends ScriptNode implements IType
 			throw new ASBlocksSyntaxError("IType visibility must be public");
 		}
 		return ModifierUtil.setVisibility(node, value);
+	}
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IType#name
+	 */
+	public function get name():String
+	{
+		return NameTypeUtil.getName(node);
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set name(value:String):void
+	{
+		NameTypeUtil.setName(node, value);
 	}
 	
 	//----------------------------------

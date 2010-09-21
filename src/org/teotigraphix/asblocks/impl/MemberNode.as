@@ -20,16 +20,17 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.api.IDocComment;
 import org.teotigraphix.asblocks.api.IMember;
+import org.teotigraphix.asblocks.api.IMetaData;
 import org.teotigraphix.asblocks.api.Modifier;
 import org.teotigraphix.asblocks.api.Visibility;
-import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.asblocks.utils.DocCommentUtil;
+import org.teotigraphix.asblocks.utils.MetaDataUtil;
 import org.teotigraphix.asblocks.utils.ModifierUtil;
+import org.teotigraphix.asblocks.utils.NameTypeUtil;
 
 /**
  * The <code>IMember</code> implementation.
@@ -38,15 +39,8 @@ import org.teotigraphix.asblocks.utils.ModifierUtil;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class MemberNode extends ScriptNode 
-	implements IMember
+public class MemberNode extends ScriptNode implements IMember
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Private :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
 	//--------------------------------------------------------------------------
 	//
 	//  IMember API :: Properties
@@ -82,8 +76,7 @@ public class MemberNode extends ScriptNode
 	 */
 	public function get name():String
 	{
-		var i:ASTIterator = new ASTIterator(node);
-		return ASTUtil.nameText(i.find(AS3NodeKind.NAME));
+		return NameTypeUtil.getName(node);
 	}
 	
 	/**
@@ -91,9 +84,11 @@ public class MemberNode extends ScriptNode
 	 */	
 	public function set name(value:String):void
 	{
-		var i:ASTIterator = new ASTIterator(node);
-		i.find(AS3NodeKind.NAME);
-		i.replace(ASTUtil.newAST(AS3NodeKind.NAME, value));
+		if (value.indexOf(".") != -1)
+		{
+			throw new ASBlocksSyntaxError("IMember names cannot contain a period");
+		}
+		NameTypeUtil.setName(node, value);
 	}
 	
 	//----------------------------------
@@ -105,8 +100,7 @@ public class MemberNode extends ScriptNode
 	 */
 	public function get type():String
 	{
-		var i:ASTIterator = new ASTIterator(node);
-		return i.find(AS3NodeKind.TYPE).stringValue;
+		return NameTypeUtil.getType(node);
 	}
 	
 	/**
@@ -114,9 +108,7 @@ public class MemberNode extends ScriptNode
 	 */	
 	public function set type(value:String):void
 	{
-		var i:ASTIterator = new ASTIterator(node);
-		i.find(AS3NodeKind.TYPE);
-		i.replace(ASTUtil.newAST(AS3NodeKind.TYPE, value));
+		NameTypeUtil.setType(node, value);
 	}
 	
 	//----------------------------------
@@ -137,6 +129,24 @@ public class MemberNode extends ScriptNode
 	public function set isStatic(value:Boolean):void
 	{
 		ModifierUtil.setModifierFlag(node, value, Modifier.STATIC);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IMetaDataAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  metaDatas
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#metaDatas
+	 */
+	public function get metaDatas():Vector.<IMetaData>
+	{
+		return MetaDataUtil.getMetaDatas(node);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -193,33 +203,48 @@ public class MemberNode extends ScriptNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IMember API :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Private :: Methods
+	//  IMetaDataAware API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @private
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#newMetaData()
 	 */
-	private function findModifiers():Vector.<IParserNode>
+	public function newMetaData(name:String):IMetaData
 	{
-		var result:Vector.<IParserNode> = new Vector.<IParserNode>();
-		var i:ASTIterator = new ASTIterator(node);
-		var child:IParserNode;
-		while (i.hasNext())
-		{
-			child = i.next();
-			if (child.isKind(AS3NodeKind.MODIFIER))
-			{
-				result.push(child);
-			}
-		}
-		return result;
+		return MetaDataUtil.newMetaData(node, name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#getMetaData()
+	 */
+	public function getMetaData(name:String):IMetaData
+	{
+		return MetaDataUtil.getMetaData(node, name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#getAllMetaData()
+	 */
+	public function getAllMetaData(name:String):Vector.<IMetaData>
+	{
+		return MetaDataUtil.getAllMetaData(node, name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#hasMetaData()
+	 */
+	public function hasMetaData(name:String):Boolean
+	{
+		return MetaDataUtil.hasMetaData(node, name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IMetaDataAware#removeMetaData()
+	 */
+	public function removeMetaData(metaData:IMetaData):Boolean
+	{
+		return MetaDataUtil.removeMetaData(node, metaData);
 	}
 }
 }

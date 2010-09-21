@@ -57,8 +57,16 @@ public class ModifierUtil
 	public static function setModifierFlag(ast:IParserNode, flag:Boolean, modifier:Modifier):void
 	{
 		var list:IParserNode = findModifiers(ast);
-		if (!list)
-			return;
+		if (!list && flag)
+		{
+			var index:int = ast.hasKind(AS3NodeKind.META_LIST) ? 1 : 0;
+			if (ast.hasKind(AS3NodeKind.AS_DOC))
+			{
+				index++;
+			}
+			list = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+			ast.addChildAt(list, index);
+		}
 		
 		var i:ASTIterator = new ASTIterator(list);
 		while (i.hasNext())
@@ -86,10 +94,10 @@ public class ModifierUtil
 		}
 	}
 	
-	public static function getVisibility(node:IParserNode):Visibility
+	public static function getVisibility(ast:IParserNode):Visibility
 	{
-		var modifiers:IParserNode = findModifiers(node);
-		if (modifiers.numChildren == 0)
+		var modifiers:IParserNode = findModifiers(ast);
+		if (!modifiers || modifiers.numChildren == 0)
 			return Visibility.DEFAULT;
 		
 		var i:ASTIterator = new ASTIterator(modifiers);
@@ -105,11 +113,71 @@ public class ModifierUtil
 		return null;
 	}
 	
-	public static function setVisibility(node:IParserNode, visibility:Visibility):void
+	public static function setVisibility(ast:IParserNode, visibility:Visibility):void
 	{
-		var modifiers:IParserNode = findModifiers(node);
-		// modifiers always go right before the NAME
+		var list:IParserNode = findModifiers(ast);
+		var i:ASTIterator;
 		
+		if (!list && !visibility.equals(Visibility.DEFAULT))
+		{
+			var index:int = ast.hasKind(AS3NodeKind.META_LIST) ? 1 : 0;
+			if (ast.hasKind(AS3NodeKind.AS_DOC))
+			{
+				index++;
+			}
+			list = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+			ast.addChildAt(list, index);
+		}
+		
+		if (visibility.equals(Visibility.DEFAULT))
+		{
+			i = new ASTIterator(list);
+			while (i.hasNext())
+			{
+				child = i.next();
+				if (Visibility.hasVisibility(child.stringValue))
+				{
+					i.remove(); // remove the visibility
+					break;
+				}
+			}
+			if (list.numChildren == 0)
+			{
+				ast.removeChild(list);
+			}
+			return;
+		}
+		
+		// chack for existing visibility
+		i = new ASTIterator(list);
+		while (i.hasNext())
+		{
+			var child:IParserNode = i.next();
+			if (child.stringValue == visibility.name)
+				return;
+		}
+		
+		i = new ASTIterator(list);
+		while (i.hasNext())
+		{
+			child = i.next();
+			if (Visibility.hasVisibility(child.stringValue))
+			{
+				i.remove(); // remove the visibility
+				break;
+			}
+		}
+		
+		var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name);
+		mod.appendToken(TokenBuilder.newSpace());
+		if (list.numChildren == 0)
+		{
+			list.addChild(mod);
+		}
+		else
+		{
+			list.addChildAt(mod, 0);
+		}
 	}
 	
 	//--------------------------------------------------------------------------

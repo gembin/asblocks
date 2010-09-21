@@ -20,6 +20,7 @@ import org.teotigraphix.asblocks.impl.TestExpressionNodes;
 import org.teotigraphix.asblocks.impl.TestFieldNode;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
 import org.teotigraphix.asblocks.impl.TestLiteralNodes;
+import org.teotigraphix.asblocks.impl.TestMemberNode;
 import org.teotigraphix.asblocks.impl.TestMethodNode;
 import org.teotigraphix.asblocks.impl.TestPackageNode;
 import org.teotigraphix.asblocks.impl.TestPrefixExpressionNode;
@@ -56,6 +57,7 @@ public class AS3BlocksTestSuite
 	public var testDefaultXMLNamespaceStatementNode:TestDefaultXMLNamespaceStatementNode;
 	public var testDoWhileStatementNode:TestDoWhileStatementNode;
 	
+	public var testMemberNode:TestMemberNode;
 	
 	public var testTryStatementNode:TestTryStatementNode;
 	

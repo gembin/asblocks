@@ -28,7 +28,7 @@ package org.teotigraphix.asblocks.api
  * @productversion 1.0
  */
 public interface IMember 
-	extends IScriptNode, IDocCommentAware /*, IDocumentAware, IMetaDataAware*/
+	extends IScriptNode, IDocCommentAware, IMetaDataAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -41,7 +41,10 @@ public interface IMember
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The <code>Visibility</code> of the member.
+	 * 
+	 * <p>This can be one of the <code>Visibility</code> enumerations or a
+	 * custom namespace <code>Visibility</code>.</p>
 	 */
 	function get visibility():Visibility;
 	
@@ -55,7 +58,9 @@ public interface IMember
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The name of the member.
+	 * 
+	 * <p><strong>Note:</strong> This name cannot contain a period.</p>
 	 */
 	function get name():String;
 	
@@ -69,7 +74,11 @@ public interface IMember
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The type of the member.
+	 * 
+	 * <p><strong>Note:</strong> This name can contain a period, if a period
+	 * is present, the type will be considered a qualified name not a simple
+	 * name.</p>
 	 */
 	function get type():String;
 	
@@ -83,7 +92,11 @@ public interface IMember
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether the member constains the <code>static</code> keyword.
+	 * 
+	 * <p>Setting this property to <code>true</code> will add the <code>static</code>
+	 * keyword, setting the property to <code>false</code> will remove the 
+	 * <code>static</code> keyword.</p>
 	 */
 	function get isStatic():Boolean;
 	

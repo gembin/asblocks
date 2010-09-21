@@ -35,24 +35,28 @@ public final class Visibility
 	//
 	//--------------------------------------------------------------------------
 	
-	public static const DEFAULT:Visibility = Visibility.create("default");
+	public static const DEFAULT:Visibility = new Visibility("default");
 	
-	public static const INTERNAL:Visibility = Visibility.create("internal");
+	public static const INTERNAL:Visibility = new Visibility("internal");
 	
-	public static const PRIVATE:Visibility = Visibility.create("private");
+	public static const PRIVATE:Visibility = new Visibility("private");
 	
-	public static const PROTECTED:Visibility = Visibility.create("protected");
+	public static const PROTECTED:Visibility = new Visibility("protected");
 	
-	public static const PUBLIC:Visibility = Visibility.create("public");
+	public static const PUBLIC:Visibility = new Visibility("public");
 	
-	private static var list:Array =
-		[
-			DEFAULT,
-			INTERNAL,
-			PRIVATE,
-			PROTECTED,
-			PUBLIC
-		];
+	private static var list:Array;
+	
+	{
+		list =
+			[
+				DEFAULT,
+				INTERNAL,
+				PRIVATE,
+				PROTECTED,
+				PUBLIC
+			];
+	}
 	
 	//--------------------------------------------------------------------------
 	//
@@ -130,7 +134,9 @@ public final class Visibility
 				return element;
 		}
 		
-		return new Visibility(name);
+		var namespace:Visibility = new Visibility(name);
+		list.push(namespace);
+		return namespace;
 	}
 	
 	/**

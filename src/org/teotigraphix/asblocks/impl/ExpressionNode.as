@@ -30,8 +30,7 @@ import org.teotigraphix.as3parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ExpressionNode extends ScriptNode 
-	implements IExpression
+public class ExpressionNode extends ScriptNode implements IExpression
 {
 	//--------------------------------------------------------------------------
 	//

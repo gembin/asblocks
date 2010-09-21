@@ -44,6 +44,24 @@ public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  visibility
+	//----------------------------------
+	
+	/**
+	 * The visibility of the <code>IType</code>, this must be <code>PUBLIC</code>, 
+	 * any other value will throw an error.
+	 * 
+	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError IType visibility must 
+	 * be public
+	 */
+	function get visibility():Visibility;
+	
+	/**
+	 * @private
+	 */
+	function set visibility(value:Visibility):void;
+	
+	//----------------------------------
 	//  name
 	//----------------------------------
 	
@@ -64,24 +82,6 @@ public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 	 * @private
 	 */
 	function set name(value:String):void;
-	
-	//----------------------------------
-	//  visibility
-	//----------------------------------
-	
-	/**
-	 * The visibility of the <code>IType</code>, this must be <code>PUBLIC</code>, 
-	 * any other value will throw an error.
-	 * 
-	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError IType visibility must 
-	 * be public
-	 */
-	function get visibility():Visibility;
-	
-	/**
-	 * @private
-	 */
-	function set visibility(value:Visibility):void;
 	
 	//----------------------------------
 	//  methods

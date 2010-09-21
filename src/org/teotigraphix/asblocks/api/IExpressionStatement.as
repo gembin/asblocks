@@ -27,8 +27,7 @@ package org.teotigraphix.asblocks.api
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IExpressionStatement 
-	extends IScriptNode, IStatement
+public interface IExpressionStatement extends IScriptNode, IStatement
 {
 	// expressionString
 	

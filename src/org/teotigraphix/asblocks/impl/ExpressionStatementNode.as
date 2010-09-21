@@ -37,7 +37,7 @@ public class ExpressionStatementNode extends ScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IExpressionStatementNode API :: Properties
+	//  IExpressionStatement API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
@@ -50,7 +50,6 @@ public class ExpressionStatementNode extends ScriptNode
 	 */
 	public function get expression():IExpression
 	{
-		//return ExpressionBuilder.build(node.getFirstChild());
 		return ExpressionBuilder.build(node);
 	}
 	

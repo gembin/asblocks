@@ -288,9 +288,10 @@ public class ASTBuilder
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_LIST);
 		// field-list/mod-list
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
+		var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name);
+		mods.addChild(mod);
+		mod.appendToken(TokenBuilder.newSpace());
 		ast.addChild(mods);
-		ast.appendToken(TokenBuilder.newSpace());
 		// field-list/field-role
 		var frole:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_ROLE);
 		frole.addChild(ASTUtil.newAST(AS3NodeKind.VAR, "var"));
