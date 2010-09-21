@@ -17,6 +17,7 @@ import org.teotigraphix.asblocks.impl.TestDeclarationStatementNode;
 import org.teotigraphix.asblocks.impl.TestDefaultXMLNamespaceStatementNode;
 import org.teotigraphix.asblocks.impl.TestDoWhileStatementNode;
 import org.teotigraphix.asblocks.impl.TestExpressionNodes;
+import org.teotigraphix.asblocks.impl.TestFieldAccessExpressionNode;
 import org.teotigraphix.asblocks.impl.TestFieldNode;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
 import org.teotigraphix.asblocks.impl.TestLiteralNodes;
@@ -56,6 +57,7 @@ public class AS3BlocksTestSuite
 	public var testDeclarationStatementNode:TestDeclarationStatementNode;
 	public var testDefaultXMLNamespaceStatementNode:TestDefaultXMLNamespaceStatementNode;
 	public var testDoWhileStatementNode:TestDoWhileStatementNode;
+	public var testFieldAccessExpressionNode:TestFieldAccessExpressionNode;
 	
 	public var testMemberNode:TestMemberNode;
 	

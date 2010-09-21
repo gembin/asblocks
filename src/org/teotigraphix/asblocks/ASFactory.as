@@ -57,7 +57,7 @@ import org.teotigraphix.asblocks.impl.BooleanLiteralNode;
 import org.teotigraphix.asblocks.impl.ConditionalExpressionNode;
 import org.teotigraphix.asblocks.impl.DeclarationStatementNode;
 import org.teotigraphix.asblocks.impl.ExpressionBuilder;
-import org.teotigraphix.asblocks.impl.FieldAccessExpression;
+import org.teotigraphix.asblocks.impl.FieldAccessExpressionNode;
 import org.teotigraphix.asblocks.impl.FunctionLiteralNode;
 import org.teotigraphix.asblocks.impl.InvocationExpressionNode;
 import org.teotigraphix.asblocks.impl.NewExpressionNode;
@@ -611,7 +611,7 @@ public class ASFactory
 	{
 		var ast:IParserNode = ASTBuilder.newFieldAccessExpression(
 			target.node, ASTUtil.newAST(AS3NodeKind.NAME, name));
-		return new FieldAccessExpression(ast);
+		return new FieldAccessExpressionNode(ast);
 	}
 	
 	/**

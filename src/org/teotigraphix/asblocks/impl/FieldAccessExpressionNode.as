@@ -22,9 +22,9 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.AS3FragmentParser;
+import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IFieldAccessExpression;
-import org.teotigraphix.asblocks.api.ISimpleNameExpression;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
@@ -34,9 +34,12 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class FieldAccessExpression extends ExpressionNode 
+public class FieldAccessExpressionNode extends ExpressionNode 
 	implements IFieldAccessExpression
 {
+	// dot/[target]
+	// dot/name
+	
 	//--------------------------------------------------------------------------
 	//
 	//  IFieldAccessExpression API :: Properties
@@ -52,7 +55,7 @@ public class FieldAccessExpression extends ExpressionNode
 	 */
 	public function get name():String
 	{
-		return ASTUtil.stringifyNode(node.getFirstChild())
+		return ASTUtil.stringifyNode(node.getLastChild());
 	}
 	
 	/**
@@ -60,8 +63,16 @@ public class FieldAccessExpression extends ExpressionNode
 	 */
 	public function set name(value:String):void
 	{
-		var name:IParserNode = AS3FragmentParser.parseName(value);
-		node.setChildAt(name, 1);
+		if (value == "")
+		{
+			throw new ASBlocksSyntaxError("Cannot set name to an empty string");
+		}
+		else if (value == null)
+		{
+			throw new ASBlocksSyntaxError("Cannot set name to null");
+		}
+		var ast:IParserNode = AS3FragmentParser.parseName(value);
+		node.setChildAt(ast, 1);
 	}
 	
 	//----------------------------------
@@ -69,12 +80,7 @@ public class FieldAccessExpression extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * @private
-	 */
-	private var _target:IExpression;
-	
-	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IFieldAccessExpression#target
 	 */
 	public function get target():IExpression
 	{
@@ -98,7 +104,7 @@ public class FieldAccessExpression extends ExpressionNode
 	/**
 	 * Constructor.
 	 */
-	public function FieldAccessExpression(node:IParserNode)
+	public function FieldAccessExpressionNode(node:IParserNode)
 	{
 		super(node);
 	}

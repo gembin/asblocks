@@ -21,14 +21,23 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * Field access; <code>foo().field</code>.
+ * Field access; <code>target.name</code>.
+ * 
+ * <pre>
+ * var target:IExpression = factory.newExpression("foo()");
+ * var name:String = "bar";
+ * var fa:IFieldAccessExpression = factory.newFieldAccessExpression(target, name);
+ * </pre>
+ * 
+ * <p>Will produce; <code>foo().bar</code>.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newFieldAccessExpression()
  */
-public interface IFieldAccessExpression 
-	extends IExpression, IScriptNode
+public interface IFieldAccessExpression extends IExpression, IScriptNode
 {
 	//--------------------------------------------------------------------------
 	//
@@ -41,7 +50,7 @@ public interface IFieldAccessExpression
 	//----------------------------------
 	
 	/**
-	 * The simple String name of the expression.
+	 * The simple String name of the expression <code>target.name<code>.
 	 */
 	function get name():String;
 	
@@ -55,7 +64,7 @@ public interface IFieldAccessExpression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The target <code>IExpression<code> the field name accesses.
 	 */
 	function get target():IExpression;
 	

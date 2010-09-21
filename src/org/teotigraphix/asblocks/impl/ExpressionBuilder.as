@@ -114,7 +114,7 @@ public class ExpressionBuilder
 				return new NewExpressionNode(ast);
 				
 			case AS3NodeKind.DOT:
-				return new FieldAccessExpression(ast);
+				return new FieldAccessExpressionNode(ast);
 				
 			default:
 				throw new IllegalOperationError("unhandled expression node type: '" + 
