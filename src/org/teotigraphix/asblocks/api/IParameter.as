@@ -26,6 +26,11 @@ package org.teotigraphix.asblocks.api
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IFunction#addParameter()
+ * @see org.teotigraphix.asblocks.api.IFunction#addRestParameter()
+ * @see org.teotigraphix.asblocks.api.IFunction#removeParameter()
+ * @see org.teotigraphix.asblocks.api.IFunction#getParameter()
  */
 public interface IParameter extends IScriptNode
 {
@@ -34,25 +39,6 @@ public interface IParameter extends IScriptNode
 	//  Properties
 	//
 	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  defaultValue
-	//----------------------------------
-	
-	/**
-	 * The parameters default value that is read after an <code>=</code> sign.
-	 */
-	function get defaultValue():String;
-	
-	/**
-	 * @private
-	 */
-	function set defaultValue(value:String):void;
-	
-	/**
-	 * Returns <code>true</code> if a default value exist.
-	 */
-	function get hasDefaultValue():Boolean;
 	
 	//----------------------------------
 	//  description
@@ -80,6 +66,11 @@ public interface IParameter extends IScriptNode
 	 */
 	function get name():String;
 	
+	/**
+	 * @private
+	 */
+	function set name(value:String):void;
+	
 	//----------------------------------
 	//  type
 	//----------------------------------
@@ -88,6 +79,43 @@ public interface IParameter extends IScriptNode
 	 * The type of the parameter; after the <code>:</code>.
 	 */
 	function get type():String;
+	
+	/**
+	 * @private
+	 */
+	function set type(value:String):void;
+	
+	//----------------------------------
+	//  hasType
+	//----------------------------------
+	
+	/**
+	 * Returns whether the parameter contains a type.
+	 */
+	function get hasType():Boolean;
+	
+	//----------------------------------
+	//  defaultValue
+	//----------------------------------
+	
+	/**
+	 * The parameters default value that is read after an <code>=</code> sign.
+	 */
+	function get defaultValue():String;
+	
+	/**
+	 * @private
+	 */
+	function set defaultValue(value:String):void;
+	
+	//----------------------------------
+	//  hasDefaultValue
+	//----------------------------------
+	
+	/**
+	 * Returns <code>true</code> if a default value exist.
+	 */
+	function get hasDefaultValue():Boolean;
 	
 	//----------------------------------
 	//  isRest

@@ -22,6 +22,7 @@ import org.teotigraphix.asblocks.impl.TestFieldNode;
 import org.teotigraphix.asblocks.impl.TestForEachInStatementNode;
 import org.teotigraphix.asblocks.impl.TestForInStatementNode;
 import org.teotigraphix.asblocks.impl.TestForStatementNode;
+import org.teotigraphix.asblocks.impl.TestFunctionCommon;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
 import org.teotigraphix.asblocks.impl.TestLiteralNodes;
 import org.teotigraphix.asblocks.impl.TestMemberNode;
@@ -64,6 +65,7 @@ public class AS3BlocksTestSuite
 	public var testForEachInStatementNode:TestForEachInStatementNode;
 	public var testForInStatementNode:TestForInStatementNode;
 	public var testForStatementNode:TestForStatementNode;
+	public var testFunctionCommon:TestFunctionCommon;
 	
 	public var testMemberNode:TestMemberNode;
 	

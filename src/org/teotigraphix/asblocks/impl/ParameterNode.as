@@ -23,6 +23,7 @@ package org.teotigraphix.asblocks.impl
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.asblocks.api.IParameter;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IParameter</code> implementation.
@@ -31,58 +32,13 @@ import org.teotigraphix.asblocks.api.IParameter;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ParameterNode extends ScriptNode 
-	implements IParameter
+public class ParameterNode extends ScriptNode implements IParameter
 {
 	//--------------------------------------------------------------------------
 	//
 	//  IParameter API :: Properties
 	//
 	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  defaultValue
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IParameter#defaultValue
-	 */
-	public function get defaultValue():String
-	{
-		if (!isRest)
-		{
-			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-			var init:IParserNode = ast.getKind(AS3NodeKind.INIT);
-			if (init)
-			{
-				return init.stringValue;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set defaultValue(value:String):void
-	{
-		// TODO impl
-	}
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IParameter#hasDefaultValue
-	 */
-	public function get hasDefaultValue():Boolean
-	{
-		if (!isRest)
-		{
-			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-			var init:IParserNode = ast.getKind(AS3NodeKind.INIT);
-			
-			return init != null;
-		}
-		return false;
-	}
 	
 	//----------------------------------
 	//  description
@@ -114,19 +70,32 @@ public class ParameterNode extends ScriptNode
 	public function get name():String
 	{
 		if (isRest)
-		{
-			var rest:IParserNode = node.getKind(AS3NodeKind.REST);
-			return rest.stringValue;
-		}
+			return findRest().stringValue;
 		
-		var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
+		var ast:IParserNode = findNameTypeInit();
 		var name:IParserNode = ast.getKind(AS3NodeKind.NAME);
 		if (name)
-		{
-			return name.stringValue;
-		}
+			return ASTUtil.nameText(name);
+		
 		// IllegalStateException
 		throw new Error("No parameter name, and not a 'rest' parameter");
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set name(value:String):void
+	{
+		if (isRest)
+		{
+			findRest().stringValue = value;
+			return;
+		}
+		
+		var ast:IParserNode = findNameTypeInit();
+		var name:IParserNode = ast.getKind(AS3NodeKind.NAME);
+		if (name)
+			name.stringValue = value;
 	}
 	
 	//----------------------------------
@@ -138,16 +107,97 @@ public class ParameterNode extends ScriptNode
 	 */
 	public function get type():String
 	{
-		if (!isRest)
-		{
-			var ast:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-			var type:IParserNode = ast.getKind(AS3NodeKind.TYPE);
-			if (type)
-			{
-				return type.stringValue;
-			}
-		}
+		if (isRest)
+			return null;
+	
+		var ast:IParserNode = findNameTypeInit();
+		var type:IParserNode = ast.getKind(AS3NodeKind.TYPE);
+		if (type)
+			return ASTUtil.typeText(type);
+	
 		return null;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set type(value:String):void
+	{
+		if (isRest)
+			return;
+		
+		var ast:IParserNode = findNameTypeInit();
+		var typeAST:IParserNode = ast.getKind(AS3NodeKind.TYPE);
+		if (typeAST)
+			typeAST.stringValue = value;
+	}
+	
+	//----------------------------------
+	//  hasType
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IParameter#hasType
+	 */
+	public function get hasType():Boolean
+	{
+		var ast:IParserNode = findNameTypeInit();
+		var type:IParserNode = ast.getKind(AS3NodeKind.TYPE);
+		return type != null;
+	}
+	
+	//----------------------------------
+	//  defaultValue
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IParameter#defaultValue
+	 */
+	public function get defaultValue():String
+	{
+		if (isRest)
+			return null;
+		
+		var ast:IParserNode = findNameTypeInit();
+		var init:IParserNode = ast.getKind(AS3NodeKind.INIT);
+		if (init)
+			return ASTUtil.initText(init);
+		
+		return null;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set defaultValue(value:String):void
+	{
+		if (isRest)
+			return;
+		
+		var ast:IParserNode = findNameTypeInit();
+		var initAST:IParserNode = ast.getKind(AS3NodeKind.INIT);
+		if (!initAST)
+		{
+			initAST = ASTUtil.newAST(AS3NodeKind.INIT);
+			ast.addChild(initAST);
+		}
+		
+		initAST.stringValue = value;
+	}
+	
+	//----------------------------------
+	//  hasDefaultValue
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IParameter#hasDefaultValue
+	 */
+	public function get hasDefaultValue():Boolean
+	{
+		if (isRest)
+			return false;
+		
+		return defaultValue != null;
 	}
 	
 	//----------------------------------
@@ -174,6 +224,22 @@ public class ParameterNode extends ScriptNode
 	public function ParameterNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findNameTypeInit():IParserNode
+	{
+		return node.getKind(AS3NodeKind.NAME_TYPE_INIT);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findRest():IParserNode
+	{
+		return node.getKind(AS3NodeKind.REST);
 	}
 }
 }

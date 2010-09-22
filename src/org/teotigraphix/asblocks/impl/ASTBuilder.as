@@ -20,6 +20,48 @@ import org.teotigraphix.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
 {
+	public static function newType(type:String):IParserNode
+	{
+		var colon:LinkedListToken = TokenBuilder.newColon();
+		var ast:IParserNode = AS3FragmentParser.parseType(type);
+		ast.startToken.beforeInsert(colon);
+		ast.startToken = colon;
+		return ast;
+	}
+	
+	public static function newParameter(name:String, type:String, defaultValue:String):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newParamterAST();
+		var nti:IParserNode = ast.getKind(AS3NodeKind.NAME_TYPE_INIT);
+		nti.addChild(ASTUtil.newNameAST(name));
+		
+		var colon:LinkedListToken = TokenBuilder.newColon();
+		var typeAST:IParserNode = ASTUtil.newTypeAST(type);
+		typeAST.startToken.beforeInsert(colon);
+		typeAST.startToken = colon;
+		nti.addChild(typeAST);
+		
+		if (defaultValue)
+		{
+			nti.appendToken(TokenBuilder.newSpace());
+			nti.appendToken(TokenBuilder.newAssign());
+			nti.appendToken(TokenBuilder.newSpace());
+			nti.addChild(ASTUtil.newInitAST(defaultValue));
+		}
+		
+		return ast;
+	}
+	
+	public static function newRestParameter(name:String):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
+		var restAST:IParserNode = ASTUtil.newAST(AS3NodeKind.REST, name);
+		ast.addChild(restAST);
+		var rest:LinkedListToken = TokenBuilder.newToken(AS3NodeKind.REST_PARM, "...");
+		ast.startToken.beforeInsert(rest);
+		ast.startToken = rest;
+		return ast;
+	}
 	
 	public static function newMetaData(name:String):IMetaData
 	{
@@ -264,8 +306,11 @@ public class ASTBuilder
 		ast.addChild(params);
 		if (returnType)
 		{
-			ast.appendToken(TokenBuilder.newColon());
-			ast.addChild(AS3FragmentParser.parseType(returnType));
+			var colon:LinkedListToken = TokenBuilder.newColon();
+			var typeAST:IParserNode = AS3FragmentParser.parseType(returnType);
+			typeAST.startToken.beforeInsert(colon);
+			typeAST.startToken = colon;
+			ast.addChild(typeAST);
 		}
 		ast.appendToken(TokenBuilder.newSpace());
 		var block:IParserNode = newBlock();
@@ -656,11 +701,13 @@ public class ASTBuilder
 			AS3NodeKind.RPAREN, ")");
 		ast.addChild(paren);
 		// added, best practices say put :void as default
-		ast.appendToken(TokenBuilder.newColon());
-		var voidType:IParserNode = AS3FragmentParser.parseType("void");
-		var nti:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME_TYPE_INIT);
-		nti.addChild(voidType);
-		ast.addChild(nti);
+		
+		var colon:LinkedListToken = TokenBuilder.newColon();
+		var typeAST:IParserNode = AS3FragmentParser.parseType("void");
+		typeAST.startToken.beforeInsert(colon);
+		typeAST.startToken = colon;
+		ast.addChild(typeAST);
+		
 		ast.appendToken(TokenBuilder.newSpace());
 		var block:IParserNode = newBlock();
 		ast.addChild(block);

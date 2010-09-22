@@ -22,44 +22,53 @@ package org.teotigraphix.asblocks.impl
 
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.ASBlocksSyntaxError;
+import org.teotigraphix.asblocks.api.IFunction;
 import org.teotigraphix.asblocks.api.IParameter;
-import org.teotigraphix.asblocks.api.IFunctionCommon;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
- * The <code>IFunctionCommon</code> implementation.
+ * The <code>IFunction</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class FunctionCommon implements IFunctionCommon
-{
+public class FunctionCommon implements IFunction
+{	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Variables
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
 	private var node:IParserNode;
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IFunctionCommon API :: Properties
+	//  IFunction API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  arguments
+	//  parameters
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#arguments
+	 * @copy org.teotigraphix.asblocks.api.IFunction#parameters
 	 */
 	public function get parameters():Vector.<IParameter>
 	{
 		var result:Vector.<IParameter> = new Vector.<IParameter>();
-		var paramList:IParserNode = findParameterList();
-		if (!paramList)
+		var ast:IParserNode = findParameterList();
+		if (!ast)
 			return result;
 		
-		var i:ASTIterator = new ASTIterator(paramList);
+		var i:ASTIterator = new ASTIterator(ast);
 		while (i.hasNext())
 		{
 			result.push(new ParameterNode(i.next()));
@@ -69,17 +78,30 @@ public class FunctionCommon implements IFunctionCommon
 	}
 	
 	//----------------------------------
+	//  hasParameters
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#hasParameters
+	 */
+	public function get hasParameters():Boolean
+	{
+		var ast:IParserNode = findParameterList();
+		return ast != null && ast.numChildren > 0;
+	}
+	
+	//----------------------------------
 	//  returnType
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#returnType
+	 * @copy org.teotigraphix.asblocks.api.IFunction#returnType
 	 */
 	public function get returnType():String
 	{
-		var t:IParserNode = node.getKind(AS3NodeKind.TYPE);
-		if (t)
-			return ASTUtil.typeText(t);
+		var ast:IParserNode = findType();
+		if (ast)
+			return ASTUtil.typeText(ast);
 		return null;
 	}
 	
@@ -88,26 +110,25 @@ public class FunctionCommon implements IFunctionCommon
 	 */	
 	public function set returnType(value:String):void
 	{
-		// lambda/name-type-int/type
-		var nameTypeInit:IParserNode = node.getKind(AS3NodeKind.NAME_TYPE_INIT);
-		var existingType:IParserNode = nameTypeInit.getKind(AS3NodeKind.TYPE);
+		var ast:IParserNode = findType();
 		if (value == null)
 		{
-			if (existingType != null)
+			if (ast != null)
 			{
-				nameTypeInit.removeChild(existingType);
+				node.removeChild(ast);
 			}
 			return;
 		}
 		
-		var newType:IParserNode = AS3FragmentParser.parseType(value);
-		if (nameTypeInit == null) // SHOULDN'T BE
+		var typeAST:IParserNode = ASTBuilder.newType(value);
+		
+		if (ast == null) // SHOULDN'T BE
 		{
 			
 		}
 		else
 		{
-			nameTypeInit.setChildAt(newType, 0);
+			node.setChildAt(typeAST, node.getChildIndex(ast));
 		}
 	}
 	
@@ -129,45 +150,137 @@ public class FunctionCommon implements IFunctionCommon
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IFunctionCommon API :: Methods
+	//  IFunction API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addParameter()
+	 * @copy org.teotigraphix.asblocks.api.IFunction#addParameter()
 	 */
 	public function addParameter(name:String, 
 								 type:String, 
 								 defaultValue:String = null):IParameter
 	{
-		var ast:IParserNode = ASTUtil.newParamterAST();
-		ast.addChild(ASTUtil.newNameAST(name));
-		ast.appendToken(TokenBuilder.newColon());
-		ast.addChild(ASTUtil.newTypeAST(type));
-		if (defaultValue)
+		if (hasParameter(name))
 		{
-			ast.appendToken(TokenBuilder.newSpace());
-			ast.appendToken(TokenBuilder.newAssign());
-			ast.appendToken(TokenBuilder.newSpace());
-			ast.addChild(ASTUtil.newInitAST(defaultValue));
+			throw new ASBlocksSyntaxError("a parameter name [" + name + "] already exists");
 		}
+		
+		var ast:IParserNode = ASTBuilder.newParameter(name, type, defaultValue);
 		return createParameter(ast);
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#removeParameter()
+	 * @copy org.teotigraphix.asblocks.api.IFunction#removeParameter()
 	 */
 	public function removeParameter(name:String):IParameter
 	{
+		if (!hasParameter(name))
+			return null;
+		
+		var i:ASTIterator = new ASTIterator(findParameterList());
+		while (i.hasNext())
+		{
+			var parameter:IParameter = new ParameterNode(i.next());
+			if (parameter.name == name)
+			{
+				i.remove();
+				return parameter;
+			}
+		}
 		return null;
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addRestParameter()
+	 * @copy org.teotigraphix.asblocks.api.IFunction#addRestParameter()
 	 */
 	public function addRestParameter(name:String):IParameter
 	{
+		if (hasRestParameter())
+		{
+			throw new ASBlocksSyntaxError("only one rest parameter allowed");
+		}
+		
+		var ast:IParserNode = ASTBuilder.newRestParameter(name);
+		return createParameter(ast);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#removeRestParameter()
+	 */
+	public function removeRestParameter():IParameter
+	{
+		if (!hasRestParameter())
+			return null;
+		
+		var i:ASTIterator = new ASTIterator(findParameterList());
+		while (i.hasNext())
+		{
+			var parameter:IParameter = new ParameterNode(i.next());
+			if (parameter.isRest)
+			{
+				i.remove();
+				return parameter;
+			}
+		}
 		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#getParameter()
+	 */
+	public function getParameter(name:String):IParameter
+	{
+		if (!hasParameter(name))
+			return null;
+		
+		var ast:IParserNode = findParameterList();
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			var parameter:IParameter = new ParameterNode(i.next());
+			if (parameter.name == name)
+				return parameter;
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#hasParameter()
+	 */
+	public function hasParameter(name:String):Boolean
+	{
+		var ast:IParserNode = findParameterList();
+		if (!ast)
+			return false;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			var parameter:IParameter = new ParameterNode(i.next());
+			if (parameter.name == name)
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#hasRestParameter()
+	 */
+	public function hasRestParameter():Boolean
+	{
+		var ast:IParserNode = findParameterList();
+		if (!ast)
+			return false;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			var parameter:IParameter = new ParameterNode(i.next());
+			if (parameter.isRest)
+				return true;
+		}
+		return false;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -187,16 +300,24 @@ public class FunctionCommon implements IFunctionCommon
 	/**
 	 * @private
 	 */
-	private function createParameter(ast:IParserNode):IParameter
+	private function findType():IParserNode
 	{
-		var paramList:IParserNode = node.getKind(AS3NodeKind.PARAMETER_LIST);
-		if (paramList.numChildren > 0)
+		return node.getKind(AS3NodeKind.TYPE);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function createParameter(parameter:IParserNode):IParameter
+	{
+		var ast:IParserNode = findParameterList();
+		if (ast.numChildren > 0)
 		{
-			paramList.appendToken(TokenBuilder.newComma());
-			paramList.appendToken(TokenBuilder.newSpace());
+			ast.appendToken(TokenBuilder.newComma());
+			ast.appendToken(TokenBuilder.newSpace());
 		}
-		paramList.addChild(ast);
-		return new ParameterNode(ast);
+		ast.addChild(parameter);
+		return new ParameterNode(parameter);
 	}
 }
 }

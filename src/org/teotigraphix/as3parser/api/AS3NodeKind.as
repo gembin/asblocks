@@ -363,6 +363,8 @@ public class AS3NodeKind
 	
 	public static const TAB:String = "tab";
 	
+	public static const REST_PARM:String = "rest-param";
+	
 	// FIXME
 	public static const ELSE:String = "else";
 	

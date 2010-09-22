@@ -34,7 +34,7 @@ import org.teotigraphix.asblocks.api.IExpressionStatement;
 import org.teotigraphix.asblocks.api.IForEachInStatement;
 import org.teotigraphix.asblocks.api.IForInStatement;
 import org.teotigraphix.asblocks.api.IForStatement;
-import org.teotigraphix.asblocks.api.IFunctionCommon;
+import org.teotigraphix.asblocks.api.IFunction;
 import org.teotigraphix.asblocks.api.IFunctionLiteral;
 import org.teotigraphix.asblocks.api.IIfStatement;
 import org.teotigraphix.asblocks.api.ILabelStatement;
@@ -69,7 +69,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	/**
 	 * @private
 	 */
-	private var functionMixin:IFunctionCommon;
+	private var functionMixin:IFunction;
 	
 	/**
 	 * @private
@@ -108,16 +108,16 @@ public class FunctionLiteralNode extends ExpressionNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IFunctionCommon API :: Properties
+	//  IFunction API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  arguments
+	//  parameters
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#arguments
+	 * @copy org.teotigraphix.asblocks.api.IFunction#parameters
 	 */
 	public function get parameters():Vector.<IParameter>
 	{
@@ -125,11 +125,23 @@ public class FunctionLiteralNode extends ExpressionNode
 	}
 	
 	//----------------------------------
+	//  hasParameters
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#hasParameters
+	 */
+	public function get hasParameters():Boolean
+	{
+		return functionMixin.hasParameters;
+	}
+	
+	//----------------------------------
 	//  returnType
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#returnType
+	 * @copy org.teotigraphix.asblocks.api.IFunction#returnType
 	 */
 	public function get returnType():String
 	{
@@ -163,12 +175,12 @@ public class FunctionLiteralNode extends ExpressionNode
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IFunctionCommon API :: Methods
+	//  IFunction API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addParameter()
+	 * @copy org.teotigraphix.asblocks.api.IFunction#addParameter()
 	 */
 	public function addParameter(name:String, 
 								 type:String, 
@@ -178,7 +190,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#removeParameter()
+	 * @copy org.teotigraphix.asblocks.api.IFunction#removeParameter()
 	 */
 	public function removeParameter(name:String):IParameter
 	{
@@ -186,11 +198,43 @@ public class FunctionLiteralNode extends ExpressionNode
 	}
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IFunctionCommon#addRestParameter()
+	 * @copy org.teotigraphix.asblocks.api.IFunction#addRestParameter()
 	 */
 	public function addRestParameter(name:String):IParameter
 	{
 		return functionMixin.addRestParameter(name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#removeRestParameter()
+	 */
+	public function removeRestParameter():IParameter
+	{
+		return functionMixin.removeRestParameter();
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#getParameter()
+	 */
+	public function getParameter(name:String):IParameter
+	{
+		return functionMixin.getParameter(name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#hasParameter()
+	 */
+	public function hasParameter(name:String):Boolean
+	{
+		return functionMixin.hasParameter(name);
+	}
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IFunction#hasRestParameter()
+	 */
+	public function hasRestParameter():Boolean
+	{
+		return functionMixin.hasRestParameter();
 	}
 	
 	//--------------------------------------------------------------------------

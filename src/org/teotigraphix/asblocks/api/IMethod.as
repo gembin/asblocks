@@ -28,7 +28,7 @@ package org.teotigraphix.asblocks.api
  * @productversion 1.0
  */
 public interface IMethod 
-	extends IFunctionCommon, IStatementContainer, IMember
+	extends IFunction, IStatementContainer, IMember
 {
 	//--------------------------------------------------------------------------
 	//

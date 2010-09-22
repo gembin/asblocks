@@ -29,7 +29,7 @@ package org.teotigraphix.asblocks.api
  * @productversion 1.0
  */
 public interface IFunctionLiteral 
-	extends IExpression, IFunctionCommon, IScriptNode, IStatementContainer
+	extends IExpression, IFunction, IScriptNode, IStatementContainer
 {
 	//--------------------------------------------------------------------------
 	//

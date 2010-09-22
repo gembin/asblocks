@@ -383,6 +383,15 @@ public class ASTUtil
 		}
 	}
 	
+	public static function nameText(ast:IParserNode):String
+	{
+		if (!ast)
+			return null;
+		
+		// NAME node, I want to change ast some day
+		return ast.stringValue;
+	}
+	
 	public static function typeText(ast:IParserNode):String
 	{
 		if (!ast)
@@ -392,13 +401,13 @@ public class ASTUtil
 		return ast.stringValue;
 	}
 	
-	public static function nameText(ast:IParserNode):String
+	public static function initText(ast:IParserNode):String
 	{
 		if (!ast)
 			return null;
 		
-		// NAME node, I want to change ast some day
-		return ast.stringValue;
+		// TYPE node, I want to change ast some day
+		return stringifyNode(ast);
 	}
 	
 	/**
