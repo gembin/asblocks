@@ -1,8 +1,8 @@
 package testSuites
 {
 
-import org.teotigraphix.as3parser.impl.TestASDocParser;
-import org.teotigraphix.as3parser.impl.TestASDocScanner;
+import org.as3commons.asblocks.parser.impl.TestASDocParser;
+import org.as3commons.asblocks.parser.impl.TestASDocScanner;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]

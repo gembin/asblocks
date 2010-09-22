@@ -1,9 +1,9 @@
 package testSuites
 {
 
-import org.teotigraphix.as3parser.impl.TestMXMLNonASDocComment;
-import org.teotigraphix.as3parser.impl.TestMXMLNonBound;
-import org.teotigraphix.as3parser.impl.TestMXMLScanner;
+import org.as3commons.asblocks.parser.impl.TestMXMLNonASDocComment;
+import org.as3commons.asblocks.parser.impl.TestMXMLNonBound;
+import org.as3commons.asblocks.parser.impl.TestMXMLScanner;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]

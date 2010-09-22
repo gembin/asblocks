@@ -1,31 +1,31 @@
 package testSuites
 {
 
-import org.teotigraphix.as3parser.core.TestLinkedListToken;
-import org.teotigraphix.as3parser.core.TestSourceCode;
-import org.teotigraphix.as3parser.impl.TestAS3FragmentParser;
-import org.teotigraphix.as3parser.impl.TestAS3Scanner;
-import org.teotigraphix.as3parser.impl.TestAS3Tokenizer;
-import org.teotigraphix.as3parser.impl.TestClass;
-import org.teotigraphix.as3parser.impl.TestClassContent;
-import org.teotigraphix.as3parser.impl.TestCompilationUnit;
-import org.teotigraphix.as3parser.impl.TestConstStatement;
-import org.teotigraphix.as3parser.impl.TestDoStatement;
-import org.teotigraphix.as3parser.impl.TestEmptyStatement;
-import org.teotigraphix.as3parser.impl.TestExpression;
-import org.teotigraphix.as3parser.impl.TestForStatement;
-import org.teotigraphix.as3parser.impl.TestIfStatement;
-import org.teotigraphix.as3parser.impl.TestInterface;
-import org.teotigraphix.as3parser.impl.TestInterfaceContent;
-import org.teotigraphix.as3parser.impl.TestPackageContent;
-import org.teotigraphix.as3parser.impl.TestPrimaryExpression;
-import org.teotigraphix.as3parser.impl.TestReturnStatement;
-import org.teotigraphix.as3parser.impl.TestSwitchStatement;
-import org.teotigraphix.as3parser.impl.TestTryCatchFinallyStatement;
-import org.teotigraphix.as3parser.impl.TestUnaryExpression;
-import org.teotigraphix.as3parser.impl.TestVarStatement;
-import org.teotigraphix.as3parser.impl.TestWhileStatement;
-import org.teotigraphix.as3parser.impl.TestWithStatement;
+import org.as3commons.asblocks.parser.core.TestLinkedListToken;
+import org.as3commons.asblocks.parser.core.TestSourceCode;
+import org.as3commons.asblocks.parser.impl.TestAS3FragmentParser;
+import org.as3commons.asblocks.parser.impl.TestAS3Scanner;
+import org.as3commons.asblocks.parser.impl.TestAS3Tokenizer;
+import org.as3commons.asblocks.parser.impl.TestClass;
+import org.as3commons.asblocks.parser.impl.TestClassContent;
+import org.as3commons.asblocks.parser.impl.TestCompilationUnit;
+import org.as3commons.asblocks.parser.impl.TestConstStatement;
+import org.as3commons.asblocks.parser.impl.TestDoStatement;
+import org.as3commons.asblocks.parser.impl.TestEmptyStatement;
+import org.as3commons.asblocks.parser.impl.TestExpression;
+import org.as3commons.asblocks.parser.impl.TestForStatement;
+import org.as3commons.asblocks.parser.impl.TestIfStatement;
+import org.as3commons.asblocks.parser.impl.TestInterface;
+import org.as3commons.asblocks.parser.impl.TestInterfaceContent;
+import org.as3commons.asblocks.parser.impl.TestPackageContent;
+import org.as3commons.asblocks.parser.impl.TestPrimaryExpression;
+import org.as3commons.asblocks.parser.impl.TestReturnStatement;
+import org.as3commons.asblocks.parser.impl.TestSwitchStatement;
+import org.as3commons.asblocks.parser.impl.TestTryCatchFinallyStatement;
+import org.as3commons.asblocks.parser.impl.TestUnaryExpression;
+import org.as3commons.asblocks.parser.impl.TestVarStatement;
+import org.as3commons.asblocks.parser.impl.TestWhileStatement;
+import org.as3commons.asblocks.parser.impl.TestWithStatement;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]

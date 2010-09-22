@@ -1,7 +1,7 @@
 package testSuites
 {
 
-import org.teotigraphix.wiki.Test_as3nodes;
+import org.as3commons.wiki.Test_as3nodes;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
