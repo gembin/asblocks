@@ -26,7 +26,6 @@ import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.api.IBlock;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IIfStatement;
-import org.teotigraphix.asblocks.api.IStatement;
 import org.teotigraphix.asblocks.api.IStatementContainer;
 import org.teotigraphix.asblocks.utils.ASTUtil;
 
@@ -46,41 +45,16 @@ public class IfStatementNode extends ContainerDelegate
 	//
 	//--------------------------------------------------------------------------
 	
-	private function findConditionNode():IParserNode
-	{
-		return node.getFirstChild();
-	}
-	
-	private function findThenClause():IParserNode
-	{
-		return node.getChild(1);
-	}
-	
-	private function findElseClause():IParserNode
-	{
-		return node.getChild(2);
-	}
-	
-	override protected function get statementContainer():IStatementContainer
-	{
-		var ast:IParserNode = findThenClause();
-		if (!ast.isKind(AS3NodeKind.BLOCK))
-		{
-			throw new ASBlocksSyntaxError("statement is not a block");
-		}
-		return new StatementList(ast);
-	}
-	
 	//----------------------------------
 	//  condition
 	//----------------------------------
 	
 	/**
-	 * copy org.teotigraphix.asblocks.api.IIfStatement#condition
+	 * @copy org.teotigraphix.asblocks.api.IIfStatement#condition
 	 */
 	public function get condition():IExpression
 	{
-		return ExpressionBuilder.build(findConditionNode().getFirstChild());
+		return ExpressionBuilder.build(findCondition().getFirstChild());
 	}
 	
 	/**
@@ -88,18 +62,35 @@ public class IfStatementNode extends ContainerDelegate
 	 */	
 	public function set condition(value:IExpression):void
 	{
-		findConditionNode().setChildAt(value.node, 0);
+		if (value == null || value.node == null)
+		{
+			throw new ASBlocksSyntaxError("if condition connot be null");
+		}
+		findCondition().setChildAt(value.node, 0);
 	}
 	
 	//----------------------------------
-	//  thenStatement
+	//  thenBlock
 	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IIfStatement#thenBlock
+	 */
+	public function get thenBlock():IBlock
+	{
+		return StatementBuilder.build(findThenClause()) as IBlock;
+	}
 	
 	/**
 	 * @private
 	 */	
-	public function set thenStatement(value:IStatement):void
+	public function set thenBlock(value:IBlock):void
 	{
+		if (value == null || value.node == null)
+		{
+			throw new ASBlocksSyntaxError("if then block connot be null");
+		}
+		
 		var ast:IParserNode = value.node;
 		node.setChildAt(ast, 1);
 		var indent:String = ASTUtil.findIndent(node);
@@ -111,30 +102,24 @@ public class IfStatementNode extends ContainerDelegate
 	//----------------------------------
 	
 	/**
-	 * copy org.teotigraphix.asblocks.api.IIfStatement#elseBlock
+	 * @copy org.teotigraphix.asblocks.api.IIfStatement#elseBlock
 	 */
 	public function get elseBlock():IBlock
 	{
 		var ast:IParserNode = findElseClause();
 		if (!ast)
 		{
-			var indent:String = ASTUtil.findIndent(node);
-			ast = ASTUtil.newAST(AS3NodeKind.ELSE, "else");
-			node.appendToken(TokenBuilder.newSpace());
-			node.addChild(ast);
-			ast.appendToken(TokenBuilder.newSpace());
-			var block:IParserNode = ASTBuilder.newBlock();
-			ast.addChild(block);
-			ASTUtil.increaseIndentAfterFirstLine(block, indent);
+			setElseClause(ASTBuilder.newBlock());
+			ast = findElseClause();
 		}
 		
-		var stmt:IStatement = StatementBuilder.build(ast.getFirstChild());
-		if (!(stmt is IBlock))
+		var statement:IBlock = StatementBuilder.build(ast.getFirstChild()) as IBlock;
+		if (!statement)
 		{
-			throw new ASBlocksSyntaxError("Expected a block");
+			throw new ASBlocksSyntaxError("Expecting an IBlock");
 		}
 		
-		return stmt as IBlock;
+		return statement;
 	}
 	
 	/**
@@ -142,7 +127,33 @@ public class IfStatementNode extends ContainerDelegate
 	 */	
 	public function set elseBlock(value:IBlock):void
 	{
-		// TODO impl elseBlock
+		var ast:IParserNode = findElseClause();
+		if (ast)
+		{
+			node.removeChild(ast);
+			if (value == null)
+				return;
+		}
+		setElseClause(value.node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function get statementContainer():IStatementContainer
+	{
+		var ast:IParserNode = findThenClause();
+		if (!ast.isKind(AS3NodeKind.BLOCK))
+		{
+			throw new ASBlocksSyntaxError("statement is not a block");
+		}
+		return new StatementList(ast);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -157,6 +168,51 @@ public class IfStatementNode extends ContainerDelegate
 	public function IfStatementNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findCondition():IParserNode
+	{
+		return node.getFirstChild();
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findThenClause():IParserNode
+	{
+		return node.getChild(1);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findElseClause():IParserNode
+	{
+		return node.getChild(2);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function setElseClause(ast:IParserNode):void
+	{
+		var indent:String = ASTUtil.findIndent(node);
+		var east:IParserNode = ASTUtil.newAST(AS3NodeKind.ELSE);
+		east.appendToken(TokenBuilder.newSpace());
+		east.appendToken(TokenBuilder.newElse());
+		node.addChild(east);
+		east.appendToken(TokenBuilder.newSpace());
+		east.addChild(ast);
+		ASTUtil.increaseIndentAfterFirstLine(ast, indent);
 	}
 }
 }

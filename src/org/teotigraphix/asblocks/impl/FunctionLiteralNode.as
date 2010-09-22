@@ -87,7 +87,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#hasCode
 	 */
 	public function get hasCode():Boolean
 	{
@@ -99,7 +99,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.teotigraphix.asblocks.api.IStatementContainer#statements
 	 */
 	public function get statements():Vector.<IStatement>
 	{

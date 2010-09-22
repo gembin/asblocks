@@ -2362,8 +2362,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseIf():TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.IF, token);
+		var result:TokenNode = adapter.empty(AS3NodeKind.IF, token);
 		
 		consume(KeyWords.IF, result);
 		result.addChild(parseCondition());
@@ -2372,8 +2371,10 @@ public class AS3Parser extends ParserBase
 		consumeWhitespace(result);
 		if (tokIs(KeyWords.ELSE))
 		{
-			consume(KeyWords.ELSE, result);
-			result.addChild(parseStatement());
+			var eresult:TokenNode = adapter.empty(AS3NodeKind.ELSE, token);
+			consume(KeyWords.ELSE, eresult);
+			eresult.addChild(parseStatement());
+			result.addChild(eresult);
 		}
 		return result;
 	}

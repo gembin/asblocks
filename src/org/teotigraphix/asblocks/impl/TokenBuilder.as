@@ -53,6 +53,11 @@ public class TokenBuilder
 		return newToken(AS3NodeKind.CONDITIONAL, "?");
 	}
 	
+	public static function newElse():LinkedListToken
+	{
+		return newToken(AS3NodeKind.ELSE, "else");
+	}
+	
 	public static function newSemi():LinkedListToken
 	{
 		return newToken(AS3NodeKind.SEMI, Operators.SEMI);

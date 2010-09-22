@@ -21,10 +21,63 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
+ * An if ( condition ) thenBlock else elseBlock statement; 
+ * <code>if (condition) { } else { }</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ifs:IIfStatement = block.newIf(factory.newExpression("foo"));
+ * ifs.addStatement("trace('true')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	if (foo) {
+ * 		trace(true);
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ifs:IIfStatement = block.newIf(factory.newExpression("foo"));
+ * ifs.condition = factory.newExpression("foo == bar && baz != foo");
+ * ifs.addStatement("trace('true')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	if (foo == bar && baz != foo) {
+ * 		trace(true);
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ifs:IIfStatement = block.newIf(factory.newExpression("foo"));
+ * ifs.addStatement("trace('true')");
+ * ifs.elseBlock.addStatement("trace('false')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	if (foo) {
+ * 		trace(true);
+ * 	} else {
+ * 		trace(false);
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newIf()
  */
 public interface IIfStatement extends IStatement, IStatementContainer
 {
@@ -39,7 +92,9 @@ public interface IIfStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The if statement's condition expression.
+	 * 
+	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError if then block connot be null
 	 */
 	function get condition():IExpression;
 	
@@ -49,20 +104,30 @@ public interface IIfStatement extends IStatement, IStatementContainer
 	function set condition(value:IExpression):void;
 	
 	//----------------------------------
-	//  thenStatement
+	//  thenBlock
 	//----------------------------------
+	
+	/**
+	 * The if statement's then block (<code>if (condition) { thenBlock }</code>).
+	 * 
+	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError if then block connot be null
+	 */
+	function get thenBlock():IBlock;
 	
 	/**
 	 * @private
 	 */
-	function set thenStatement(value:IStatement):void;
+	function set thenBlock(value:IBlock):void;
 	
 	//----------------------------------
 	//  elseBlock
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The if statement's else block (<code>if (condition) { thenBlock } 
+	 * else { elseBlock }</code>).
+	 * 
+	 * @throws org.teotigraphix.asblocks.ASBlocksSyntaxError Expecting an IBlock
 	 */
 	function get elseBlock():IBlock;
 	

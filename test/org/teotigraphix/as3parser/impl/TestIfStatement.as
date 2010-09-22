@@ -72,7 +72,25 @@ public class TestIfStatement extends AbstractStatementTest
 		var input:String = "if( true ){ trace( true ); } else { trace( false )}";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\"><true line=\"1\" column=\"5\">true</true></condition><block line=\"1\" column=\"11\"><expr-stmnt line=\"1\" column=\"13\"><call line=\"1\" column=\"18\"><primary line=\"1\" column=\"13\">trace</primary><arguments line=\"1\" column=\"18\"><true line=\"1\" column=\"20\">true</true></arguments></call></expr-stmnt></block><block line=\"1\" column=\"35\"><expr-stmnt line=\"1\" column=\"37\"><call line=\"1\" column=\"42\"><primary line=\"1\" column=\"37\">trace</primary><arguments line=\"1\" column=\"42\"><false line=\"1\" column=\"44\">false</false></arguments></call></expr-stmnt></block></if>");
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\"><true line=\"1\" column=\"5\">true</true></condition><block line=\"1\" column=\"11\"><expr-stmnt line=\"1\" column=\"13\"><call line=\"1\" column=\"18\"><primary line=\"1\" column=\"13\">trace</primary><arguments line=\"1\" column=\"18\"><true line=\"1\" column=\"20\">true</true></arguments></call></expr-stmnt></block><else line=\"1\" column=\"30\"><block line=\"1\" column=\"35\"><expr-stmnt line=\"1\" column=\"37\"><call line=\"1\" column=\"42\"><primary line=\"1\" column=\"37\">trace</primary><arguments line=\"1\" column=\"42\"><false line=\"1\" column=\"44\">false</false></arguments></call></expr-stmnt></block></else></if>");
+	}
+	
+	[Test]
+	public function testIfElseIf():void
+	{
+		var input:String = "if( true ){ trace( true ); } else if ( false) { trace( false )}";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\"><true line=\"1\" column=\"5\">true</true></condition><block line=\"1\" column=\"11\"><expr-stmnt line=\"1\" column=\"13\"><call line=\"1\" column=\"18\"><primary line=\"1\" column=\"13\">trace</primary><arguments line=\"1\" column=\"18\"><true line=\"1\" column=\"20\">true</true></arguments></call></expr-stmnt></block><else line=\"1\" column=\"30\"><if line=\"1\" column=\"35\"><condition line=\"1\" column=\"38\"><false line=\"1\" column=\"40\">false</false></condition><block line=\"1\" column=\"47\"><expr-stmnt line=\"1\" column=\"49\"><call line=\"1\" column=\"54\"><primary line=\"1\" column=\"49\">trace</primary><arguments line=\"1\" column=\"54\"><false line=\"1\" column=\"56\">false</false></arguments></call></expr-stmnt></block></if></else></if>");
+	}
+	
+	[Test]
+	public function testIfElseIfElse():void
+	{
+		var input:String = "if( true ){ trace( true ); } else if ( false) { trace( false )} else { trace( false ) }";
+		assertStatementPrint(input);
+		assertStatement("1", input,
+			"<if line=\"1\" column=\"1\"><condition line=\"1\" column=\"3\"><true line=\"1\" column=\"5\">true</true></condition><block line=\"1\" column=\"11\"><expr-stmnt line=\"1\" column=\"13\"><call line=\"1\" column=\"18\"><primary line=\"1\" column=\"13\">trace</primary><arguments line=\"1\" column=\"18\"><true line=\"1\" column=\"20\">true</true></arguments></call></expr-stmnt></block><else line=\"1\" column=\"30\"><if line=\"1\" column=\"35\"><condition line=\"1\" column=\"38\"><false line=\"1\" column=\"40\">false</false></condition><block line=\"1\" column=\"47\"><expr-stmnt line=\"1\" column=\"49\"><call line=\"1\" column=\"54\"><primary line=\"1\" column=\"49\">trace</primary><arguments line=\"1\" column=\"54\"><false line=\"1\" column=\"56\">false</false></arguments></call></expr-stmnt></block><else line=\"1\" column=\"65\"><block line=\"1\" column=\"70\"><expr-stmnt line=\"1\" column=\"72\"><call line=\"1\" column=\"77\"><primary line=\"1\" column=\"72\">trace</primary><arguments line=\"1\" column=\"77\"><false line=\"1\" column=\"79\">false</false></arguments></call></expr-stmnt></block></else></if></else></if>");
 	}
 	
 	[Test]
