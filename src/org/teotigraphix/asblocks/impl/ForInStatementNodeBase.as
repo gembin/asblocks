@@ -43,15 +43,15 @@ public class ForInStatementNodeBase extends ContainerDelegate
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  declaration
+	//  initializer
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IForInStatement#declaration
+	 * @copy org.teotigraphix.asblocks.api.IForInStatement#initializer
 	 */
-	public function get declaration():IScriptNode
+	public function get initializer():IScriptNode
 	{
-		var ast:IParserNode = findDeclaration();
+		var ast:IParserNode = findInitializer();
 		if (!ast)
 			return null;
 		
@@ -70,7 +70,7 @@ public class ForInStatementNodeBase extends ContainerDelegate
 	/**
 	 * @private
 	 */	
-	public function set declaration(value:IScriptNode):void
+	public function set initializer(value:IScriptNode):void
 	{
 		var ast:IParserNode = node.getChild(0);
 		if (!value && ast)
@@ -159,7 +159,7 @@ public class ForInStatementNodeBase extends ContainerDelegate
 	/**
 	 * @private
 	 */
-	private function findDeclaration():IParserNode
+	private function findInitializer():IParserNode
 	{
 		return node.getChild(0).getFirstChild();
 	}

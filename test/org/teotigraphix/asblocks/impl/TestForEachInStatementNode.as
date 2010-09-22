@@ -66,10 +66,10 @@ public class TestForEachInStatementNode extends BaseASFactoryTest
 		statement = block.newForEachIn(declaration, target);
 		assertPrint("{\n\tfor each (foo in bar) {\n\t}\n}", block);
 		
-		statement.declaration = factory.newExpression("baz");
+		statement.initializer = factory.newExpression("baz");
 		assertPrint("{\n\tfor each (baz in bar) {\n\t}\n}", block);
 		
-		statement.declaration = factory.newDeclaration("foo:String");
+		statement.initializer = factory.newDeclaration("foo:String");
 		assertPrint("{\n\tfor each (var foo:String in bar) {\n\t}\n}", block);
 	}
 	

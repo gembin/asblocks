@@ -21,11 +21,53 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * A for ( ; ; ) statement; <code>for (initializer; condition; iterator) { }</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var intializer:IExpression = factory.newExpression("i = 0");
+ * var condition:IExpression = factory.newExpression("i < len");
+ * var iterator:IExpression = factory.newExpression("i++");
+ * var fs:IForStatement = block.newFor(intializer, condition, iterator);
+ * fs.addStatement("trace('do work')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	for (i = 0; i < len; i++) {
+ * 		trace('do work');
+ * 	}
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var intializer:IExpression = factory.newExpression("i = 0");
+ * var condition:IExpression = factory.newExpression("i < len");
+ * var iterator:IExpression = factory.newExpression("i++");
+ * var fs:IForStatement = block.newFor(intializer, condition, iterator);
+ * fs.initializer = factory.newDeclaration("j:int = 0");
+ * fs.condition = factory.newExpression("j >= len");
+ * fs.iterator = factory.newExpression("--j");
+ * fs.addStatement("trace('do work')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	for (var j:int = 0; j >= len; --j) {
+ * 		trace('do work');
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.api.IStatementContainer#newFor()
+ * @see org.teotigraphix.asblocks.ASFactory#newDeclaration()
  */
 public interface IForStatement extends IStatement, IStatementContainer
 {
@@ -40,7 +82,10 @@ public interface IForStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The loop initializer, this can be an <code>IExpression</code> or
+	 * <code>IDeclarationStatement</code>.
+	 * 
+	 * @see org.teotigraphix.asblocks.ASFactory#newDeclaration()
 	 */
 	function get initializer():IScriptNode;
 	
@@ -54,7 +99,7 @@ public interface IForStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The loop condition, terminates the loop when evaluates to true.
 	 */
 	function get condition():IExpression;
 	
@@ -68,13 +113,13 @@ public interface IForStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The loop iterator, advances a counter after each loop iteration.
 	 */
-	function get update():IExpression;
+	function get iterator():IExpression;
 	
 	/**
 	 * @private
 	 */
-	function set update(value:IExpression):void;
+	function set iterator(value:IExpression):void;
 }
 }

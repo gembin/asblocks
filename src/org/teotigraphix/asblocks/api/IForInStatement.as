@@ -73,19 +73,19 @@ public interface IForInStatement extends IStatement, IStatementContainer
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  declaration
+	//  initializer
 	//----------------------------------
 	
 	/**
-	 * The loop declaration, this can be an <code>IExpression</code> or
+	 * The loop initializer, this can be an <code>IExpression</code> or
 	 * <code>IDeclarationStatement</code>.
 	 */
-	function get declaration():IScriptNode;
+	function get initializer():IScriptNode;
 	
 	/**
 	 * @private
 	 */
-	function set declaration(value:IScriptNode):void;
+	function set initializer(value:IScriptNode):void;
 	
 	//----------------------------------
 	//  iterated

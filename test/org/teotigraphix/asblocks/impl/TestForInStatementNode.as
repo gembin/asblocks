@@ -66,10 +66,10 @@ public class TestForInStatementNode extends BaseASFactoryTest
 		statement = block.newForIn(declaration, target);
 		assertPrint("{\n\tfor (foo in bar) {\n\t}\n}", block);
 		
-		statement.declaration = factory.newExpression("baz");
+		statement.initializer = factory.newExpression("baz");
 		assertPrint("{\n\tfor (baz in bar) {\n\t}\n}", block);
 		
-		statement.declaration = factory.newDeclaration("foo:String");
+		statement.initializer = factory.newDeclaration("foo:String");
 		assertPrint("{\n\tfor (var foo:String in bar) {\n\t}\n}", block);
 	}
 	

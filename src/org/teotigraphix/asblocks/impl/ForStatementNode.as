@@ -23,24 +23,11 @@ package org.teotigraphix.asblocks.impl
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.core.LinkedListToken;
-import org.teotigraphix.as3parser.impl.AS3FragmentParser;
 import org.teotigraphix.asblocks.api.IExpression;
 import org.teotigraphix.asblocks.api.IForStatement;
 import org.teotigraphix.asblocks.api.IScriptNode;
 import org.teotigraphix.asblocks.api.IStatementContainer;
-
-/*
-for/init/dec-list
-for/init/dec-list/dec-role
-for/init/dec-list/name-type-init
-for/init/dec-list/name-type-init/name
-for/init/dec-list/name-type-init/type
-for/init/dec-list/name-type-init/init
-for/init/dec-list/dec-role
-for/cond/releational
-for/iter/post-inc
-for/block
-*/
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IForStatement</code> implementation.
@@ -52,25 +39,11 @@ for/block
 public class ForStatementNode extends ContainerDelegate 
 	implements IForStatement
 {
-	override protected function get statementContainer():IStatementContainer
-	{
-		return new StatementList(node.getChild(3)); // block
-	}
-	
-	private function findInit():IParserNode
-	{
-		return node.getKind(AS3NodeKind.INIT);
-	}
-	
-	private function findCondition():IParserNode
-	{
-		return node.getKind(AS3NodeKind.COND);
-	}
-	
-	private function findUpdate():IParserNode
-	{
-		return node.getKind(AS3NodeKind.ITER);
-	}
+	//--------------------------------------------------------------------------
+	//
+	//  IForStatement API :: Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
 	//  initializer
@@ -81,19 +54,19 @@ public class ForStatementNode extends ContainerDelegate
 	 */
 	public function get initializer():IScriptNode
 	{
-		var init:IParserNode = findInit();
-		if (!init)
+		var ast:IParserNode = findInit();
+		if (!ast)
 			return null;
 		
-		init = init.getFirstChild();
+		ast = ast.getFirstChild();
 		
-		if (init.isKind(AS3NodeKind.DEC_LIST))
+		if (ast.isKind(AS3NodeKind.DEC_LIST))
 		{
-			return new DeclarationStatementNode(init);
+			return new DeclarationStatementNode(ast);
 		}
 		else
 		{
-			return ExpressionBuilder.build(init);
+			return ExpressionBuilder.build(ast);
 		}
 		
 		return null;
@@ -104,13 +77,19 @@ public class ForStatementNode extends ContainerDelegate
 	 */	
 	public function set initializer(value:IScriptNode):void
 	{
-		var init:IParserNode = findInit();
-		if (!value && init)
+		var ast:IParserNode = findInit();
+		if (!value && ast)
 		{
-			init.removeChildAt(0);
+			node.removeChild(ast);
 		}
 		else if (value)
 		{
+			if (!ast)
+			{
+				ast = ASTUtil.newAST(AS3NodeKind.INIT);
+				node.addChildAt(ast, 0);
+			}
+			
 			var last:LinkedListToken = value.node.stopToken;
 			if (last.text == ";")
 			{
@@ -118,7 +97,7 @@ public class ForStatementNode extends ContainerDelegate
 				last.remove();
 				value.node.stopToken = prev;
 			}
-			init.setChildAt(value.node, 0);
+			ast.setChildAt(value.node, 0);
 		}
 	}
 	
@@ -131,11 +110,11 @@ public class ForStatementNode extends ContainerDelegate
 	 */
 	public function get condition():IExpression
 	{
-		var cond:IParserNode = findCondition();
-		if (!cond)
+		var ast:IParserNode = findCondition();
+		if (!ast)
 			return null;
 		
-		return ExpressionBuilder.build(cond.getFirstChild());
+		return ExpressionBuilder.build(ast.getFirstChild());
 	}
 	
 	/**
@@ -143,14 +122,20 @@ public class ForStatementNode extends ContainerDelegate
 	 */	
 	public function set condition(value:IExpression):void
 	{
-		var cond:IParserNode = findCondition();
-		if (!value && cond)
+		var ast:IParserNode = findCondition();
+		if (!value && ast)
 		{
-			cond.removeChildAt(0);
+			node.removeChild(ast);
 		}
 		else if (value)
 		{
-			cond.setChildAt(value.node, 0);
+			if (!ast)
+			{
+				ast = ASTUtil.newAST(AS3NodeKind.COND);
+				node.addChildAt(ast, 1); // FIXME this index is not certain
+			}
+			
+			ast.setChildAt(value.node, 0);
 		}
 	}
 	
@@ -159,31 +144,51 @@ public class ForStatementNode extends ContainerDelegate
 	//----------------------------------
 	
 	/**
-	 * @copy org.teotigraphix.asblocks.api.IForStatement#update
+	 * @copy org.teotigraphix.asblocks.api.IForStatement#iterator
 	 */
-	public function get update():IExpression
+	public function get iterator():IExpression
 	{
-		var update:IParserNode = findUpdate();
-		if (!update)
+		var ast:IParserNode = findIterator();
+		if (!ast)
 			return null;
 		
-		return ExpressionBuilder.build(update.getFirstChild());
+		return ExpressionBuilder.build(ast.getFirstChild());
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set update(value:IExpression):void
+	public function set iterator(value:IExpression):void
 	{
-		var updt:IParserNode = findUpdate();
-		if (!value && updt)
+		var ast:IParserNode = findIterator();
+		if (!value && ast)
 		{
-			updt.removeChildAt(0);
+			node.removeChild(ast);
 		}
 		else if (value)
 		{
-			updt.setChildAt(value.node, 0);
+			if (!ast)
+			{
+				ast = ASTUtil.newAST(AS3NodeKind.ITER);
+				node.addChildAt(ast, 2); // FIXME this index is not certain
+			}
+			
+			ast.setChildAt(value.node, 0);
 		}
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function get statementContainer():IStatementContainer
+	{
+		return new StatementList(node.getLastChild()); // block
 	}
 	
 	//--------------------------------------------------------------------------
@@ -198,6 +203,36 @@ public class ForStatementNode extends ContainerDelegate
 	public function ForStatementNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */	
+	private function findInit():IParserNode
+	{
+		return node.getKind(AS3NodeKind.INIT);
+	}
+	
+	/**
+	 * @private
+	 */	
+	private function findCondition():IParserNode
+	{
+		return node.getKind(AS3NodeKind.COND);
+	}
+	
+	/**
+	 * @private
+	 */	
+	private function findIterator():IParserNode
+	{
+		return node.getKind(AS3NodeKind.ITER);
 	}
 }
 }

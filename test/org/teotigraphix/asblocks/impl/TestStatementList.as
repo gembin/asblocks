@@ -268,7 +268,7 @@ public class TestStatementList
 			"('Hello World ' + i);\n\t}\n}", forstmt);
 		
 		// test setting update
-		forstmt.update = factory.newExpression("next(j)");
+		forstmt.iterator = factory.newExpression("next(j)");
 		assertPrint("{\n\tfor (var j:int = 0; j < (j + 2); next(j)) {\n\t\ttrace" +
 			"('Hello World ' + i);\n\t}\n}", forstmt);
 	}
@@ -289,7 +289,7 @@ public class TestStatementList
 		assertPrint("{\n\tfor each (name in object) {\n\t}\n}", forstmt);
 		
 		// test setting variable
-		forstmt.declaration = factory.parseDeclarationStatement("prop:String");
+		forstmt.initializer = factory.parseDeclarationStatement("prop:String");
 		assertPrint("{\n\tfor each (var prop:String in object) {\n\t}\n}", forstmt);
 		
 		// test setting iterated
@@ -307,7 +307,7 @@ public class TestStatementList
 		assertPrint("{\n\tfor (name in object) {\n\t}\n}", forstmt);
 		
 		// test setting variable
-		forstmt.declaration = factory.parseDeclarationStatement("prop:String");
+		forstmt.initializer = factory.parseDeclarationStatement("prop:String");
 		assertPrint("{\n\tfor (var prop:String in object) {\n\t}\n}", forstmt);
 		
 		// test setting iterated
