@@ -45,7 +45,7 @@ public class AS3BlocksTestSuite
 	public var testPackageNode:TestPackageNode;
 	public var testTypeNode:TestTypeNode;
 	public var testClassTypeNode:TestClassTypeNode;
-	public var testInterfaceNodeType:TestInterfaceTypeNode;
+	
 	
 	public var testExpressionNodes:TestExpressionNodes;
 	public var testLiteralNodes:TestLiteralNodes;
@@ -69,6 +69,7 @@ public class AS3BlocksTestSuite
 	public var testFunctionCommon:TestFunctionCommon;
 	//public var testFunctionLiteralNode:TestFunctionLiteralNode;
 	public var testIfStatementNode:TestIfStatementNode;
+	public var testInterfaceNodeType:TestInterfaceTypeNode;
 	
 	public var testMemberNode:TestMemberNode;
 	

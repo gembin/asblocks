@@ -40,12 +40,6 @@ public class InterfaceTypeNode extends TypeNode
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Private :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//--------------------------------------------------------------------------
-	//
 	//  IInterfaceType API :: Properties
 	//
 	//--------------------------------------------------------------------------
@@ -173,11 +167,11 @@ public class InterfaceTypeNode extends TypeNode
 	 */
 	private function containsSuper(name:String):Boolean
 	{
-		var extndz:IParserNode = node.getKind(AS3NodeKind.EXTENDS);
-		if (!extndz)
+		var ast:IParserNode = node.getKind(AS3NodeKind.EXTENDS);
+		if (!ast)
 			return false;
 		
-		var i:ASTIterator = new ASTIterator(extndz);
+		var i:ASTIterator = new ASTIterator(ast);
 		while (i.hasNext())
 		{
 			if (ASTUtil.typeText(i.next()) == name)

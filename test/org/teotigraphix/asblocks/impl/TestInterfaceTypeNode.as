@@ -1,10 +1,12 @@
 package org.teotigraphix.asblocks.impl
 {
 
+import org.flexunit.Assert;
 import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertTrue;
+import org.teotigraphix.asblocks.ASBlocksSyntaxError;
 import org.teotigraphix.asblocks.api.ICompilationUnit;
 import org.teotigraphix.asblocks.api.IInterfaceType;
 import org.teotigraphix.asblocks.api.Visibility;
@@ -24,24 +26,6 @@ public class TestInterfaceTypeNode extends BaseASFactoryTest
 	}
 	
 	[Test]
-	public function test_visibility():void
-	{
-		assertEquals(Visibility.PUBLIC, unit.typeNode.visibility);
-	}
-	
-	[Test]
-	public function test_name():void
-	{
-		var typeNode:IInterfaceType = unit.typeNode as IInterfaceType;
-		assertEquals("IA", typeNode.name);
-		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
-		typeNode.name = "ITestA";
-		assertEquals("ITestA", typeNode.name);
-		assertPrint("package {\n\tpublic interface ITestA {\n\t}\n}", unit);
-		// test that name cannot be set to null or ""
-	}
-	
-	[Test]
 	public function test_addSuperInterface():void
 	{
 		// TODO block adding the same type
@@ -55,6 +39,23 @@ public class TestInterfaceTypeNode extends BaseASFactoryTest
 		assertPrint("package {\n\tpublic interface IA extends IInterfaceC {\n\t}\n}", unit);
 		typeNode.removeSuperInterface("IInterfaceC");
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
+	}
+	
+	[Test]
+	public function test_addSuperInterfaceDuplicate():void
+	{
+		// TODO block adding the same type
+		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
+		var typeNode:IInterfaceType = unit.typeNode as IInterfaceType;
+		typeNode.addSuperInterface("IInterfaceB");
+		typeNode.addSuperInterface("IInterfaceB");
+		assertPrint("package {\n\tpublic interface IA extends IInterfaceB {\n\t}\n}", unit);
+		//try
+		//{
+		//	typeNode.addSuperInterface("IInterfaceB");
+		//	Assert.fail("duplicate super interface");
+		//}
+		//catch (e:ASBlocksSyntaxError) {}
 	}
 	
 	[Test]

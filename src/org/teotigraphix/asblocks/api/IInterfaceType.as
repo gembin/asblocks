@@ -21,11 +21,31 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO Docme
+ * The <code>IInterfaceType</code> interface exposes documentation, metadata,
+ * and public members of the <code>interface</code> type.
+ * 
+ * <pre>
+ * var factory:ASFactory = new ASFactory();
+ * var project:IASProject = new ASFactory(factory);
+ * var unit:ICompilationUnit = project.newInterface("my.domain.IInterfaceType");
+ * var type:IInterfaceType = unit.typeNode as IInterfaceType;
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * package my.domain {
+ * 	public interface IInterfaceType {
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.teotigraphix.asblocks.ASFactory#newInterface()
+ * @see org.teotigraphix.asblocks.api.IASProject#newInterface()
+ * @see org.teotigraphix.asblocks.api.ICompilationUnit
  */
 public interface IInterfaceType extends IType
 {
@@ -40,7 +60,7 @@ public interface IInterfaceType extends IType
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Returns a Vector of interfaces this interface type extends.
 	 */
 	function get superInterfaces():Vector.<String>;
 	
@@ -51,12 +71,21 @@ public interface IInterfaceType extends IType
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Adds an interface to the <code>extends</code> clause.
+	 * 
+	 * @param name The name of the interface, if a period is present, the name
+	 * will be considered qualified.
+	 * @return A <code>Boolean</code> indicating whether the interface name
+	 * was successfully added to the <code>extends</code> clause.
 	 */
 	function addSuperInterface(name:String):Boolean;
 	
 	/**
-	 * TODO Docme
+	 * Removes an interface from the <code>extends</code> clause.
+	 * 
+	 * @param name The name of the interface to be removed.
+	 * @return A <code>Boolean</code> indicating whether the interface name
+	 * was successfully removed from the <code>extends</code> clause.
 	 */
 	function removeSuperInterface(name:String):Boolean;
 }
