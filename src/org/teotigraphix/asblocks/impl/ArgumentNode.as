@@ -44,19 +44,11 @@ public class ArgumentNode extends ScriptNode implements IArgument
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.teotigraphix.asblocks.api.IArgument#expression
 	 */
 	public function get expression():IExpression
 	{
 		return ExpressionBuilder.build(node);
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set expression(value:IExpression):void
-	{
-		
 	}
 	
 	//--------------------------------------------------------------------------

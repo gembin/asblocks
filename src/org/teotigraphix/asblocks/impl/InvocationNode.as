@@ -20,12 +20,12 @@
 package org.teotigraphix.asblocks.impl
 {
 
-import org.teotigraphix.asblocks.api.IExpression;
-import org.teotigraphix.asblocks.api.IINvocation;
-import org.teotigraphix.asblocks.utils.ASTUtil;
 import org.teotigraphix.as3parser.api.AS3NodeKind;
 import org.teotigraphix.as3parser.api.IParserNode;
 import org.teotigraphix.as3parser.impl.ASTIterator;
+import org.teotigraphix.asblocks.api.IExpression;
+import org.teotigraphix.asblocks.api.IINvocation;
+import org.teotigraphix.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IINvocation</code> implementation.
@@ -34,59 +34,13 @@ import org.teotigraphix.as3parser.impl.ASTIterator;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class InvocationNode extends ExpressionNode 
-	implements IINvocation
+public class InvocationNode extends ExpressionNode implements IINvocation
 {
-	protected function setArguments(value:Vector.<IExpression>):void
-	{
-		var args:IParserNode = node.getKind(AS3NodeKind.ARGUMENTS);
-		
-		ASTUtil.removeAllChildren(args);
-		
-		if (!value)
-			return;
-		
-		var len:int = value.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var element:IExpression = value[i] as IExpression;
-			args.addChild(element.node);
-			if (i < len - 1)
-			{
-				args.appendToken(TokenBuilder.newComma());
-				args.appendToken(TokenBuilder.newSpace());
-			}
-		}
-	}
-	
-	//----------------------------------
-	//  arguments
-	//----------------------------------
-	
-	/**
-	 * @copy org.teotigraphix.asblocks.api.IINvocation#arguments
-	 */
-	public function get arguments():Vector.<IExpression>
-	{
-		var args:IParserNode = node.getKind(AS3NodeKind.ARGUMENTS);
-		var i:ASTIterator = new ASTIterator(args);
-		
-		var result:Vector.<IExpression> = new Vector.<IExpression>();
-		while (i.hasNext())
-		{
-			result.push(ExpressionBuilder.build(i.next()));
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * @private
-	 */	
-	public function set arguments(value:Vector.<IExpression>):void
-	{
-		setArguments(value);
-	}
+	//--------------------------------------------------------------------------
+	//
+	//  IINvocation API :: Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
 	//  target
@@ -108,6 +62,37 @@ public class InvocationNode extends ExpressionNode
 		node.setChildAt(value.node, 0);
 	}
 	
+	//----------------------------------
+	//  arguments
+	//----------------------------------
+	
+	/**
+	 * @copy org.teotigraphix.asblocks.api.IINvocation#arguments
+	 */
+	public function get arguments():Vector.<IExpression>
+	{
+		var result:Vector.<IExpression> = new Vector.<IExpression>();
+		var ast:IParserNode = findArguments();
+		if (!ast)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			result.push(ExpressionBuilder.build(i.next()));
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set arguments(value:Vector.<IExpression>):void
+	{
+		setArguments(value);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -120,6 +105,45 @@ public class InvocationNode extends ExpressionNode
 	public function InvocationNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findArguments():IParserNode
+	{
+		return node.getKind(AS3NodeKind.ARGUMENTS);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function setArguments(value:Vector.<IExpression>):void
+	{
+		var args:IParserNode = node.getKind(AS3NodeKind.ARGUMENTS);
+		
+		ASTUtil.removeAllChildren(args);
+		
+		if (!value)
+			return;
+		
+		var len:int = value.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IExpression = value[i] as IExpression;
+			args.addChild(element.node);
+			if (i < len - 1)
+			{
+				args.appendToken(TokenBuilder.newComma());
+				args.appendToken(TokenBuilder.newSpace());
+			}
+		}
 	}
 }
 }

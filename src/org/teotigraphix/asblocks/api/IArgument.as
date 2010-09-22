@@ -21,7 +21,7 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO DOCME
+ * An invocation argument func(argument); <code>foo(arg0, "bar")</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -43,10 +43,5 @@ public interface IArgument extends IScriptNode
 	 * The expression argument.
 	 */
 	function get expression():IExpression;
-	
-	/**
-	 * @private
-	 */	
-	function set expression(value:IExpression):void;
 }
 }

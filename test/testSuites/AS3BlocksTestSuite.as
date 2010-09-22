@@ -25,6 +25,7 @@ import org.teotigraphix.asblocks.impl.TestForStatementNode;
 import org.teotigraphix.asblocks.impl.TestFunctionCommon;
 import org.teotigraphix.asblocks.impl.TestIfStatementNode;
 import org.teotigraphix.asblocks.impl.TestInterfaceTypeNode;
+import org.teotigraphix.asblocks.impl.TestInvocationExpressionNode;
 import org.teotigraphix.asblocks.impl.TestLiteralNodes;
 import org.teotigraphix.asblocks.impl.TestMemberNode;
 import org.teotigraphix.asblocks.impl.TestMethodNode;
@@ -70,6 +71,7 @@ public class AS3BlocksTestSuite
 	//public var testFunctionLiteralNode:TestFunctionLiteralNode;
 	public var testIfStatementNode:TestIfStatementNode;
 	public var testInterfaceNodeType:TestInterfaceTypeNode;
+	public var testInvocationExpressionNode:TestInvocationExpressionNode;
 	
 	public var testMemberNode:TestMemberNode;
 	

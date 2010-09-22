@@ -21,7 +21,8 @@ package org.teotigraphix.asblocks.api
 {
 
 /**
- * TODO DOCME
+ * An invocation expression target( arguments ); <code>super(arg0, arg1)</code>, 
+ * <code>new Class(arg)</code>, <code>foo(arg0)</code> etc.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -36,25 +37,11 @@ public interface IINvocation
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  arguments
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get arguments():Vector.<IExpression>;
-	
-	/**
-	 * @private
-	 */
-	function set arguments(value:Vector.<IExpression>):void;
-	
-	//----------------------------------
 	//  target
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The target expression of the invocation, before the <code>()</code>.
 	 */
 	function get target():IExpression;
 	
@@ -62,5 +49,19 @@ public interface IINvocation
 	 * @private
 	 */
 	function set target(value:IExpression):void;
+	
+	//----------------------------------
+	//  arguments
+	//----------------------------------
+	
+	/**
+	 * The argument expressions of the invocation, between the <code>(args,...)</code>.
+	 */
+	function get arguments():Vector.<IExpression>;
+	
+	/**
+	 * @private
+	 */
+	function set arguments(value:Vector.<IExpression>):void;
 }
 }
