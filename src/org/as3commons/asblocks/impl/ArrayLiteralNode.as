@@ -37,8 +37,6 @@ import org.as3commons.asblocks.utils.ASTUtil;
 public class ArrayLiteralNode extends LiteralNode 
 	implements IArrayLiteral
 {
-	// node is primary/array/expressions[i]
-	
 	//--------------------------------------------------------------------------
 	//
 	//  IArrayLiteral API :: Properties
@@ -130,7 +128,7 @@ public class ArrayLiteralNode extends LiteralNode
 	 */
 	private function findArray():IParserNode
 	{
-		return node.getKind(AS3NodeKind.ARRAY);
+		return node;
 	}
 }
 }

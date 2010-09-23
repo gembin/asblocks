@@ -419,11 +419,11 @@ public class TestExpression extends AbstractStatementTest
 	{
 		assertStatement( "",
 			"(dataProvider as ArrayCollection) = null",
-			"<assignment line=\"1\" column=\"1\"><primary line=\"1\" column=\"1\">" +
+			"<assignment line=\"1\" column=\"1\">" +
 			"<encapsulated line=\"1\" column=\"1\"><relational line=\"1\" " +
 			"column=\"2\"><primary line=\"1\" column=\"2\">dataProvider</primary>" +
 			"<as line=\"1\" column=\"15\">as</as><primary line=\"1\" column=\"18\">" +
-			"ArrayCollection</primary></relational></encapsulated></primary>" +
+			"ArrayCollection</primary></relational></encapsulated>" +
 			"<assign line=\"1\" column=\"35\">=</assign><null line=\"1\" " +
 			"column=\"37\">null</null></assignment>" );
 	}
@@ -433,17 +433,17 @@ public class TestExpression extends AbstractStatementTest
 	{
 		assertStatement( "",
 			"new Event()",
-			"<primary line=\"1\" column=\"1\"><new line=\"1\" column=\"1\">" +
+			"<new line=\"1\" column=\"1\">" +
 			"<call line=\"1\" column=\"10\"><primary line=\"1\" column=\"5\">" +
 			"Event</primary><arguments line=\"1\" column=\"10\"></arguments>" +
-			"</call></new></primary>" );
+			"</call></new>" );
 		
 		assertStatement( "",
 			"new Event(\"lala\")",
-			"<primary line=\"1\" column=\"1\"><new line=\"1\" column=\"1\">" +
+			"<new line=\"1\" column=\"1\">" +
 			"<call line=\"1\" column=\"10\"><primary line=\"1\" column=\"5\">" +
 			"Event</primary><arguments line=\"1\" column=\"10\"><string line=\"1\" " +
-			"column=\"11\">\"lala\"</string></arguments></call></new></primary>" );
+			"column=\"11\">\"lala\"</string></arguments></call></new>" );
 	}
 	
 	[Test]

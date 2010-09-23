@@ -58,15 +58,7 @@ public class TestVarStatement extends AbstractStatementTest
 		input = "var colors:Array = [0x2bc9f6, 0x0086ad];";
 		assertStatementPrint(input);
 		assertStatement("3", input,
-			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" " +
-			"column=\"1\"><var line=\"1\" column=\"1\"></var></dec-role>" +
-			"<name-type-init line=\"1\" column=\"5\"><name line=\"1\" " +
-			"column=\"5\">colors</name><type line=\"1\" column=\"12\">Array" +
-			"</type><init line=\"1\" column=\"20\"><primary line=\"1\" " +
-			"column=\"20\"><array line=\"1\" column=\"20\"><number line=\"1\" " +
-			"column=\"21\">0x2bc9f6</number><number line=\"1\" column=\"31\">" +
-			"0x0086ad</number></array></primary></init></name-type-init>" +
-			"</dec-list>");
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\"><var line=\"1\" column=\"1\"></var></dec-role><name-type-init line=\"1\" column=\"5\"><name line=\"1\" column=\"5\">colors</name><type line=\"1\" column=\"12\">Array</type><init line=\"1\" column=\"20\"><array line=\"1\" column=\"20\"><number line=\"1\" column=\"21\">0x2bc9f6</number><number line=\"1\" column=\"31\">0x0086ad</number></array></init></name-type-init></dec-list>");
 	}
 	
 	[Test]
@@ -114,15 +106,7 @@ public class TestVarStatement extends AbstractStatementTest
 		var input:String = "var v:Vector.<DisplayObject> = new Vector.<Sprite>();";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" " +
-			"column=\"1\"><var line=\"1\" column=\"1\"></var></dec-role>" +
-			"<name-type-init line=\"1\" column=\"5\"><name line=\"1\" " +
-			"column=\"5\">v</name><vector line=\"1\" column=\"7\"><type " +
-			"line=\"1\" column=\"15\">DisplayObject</type></vector><init " +
-			"line=\"1\" column=\"32\"><primary line=\"1\" column=\"32\">" +
-			"<new line=\"1\" column=\"32\"><primary line=\"1\" column=\"36\">" +
-			"Vector</primary><arguments line=\"1\" column=\"51\"></arguments>" +
-			"</new></primary></init></name-type-init></dec-list>");
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\"><var line=\"1\" column=\"1\"></var></dec-role><name-type-init line=\"1\" column=\"5\"><name line=\"1\" column=\"5\">v</name><vector line=\"1\" column=\"7\"><type line=\"1\" column=\"15\">DisplayObject</type></vector><init line=\"1\" column=\"32\"><new line=\"1\" column=\"32\"><primary line=\"1\" column=\"36\">Vector</primary><arguments line=\"1\" column=\"51\"></arguments></new></init></name-type-init></dec-list>");
 		
 		input = "var v:Vector.< Vector.< String > >";
 		assertStatementPrint(input);
@@ -147,16 +131,7 @@ public class TestVarStatement extends AbstractStatementTest
 		input = "var HT:Vector.<BitString> = new Vector.<BitString>(251, true);";
 		assertStatementPrint(input);
 		assertStatement("3", input,
-			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\">" +
-			"<var line=\"1\" column=\"1\"></var></dec-role><name-type-init " +
-			"line=\"1\" column=\"5\"><name line=\"1\" column=\"5\">HT</name>" +
-			"<vector line=\"1\" column=\"8\"><type line=\"1\" column=\"16\">" +
-			"BitString</type></vector><init line=\"1\" column=\"29\"><primary " +
-			"line=\"1\" column=\"29\"><new line=\"1\" column=\"29\"><primary " +
-			"line=\"1\" column=\"33\">Vector</primary><arguments line=\"1\" " +
-			"column=\"51\"><number line=\"1\" column=\"52\">251</number><true " +
-			"line=\"1\" column=\"57\">true</true></arguments></new></primary>" +
-			"</init></name-type-init></dec-list>");
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\"><var line=\"1\" column=\"1\"></var></dec-role><name-type-init line=\"1\" column=\"5\"><name line=\"1\" column=\"5\">HT</name><vector line=\"1\" column=\"8\"><type line=\"1\" column=\"16\">BitString</type></vector><init line=\"1\" column=\"29\"><new line=\"1\" column=\"29\"><primary line=\"1\" column=\"33\">Vector</primary><arguments line=\"1\" column=\"51\"><number line=\"1\" column=\"52\">251</number><true line=\"1\" column=\"57\">true</true></arguments></new></init></name-type-init></dec-list>");
 	}
 }
 }

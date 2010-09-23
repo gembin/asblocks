@@ -1491,28 +1491,27 @@ public class AS3Parser extends ParserBase
 	 */
 	internal function parsePrimaryExpression():TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.PRIMARY, token);
+		var result:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);
 		
 		if (tokIs(Operators.LBRACK))
 		{
-			result.addChild(parseArrayLiteral());
+			return parseArrayLiteral();
 		}
 		else if (tokIs(Operators.LCURLY))
 		{
-			result.addChild(parseObjectLiteral());
+			return parseObjectLiteral();
 		}
 		else if (tokIs(KeyWords.FUNCTION))
 		{
-			result.addChild(parseLambdaExpression());
+			return parseLambdaExpression();
 		}
 		else if (tokIs(KeyWords.NEW))
 		{
-			result.addChild(parseNewExpression());
+			return parseNewExpression();
 		}
 		else if (tokIs(Operators.LPAREN))
 		{
-			result.addChild(parseEncapsulatedExpression());
+			return parseEncapsulatedExpression();
 		}
 		else
 		{

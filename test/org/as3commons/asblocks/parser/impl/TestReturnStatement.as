@@ -51,15 +51,15 @@ public class TestReturnStatement extends AbstractStatementTest
 		assertStatementPrint(input);
 		assertStatement( "1",
 			"return []",
-			"<return line=\"1\" column=\"1\"><primary line=\"1\" column=\"8\">" +
-			"<array line=\"1\" column=\"8\"></array></primary></return>" );
+			"<return line=\"1\" column=\"1\"><array line=\"1\" column=\"8\">" +
+			"</array></return>" );
 		
 		input = "return [];";
 		assertStatementPrint(input);
 		assertStatement( "2",
 			"return [];",
-			"<return line=\"1\" column=\"1\"><primary line=\"1\" column=\"8\">" +
-			"<array line=\"1\" column=\"8\"></array></primary></return>" );
+			"<return line=\"1\" column=\"1\"><array line=\"1\" column=\"8\">" +
+			"</array></return>" );
 	}
 	
 	[Test]
@@ -186,12 +186,11 @@ public class TestReturnStatement extends AbstractStatementTest
 		assertStatementPrint(input);
 		assertStatement("1",
 			input,
-			"<throw line=\"1\" column=\"1\"><primary line=\"1\" " +
-			"column=\"7\"><new line=\"1\" column=\"7\"><call line=\"1\" " +
+			"<throw line=\"1\" column=\"1\"><new line=\"1\" column=\"7\"><call line=\"1\" " +
 			"column=\"16\"><primary line=\"1\" column=\"11\">Error</primary>" +
 			"<arguments line=\"1\" column=\"16\"><string line=\"1\" " +
 			"column=\"17\">'error'</string></arguments></call></new>" +
-			"</primary></throw>");
+			"</throw>");
 	}
 	
 	[Test]

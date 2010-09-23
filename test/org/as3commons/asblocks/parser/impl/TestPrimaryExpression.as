@@ -149,7 +149,7 @@ public class TestPrimaryExpression
 	{
 		var input:String = "[1,2,3]";
 		assertPrimaryPrint(input, "[1,2,3]");
-		assertPrimary(input,
+		assertTopPrimary(input,
 			"<array line=\"1\" column=\"1\">" +
 			"<number line=\"1\" column=\"2\">1</number><number line=\"1\" " +
 			"column=\"4\">2</number><number line=\"1\" column=\"6\">3</number>" +
@@ -161,7 +161,7 @@ public class TestPrimaryExpression
 	{
 		var input:String = "{a:1,b:2}";
 		assertPrimaryPrint(input, "{a:1,b:2}");
-		assertPrimary( input,
+		assertTopPrimary( input,
 			"<object line=\"1\" column=\"1\">" +
 			"<prop line=\"1\" column=\"2\"><name line=\"1\" column=\"2\">a</name>" +
 			"<value line=\"1\" column=\"4\"><number line=\"1\" column=\"4\">1" +
@@ -175,7 +175,7 @@ public class TestPrimaryExpression
 	{
 		var input:String = "function ( a : Object ) : * { trace('test'); }";
 		assertPrimaryPrint(input, "function ( a : Object ) : * { trace('test'); }");
-		assertPrimary( input,
+		assertTopPrimary( input,
 			"<lambda line=\"1\" column=\"1\"><parameter-list line=\"1\" column=\"10\"><parameter line=\"1\" column=\"12\"><name-type-init line=\"1\" column=\"12\"><name line=\"1\" column=\"12\">a</name><type line=\"1\" column=\"16\">Object</type></name-type-init></parameter></parameter-list><type line=\"1\" column=\"27\">*</type><block line=\"1\" column=\"29\"><expr-stmnt line=\"1\" column=\"31\"><call line=\"1\" column=\"36\"><primary line=\"1\" column=\"31\">trace</primary><arguments line=\"1\" column=\"36\"><string line=\"1\" column=\"37\">'test'</string></arguments></call></expr-stmnt></block></lambda>");
 	}
 	
@@ -184,7 +184,7 @@ public class TestPrimaryExpression
 	{
 		var input:String = "new ClassA()";
 		assertPrimaryPrint(input, "new ClassA()");
-		assertPrimary( input,
+		assertTopPrimary( input,
 			"<new line=\"1\" column=\"1\"><call line=\"1\" column=\"11\">" +
 			"<primary line=\"1\" column=\"5\">ClassA</primary><arguments " +
 			"line=\"1\" column=\"11\"></arguments></call></new>");
@@ -195,7 +195,7 @@ public class TestPrimaryExpression
 	{
 		var input:String = "( world as Ball )";
 		assertPrimaryPrint(input, "( world as Ball )");
-		assertPrimary( input,
+		assertTopPrimary( input,
 			"<encapsulated line=\"1\" column=\"1\"><relational line=\"1\" " +
 			"column=\"3\"><primary line=\"1\" column=\"3\">world</primary><as " +
 			"line=\"1\" column=\"9\">as</as><primary line=\"1\" column=\"12\">" +
@@ -203,7 +203,7 @@ public class TestPrimaryExpression
 		
 		input = "( \"world\" in myBall )";
 		assertPrimaryPrint(input, "( \"world\" in myBall )");
-		assertPrimary( input,
+		assertTopPrimary( input,
 			"<encapsulated line=\"1\" " +
 			"column=\"1\"><relational line=\"1\" column=\"3\"><string " +
 			"line=\"1\" column=\"3\">\"world\"</string><in line=\"1\" " +
@@ -246,6 +246,15 @@ public class TestPrimaryExpression
 		var result:String = ASTUtil.convert(parser.parsePrimaryExpression());
 		Assert.assertEquals("<primary line=\"1\" column=\"1\">" + 
 			expected + "</primary>", result);
+	}
+	
+	private function assertTopPrimary(input:String, 
+								   expected:String):void
+	{
+		parser.scanner.setLines(Vector.<String>([input]));
+		parser.nextToken(); // first call
+		var result:String = ASTUtil.convert(parser.parsePrimaryExpression());
+		Assert.assertEquals(expected, result);
 	}
 	
 	private function assertPrimaryPrint(input:String, 

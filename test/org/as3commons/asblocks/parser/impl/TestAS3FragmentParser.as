@@ -555,8 +555,8 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parsePrimaryExpression("[a,b,c]");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<primary><array><primary>a</primary><primary>b" +
-			"</primary><primary>c</primary></array></primary>", result);
+		Assert.assertEquals("<array><primary>a</primary><primary>b" +
+			"</primary><primary>c</primary></array>", result);
 		
 		//------------------------------
 		// Object literal
@@ -564,9 +564,9 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parsePrimaryExpression("{a:1,b:1}");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<primary><object><prop><name>a</name><value>" +
+		Assert.assertEquals("<object><prop><name>a</name><value>" +
 			"<number>1</number></value></prop><prop><name>b</name><value>" +
-			"<number>1</number></value></prop></object></primary>", result);
+			"<number>1</number></value></prop></object>", result);
 		
 		//------------------------------
 		// Function literal
@@ -574,9 +574,9 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parsePrimaryExpression("function(a:Object):void{}");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<primary><lambda><parameter-list><parameter>" +
+		Assert.assertEquals("<lambda><parameter-list><parameter>" +
 			"<name-type-init><name>a</name><type>Object</type></name-type-init>" +
-			"</parameter></parameter-list><block></block></lambda></primary>", result);
+			"</parameter></parameter-list><block></block></lambda>", result);
 	}
 	
 	[Test]

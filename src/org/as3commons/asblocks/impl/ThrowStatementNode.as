@@ -48,13 +48,7 @@ public class ThrowStatementNode extends ScriptNode implements IThrowStatement
 	 */
 	public function get expression():IExpression
 	{
-		// primary/new | primary/
-		var ast:IParserNode = node.getFirstChild();
-		if (ast.numChildren > 0)
-		{
-			ast = ast.getFirstChild();
-		}
-		return ExpressionBuilder.build(ast);
+		return ExpressionBuilder.build(node.getFirstChild());
 	}
 	
 	//--------------------------------------------------------------------------

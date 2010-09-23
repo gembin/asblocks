@@ -680,13 +680,11 @@ public class ASTBuilder
 	
 	public static function newArrayLiteral():IParserNode
 	{
-		var primary:IParserNode = ASTUtil.newPrimaryAST();
 		var ast:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.ARRAY, 
 			AS3NodeKind.LBRACKET, "[", 
 			AS3NodeKind.RBRACKET, "]");
-		primary.addChild(ast);
-		return primary;
+		return ast;
 		
 	}
 	
