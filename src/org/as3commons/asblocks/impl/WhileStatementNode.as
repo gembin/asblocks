@@ -20,11 +20,11 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.IStatement;
 import org.as3commons.asblocks.api.IStatementContainer;
 import org.as3commons.asblocks.api.IWhileStatement;
+import org.as3commons.asblocks.parser.api.IParserNode;
 
 /**
  * The <code>IWhileStatement</code> implementation.
@@ -42,21 +42,6 @@ public class WhileStatementNode extends ContainerDelegate
 	//
 	//--------------------------------------------------------------------------
 	
-	override protected function get statementContainer():IStatementContainer
-	{
-		return new StatementList(node.getLastChild());
-	}
-	
-	private function findConditionNode():IParserNode
-	{
-		return node.getFirstChild();
-	}
-	
-	private function findBlockNode():IParserNode
-	{
-		return node.getLastChild();
-	}
-	
 	//----------------------------------
 	//  condition
 	//----------------------------------
@@ -66,15 +51,15 @@ public class WhileStatementNode extends ContainerDelegate
 	 */
 	public function get condition():IExpression
 	{
-		return ExpressionBuilder.build(findConditionNode().getFirstChild());
+		return ExpressionBuilder.build(findCondition().getFirstChild());
 	}
 	
 	/**
 	 * @private
-	 */	
+	 */
 	public function set condition(value:IExpression):void
 	{
-		findConditionNode().setChildAt(value.node, 1);
+		findCondition().setChildAt(value.node, 0);
 	}
 	
 	//----------------------------------
@@ -86,7 +71,21 @@ public class WhileStatementNode extends ContainerDelegate
 	 */
 	public function get body():IStatement
 	{
-		return StatementBuilder.build(findBlockNode());
+		return StatementBuilder.build(findBlock());
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function get statementContainer():IStatementContainer
+	{
+		return new StatementList(findBlock());
 	}
 	
 	//--------------------------------------------------------------------------
@@ -101,6 +100,28 @@ public class WhileStatementNode extends ContainerDelegate
 	public function WhileStatementNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findCondition():IParserNode
+	{
+		return node.getFirstChild();
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findBlock():IParserNode
+	{
+		return node.getLastChild();
 	}
 }
 }

@@ -39,6 +39,7 @@ import org.as3commons.asblocks.impl.TestThrowStatementNode;
 import org.as3commons.asblocks.impl.TestTokenBoundaries;
 import org.as3commons.asblocks.impl.TestTryStatementNode;
 import org.as3commons.asblocks.impl.TestTypeNode;
+import org.as3commons.asblocks.impl.TestWhileStatementNode;
 import org.as3commons.asblocks.impl.TestWithStatementNode;
 
 [Suite]
@@ -84,6 +85,7 @@ public class AS3BlocksTestSuite
 	public var testThrowStatementNode:TestThrowStatementNode;
 	public var testTryStatementNode:TestTryStatementNode;
 	
+	public var testWhileStatementNode:TestWhileStatementNode;
 	public var testWithStatementNode:TestWithStatementNode;
 	
 	public var testTokenBoundaries:TestTokenBoundaries;

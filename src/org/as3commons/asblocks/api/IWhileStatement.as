@@ -21,10 +21,29 @@ package org.as3commons.asblocks.api
 {
 
 /**
+ * A while statement; <code>while (condition) {}</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var condition:IExpression = factory.newExpression("hasNext()");
+ * var ws:IWhileStatement = block.newWhile(condition);
+ * ws.addStatement("current = foo.next()");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	with (hasNext()) {
+ * 		current = foo.next();
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IStatementContainer#newWhile()
  */
 public interface IWhileStatement extends IStatement, IStatementContainer
 {
@@ -39,7 +58,7 @@ public interface IWhileStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The while statement's condition expression.
 	 */
 	function get condition():IExpression;
 	
@@ -53,7 +72,7 @@ public interface IWhileStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The while statement's body statement, usually a block.
 	 */
 	function get body():IStatement;
 }

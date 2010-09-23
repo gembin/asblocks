@@ -21,7 +21,7 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * A with statement; <code>with(object) {}</code>.
+ * A with statement; <code>with (object) {}</code>.
  * 
  * <pre>
  * var block:IBlock = factory.newBlock();
