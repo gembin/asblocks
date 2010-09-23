@@ -21,11 +21,29 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * TODO DOCME
+ * A with statement; <code>with(object) {}</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var object:IExpression = factory.newExpression("foo.bar");
+ * var ws:IWithStatement = block.newWith(object);
+ * ws.addStatement("baz = 42");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	with (foo.bar) {
+ * 		baz = 42;
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IStatementContainer#newWith()
  */
 public interface IWithStatement extends IStatement, IStatementContainer
 {
@@ -36,25 +54,25 @@ public interface IWithStatement extends IStatement, IStatementContainer
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  condition
+	//  object
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The target object that each statement within the body resolves to.
 	 */
-	function get condition():IExpression;
+	function get object():IExpression;
 	
 	/**
 	 * @private
 	 */
-	function set condition(value:IExpression):void;
+	function set object(value:IExpression):void;
 	
 	//----------------------------------
 	//  body
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The with statement's child statement or block.
 	 */
 	function get body():IStatement;
 }

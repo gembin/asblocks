@@ -39,6 +39,7 @@ import org.as3commons.asblocks.impl.TestThrowStatementNode;
 import org.as3commons.asblocks.impl.TestTokenBoundaries;
 import org.as3commons.asblocks.impl.TestTryStatementNode;
 import org.as3commons.asblocks.impl.TestTypeNode;
+import org.as3commons.asblocks.impl.TestWithStatementNode;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
@@ -82,6 +83,8 @@ public class AS3BlocksTestSuite
 	public var testThisStatementNode:TestThisStatementNode;
 	public var testThrowStatementNode:TestThrowStatementNode;
 	public var testTryStatementNode:TestTryStatementNode;
+	
+	public var testWithStatementNode:TestWithStatementNode;
 	
 	public var testTokenBoundaries:TestTokenBoundaries;
 	public var testFieldNode:TestFieldNode;

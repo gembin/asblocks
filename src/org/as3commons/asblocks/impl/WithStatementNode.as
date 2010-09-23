@@ -20,11 +20,11 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.IStatement;
 import org.as3commons.asblocks.api.IStatementContainer;
 import org.as3commons.asblocks.api.IWithStatement;
+import org.as3commons.asblocks.parser.api.IParserNode;
 
 /**
  * The <code>IWithStatement</code> implementation.
@@ -38,33 +38,18 @@ public class WithStatementNode extends ContainerDelegate
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IDoWhileStatementNode API :: Properties
+	//  IWithStatement API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
-	override protected function get statementContainer():IStatementContainer
-	{
-		return new StatementList(node.getLastChild());
-	}
-	
-	private function findConditionNode():IParserNode
-	{
-		return node.getFirstChild();
-	}
-	
-	private function findBlockNode():IParserNode
-	{
-		return node.getLastChild();
-	}
-	
 	//----------------------------------
-	//  condition
+	//  object
 	//----------------------------------
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.IWithStatement#condition
+	 * @copy org.as3commons.asblocks.api.IWithStatement#object
 	 */
-	public function get condition():IExpression
+	public function get object():IExpression
 	{
 		return ExpressionBuilder.build(findConditionNode().getFirstChild());
 	}
@@ -72,9 +57,9 @@ public class WithStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */	
-	public function set condition(value:IExpression):void
+	public function set object(value:IExpression):void
 	{
-		findConditionNode().setChildAt(value.node, 1);
+		findConditionNode().setChildAt(value.node, 0);
 	}
 	
 	//----------------------------------
@@ -91,6 +76,20 @@ public class WithStatementNode extends ContainerDelegate
 	
 	//--------------------------------------------------------------------------
 	//
+	//  Overridden Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function get statementContainer():IStatementContainer
+	{
+		return new StatementList(node.getLastChild());
+	}
+	
+	//--------------------------------------------------------------------------
+	//
 	//  Constructor
 	//
 	//--------------------------------------------------------------------------
@@ -101,6 +100,28 @@ public class WithStatementNode extends ContainerDelegate
 	public function WithStatementNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findConditionNode():IParserNode
+	{
+		return node.getFirstChild();
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findBlockNode():IParserNode
+	{
+		return node.getLastChild();
 	}
 }
 }
