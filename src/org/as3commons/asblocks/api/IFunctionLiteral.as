@@ -21,12 +21,37 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * A Function literal; <code>var f:Function = 
- * function():void{trace'hello')};</code>.
+ * A Function literal; <code>var f:Function = function():void{trace'hello')};</code>.
+ * 
+ * <pre>
+ * var fl:IFunctionLiteral = factory.newFunctionLiteral()
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * function():void {
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var fl:IFunctionLiteral = factory.newFunctionLiteral()
+ * fl.returnType = "int";
+ * fl.addParameter("arg0", "String");
+ * fl.addStatement("trace('Hello World')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * function(arg0:String):int {
+ * 	trace('Hello World');
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.ASFactory#newFunctionLiteral()
  */
 public interface IFunctionLiteral 
 	extends IExpression, IFunction, IScriptNode, IStatementContainer

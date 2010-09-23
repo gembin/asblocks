@@ -106,6 +106,8 @@ public class TestLiteralNodes
 		var left:IExpression = factory.newExpression("myObject");
 		var right:IExpression = factory.newExpression("{a:1,b:2c:3}");
 		
+		expression = factory.newExpression("function(arg0:String, arg1:int = 0):void{}") as IFunctionLiteral;
+		
 		//var arrexpression:IAssignmentExpressionNode = 
 		//	factory.newAssignmentExpression(left, right);
 		//

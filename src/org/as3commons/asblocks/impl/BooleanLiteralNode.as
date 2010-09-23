@@ -34,8 +34,7 @@ import org.as3commons.asblocks.api.IBooleanLiteral;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class BooleanLiteralNode extends LiteralNode 
-	implements IBooleanLiteral
+public class BooleanLiteralNode extends LiteralNode implements IBooleanLiteral
 {
 	//--------------------------------------------------------------------------
 	//

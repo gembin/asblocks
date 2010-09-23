@@ -343,7 +343,7 @@ public class FunctionLiteralNode extends ExpressionNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#parseNewFor()
 	 */
 	public function parseNewFor(initializer:String, 
 								condition:String, 
