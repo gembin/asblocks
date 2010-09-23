@@ -20,9 +20,6 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.api.IToken;
 import org.as3commons.asblocks.api.IArgument;
 import org.as3commons.asblocks.api.IBreakStatement;
 import org.as3commons.asblocks.api.IContinueStatement;
@@ -42,10 +39,14 @@ import org.as3commons.asblocks.api.IStatement;
 import org.as3commons.asblocks.api.IStatementContainer;
 import org.as3commons.asblocks.api.ISuperStatement;
 import org.as3commons.asblocks.api.ISwitchStatement;
+import org.as3commons.asblocks.api.IThisStatement;
 import org.as3commons.asblocks.api.IThrowStatement;
 import org.as3commons.asblocks.api.ITryStatement;
 import org.as3commons.asblocks.api.IWhileStatement;
 import org.as3commons.asblocks.api.IWithStatement;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.api.IToken;
 
 /**
  * The <code>IStatementContainer</code> implementation.
@@ -278,6 +279,14 @@ public class ContainerDelegate extends ScriptNode
 	public function newSwitch(condition:IExpression):ISwitchStatement
 	{
 		return statementContainer.newSwitch(condition);
+	}
+	
+	/**
+	 * @private
+	 */
+	public function newThis(expression:IExpression):IThisStatement
+	{
+		return statementContainer.newThis(expression);
 	}
 	
 	/**

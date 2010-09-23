@@ -650,7 +650,14 @@ public class ASTBuilder
 		return ast;
 	}
 	
-	
+	public static function newThis(expression:IParserNode):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.THIS, "this");
+		ast.appendToken(TokenBuilder.newDot());
+		ast.addChild(expression);
+		ast.appendToken(TokenBuilder.newSemi());
+		return ast;
+	}
 	
 	public static function newThrow(expression:IParserNode):IParserNode
 	{

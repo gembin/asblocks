@@ -21,13 +21,66 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * TODO DOCME
+ * A this statement; <code>this.property</code> or <code>this.func(arg)</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ts:IThisStatement = block.newThis(factory.newExpression("property = 42"));
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	this.property = 42;
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ts:IThisStatement = block.newThis(factory.newExpression("foo(bar)"));
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	this.foo(bar);
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ts:IThisStatement = block.addStatement("this.foo(bar)") as IThisStatement;
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	this.foo(bar);
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IStatementContainer#newThis()
  */
 public interface IThisStatement extends IStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  expression
+	//----------------------------------
+	
+	/**
+	 * The this's expression located after the <code>this</code> keyword 
+	 * and period.
+	 */
+	function get expression():IExpression;
 }
 }

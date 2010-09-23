@@ -179,6 +179,11 @@ public interface IStatementContainer
 	/**
 	 * @private
 	 */
+	function newThis(expression:IExpression):IThisStatement;
+	
+	/**
+	 * @private
+	 */
 	function newThrow(expression:IExpression):IThrowStatement;
 	
 	/**

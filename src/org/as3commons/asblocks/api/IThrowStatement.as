@@ -49,7 +49,7 @@ package org.as3commons.asblocks.api
  * 
  * <pre>
  * var block:IBlock = factory.newBlock();
- * var ts:IThrowStatement = block.addStatement("throw new Error('message')");
+ * var ts:IThrowStatement = block.addStatement("throw new Error('message')") as IThrowStatement;
  * </pre>
  * 
  * <p>Will produce;</p>

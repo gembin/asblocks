@@ -20,8 +20,9 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.IThisStatement;
+import org.as3commons.asblocks.parser.api.IParserNode;
 
 /**
  * The <code>IThisStatement</code> implementation.
@@ -32,6 +33,24 @@ import org.as3commons.asblocks.api.IThisStatement;
  */
 public class ThisStatementNode extends ScriptNode implements IThisStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  IThisStatement API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  expression
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IThisStatement#expression
+	 */
+	public function get expression():IExpression
+	{
+		return ExpressionBuilder.build(node.getFirstChild());
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

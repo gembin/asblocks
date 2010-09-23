@@ -20,9 +20,6 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.api.IToken;
 import org.as3commons.asblocks.api.AccessorRole;
 import org.as3commons.asblocks.api.IArgument;
 import org.as3commons.asblocks.api.IBreakStatement;
@@ -46,10 +43,14 @@ import org.as3commons.asblocks.api.IStatement;
 import org.as3commons.asblocks.api.IStatementContainer;
 import org.as3commons.asblocks.api.ISuperStatement;
 import org.as3commons.asblocks.api.ISwitchStatement;
+import org.as3commons.asblocks.api.IThisStatement;
 import org.as3commons.asblocks.api.IThrowStatement;
 import org.as3commons.asblocks.api.ITryStatement;
 import org.as3commons.asblocks.api.IWhileStatement;
 import org.as3commons.asblocks.api.IWithStatement;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.api.IToken;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -481,6 +482,14 @@ public class MethodNode extends MemberNode
 	public function newSwitch(condition:IExpression):ISwitchStatement
 	{
 		return containerMixin.newSwitch(condition);
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newThrow()
+	 */
+	public function newThis(expression:IExpression):IThisStatement
+	{
+		return containerMixin.newThis(expression);
 	}
 	
 	/**
