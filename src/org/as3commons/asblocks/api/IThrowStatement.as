@@ -21,22 +21,68 @@ package org.as3commons.asblocks.api
 {
 
 /**
+ * A throw statement; <code>throw new Error()</code>.
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ts:IThrowStatement = block.newThrow(factory.newExpression("new Error()"));
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	throw new Error();
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ts:IThrowStatement = block.newThrow(factory.newExpression("e1"));
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	throw e1;
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ts:IThrowStatement = block.addStatement("throw new Error('message')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	throw new Error('message');
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IStatementContainer#newThrow()
  */
 public interface IThrowStatement extends IStatement
 {
-
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
+	
 	//----------------------------------
 	//  expression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The throw's expression located after the <code>throw</code> keyword.
+	 * 
+	 * <p>This can either be a <code>new</code> expression or an identifier
+	 * realating to an existing error instance.</p>
 	 */
 	function get expression():IExpression;
-	
 }
 }

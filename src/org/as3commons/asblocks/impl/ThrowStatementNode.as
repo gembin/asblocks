@@ -25,25 +25,36 @@ import org.as3commons.asblocks.api.IThrowStatement;
 import org.as3commons.asblocks.parser.api.IParserNode;
 
 /**
- * The <code>IReturnStatement</code> implementation.
+ * The <code>IThrowStatement</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ThrowStatementNode extends ScriptNode 
-	implements IThrowStatement
+public class ThrowStatementNode extends ScriptNode implements IThrowStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  IThrowStatement API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
 	//----------------------------------
 	//  expression
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.as3commons.asblocks.api.IThrowStatement#expression
 	 */
 	public function get expression():IExpression
 	{
-		return ExpressionBuilder.build(node.getFirstChild());
+		// primary/new | primary/
+		var ast:IParserNode = node.getFirstChild();
+		if (ast.numChildren > 0)
+		{
+			ast = ast.getFirstChild();
+		}
+		return ExpressionBuilder.build(ast);
 	}
 	
 	//--------------------------------------------------------------------------

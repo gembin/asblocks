@@ -1,6 +1,8 @@
 package testSuites
 {
 
+import flexunit.framework.Test;
+
 import org.as3commons.asblocks.TestASFactory;
 import org.as3commons.asblocks.impl.TestASProject;
 import org.as3commons.asblocks.impl.TestArrayAccessExpressionNode;
@@ -32,6 +34,7 @@ import org.as3commons.asblocks.impl.TestMethodNode;
 import org.as3commons.asblocks.impl.TestPackageNode;
 import org.as3commons.asblocks.impl.TestPrefixExpressionNode;
 import org.as3commons.asblocks.impl.TestStatementList;
+import org.as3commons.asblocks.impl.TestThrowStatementNode;
 import org.as3commons.asblocks.impl.TestTokenBoundaries;
 import org.as3commons.asblocks.impl.TestTryStatementNode;
 import org.as3commons.asblocks.impl.TestTypeNode;
@@ -75,6 +78,7 @@ public class AS3BlocksTestSuite
 	
 	public var testMemberNode:TestMemberNode;
 	
+	public var testThrowStatementNode:TestThrowStatementNode;
 	public var testTryStatementNode:TestTryStatementNode;
 	
 	public var testTokenBoundaries:TestTokenBoundaries;

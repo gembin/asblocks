@@ -1,12 +1,6 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.api.IToken;
-import org.as3commons.asblocks.parser.core.LinkedListToken;
-import org.as3commons.asblocks.parser.core.TokenNode;
-import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.api.IArgument;
 import org.as3commons.asblocks.api.IAssignmentExpression;
 import org.as3commons.asblocks.api.IBinaryExpression;
@@ -16,6 +10,12 @@ import org.as3commons.asblocks.api.IField;
 import org.as3commons.asblocks.api.IMetaData;
 import org.as3commons.asblocks.api.IMethod;
 import org.as3commons.asblocks.api.Visibility;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.api.IToken;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.core.TokenNode;
+import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
