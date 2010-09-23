@@ -23,9 +23,9 @@ package org.as3commons.asblocks.impl
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.IObjectLiteral;
 import org.as3commons.asblocks.api.IPropertyField;
-import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
+import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IObjectLiteral</code> implementation.
@@ -82,7 +82,7 @@ public class ObjectLiteralNode extends LiteralNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.IObjectLiteral#add()
+	 * @copy org.as3commons.asblocks.api.IObjectLiteral#newField()
 	 */
 	public function newField(name:String, expression:IExpression):IPropertyField
 	{

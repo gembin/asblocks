@@ -23,9 +23,17 @@ package org.as3commons.asblocks.api
 /**
  * A null literal; <code>null</code>.
  * 
+ * <pre>
+ * var nl:INullLiteral = factory.newNullLiteral()
+ * </pre>
+ * 
+ * <p>Will produce; <code>null</code></p>
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.ASFactory#newNullLiteral()
  */
 public interface INullLiteral extends ILiteral
 {

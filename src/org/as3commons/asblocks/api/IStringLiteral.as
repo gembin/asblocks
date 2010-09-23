@@ -23,9 +23,17 @@ package org.as3commons.asblocks.api
 /**
  * A String literal; <code>"foo"</code> or <code>'foo'</code>.
  * 
+ * <pre>
+ * var sl:IStringLiteral = factory.newStringLiteral("hello world")
+ * </pre>
+ * 
+ * <p>Will produce; <code>"hello world"</code></p>
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.ASFactory#newStringLiteral()
  */
 public interface IStringLiteral extends ILiteral
 {

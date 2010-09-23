@@ -23,9 +23,17 @@ package org.as3commons.asblocks.api
 /**
  * A undefined literal; <code>undefined</code>.
  * 
+ * <pre>
+ * var ul:IUndefinedLiteral = factory.newUndefinedLiteral()
+ * </pre>
+ * 
+ * <p>Will produce; <code>undefined</code></p>
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.ASFactory#newUndefinedLiteral()
  */
 public interface IUndefinedLiteral extends ILiteral
 {

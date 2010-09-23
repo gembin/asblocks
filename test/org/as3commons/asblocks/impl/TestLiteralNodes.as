@@ -1,9 +1,6 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.flexunit.Assert;
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.core.SourceCode;
 import org.as3commons.asblocks.ASFactory;
 import org.as3commons.asblocks.api.IArrayLiteral;
 import org.as3commons.asblocks.api.IBooleanLiteral;
@@ -15,6 +12,9 @@ import org.as3commons.asblocks.api.IObjectLiteral;
 import org.as3commons.asblocks.api.IPropertyField;
 import org.as3commons.asblocks.api.IStringLiteral;
 import org.as3commons.asblocks.api.IUndefinedLiteral;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.core.SourceCode;
+import org.flexunit.Assert;
 
 /*
 * newArrayLiteral()
@@ -107,14 +107,7 @@ public class TestLiteralNodes
 		var right:IExpression = factory.newExpression("{a:1,b:2c:3}");
 		
 		expression = factory.newExpression("function(arg0:String, arg1:int = 0):void{}") as IFunctionLiteral;
-		
-		//var arrexpression:IAssignmentExpressionNode = 
-		//	factory.newAssignmentExpression(left, right);
-		//
-		//expression.addStatement("myObject = {a:1,b:2,c:3}");
-		//
-		//assertPrintExpression("function(arg0:String, arg1:int = 0):my.domain.Type " +
-		//	"{\n\ttrace('Hello World');\n\tmyObject = {a:1,b:2,c:3};\n}", expression);
+		Assert.assertTrue(expression is IFunctionLiteral);
 	}
 	
 	[Test]
