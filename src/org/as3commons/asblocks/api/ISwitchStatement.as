@@ -22,9 +22,32 @@ package org.as3commons.asblocks.api
 
 /**
  * 
+ * <pre>
+ * var block:IBlock = factory.newBlock();
+ * var ss:ISwitchStatement = block.newSwitch(factory.newExpression("foo"));
+ * var sc:ISwitchCase = ss.newCase("1");
+ * sc.addStatement("trace('one')");
+ * var sd:ISwitchDefault = ss.newDefault();
+ * sd.addStatement("trace('default')");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * {
+ * 	switch (foo) {
+ * 		case 1:
+ * 			trace('one');
+ * 		default:
+ * 			trace('default');
+ * 	}
+ * }
+ * </pre>
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IStatementContainer#newSwitch()
  */
 public interface ISwitchStatement extends IStatement
 {
@@ -39,7 +62,7 @@ public interface ISwitchStatement extends IStatement
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The switch statement's condition expression.
 	 */
 	function get condition():IExpression;
 	
@@ -49,11 +72,12 @@ public interface ISwitchStatement extends IStatement
 	function set condition(value:IExpression):void;
 	
 	//----------------------------------
-	//  condition
+	//  labels
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The switch statement's Vector of <code>ISwitchLabel</code> statements,
+	 * (the <code>case</code> and <code>default</code> statements).
 	 */
 	function get labels():Vector.<ISwitchLabel>;
 	
@@ -64,12 +88,22 @@ public interface ISwitchStatement extends IStatement
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Creates and appends a new <code>case</code> label statement to the 
+	 * <code>switch</code> statement.
+	 * 
+	 * @param label A <code>String</code> indicating the label's name.
+	 * @return A new <code>ISwitchCase</code> statement.
 	 */
 	function newCase(label:String):ISwitchCase;
 	
 	/**
-	 * TODO Docme
+	 * Creates and appends a new <code>default</code> label statement to the 
+	 * <code>switch</code> statement.
+	 * 
+	 * <p>Note: Only one <code>default</code> label statement is allowed per
+	 * switch statement.</p>
+	 * 
+	 * @return A new <code>ISwitchDefault</code> statement.
 	 */
 	function newDefault():ISwitchDefault;
 }

@@ -34,6 +34,7 @@ import org.as3commons.asblocks.impl.TestMethodNode;
 import org.as3commons.asblocks.impl.TestPackageNode;
 import org.as3commons.asblocks.impl.TestPrefixExpressionNode;
 import org.as3commons.asblocks.impl.TestStatementList;
+import org.as3commons.asblocks.impl.TestSwitchStatementNode;
 import org.as3commons.asblocks.impl.TestThisStatementNode;
 import org.as3commons.asblocks.impl.TestThrowStatementNode;
 import org.as3commons.asblocks.impl.TestTokenBoundaries;
@@ -41,6 +42,7 @@ import org.as3commons.asblocks.impl.TestTryStatementNode;
 import org.as3commons.asblocks.impl.TestTypeNode;
 import org.as3commons.asblocks.impl.TestWhileStatementNode;
 import org.as3commons.asblocks.impl.TestWithStatementNode;
+import org.as3commons.asblocks.parser.impl.TestSwitchStatement;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
@@ -81,6 +83,7 @@ public class AS3BlocksTestSuite
 	
 	public var testMemberNode:TestMemberNode;
 	
+	public var testSwitchStatementNode:TestSwitchStatementNode;
 	public var testThisStatementNode:TestThisStatementNode;
 	public var testThrowStatementNode:TestThrowStatementNode;
 	public var testTryStatementNode:TestTryStatementNode;

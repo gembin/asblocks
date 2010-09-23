@@ -20,9 +20,9 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.api.IStatementContainer;
 import org.as3commons.asblocks.api.ISwitchDefault;
+import org.as3commons.asblocks.parser.api.IParserNode;
 
 /**
  * The <code>ISwitchDefault</code> implementation.
@@ -35,13 +35,16 @@ public class SwitchDefaultNode extends ContainerDelegate implements ISwitchDefau
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Overridden Protected :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * @private
+	 */
 	override protected function get statementContainer():IStatementContainer
 	{
-		return new StatementList(node.getChild(0));
+		return new StatementList(node.getFirstChild());
 	}
 	
 	//--------------------------------------------------------------------------

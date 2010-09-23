@@ -20,10 +20,10 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.IStatementContainer;
 import org.as3commons.asblocks.api.ISwitchCase;
+import org.as3commons.asblocks.parser.api.IParserNode;
 
 /**
  * The <code>ISwitchCase</code> implementation.
@@ -40,11 +40,6 @@ public class SwitchCaseNode extends ContainerDelegate implements ISwitchCase
 	//
 	//--------------------------------------------------------------------------
 	
-	override protected function get statementContainer():IStatementContainer
-	{
-		return new StatementList(node.getLastChild());
-	}
-	
 	//----------------------------------
 	//  label
 	//----------------------------------
@@ -59,10 +54,24 @@ public class SwitchCaseNode extends ContainerDelegate implements ISwitchCase
 	
 	/**
 	 * @private
-	 */	
+	 */
 	public function set label(value:IExpression):void
 	{
 		node.setChildAt(value.node, 0);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Protected :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override protected function get statementContainer():IStatementContainer
+	{
+		return new StatementList(node.getLastChild());
 	}
 	
 	//--------------------------------------------------------------------------

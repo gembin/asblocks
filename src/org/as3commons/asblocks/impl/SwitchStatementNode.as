@@ -20,23 +20,14 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.ISwitchCase;
 import org.as3commons.asblocks.api.ISwitchDefault;
 import org.as3commons.asblocks.api.ISwitchLabel;
 import org.as3commons.asblocks.api.ISwitchStatement;
-
-/*
-switch
-switch/condition
-switch/cases
-switch/cases/case
-switch/cases/case/label|default
-switch/cases/case/switch-block
-*/
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 
 /**
  * The <code>ISwitchStatement</code> implementation.
@@ -48,16 +39,6 @@ switch/cases/case/switch-block
 public class SwitchStatementNode extends ScriptNode 
 	implements ISwitchStatement
 {
-	private function findCondition():IParserNode
-	{
-		return node.getFirstChild();
-	}
-	
-	private function findCases():IParserNode
-	{
-		return node.getLastChild();
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  ISwitchStatement API :: Properties
@@ -78,7 +59,7 @@ public class SwitchStatementNode extends ScriptNode
 	
 	/**
 	 * @private
-	 */	
+	 */
 	public function set condition(value:IExpression):void
 	{
 		findCondition().setChildAt(value.node, 0);
@@ -147,6 +128,28 @@ public class SwitchStatementNode extends ScriptNode
 	{
 		var ast:IParserNode = ASTBuilder.newSwitchDefault(node);
 		return new SwitchDefaultNode(ast);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function findCondition():IParserNode
+	{
+		return node.getFirstChild();
+	}
+	
+	/**
+	 * @private
+	 */
+	private function findCases():IParserNode
+	{
+		return node.getLastChild();
 	}
 }
 }

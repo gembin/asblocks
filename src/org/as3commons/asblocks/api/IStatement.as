@@ -21,6 +21,7 @@ package org.as3commons.asblocks.api
 {
 
 /**
+ * Supertype for all statement nodes.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -28,16 +29,5 @@ package org.as3commons.asblocks.api
  */
 public interface IStatement extends IScriptNode
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
 }
 }

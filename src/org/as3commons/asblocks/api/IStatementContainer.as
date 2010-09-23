@@ -19,6 +19,7 @@
 
 package org.as3commons.asblocks.api
 {
+
 import org.as3commons.asblocks.parser.api.IToken;
 
 /**
@@ -59,19 +60,32 @@ public interface IStatementContainer
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * TODO Docme
+	 */
 	function addComment(text:String):IToken;
 	
+	/**
+	 * TODO Docme
+	 */
 	function removeComment(statement:IStatement):IToken;
 	
+	/**
+	 * TODO Docme
+	 */
 	function addStatement(statement:String):IStatement;
 	
+	/**
+	 * TODO Docme
+	 */
 	function removeStatement(statement:IStatement):IStatement;
 	
+	/**
+	 * TODO Docme
+	 */
 	function removeStatementAt(index:int):IStatement;
 	
 	// then all the new factory methods
-	
-	
 	
 	/**
 	 * TODO Docme
@@ -170,7 +184,7 @@ public interface IStatementContainer
 	 * TODO Docme
 	 */
 	function newSuper(arguments:Vector.<IArgument>):ISuperStatement;
-		
+	
 	/**
 	 * @private
 	 */
