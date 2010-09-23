@@ -21,6 +21,7 @@ package org.as3commons.asblocks.api
 {
 
 /**
+ * A switch statement; <code>switch (condition) { case: break; default: break; }</code>.
  * 
  * <pre>
  * var block:IBlock = factory.newBlock();

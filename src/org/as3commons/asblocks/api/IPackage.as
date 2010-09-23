@@ -21,10 +21,22 @@ package org.as3commons.asblocks.api
 {
 
 /**
+ * The <code>IPackage</code> holds the public <code>IClassType</code>,
+ * <code>IInterfaceType</code> and <code>IFunctionType</code> type definitions.
+ * 
+ * <p>This package type gets created as a side-effect from creating one of the above
+ * types in a compilation unit.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.ASFactory#newClass()
+ * @see org.as3commons.asblocks.ASFactory#newInterface()
+ * @see org.as3commons.asblocks.ASFactory#newFunction()
+ * @see org.as3commons.asblocks.IASProject#newClass()
+ * @see org.as3commons.asblocks.IASProject#newInterface()
+ * @see org.as3commons.asblocks.IASProject#newFunction()
  */
 public interface IPackage extends IScriptNode
 {
@@ -53,7 +65,7 @@ public interface IPackage extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The <code>public</code> type, class, interface or function.
 	 */
 	function get typeNode():IType;
 	
@@ -64,17 +76,24 @@ public interface IPackage extends IScriptNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Adds an import to the package.
+	 * 
+	 * @param name the String qualified import name.
 	 */
 	function addImports(name:String):void;
 	
 	/**
-	 * TODO Docme
+	 * Removes an import from the package.
+	 * 
+	 * @param name the String qualified import name.
+	 * @return A Boolean indicating whether the removal was successfull.
 	 */
 	function removeImport(name:String):Boolean;
 	
 	/**
-	 * TODO Docme
+	 * Returns a Vector of String qualified imports.
+	 * 
+	 * @return A String Vector of package imports.
 	 */
 	function findImports():Vector.<String>;
 }

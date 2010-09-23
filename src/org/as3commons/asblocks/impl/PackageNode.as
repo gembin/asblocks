@@ -20,12 +20,12 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.api.IPackage;
+import org.as3commons.asblocks.api.IType;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
-import org.as3commons.asblocks.api.IPackage;
-import org.as3commons.asblocks.api.IType;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
