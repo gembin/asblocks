@@ -20,16 +20,16 @@
 package org.as3commons.asblocks.parser.impl
 {
 
-import mx.utils.StringUtil;
-
-import org.as3commons.asblocks.parser.api.IParser;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.IScanner;
 import org.as3commons.asblocks.parser.api.ISourceCodeScanner;
 import org.as3commons.asblocks.parser.api.MXMLNodeKind;
+import org.as3commons.asblocks.parser.api.Operators;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.core.LinkedListTreeAdaptor;
 import org.as3commons.asblocks.parser.core.Node;
 import org.as3commons.asblocks.parser.core.Token;
-import org.as3commons.asblocks.parser.errors.NullTokenError;
+import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.parser.errors.Position;
 import org.as3commons.asblocks.parser.errors.UnExpectedTokenError;
 
@@ -65,6 +65,8 @@ public class MXMLParser extends ParserBase
 	public function MXMLParser()
 	{
 		super();
+		
+		adapter = new LinkedListTreeAdaptor();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -78,7 +80,9 @@ public class MXMLParser extends ParserBase
 	 */
 	override protected function createScanner():IScanner
 	{
-		return new MXMLScanner();
+		var s:IScanner = new MXMLScanner();
+		s.allowWhiteSpace = true;
+		return s;
 	}
 	
 	/**
@@ -104,8 +108,7 @@ public class MXMLParser extends ParserBase
 	 */
 	override public function parseCompilationUnit():IParserNode
 	{
-		var result:Node =
-			Node.create(MXMLNodeKind.COMPILATION_UNIT, -1, -1);
+		var result:TokenNode = adapter.create(MXMLNodeKind.COMPILATION_UNIT);
 		
 		nextToken(); // start the parse
 		
@@ -120,7 +123,7 @@ public class MXMLParser extends ParserBase
 		
 		result.addChild(parseProcInst());
 		
-		nextToken(); // chomp all whitespace
+		nextNonWhiteSpaceToken(result); // chomp all whitespace
 		
 		if (tokenStartsWith("<!---")) // this will be the class asdoc
 		{
@@ -142,8 +145,9 @@ public class MXMLParser extends ParserBase
 	/*
 	* - PROC_INST
 	*/
-	internal function parseProcInst():Node
+	internal function parseProcInst():TokenNode
 	{
+		var result:TokenNode = adapter.copy(MXMLNodeKind.PROC_INST, token);
 		// current token "<?"
 		var text:String = "";
 		
@@ -153,17 +157,11 @@ public class MXMLParser extends ParserBase
 		while (!tokIs("?>"))
 		{
 			text += token.text;
-			nextTokenAllowWhiteSpace();
+			nextToken();
 		}
 		
 		text += "?>";
-		
-		var result:Node =
-			Node.create(MXMLNodeKind.PROC_INST,
-				line,
-				column,
-				text);
-		
+		result.stringValue = text;
 		return result;
 	}
 	
@@ -184,19 +182,19 @@ public class MXMLParser extends ParserBase
 	/*
 	* - AS_DOC
 	*/
-	internal function parseASDoc():Node
+	internal function parseASDoc():TokenNode
 	{
 		// current token "<!--- doc. -->"
 		asdocLine = ISourceCodeScanner(scanner).commentLine;
 		asdocColumn = ISourceCodeScanner(scanner).commentColumn;
 		
-		var result:Node =
-			Node.create(MXMLNodeKind.AS_DOC,
+		var result:TokenNode =
+			adapter.create(MXMLNodeKind.AS_DOC,
+				token.text,
 				asdocLine,
-				asdocColumn,
-				token.text);
+				asdocColumn);
 		
-		nextToken();
+		nextNonWhiteSpaceToken(result);
 		
 		return result;
 	}
@@ -216,14 +214,10 @@ public class MXMLParser extends ParserBase
 	*   - TAG_LIST (optional)
 	*/
 	
-	internal function parseTagList():Node
+	internal function parseTagList():TokenNode
 	{
 		// current token "<"
-		var line:int = token.line;
-		var column:int = token.column;
-		
-		var result:Node =
-			Node.create(MXMLNodeKind.TAG_LIST, line, column);
+		var result:TokenNode = adapter.empty(MXMLNodeKind.TAG_LIST, token);
 		
 		var cdata:String = "";
 		
@@ -235,56 +229,61 @@ public class MXMLParser extends ParserBase
 		
 		// <, s, :, Application
 		
-		nextToken(); // <
+		consume("<", result);
 		
 		var bindingFound:Boolean = false;
 		
-		var bindingOrLocalName:Token = token;
-		var tagName:String = bindingOrLocalName.text;
+		var localNameToken:Token = token;
+		var firstNode:TokenNode = adapter.empty(MXMLNodeKind.LOCAL_NAME, localNameToken);
+		var tagName:String = localNameToken.text;
 		
-		nextToken(); // (:|TAG_NAME)
+		nextNonWhiteSpaceToken(firstNode); // (:|TAG_NAME)
 		
-		if (token.text == ":")
+		if (tokIs(Operators.COLON))
 		{
-			result.addChild(Node.create(MXMLNodeKind.BINDING,
-				bindingOrLocalName.line,
-				bindingOrLocalName.column,
-				bindingOrLocalName.text));
-			
-			nextToken();
-			bindingOrLocalName = token;
-			tagName = bindingOrLocalName.text;
 			bindingFound = true;
+			
+			firstNode.kind = MXMLNodeKind.BINDING;
+			firstNode.stringValue = localNameToken.text;
+			result.addChild(firstNode);
+			
+			consume(Operators.COLON, result);
+			localNameToken = token;
+			tagName = localNameToken.text;
+			
+			result.addChild(adapter.create(
+				MXMLNodeKind.LOCAL_NAME, tagName, 
+				localNameToken.line, localNameToken.column));
 		}
 		else
 		{
 			bindingFound = false;
+			
+			firstNode.kind = MXMLNodeKind.LOCAL_NAME;
+			tagName = localNameToken.text;
+			firstNode.stringValue = tagName;
+			result.addChild(firstNode);
 		}
 		
 		// only call next if there was a binding, if not we are already there
 		if (bindingFound)
 		{
-			nextToken(); // maybe xmlns or att or <
+			nextNonWhiteSpaceToken(result); // maybe xmlns or att or <
 		}
 		
 		// added to solve . error in tag name (state)
 		// TODO edit ast to include tag state
 		if (tokIs("."))
 		{
-			nextToken();
+			nextNonWhiteSpaceToken(result);
 			tagName = tagName + "." + token.text;
-			nextToken(); // maybe xmlns or att or <
+			nextNonWhiteSpaceToken(result); // maybe xmlns or att or <
 		}
-		
-		result.addChild(Node.create(MXMLNodeKind.LOCAL_NAME,
-			bindingOrLocalName.line,
-			bindingOrLocalName.column,
-			tagName));
 		
 		var closing:Boolean = false;
 		var inAttList:Boolean = true;
 		
-		while (!tokIs("/>"))
+		while (!tokIs("/>") && !tokIs("</"))
 		{
 			// if we have passed the closing tag's </, binding(optional) and local name
 			if (closing && tokIs(">"))
@@ -295,6 +294,7 @@ public class MXMLParser extends ParserBase
 			if (!closing && tokIs(">"))
 			{
 				inAttList = false;
+				append(result);
 			}
 			// mark as closing, need to digest binding(optional) and local name
 			if (token.text == "</")
@@ -311,7 +311,6 @@ public class MXMLParser extends ParserBase
 			{
 				pendingASDoc = parseASDoc();
 			}
-				// parse the name space declaration
 			else if (token.text == "xmlns")
 			{
 				result.addChild(parseXmlNs());
@@ -345,26 +344,41 @@ public class MXMLParser extends ParserBase
 				if (!closing && !inAttList && !tokIs(">"))
 				{
 					// System.out.println("{" + tok.getText() + "}");
-					cdata += token.text;
+					//cdata += token.text;
+					result.appendToken(new LinkedListToken("cdata-start", "<![CDATA["));
+					var cxd:TokenNode = adapter.copy(
+						MXMLNodeKind.CDATA, token);
+					result.addChild(cxd);
+					result.appendToken(new LinkedListToken("cdata-end", "]]>"));
+					
 				}
-				nextTokenAllowWhiteSpace();
+				nextNonWhiteSpaceToken(result);
 			}
-		}
-		
-		if (StringUtil.trim(cdata).length > 0)
-		{
-			// text node
-			result.addChild(Node.create(MXMLNodeKind.CDATA,
-				token.line,
-				token.column,
-				cdata));
 		}
 		
 		// these tokens are required to leave this method
 		// to types of end tag tokens
 		if (tokIs("/>") || tokIs("</"))
 		{
-			consume(token.text);
+			var end:Boolean = tokIs("/>");
+			consume(token.text, result);
+			
+			if (!end)
+			{
+				// binding : LocalName
+				if (!bindingFound)
+				{
+					consume(tagName, result);
+					consume(">", result);
+				}
+				else
+				{
+					consume(firstNode.stringValue, result);
+					consume(":", result);
+					consume(tagName, result);
+					consume(">", result);
+				}	
+			}
 		}
 		
 		return result;
@@ -379,29 +393,28 @@ public class MXMLParser extends ParserBase
 	*   - LOCAL_NAME
 	*   - URI
 	*/
-	internal function parseXmlNs():Node
+	internal function parseXmlNs():TokenNode
 	{
 		// current token "xmlns"
-		var result:Node =
-			Node.create(MXMLNodeKind.XML_NS, token.line, token.column);
+		var result:TokenNode = adapter.empty(MXMLNodeKind.XML_NS, token);
 		
-		consume("xmlns");
-		consume(":");
+		consume("xmlns", result);
+		consume(":", result);
 		
-		result.addChild(Node.create(MXMLNodeKind.LOCAL_NAME,
+		result.addChild(adapter.copy(MXMLNodeKind.LOCAL_NAME, token));
+		
+		nextNonWhiteSpaceToken(result); // s binding
+		consume("=", result);
+		
+		result.appendToken(new LinkedListToken(Operators.QUOTE, "\""));
+		result.addChild(adapter.create(
+			MXMLNodeKind.URI,
+			trimQuotes(token.text),
 			token.line,
-			token.column,
-			token.text));
+			token.column));// should +1 since quotes are trimmed;
+		result.appendToken(new LinkedListToken(Operators.QUOTE, "\""));
 		
-		nextToken(); // s binding
-		consume("=");
-		
-		result.addChild(Node.create(MXMLNodeKind.URI,
-			token.line,
-			token.column,// should +1 since quotes are trimmed
-			trimQuotes(token.text)));
-		
-		nextToken(); // "library://ns.adobe.com/flex/spark"
+		nextNonWhiteSpaceToken(result); // "library://ns.adobe.com/flex/spark"
 		
 		return result;
 	}
@@ -413,18 +426,12 @@ public class MXMLParser extends ParserBase
 	/*
 	* - CDATA
 	*/
-	internal function parseCData():Node
+	internal function parseCData():TokenNode
 	{
-		// FIXME Cdata line and column is not correct
-		
 		// current token "all string data in between CDATA tags"
-		var line:int = token.line;
-		var column:int = token.column;
+		var result:TokenNode = adapter.copy(MXMLNodeKind.CDATA, token);
 		
-		var result:Node =
-			Node.create(MXMLNodeKind.CDATA, line, column, token.text);
-		
-		nextToken();
+		nextNonWhiteSpaceToken(result);
 		
 		return result;
 	}
@@ -439,29 +446,19 @@ public class MXMLParser extends ParserBase
 	*   - STATE
 	*   - VALUE
 	*/
-	internal function parseAtt():Node
+	internal function parseAtt():TokenNode
 	{
 		// current token "attributName"
-		var result:Node =
-			Node.create(MXMLNodeKind.ATT, token.line, token.column);
+		var result:TokenNode = adapter.empty(MXMLNodeKind.ATT, token);
 		
-		result.addChild(Node.create(MXMLNodeKind.NAME,
-			token.line,
-			token.column,
-			token.text));
+		result.addChild(adapter.copy(MXMLNodeKind.NAME, token));
 		
-		var state:Node = null;
-		
-		nextToken();
-		if (token.text == ".")
+		nextNonWhiteSpaceToken(result);
+		if (tokIs("."))
 		{
-			skip(".");
-			state =
-				Node.create(MXMLNodeKind.STATE,
-					token.line,
-					token.column,
-					token.text);
-			nextToken();
+			skip(".", result);
+			result.addChild(adapter.copy(MXMLNodeKind.STATE, token));
+			nextNonWhiteSpaceToken(result);
 		}
 		
 		if (!tokIs("="))
@@ -469,44 +466,73 @@ public class MXMLParser extends ParserBase
 			return null;
 		}
 		
-		consume("=");
+		consume("=", result);
 		
-		result.addChild(Node.create(MXMLNodeKind.VALUE,
+		result.appendToken(new LinkedListToken(Operators.QUOTE, "\""));
+		result.addChild(adapter.create(MXMLNodeKind.VALUE,
+			trimQuotes(token.text),
 			token.line,
-			token.column,
-			trimQuotes(token.text)));
+			token.column));
+		result.appendToken(new LinkedListToken(Operators.QUOTE, "\""));
 		
-		if (state != null)
-		{
-			result.addChild(state);
-		}
-		
-		nextToken(); // pass the value
+		nextNonWhiteSpaceToken(result); // pass the value
 		
 		return result;
 	}
 	
-	/**
-	 * @private
-	 */
-	override protected function moveToNextToken():void
+	override protected function nextNonWhiteSpaceToken(node:TokenNode):void
 	{
-		do
+		if (!consumeWhitespace(node))
 		{
-			token = scanner.nextToken();
+			nextToken();
 			
-			if (token == null)
+			if (tokIs(" ") || tokIs("\t") || tokIs("\n")
+				|| (tokenStartsWith("<!--") && !tokenStartsWith("<!---")))
 			{
-				throw new NullTokenError(fileName);
-				
-			}
-			if (token.text == null)
-			{
-				throw new NullTokenError(fileName);
+				nextNonWhiteSpaceToken(node);
 			}
 		}
-		while (tokenStartsWith("<!--")
-			&& !tokenStartsWith("<!---"));
+	}
+	
+	override protected function tokIsWhitespace():Boolean
+	{
+		return token.text == "\n" || token.text == "\t" || 
+			token.text == " " || tokenStartsWith("<!--");
+	}
+	
+	override protected function consumeWhitespace(node:TokenNode):Boolean
+	{
+		if (!node || !token)
+		{
+			return false;
+		}
+		
+		var advanced:Boolean = false;
+		
+		while (tokIs(" ") || tokIs("\t") || tokIs("\n")
+			|| (tokenStartsWith("<!--") && ! tokenStartsWith("<!---")))
+		{
+			if (tokIs(" "))
+			{
+				appendSpace(node);
+			}
+			else if (tokIs("\t"))
+			{
+				appendTab(node);
+			}
+			else if (tokIs("\n"))
+			{
+				appendNewline(node);
+			}
+			else if (tokenStartsWith("<!--") && !tokenStartsWith("<!---"))
+			{
+				appendComment(node);
+			}
+			
+			advanced = true;
+		}
+		
+		return advanced;
 	}
 }
 }

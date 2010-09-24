@@ -87,11 +87,11 @@ public class TestMXMLNonBound
 		
 		var result:String = ASTUtil.convert(parser.parseTagList());
 		
-		Assert.assertEquals("<tag-list line=\"1\" column=\"1\"><local-name line=\"1\" "
-			+ "column=\"2\">Application</local-name><att line=\"1\" "
-			+ "column=\"14\"><name line=\"1\" column=\"14\">alpha</name>"
-			+ "<value line=\"1\" column=\"29\">0.5</value><state line=\"1\" "
-			+ "column=\"20\">disabled</state></att></tag-list>", result);
+		Assert.assertEquals("<tag-list line=\"1\" column=\"1\"><local-name line=\"1\" " +
+			"column=\"2\">Application</local-name><att line=\"1\" column=\"14\">" +
+			"<name line=\"1\" column=\"14\">alpha</name><state line=\"1\" " +
+			"column=\"20\">disabled</state><value line=\"1\" column=\"29\">0.5</value>" +
+			"</att></tag-list>", result);
 	}
 }
 }

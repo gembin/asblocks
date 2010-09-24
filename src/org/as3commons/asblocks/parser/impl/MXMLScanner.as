@@ -125,6 +125,8 @@ public class MXMLScanner extends ScannerBase implements ISourceCodeScanner
 	public function MXMLScanner()
 	{
 		super();
+		
+		allowWhiteSpace = true;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -144,11 +146,23 @@ public class MXMLScanner extends ScannerBase implements ISourceCodeScanner
 		// while we have lines and are not at the end
 		if (lines != null && line < lines.length)
 		{
-			currentCharacter = nextNonWhitespaceCharacter();
+			if (allowWhiteSpace)
+			{
+				currentCharacter = nextChar();
+			}
+			else
+			{
+				currentCharacter = nextNonWhitespaceCharacter();
+			}
 		}
 		else
 		{
 			// at the end, send the line terminator
+			return new Token(END, line, column);
+		}
+		
+		if (line == lines.length)
+		{
 			return new Token(END, line, column);
 		}
 		

@@ -16,6 +16,7 @@ public class TestMXMLScanner
 	{
 		parser = new MXMLParser();
 		scanner = parser.scanner;
+		scanner.allowWhiteSpace = false;
 	}
 	
 	[Test]
