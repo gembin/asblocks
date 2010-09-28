@@ -29,6 +29,7 @@ import org.as3commons.asblocks.impl.TestInterfaceTypeNode;
 import org.as3commons.asblocks.impl.TestInvocationExpressionNode;
 import org.as3commons.asblocks.impl.TestLiteralNodes;
 import org.as3commons.asblocks.impl.TestMemberNode;
+import org.as3commons.asblocks.impl.TestMetaDataNode;
 import org.as3commons.asblocks.impl.TestMethodNode;
 import org.as3commons.asblocks.impl.TestPackageNode;
 import org.as3commons.asblocks.impl.TestPrefixExpressionNode;
@@ -85,6 +86,7 @@ public class AS3BlocksTestSuite
 	public var testInvocationExpressionNode:TestInvocationExpressionNode;
 	
 	public var testMemberNode:TestMemberNode;
+	public var testMetaDataNode:TestMetaDataNode;
 	
 	public var testSwitchStatementNode:TestSwitchStatementNode;
 	public var testThisStatementNode:TestThisStatementNode;

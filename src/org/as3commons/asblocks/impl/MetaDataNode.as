@@ -45,6 +45,21 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMetaData#parameters
+	 */
+	public function get name():String
+	{
+		var ast:IParserNode = findName();
+		if(!ast)
+			return null;
+		return ASTUtil.nameText(ast);
+	}
+	
+	//----------------------------------
 	//  parameter
 	//----------------------------------
 	
@@ -81,33 +96,6 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 		}
 		
 		return result;
-	}
-	
-	//----------------------------------
-	//  name
-	//----------------------------------
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IMetaData#parameters
-	 */
-	public function get name():String
-	{
-		var ast:IParserNode = findName();
-		if(!ast)
-			return null;
-		return ast.stringValue;
-	}
-	
-	//----------------------------------
-	//  hasName
-	//----------------------------------
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IMetaData#hasName
-	 */
-	public function get hasName():Boolean
-	{
-		return findName() != null;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -164,7 +152,7 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  IMetaData API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
@@ -173,8 +161,11 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 	 */
 	public function addParameter(value:String):IMetaDataParameter
 	{
-		// FIXME impl IMetaData
-		return null;
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.PRIMARY, value));
+		
+		_addParameter(ast);
+		return new MetaDataParameterNode(ast);
 	}
 	
 	/**
@@ -182,14 +173,156 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 	 */
 	public function addNamedParameter(name:String, value:String):IMetaDataParameter
 	{
-		// FIXME impl IMetaData
-		return null;
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
+		ast.addChild(ASTUtil.newNameAST(name));
+		ast.appendToken(TokenBuilder.newAssign());
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.PRIMARY, value));
+		
+		_addParameter(ast);
+		return new MetaDataParameterNode(ast);
 	}
 	
 	/**
 	 * @copy org.as3commons.asblocks.api.IMetaData#addNamedStringParameter()
 	 */
 	public function addNamedStringParameter(name:String, value:String):IMetaDataParameter
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
+		ast.addChild(ASTUtil.newNameAST(name));
+		ast.appendToken(TokenBuilder.newAssign());
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.STRING, ASTBuilder.escapeString(value)));
+		
+		_addParameter(ast);
+		return new MetaDataParameterNode(ast);
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMetaData#removeParameter()
+	 */
+	public function removeParameter(name:String):IMetaDataParameter
+	{
+		var ast:IParserNode = findParameterList();
+		if (!ast)
+			return null;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			var current:IParserNode = i.next();
+			var parameter:MetaDataParameterNode = new MetaDataParameterNode(current);
+			if (parameter.name == name)
+			{
+				if (i.getCurrentIndex() < ast.numChildren - 1)
+				{
+					ASTUtil.removeTrailingWhitespaceAndComma(current.stopToken);
+				} 
+				else if (i.getCurrentIndex() > 0)
+				{
+					ASTUtil.removePreceedingWhitespaceAndComma(current.startToken);
+				}
+				
+				i.remove();
+				return parameter;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMetaData#removeParameterAt()
+	 */
+	public function removeParameterAt(index:int):IMetaDataParameter
+	{
+		var ast:IParserNode = findParameterList();
+		if (!ast)
+			return null;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		var current:IParserNode = i.moveTo(index);
+		if (!current)
+			return null;
+		
+		var result:IMetaDataParameter = new MetaDataParameterNode(current);
+		
+		if (ast.numChildren - 1 > i.getCurrentIndex())
+		{
+			ASTUtil.removeTrailingWhitespaceAndComma(current.stopToken);
+		} 
+		else if (i.getCurrentIndex() > 0)
+		{
+			ASTUtil.removePreceedingWhitespaceAndComma(current.startToken);
+		}
+		
+		i.remove();
+		
+		return result;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMetaData#getParameter()
+	 */
+	public function getParameter(name:String):IMetaDataParameter
+	{
+		var ast:IParserNode = findParameterList();
+		if (!ast)
+			return null;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			var parameter:MetaDataParameterNode = new MetaDataParameterNode(i.next());
+			if (parameter.name == name)
+				return parameter;
+		}
+		return null;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMetaData#getParameterAt()
+	 */
+	public function getParameterAt(index:int):IMetaDataParameter
+	{
+		var ast:IParserNode = findParameterList();
+		if (!ast)
+			return null;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		var current:IParserNode = i.moveTo(index);
+		if (!current)
+			return null;
+		
+		return new MetaDataParameterNode(current);
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMetaData#getParameterValue()
+	 */
+	public function getParameterValue(name:String):String
+	{
+		var parameter:IMetaDataParameter = getParameter(name);
+		if (!parameter)
+			return null;
+		return parameter.value;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMetaData#hasParameter()
+	 */
+	public function hasParameter(name:String):Boolean
+	{
+		return getParameter(name) != null;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function _addParameter(ast:IParserNode):void
 	{
 		var list:IParserNode = findParameterList();
 		if (!list)
@@ -201,11 +334,6 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 			node.addChild(list);
 		}
 		
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
-		ast.addChild(ASTUtil.newNameAST(name));
-		ast.appendToken(TokenBuilder.newAssign());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.STRING, ASTBuilder.escapeString(value)));
-		
 		if (list.numChildren > 0)
 		{
 			list.appendToken(TokenBuilder.newComma());
@@ -213,50 +341,19 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 		}
 		
 		list.addChild(ast);
-		return new MetaDataParameterNode(ast);
 	}
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.IMetaData#getParameter()
+	 * @private
 	 */
-	public function getParameter(name:String):IMetaDataParameter
-	{
-		// FIXME impl IMetaData
-		return null;
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IMetaData#getParameterAt()
-	 */
-	public function getParameterAt(index:int):IMetaDataParameter
-	{
-		// FIXME impl IMetaData
-		return null;
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IMetaData#getParameterValue()
-	 */
-	public function getParameterValue(name:String):String
-	{
-		// FIXME impl IMetaData
-		return null;
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IMetaData#hasParameter()
-	 */
-	public function hasParameter(name:String):Boolean
-	{
-		// FIXME impl IMetaData
-		return false;
-	}
-	
 	private function findName():IParserNode
 	{
 		return node.getKind(AS3NodeKind.NAME);
 	}
 	
+	/**
+	 * @private
+	 */
 	private function findParameterList():IParserNode
 	{
 		return node.getKind(AS3NodeKind.PARAMETER_LIST);

@@ -21,11 +21,16 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * TODO DOCME
+ * A parameter entry of an <code>IMetaData</code> instance.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IMetaData#parameters
+ * @see org.as3commons.asblocks.api.IMetaData#addParameter()
+ * @see org.as3commons.asblocks.api.IMetaData#addNamedParameter()
+ * @see org.as3commons.asblocks.api.IMetaData#addNamedStringParameter()
  */
 public interface IMetaDataParameter
 {

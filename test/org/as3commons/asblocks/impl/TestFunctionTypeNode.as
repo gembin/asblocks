@@ -75,7 +75,7 @@ public class TestFunctionTypeNode extends BaseASFactoryTest
 		f.description = "A foo metadata.";
 		type.description = "A package function.";
 		
-		assertPrint("package {\n\t/**\n\t * A foo metadata.\n\t */\n\t[Foo]\n\t" +
+		assertPrint("package {\n\t/**\n\t * A foo metadata.\n\t */\n\t[Foo(true)]\n\t" +
 			"/**\n\t * A package function.\n\t */\n\tpublic function " +
 			"foo():void {\n\t}\n}", type);
 	}

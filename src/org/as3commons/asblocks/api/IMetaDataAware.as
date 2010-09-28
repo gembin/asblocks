@@ -21,7 +21,7 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * Clients implement this interface to hold IMetaDataNode.
+ * Clients implement this interface to hold <code>IMetaData</code> ast.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -40,7 +40,7 @@ public interface IMetaDataAware
 	//----------------------------------
 	
 	/**
-	 * The metadata nodes found on the host.
+	 * The <code>IMetaData</code> nodes found on the host.
 	 */
 	function get metaDatas():Vector.<IMetaData>;
 	
@@ -51,23 +51,27 @@ public interface IMetaDataAware
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Creates and returns a new <code>IMetaData</code> element.
+	 * 
+	 * @param name The String metadata name.
+	 * @return An <code>IMetaData</code> instance.
 	 */
 	function newMetaData(name:String):IMetaData;
 	
 	/**
-	 * Returns the first IMetaData node named name.
+	 * Returns the first <code>IMetaData</code> node named name.
 	 * 
 	 * @param name A String indicating the first IMetaData node to return.
-	 * @return An IMetaData named name.
+	 * @return An <code>IMetaData</code> named name.
 	 */
 	function getMetaData(name:String):IMetaData;
 	
 	/**
-	 * Returns all IMetaData nodes named name as a Vector.
+	 * Returns all <code>IMetaData</code> nodes named name as a Vector.
 	 * 
-	 * @param name A String indicating the IMetaData nodes to return.
-	 * @return A Vector of IMetaData named name.
+	 * @param name A String indicating the <code>IMetaData</code> nodes 
+	 * to return.
+	 * @return A Vector of <code>IMetaData</code> named name.
 	 */
 	function getAllMetaData(name:String):Vector.<IMetaData>;
 	
@@ -80,10 +84,10 @@ public interface IMetaDataAware
 	function hasMetaData(name:String):Boolean;
 	
 	/**
-	 * Removes an IMetaData node from the host.
+	 * Removes an <code>IMetaData</code> node from the host.
 	 * 
-	 * @param node The metadata node to remove.
+	 * @param metaData The <code>IMetaData</code> node to remove.
 	 */
-	function removeMetaData(node:IMetaData):Boolean;
+	function removeMetaData(metaData:IMetaData):Boolean;
 }
 }

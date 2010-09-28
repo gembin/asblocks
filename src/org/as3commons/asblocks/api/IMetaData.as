@@ -21,7 +21,16 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * TODO DOCME
+ * A metadata annotation; <code>[Name(value, name=value, name="value")]</code>.
+ * 
+ * <pre>
+ * var md:IMetaData = aware.newMetaData("Foo");
+ * md.addParameter("bar");
+ * md.addNamedParameter("bar", "baz");
+ * md.addNamedStringParameter("goo", "ber");
+ * </pre>
+ * 
+ * <p>Will produce; <code>[Foo(bar, bar=baz, goo="ber")]</code>.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -36,12 +45,20 @@ public interface IMetaData extends IScriptNode, IDocCommentAware
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * The name of the metadata tag.
+	 */
+	function get name():String;
+	
+	//----------------------------------
 	//  parameter
 	//----------------------------------
 	
 	/**
-	 * The original String found between the ( and ) with space between the
-	 * parameters and equals to make it easier to split and parse.
+	 * The original String found between the <code>[(</code> and <code>)]</code>.
 	 * 
 	 * <p>If there was no parenthesis, this property value is null.</p>
 	 */
@@ -52,11 +69,9 @@ public interface IMetaData extends IScriptNode, IDocCommentAware
 	//----------------------------------
 	
 	/**
-	 * The list of paramter nodes.
+	 * The Vector of <code>IMetaDataParameter</code> instances.
 	 */
 	function get parameters():Vector.<IMetaDataParameter>;
-	
-	function get name():String;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -65,19 +80,48 @@ public interface IMetaData extends IScriptNode, IDocCommentAware
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Adds a value parameter (<code>[Foo(value)]</code>) to the metadata.
+	 * 
+	 * @param value The String value.
+	 * @return A <code>IMetaDataParameter</code> instance.
 	 */
 	function addParameter(value:String):IMetaDataParameter;
 	
 	/**
-	 * TODO DOCME
+	 * Adds a named parameter (<code>[Foo(name=value)]</code>) to the metadata.
+	 * 
+	 * @param name The String name.
+	 * @param value The String value.
+	 * @return A <code>IMetaDataParameter</code> instance.
 	 */
 	function addNamedParameter(name:String, value:String):IMetaDataParameter;
 	
 	/**
-	 * TODO DOCME
+	 * Adds a named String parameter (<code>[Foo(name="value")]</code>) to the metadata.
+	 * 
+	 * @param name The String name.
+	 * @param value The String value.
+	 * @return A <code>IMetaDataParameter</code> instance.
 	 */
 	function addNamedStringParameter(name:String, value:String):IMetaDataParameter;
+	
+	/**
+	 * Removes a named parameter from the metadata.
+	 * 
+	 * @param name The String name.
+	 * @return A <code>IMetaDataParameter</code> instance if removed, <code>null</code>
+	 * if not.
+	 */
+	function removeParameter(name:String):IMetaDataParameter;
+	
+	/**
+	 * Removes a parameter from the metadata at the specified index.
+	 * 
+	 * @param index The int index.
+	 * @return A <code>IMetaDataParameter</code> instance if removed, <code>null</code>
+	 * if not.
+	 */
+	function removeParameterAt(index:int):IMetaDataParameter;
 	
 	/**
 	 * Returns a <code>IMetaDataParameter</code> by the specified name
