@@ -628,6 +628,31 @@ public class ASTBuilder
 		return new CompilationUnitNode(ast);
 	}
 	
+	public static function synthesizeFunction(qualifiedName:String, returnType:String):ICompilationUnit
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.COMPILATION_UNIT);
+		var past:IParserNode = ASTUtil.newAST(AS3NodeKind.PACKAGE, "package");
+		
+		ast.addChild(past);
+		past.appendToken(TokenBuilder.newSpace());
+		
+		var packageName:String = packageNameFrom(qualifiedName);
+		if (packageName)
+		{
+			past.addChild(AS3FragmentParser.parseName(packageName));
+			past.appendToken(TokenBuilder.newSpace());
+		}
+		
+		var block:IParserNode = newBlock(AS3NodeKind.CONTENT);
+		past.addChild(block);
+		
+		var functionName:String = typeNameFrom(qualifiedName);
+		var func:IParserNode = synthesizeAS3Function(functionName, returnType);
+		ASTUtil.addChildWithIndentation(block, func);
+		
+		return new CompilationUnitNode(ast);
+	}
+	
 	public static function synthesizeApplication(qualifiedName:String,
 												 superQualifiedName:String):ICompilationUnit
 	{
@@ -684,6 +709,37 @@ public class ASTBuilder
 		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, name));
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(newBlock(AS3NodeKind.CONTENT));
+		return ast;
+	}
+	
+	private static function synthesizeAS3Function(name:String, returnType:String):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
+		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, Visibility.PUBLIC.toString()));
+		ast.addChild(mods);
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.appendToken(TokenBuilder.newFunction());
+		ast.appendToken(TokenBuilder.newSpace());
+		var n:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME, name);
+		ast.addChild(n);
+		var params:IParserNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.PARAMETER_LIST,
+			AS3NodeKind.LPAREN, "(",
+			AS3NodeKind.RPAREN, ")");
+		ast.addChild(params);
+		if (returnType)
+		{
+			var colon:LinkedListToken = TokenBuilder.newColon();
+			var typeAST:IParserNode = AS3FragmentParser.parseType(returnType);
+			typeAST.startToken.beforeInsert(colon);
+			typeAST.startToken = colon;
+			ast.addChild(typeAST);
+		}
+		ast.appendToken(TokenBuilder.newSpace());
+		var block:IParserNode = newBlock();
+		ast.addChild(block);
 		return ast;
 	}
 	

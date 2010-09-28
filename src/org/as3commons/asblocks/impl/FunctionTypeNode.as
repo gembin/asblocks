@@ -32,14 +32,13 @@ import org.as3commons.asblocks.utils.ModifierUtil;
 import org.as3commons.asblocks.utils.NameTypeUtil;
 
 /**
- * The <code>IFunctionLiteral</code> implementation.
+ * The <code>IFunctionType</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class FunctionTypeNode extends FunctionNodeBase 
-	implements IFunctionType
+public class FunctionTypeNode extends FunctionNodeBase implements IFunctionType
 {
 	//--------------------------------------------------------------------------
 	//

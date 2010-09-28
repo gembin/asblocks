@@ -121,6 +121,14 @@ public class ASFactory
 		return ASTBuilder.synthesizeInterface(qualifiedName);
 	}
 	
+	/**
+	 * TODO DOCME
+	 */
+	public function newFunction(qualifiedName:String, returnType:String):ICompilationUnit
+	{
+		return ASTBuilder.synthesizeFunction(qualifiedName, returnType);
+	}
+	
 	// FIXME move to MXMLFactory
 	
 	/**

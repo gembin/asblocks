@@ -22,15 +22,15 @@ package org.as3commons.asblocks.utils
 
 import mx.utils.StringUtil;
 
+import org.as3commons.asblocks.api.IDocComment;
+import org.as3commons.asblocks.impl.DocCommentNode;
+import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.parser.impl.ASDocFragmentParser;
 import org.as3commons.asblocks.parser.impl.ASDocParser;
-import org.as3commons.asblocks.api.IDocComment;
-import org.as3commons.asblocks.impl.DocCommentNode;
-import org.as3commons.asblocks.impl.TokenBuilder;
 
 /**
  * TODO DOCME
@@ -127,8 +127,13 @@ public class DocCommentUtil
 			// FIXME this is for parenthetic updates such as meta []
 			// the /** */ needs to go before the [
 			asdoc = ASTUtil.newAST(AS3NodeKind.AS_DOC, result);
+			var index:int = 0;
+			if (parent.hasKind(AS3NodeKind.META_LIST))
+			{
+				index++;
+			}
 			TokenNode(parent).absolute = true;
-			parent.addChildAt(asdoc, 0);
+			parent.addChildAt(asdoc, index);
 			TokenNode(parent).absolute = false;
 			// FIXME is this right, explain why
 			var indentTok:LinkedListToken = TokenBuilder.newWhiteSpace(indent);

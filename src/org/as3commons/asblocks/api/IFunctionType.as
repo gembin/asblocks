@@ -22,7 +22,7 @@ package org.as3commons.asblocks.api
 
 /**
  * The <code>IFunctionType</code> interface exposes documentation, metadata,
- * and public members of the <code>function</code> type.
+ * and single public <code>function</code> type.
  * 
  * <pre>
  * var factory:ASFactory = new ASFactory();

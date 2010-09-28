@@ -454,6 +454,50 @@ public class TestCompilationUnit
 			"</package></compilation-unit>");
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Function
+	//
+	//--------------------------------------------------------------------------
+	
+	[Test]
+	public function testDefaultPackageWithFunction():void
+	{
+		var input:String = " package { public function myA ( ) { } } ";
+		assertCompilationUnitPrint(input);
+		assertCompilationUnit("1", input,
+			"<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
+			"column=\"2\"><content line=\"1\" column=\"10\"><function line=\"1\" " +
+			"column=\"12\"><mod-list line=\"1\" column=\"12\"><mod line=\"1\" " +
+			"column=\"12\">public</mod></mod-list><accessor-role line=\"1\" " +
+			"column=\"28\"></accessor-role><name line=\"1\" column=\"28\">myA</name>" +
+			"<parameter-list line=\"1\" column=\"32\"></parameter-list><block " +
+			"line=\"1\" column=\"36\"></block></function></content></package>" +
+			"</compilation-unit>");
+	}
+	
+	[Test]
+	public function testPackageWithFunctionFullFeatured():void
+	{
+		var input:String = " package my.domain { function myA(arg0:int = 0, ...rest):my.Type { return null; } } ";
+		assertCompilationUnitPrint(input);
+		assertCompilationUnit("1", input,
+			"<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
+			"column=\"2\"><name line=\"1\" column=\"10\">my.domain</name><content " +
+			"line=\"1\" column=\"20\"><function line=\"1\" column=\"22\">" +
+			"<accessor-role line=\"1\" column=\"31\"></accessor-role><name line=\"1\" " +
+			"column=\"31\">myA</name><parameter-list line=\"1\" column=\"34\">" +
+			"<parameter line=\"1\" column=\"35\"><name-type-init line=\"1\" " +
+			"column=\"35\"><name line=\"1\" column=\"35\">arg0</name><type line=\"1\" " +
+			"column=\"40\">int</type><init line=\"1\" column=\"46\"><number line=\"1\" " +
+			"column=\"46\">0</number></init></name-type-init></parameter><parameter " +
+			"line=\"1\" column=\"49\"><rest line=\"1\" column=\"52\">rest</rest>" +
+			"</parameter></parameter-list><type line=\"1\" column=\"58\">my.Type</type>" +
+			"<block line=\"1\" column=\"66\"><return line=\"1\" column=\"68\"><null " +
+			"line=\"1\" column=\"75\">null</null></return></block></function></content>" +
+			"</package></compilation-unit>");
+	}
+	
 	// Internal Package content
 	
 	[Test]

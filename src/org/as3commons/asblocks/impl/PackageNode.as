@@ -114,7 +114,7 @@ public class PackageNode extends ScriptNode implements IPackage
 		}
 		else if (ast.hasKind(AS3NodeKind.FUNCTION))
 		{
-			//return new FunctionTypeNode(content.getKind(AS3NodeKind.FUNCTION));
+			return new FunctionTypeNode(ast.getKind(AS3NodeKind.FUNCTION));
 		}
 		return null;
 	}

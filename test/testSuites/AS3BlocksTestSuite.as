@@ -23,6 +23,7 @@ import org.as3commons.asblocks.impl.TestForEachInStatementNode;
 import org.as3commons.asblocks.impl.TestForInStatementNode;
 import org.as3commons.asblocks.impl.TestForStatementNode;
 import org.as3commons.asblocks.impl.TestFunctionCommon;
+import org.as3commons.asblocks.impl.TestFunctionTypeNode;
 import org.as3commons.asblocks.impl.TestIfStatementNode;
 import org.as3commons.asblocks.impl.TestInterfaceTypeNode;
 import org.as3commons.asblocks.impl.TestInvocationExpressionNode;
@@ -77,6 +78,7 @@ public class AS3BlocksTestSuite
 	public var testForInStatementNode:TestForInStatementNode;
 	public var testForStatementNode:TestForStatementNode;
 	public var testFunctionCommon:TestFunctionCommon;
+	public var testFunctionTypeNode:TestFunctionTypeNode;
 	//public var testFunctionLiteralNode:TestFunctionLiteralNode;
 	public var testIfStatementNode:TestIfStatementNode;
 	public var testInterfaceNodeType:TestInterfaceTypeNode;
