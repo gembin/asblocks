@@ -47,7 +47,7 @@ package org.as3commons.asblocks.api
  * @see org.as3commons.asblocks.api.IASProject#newClass()
  * @see org.as3commons.asblocks.api.ICompilationUnit
  */
-public interface IClassType extends IType, IFieldAware
+public interface IClassType extends IType, IContentBlock, IFieldAware
 {
 	//--------------------------------------------------------------------------
 	//

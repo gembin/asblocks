@@ -17,34 +17,38 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.as3commons.asblocks.impl
+package org.as3commons.asblocks.api
 {
 
-import org.as3commons.asblocks.api.IFunctionLiteral;
-import org.as3commons.asblocks.parser.api.IParserNode;
-
 /**
- * The <code>IFunctionLiteral</code> implementation.
+ * The <code>IFunctionType</code> interface exposes documentation, metadata,
+ * and public members of the <code>function</code> type.
+ * 
+ * <pre>
+ * var factory:ASFactory = new ASFactory();
+ * var project:IASProject = new ASFactory(factory);
+ * var unit:ICompilationUnit = project.newFunction("my.domain.myFunction");
+ * var type:IFunctionType = unit.typeNode as IFunctionType;
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * package my.domain {
+ * 	public function myFunction():void {
+ * 	}
+ * }
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.ASFactory#newFunction()
+ * @see org.as3commons.asblocks.api.IASProject#newFunction()
+ * @see org.as3commons.asblocks.api.ICompilationUnit
  */
-public class FunctionLiteralNode extends FunctionNodeBase 
-	implements IFunctionLiteral
+public interface IFunctionType extends IType, IFunction, IStatementContainer
 {
-	//--------------------------------------------------------------------------
-	//
-	//  Constructor
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * Constructor.
-	 */
-	public function FunctionLiteralNode(node:IParserNode)
-	{
-		super(node);
-	}
+
 }
 }

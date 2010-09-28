@@ -35,7 +35,7 @@ package org.as3commons.asblocks.api
  * @see org.as3commons.asblocks.IASProject#newInterface()
  * @see org.as3commons.asblocks.IASProject#newFunction()
  */
-public interface IType extends IContentBlock, IMetaDataAware, IDocCommentAware
+public interface IType extends IMetaDataAware, IDocCommentAware
 {
 	//--------------------------------------------------------------------------
 	//

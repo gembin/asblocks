@@ -1,27 +1,28 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.ASBlocksSyntaxError;
+import org.as3commons.asblocks.CodeMirror;
+import org.as3commons.asblocks.api.IClassType;
+import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.api.IMethod;
+import org.as3commons.asblocks.api.IType;
+import org.as3commons.asblocks.api.Visibility;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.SourceCode;
+import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertNull;
 import org.flexunit.asserts.assertTrue;
 import org.flexunit.asserts.fail;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.SourceCode;
-import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
-import org.as3commons.asblocks.ASBlocksSyntaxError;
-import org.as3commons.asblocks.CodeMirror;
-import org.as3commons.asblocks.api.ICompilationUnit;
-import org.as3commons.asblocks.api.IMethod;
-import org.as3commons.asblocks.api.IType;
-import org.as3commons.asblocks.api.Visibility;
 
 public class TestTypeNode extends BaseASFactoryTest
 {
 	private var unit:ICompilationUnit;
 	
-	private var type:IType;
+	private var type:IClassType;
 	
 	[Before]
 	override public function setUp():void
@@ -50,7 +51,7 @@ public class TestTypeNode extends BaseASFactoryTest
 	public function testBasic():void
 	{
 		unit = factory.newClass("my.domain.Test");
-		type = unit.typeNode;
+		type = unit.typeNode as IClassType;
 	}
 	
 	[Test]
@@ -62,7 +63,7 @@ public class TestTypeNode extends BaseASFactoryTest
 	public function test_name():void
 	{
 		unit = factory.newClass("my.domain.Test");
-		type = unit.typeNode;
+		type = unit.typeNode as IClassType;
 		type.name = "NewTest";
 		assertEquals("NewTest", type.name);
 		try
@@ -84,7 +85,7 @@ public class TestTypeNode extends BaseASFactoryTest
 	public function test_visibility():void
 	{
 		unit = factory.newClass("my.domain.Test");
-		type = unit.typeNode;
+		type = unit.typeNode as IClassType;
 		assertTrue(type.visibility.equals(Visibility.PUBLIC));
 		try
 		{
@@ -100,7 +101,7 @@ public class TestTypeNode extends BaseASFactoryTest
 	public function test_methods():void
 	{
 		unit = factory.newClass("my.domain.Test");
-		type = unit.typeNode;
+		type = unit.typeNode as IClassType;
 		assertNotNull(type.methods);
 		assertEquals(0, type.methods.length);
 		var method:IMethod = type.newMethod("method", Visibility.PUBLIC, "void");
@@ -114,7 +115,7 @@ public class TestTypeNode extends BaseASFactoryTest
 	public function test_newMethod():void
 	{
 		unit = factory.newClass("my.domain.Test");
-		type = unit.typeNode;
+		type = unit.typeNode as IClassType;
 		var method1:IMethod = type.newMethod("method1", Visibility.PUBLIC, "void");
 		var method2:IMethod = type.newMethod("method2", Visibility.PRIVATE, "String");
 		assertPrint("package my.domain {\n\tpublic class Test {\n\t\tpublic " +
@@ -126,7 +127,7 @@ public class TestTypeNode extends BaseASFactoryTest
 	public function test_getMethod():void
 	{
 		unit = factory.newClass("my.domain.Test");
-		type = unit.typeNode;
+		type = unit.typeNode as IClassType;
 		var method1:IMethod = type.newMethod("method1", Visibility.PUBLIC, "void");
 		var method2:IMethod = type.newMethod("method2", Visibility.PRIVATE, "String");
 		
@@ -139,7 +140,7 @@ public class TestTypeNode extends BaseASFactoryTest
 	public function test_removeMethod():void
 	{
 		unit = factory.newClass("my.domain.Test");
-		type = unit.typeNode;
+		type = unit.typeNode as IClassType;
 		var method1:IMethod = type.newMethod("method1", Visibility.PUBLIC, "void");
 		var method2:IMethod = type.newMethod("method2", Visibility.PRIVATE, "String");
 		

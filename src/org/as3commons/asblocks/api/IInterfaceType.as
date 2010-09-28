@@ -47,7 +47,7 @@ package org.as3commons.asblocks.api
  * @see org.as3commons.asblocks.api.IASProject#newInterface()
  * @see org.as3commons.asblocks.api.ICompilationUnit
  */
-public interface IInterfaceType extends IType
+public interface IInterfaceType extends IType, IContentBlock
 {
 	//--------------------------------------------------------------------------
 	//
