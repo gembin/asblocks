@@ -192,7 +192,7 @@ public class PackageNode extends ScriptNode implements IPackage
 	/**
 	 * @private
 	 */
-	private function getContentIterator():ASTIterator
+	protected function getContentIterator():ASTIterator
 	{
 		return new ASTIterator(findContent());
 	}
@@ -200,7 +200,7 @@ public class PackageNode extends ScriptNode implements IPackage
 	/**
 	 * @private
 	 */
-	private function findContent():IParserNode
+	protected function findContent():IParserNode
 	{
 		return node.getLastChild();
 	}
@@ -208,7 +208,7 @@ public class PackageNode extends ScriptNode implements IPackage
 	/**
 	 * @private
 	 */
-	private function importText(ast:IParserNode):String
+	protected function importText(ast:IParserNode):String
 	{
 		return ast.getFirstChild().stringValue;
 	}
@@ -216,7 +216,7 @@ public class PackageNode extends ScriptNode implements IPackage
 	/**
 	 * @private
 	 */
-	private function nextInsertion():int
+	protected function nextInsertion():int
 	{
 		var i:ASTIterator = getContentIterator();
 		var index:int = 0;

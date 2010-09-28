@@ -1,4 +1,4 @@
-package org.as3commons.asblocks.parser.impl
+package org.as3commons.mxmlblocks.parser.impl
 {
 import flexunit.framework.Assert;
 

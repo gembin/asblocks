@@ -17,21 +17,24 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.as3commons.asblocks.parser.impl
+package org.as3commons.mxmlblocks.parser.impl
 {
 
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.IScanner;
 import org.as3commons.asblocks.parser.api.ISourceCodeScanner;
-import org.as3commons.asblocks.parser.api.MXMLNodeKind;
 import org.as3commons.asblocks.parser.api.Operators;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.LinkedListTreeAdaptor;
-import org.as3commons.asblocks.parser.core.Node;
+import org.as3commons.asblocks.parser.core.ParentheticListUpdateDelegate;
 import org.as3commons.asblocks.parser.core.Token;
 import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.parser.errors.Position;
 import org.as3commons.asblocks.parser.errors.UnExpectedTokenError;
+import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
+import org.as3commons.asblocks.parser.impl.ParserBase;
+import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.mxmlblocks.parser.api.MXMLNodeKind;
 
 /**
  * The default implementation of an .mxml parser.
@@ -206,12 +209,8 @@ public class MXMLParser extends ParserBase
 	/*
 	* TAG_LIST
 	*   - AS_DOC (optional)
-	*   - BINDING (optional)
-	*   - LOCAL_NAME (required)
-	*   - ATT
-	*     - NAME
-	*     - VALUE
-	*   - TAG_LIST (optional)
+	*   - ATT_LIST
+	*   - BODY
 	*/
 	
 	internal function parseTagList():TokenNode
@@ -219,7 +218,7 @@ public class MXMLParser extends ParserBase
 		// current token "<"
 		var result:TokenNode = adapter.empty(MXMLNodeKind.TAG_LIST, token);
 		
-		var cdata:String = "";
+		var text:String = "";
 		
 		if (pendingASDoc != null)
 		{
@@ -280,79 +279,73 @@ public class MXMLParser extends ParserBase
 			nextNonWhiteSpaceToken(result); // maybe xmlns or att or <
 		}
 		
-		var closing:Boolean = false;
 		var inAttList:Boolean = true;
+		var closing:Boolean = false;
+		
+		var body:TokenNode = adapter.empty("body", token);
 		
 		while (!tokIs("/>") && !tokIs("</"))
 		{
-			// if we have passed the closing tag's </, binding(optional) and local name
-			if (closing && tokIs(">"))
-			{
-				break;
-			}
-			// if we are not closing but have reached tag end, atts cannot be collected
-			if (!closing && tokIs(">"))
+			if (tokIs(">"))
 			{
 				inAttList = false;
-				append(result);
+				result.addChild(body);
+				consume(">", body);
 			}
-			// mark as closing, need to digest binding(optional) and local name
-			if (token.text == "</")
-			{
-				closing = true;
-			}
-			
-			//-----------------------------
-			// descent parsing
-			//-----------------------------
-			
-			// parse an asdoc comment
-			if (tokenStartsWith("<!---"))
+			else if (tokenStartsWith("<!---"))
 			{
 				pendingASDoc = parseASDoc();
 			}
-			else if (token.text == "xmlns")
+			else if (tokIs("<"))
 			{
-				result.addChild(parseXmlNs());
+				body.addChild(parseTagList());
 			}
-			else if (token.text == "<![CDATA[")
-			{
-				result.addChild(parseCData());
-			}
-				// parse a new nested tag list
-			else if (token.text == "<")
-			{
-				result.addChild(parseTagList());
-			}
-				// if we are still in the tag and are not closing it, do an attribute
 			else if (inAttList)
 			{
-				var aresult:Node = parseAtt();
-				if (aresult != null)
-				{
-					result.addChild(aresult);
-				}
-				else
-				{
-					//nextToken();
-				}
+				result.addChild(parseAttList());
 			}
-				// other wise, pass all junk IE (binding ends, :, etc)
 			else
 			{
-				// we must be in a text node
-				if (!closing && !inAttList && !tokIs(">"))
+				if (!tokIs(">"))
 				{
-					// System.out.println("{" + tok.getText() + "}");
-					//cdata += token.text;
-					result.appendToken(new LinkedListToken("cdata-start", "<![CDATA["));
-					var cxd:TokenNode = adapter.copy(
-						MXMLNodeKind.CDATA, token);
-					result.addChild(cxd);
-					result.appendToken(new LinkedListToken("cdata-end", "]]>"));
+					var contentAST:IParserNode;
 					
+					if (token.kind == "cdata")
+					{
+						if (tagName == "Script")
+						{
+							contentAST = AS3FragmentParser.parseClassContent(token.text);
+						}
+						else if (tagName == "Metadata")
+						{
+							contentAST = AS3FragmentParser.parsePackageContent(token.text);
+						}
+						
+						ParentheticListUpdateDelegate(TokenNode(contentAST).tokenListUpdater).
+							setBoundaries("lcdata", "rcdata");
+						
+						contentAST.startToken.text = "<![CDATA[";
+						contentAST.startToken.kind = "lcdata";
+						contentAST.stopToken.text = "]]>";
+						contentAST.stopToken.kind = "rcdata";
+						
+						body.addChild(contentAST);
+					}
+					else
+					{
+						var t:String = parseText();
+						if (tagName == "Metadata")
+						{
+							contentAST = AS3FragmentParser.parsePackageContent(t);
+						}
+						body.addChild(contentAST);
+					}
 				}
-				nextNonWhiteSpaceToken(result);
+				
+				if (!tokIs("</"))
+				{
+					nextNonWhiteSpaceToken(result);
+				}
 			}
 		}
 		
@@ -376,9 +369,56 @@ public class MXMLParser extends ParserBase
 					consume(firstNode.stringValue, result);
 					consume(":", result);
 					consume(tagName, result);
-					consume(">", result);
+					// FIXME
+					try {
+						consume(">", result);
+					}
+					catch(e:Error){trace(e.message)}
 				}	
 			}
+		}
+		else
+		{
+			throw new Error("parseTagList() error");
+		}
+		
+		if (tagName == "Script")
+		{
+			result.kind = "script";
+		}
+		else if (tagName == "Metadata")
+		{
+			result.kind = "metadata";
+		}
+		return result;
+	}
+	
+	private function parseText():String
+	{
+		var text:String = "";
+		while (!tokIs("</"))
+		{
+			text += token.text;
+			nextToken();
+		}
+		return text;
+	}
+	
+	internal function parseAttList():TokenNode
+	{
+		var result:TokenNode = adapter.empty(MXMLNodeKind.ATT_LIST, token);
+		
+		while (!tokIs(">") && !tokIs("/>"))
+		{
+			if (tokIs("xmlns"))
+			{
+				result.addChild(parseXmlNs());
+			}
+			else
+			{
+				result.addChild(parseAtt());
+			}
+			nextNonWhiteSpaceToken(result);
 		}
 		
 		return result;
@@ -399,11 +439,14 @@ public class MXMLParser extends ParserBase
 		var result:TokenNode = adapter.empty(MXMLNodeKind.XML_NS, token);
 		
 		consume("xmlns", result);
-		consume(":", result);
 		
-		result.addChild(adapter.copy(MXMLNodeKind.LOCAL_NAME, token));
+		if (tokIs(":"))
+		{
+			consume(":", result);
+			result.addChild(adapter.copy(MXMLNodeKind.LOCAL_NAME, token));
+			nextNonWhiteSpaceToken(result); // s binding
+		}
 		
-		nextNonWhiteSpaceToken(result); // s binding
 		consume("=", result);
 		
 		result.appendToken(new LinkedListToken(Operators.QUOTE, "\""));
@@ -413,8 +456,6 @@ public class MXMLParser extends ParserBase
 			token.line,
 			token.column));// should +1 since quotes are trimmed;
 		result.appendToken(new LinkedListToken(Operators.QUOTE, "\""));
-		
-		nextNonWhiteSpaceToken(result); // "library://ns.adobe.com/flex/spark"
 		
 		return result;
 	}
@@ -474,8 +515,6 @@ public class MXMLParser extends ParserBase
 			token.line,
 			token.column));
 		result.appendToken(new LinkedListToken(Operators.QUOTE, "\""));
-		
-		nextNonWhiteSpaceToken(result); // pass the value
 		
 		return result;
 	}

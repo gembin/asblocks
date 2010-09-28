@@ -95,6 +95,26 @@ public class FieldAccessExpressionNode extends ExpressionNode
 		node.setChildAt(value.node, 0);
 	}
 	
+	//----------------------------------
+	//  call
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IFieldAccessExpression#call
+	 */
+	public function get call():IExpression
+	{
+		return ExpressionBuilder.build(node.getLastChild());
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set call(value:IExpression):void
+	{
+		//node.setChildAt(value.node, 0);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

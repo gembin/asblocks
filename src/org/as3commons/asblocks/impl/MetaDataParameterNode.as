@@ -20,8 +20,10 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.api.IMetaDataParameter;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
  * The <code>IMetaDataParameter</code> implementation.
@@ -48,7 +50,11 @@ public class MetaDataParameterNode extends ScriptNode
 	 */
 	public function get value():String
 	{
-		return null;
+		if (hasName)
+		{
+			return ASTUtil.stringifyNode(node.getLastChild());
+		}
+		return ASTUtil.stringifyNode(node.getFirstChild());
 	}
 	
 	//----------------------------------
@@ -60,7 +66,10 @@ public class MetaDataParameterNode extends ScriptNode
 	 */
 	public function get name():String
 	{
-		return null;
+		var ast:IParserNode = findName();
+		if (!ast)
+			return null;
+		return ast.stringValue;
 	}
 	
 	//----------------------------------
@@ -72,7 +81,7 @@ public class MetaDataParameterNode extends ScriptNode
 	 */
 	public function get hasName():Boolean
 	{
-		return false;
+		return findName() != null;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -87,6 +96,11 @@ public class MetaDataParameterNode extends ScriptNode
 	public function MetaDataParameterNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	private function findName():IParserNode
+	{
+		return node.getKind(AS3NodeKind.NAME);
 	}
 }
 }

@@ -20,11 +20,12 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.api.IDocComment;
 import org.as3commons.asblocks.api.IMetaData;
 import org.as3commons.asblocks.api.IMetaDataParameter;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.asblocks.utils.DocCommentUtil;
 
@@ -35,14 +36,8 @@ import org.as3commons.asblocks.utils.DocCommentUtil;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class MetaDataNode extends ScriptNode 
-	implements IMetaData
+public class MetaDataNode extends ScriptNode implements IMetaData
 {
-	private function findParameterList():IParserNode
-	{
-		return node.getKind(AS3NodeKind.PARAMETER_LIST);
-	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  IMetaData API :: Properties
@@ -58,8 +53,34 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function get parameter():String
 	{
-		// FIXME impl IMetaData
-		return null;
+		var ast:IParserNode = findParameterList();
+		if (!ast)
+			return null;
+		return ASTUtil.stringifyNode(ast);
+	}
+	
+	//----------------------------------
+	//  parameters
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMetaData#parameters
+	 */
+	public function get parameters():Vector.<IMetaDataParameter>
+	{
+		var result:Vector.<IMetaDataParameter> = new Vector.<IMetaDataParameter>();
+		
+		var ast:IParserNode = findParameterList();
+		if (!ast)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while(i.hasNext())
+		{
+			result.push(new MetaDataParameterNode(i.next()));
+		}
+		
+		return result;
 	}
 	
 	//----------------------------------
@@ -69,14 +90,16 @@ public class MetaDataNode extends ScriptNode
 	/**
 	 * @copy org.as3commons.asblocks.api.IMetaData#parameters
 	 */
-	public function get parameters():Vector.<IMetaDataParameter>
+	public function get name():String
 	{
-		// FIXME impl IMetaData
-		return null;
+		var ast:IParserNode = findName();
+		if(!ast)
+			return null;
+		return ast.stringValue;
 	}
 	
 	//----------------------------------
-	//  label
+	//  hasName
 	//----------------------------------
 	
 	/**
@@ -84,8 +107,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function get hasName():Boolean
 	{
-		// FIXME impl IMetaData
-		return false;
+		return findName() != null;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -103,7 +125,7 @@ public class MetaDataNode extends ScriptNode
 	 */
 	public function get description():String
 	{
-		return null;
+		return documentation.description;
 	}
 	
 	/**
@@ -228,6 +250,16 @@ public class MetaDataNode extends ScriptNode
 	{
 		// FIXME impl IMetaData
 		return false;
+	}
+	
+	private function findName():IParserNode
+	{
+		return node.getKind(AS3NodeKind.NAME);
+	}
+	
+	private function findParameterList():IParserNode
+	{
+		return node.getKind(AS3NodeKind.PARAMETER_LIST);
 	}
 }
 }

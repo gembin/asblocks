@@ -35,7 +35,7 @@ package org.as3commons.asblocks.api
  * @see org.as3commons.asblocks.IASProject#newInterface()
  * @see org.as3commons.asblocks.IASProject#newFunction()
  */
-public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
+public interface IType extends IContentBlock, IMetaDataAware, IDocCommentAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -82,52 +82,5 @@ public interface IType extends IScriptNode, IMetaDataAware, IDocCommentAware
 	 * @private
 	 */
 	function set name(value:String):void;
-	
-	//----------------------------------
-	//  methods
-	//----------------------------------
-	
-	/**
-	 * Returns the Vector of <code>IMethod</code> held on this type.
-	 * 
-	 * <p>The property always returns a Vector regaurdless of methods defined.
-	 * The property will not return <code>null</code>.</p>
-	 */
-	function get methods():Vector.<IMethod>;
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * Creates, appends and returns a new <code>IMethod</code> instance.
-	 * 
-	 * @param name The <code>String</code> name of the method.
-	 * @param visibility The <code>Visibility</code> of the method.
-	 * @param returnType The return type of the method.
-	 * @return A new <code>IMethod</code> instance appended to the type.
-	 */
-	function newMethod(name:String, 
-					   visibility:Visibility, 
-					   returnType:String):IMethod;
-	
-	/**
-	 * Returns an <code>IMethod</code> instance if found or <code>null</code> 
-	 * if the type does not contain a method by name.
-	 * 
-	 * @return The <code>IMethod</code> instance by name or <code>null</code>.
-	 */
-	function getMethod(name:String):IMethod;
-	
-	/**
-	 * Attemps to remove an <code>IMethod</code> instance by name.
-	 * 
-	 * @param name The <code>String</code> name of the method.
-	 * @return An <code>IMethod</code> indicating whether a method by name was 
-	 * found and removed (<code>IMethod</code>), or (<code>null</code>) if not.
-	 */
-	function removeMethod(name:String):IMethod;
 }
 }

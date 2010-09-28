@@ -17,57 +17,34 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.as3commons.asblocks.impl
+package org.as3commons.mxmlblocks.impl
 {
 
+import org.as3commons.asblocks.impl.ClassTypeNode;
 import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.api.ISourceCode;
-import org.as3commons.asblocks.parser.core.SourceCode;
-import org.as3commons.asblocks.parser.errors.UnExpectedTokenError;
-import org.as3commons.asblocks.parser.impl.AS3Parser;
-import org.as3commons.asblocks.IASParser;
-import org.as3commons.asblocks.api.ICompilationUnit;
-import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.mxmlblocks.api.IApplicationType;
 
 /**
- * Implementation of the <code>IASParser</code> API.
+ * The <code>IMXMLApplication</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ASParser implements IASParser
+public class ApplicationTypeNode extends ClassTypeNode implements IApplicationType
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IASParser API :: Methods
+	//  Constructor
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.as3commons.asblocks.IASParser#parse()
+	 * Constructor.
 	 */
-	public function parse(code:ISourceCode):ICompilationUnit
+	public function ApplicationTypeNode(node:IParserNode)
 	{
-		var parser:AS3Parser = ASTUtil.parse(code);
-		var ast:IParserNode;
-		try
-		{
-			ast = parser.parseCompilationUnit();
-		}
-		catch (e:UnExpectedTokenError)
-		{
-			throw ASTUtil.constructSyntaxError(null, parser, e);
-		}
-		return new CompilationUnitNode(ast);
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.IASParser#parseString()
-	 */
-	public function parseString(source:String):ICompilationUnit
-	{
-		return parse(new SourceCode(source));
+		super(node);
 	}
 }
 }

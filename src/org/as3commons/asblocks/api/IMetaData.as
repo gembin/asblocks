@@ -56,6 +56,8 @@ public interface IMetaData extends IScriptNode, IDocCommentAware
 	 */
 	function get parameters():Vector.<IMetaDataParameter>;
 	
+	function get name():String;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Methods

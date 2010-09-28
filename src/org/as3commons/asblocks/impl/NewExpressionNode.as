@@ -20,10 +20,11 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.INewExpression;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 
 /**
  * The <code>INewExpression</code> implementation.
@@ -42,11 +43,18 @@ public class NewExpressionNode extends InvocationNode
 	
 	override public function get arguments():Vector.<IExpression>
 	{
-		if (hasArguments)
+		var result:Vector.<IExpression> = new Vector.<IExpression>();
+		var ast:IParserNode = node.getFirstChild().getLastChild();
+		if (!ast)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
 		{
-			return super.arguments;
+			result.push(ExpressionBuilder.build(i.next()));
 		}
-		return null;
+		
+		return result;
 	}
 	
 	override public function set arguments(value:Vector.<IExpression>):void

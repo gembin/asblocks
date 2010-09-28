@@ -113,6 +113,11 @@ public class LinkedListTreeAdaptor
 			TokenNode(result).tokenListUpdater = 
 				new ParentheticListUpdateDelegate(AS3NodeKind.LPAREN, AS3NodeKind.RPAREN);
 		}
+		else if (payload.kind == "cdata")
+		{
+			TokenNode(result).tokenListUpdater = 
+				new ParentheticListUpdateDelegate("lcdata", "rcdata");
+		}
 		
 		if (payload is LinkedListToken) 
 		{

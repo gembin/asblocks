@@ -237,6 +237,11 @@ public class TokenBuilder
 		return token;
 	}
 	
+	public static function newQuote():LinkedListToken
+	{
+		return newToken("quote", "\"");
+	}
+	
 	public static function newLParen():LinkedListToken
 	{
 		return newToken(AS3NodeKind.LPAREN, "(");

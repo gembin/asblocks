@@ -17,11 +17,12 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.as3commons.asblocks.parser.impl
+package org.as3commons.mxmlblocks.parser.impl
 {
 
 import org.as3commons.asblocks.parser.api.ISourceCodeScanner;
 import org.as3commons.asblocks.parser.core.Token;
+import org.as3commons.asblocks.parser.impl.ScannerBase;
 
 /**
  * A scanner that is .mxml domain aware.
@@ -353,7 +354,9 @@ public class MXMLScanner extends ScannerBase implements ISourceCodeScanner
 		while (currentCharacter != null
 			&& !(currentCharacter == '>' && previousCharacter == ']'));
 		
-		return new Token(buffer.replace("]]>", ""), line, column);
+		var token:Token = new Token(buffer.replace("]]>", ""), line, column);
+		token.kind = "cdata";
+		return token;
 	}
 }
 }

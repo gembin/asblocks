@@ -159,6 +159,17 @@ public class ASProject implements IASProject
 	}
 	
 	/**
+	 * @copy org.as3commons.asblocks.IASProject#newApplication()
+	 */
+	public function newApplication(qualifiedName:String, 
+								   superQualifiedName:String):ICompilationUnit
+	{
+		var cu:ICompilationUnit = factory.newApplication(qualifiedName, superQualifiedName);
+		addCompilationUnit(cu);
+		return cu;
+	}
+	
+	/**
 	 * @copy org.as3commons.asblocks.IASProject#addCompilationUnit()
 	 */
 	public function addCompilationUnit(unit:ICompilationUnit):Boolean

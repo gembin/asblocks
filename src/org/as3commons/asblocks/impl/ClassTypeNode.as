@@ -20,17 +20,18 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.LinkedListToken;
-import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.IField;
 import org.as3commons.asblocks.api.IMethod;
 import org.as3commons.asblocks.api.Modifier;
 import org.as3commons.asblocks.api.Visibility;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.asblocks.utils.FieldUtil;
 import org.as3commons.asblocks.utils.ModifierUtil;
 
 /**
@@ -159,26 +160,22 @@ public class ClassTypeNode extends TypeNode implements IClassType
 		return result;
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  IFieldAware API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
 	//----------------------------------
 	//  fields
 	//----------------------------------
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.ITypeNode#fields
+	 * @copy org.as3commons.asblocks.api.IFieldAware#fields
 	 */
 	public function get fields():Vector.<IField>
 	{
-		var result:Vector.<IField> = new Vector.<IField>();
-		var i:ASTIterator = new ASTIterator(findContent());
-		while (i.hasNext())
-		{
-			var member:IParserNode = i.search(AS3NodeKind.FIELD_LIST);
-			if (member)
-			{
-				result.push(new FieldNode(member));
-			}
-		}
-		return result;
+		return FieldUtil.getFields(findContent());
 	}
 	
 	//--------------------------------------------------------------------------
@@ -291,73 +288,43 @@ public class ClassTypeNode extends TypeNode implements IClassType
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IClassType API :: Methods
+	//  IFieldAware API :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.IClassType#newField()
+	 * @copy org.as3commons.asblocks.api.IFieldAware#newField()
 	 */
 	public function newField(name:String, 
 							 visibility:Visibility, 
 							 type:String):IField
 	{
-		var field:IField = ASTBuilder.newField(name, visibility, type);
-		addField(field);
-		return field;
+		return FieldUtil.newField(findContent(), name, visibility, type);
 	}
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.IClassType#getField()
+	 * @copy org.as3commons.asblocks.api.IFieldAware#getField()
 	 */
 	public function getField(name:String):IField
 	{
-		var i:ASTIterator = new ASTIterator(findContent());
-		while (i.hasNext())
-		{
-			var member:IParserNode = i.next();
-			if (member.isKind(AS3NodeKind.FIELD_LIST))
-			{
-				var field:IField = new FieldNode(member);
-				if (field.name == name)
-				{
-					return field;
-				}
-			}
-		}
-		return null;
+		return FieldUtil.getField(findContent(), name);
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IFieldAware#addField()
 	 */
 	public function addField(field:IField):void
 	{
-		ASTUtil.addChildWithIndentation(findContent(), field.node);
+		FieldUtil.addField(findContent(), field);
 	}
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.IClassType#removeField()
+	 * @copy org.as3commons.asblocks.api.IFieldAware#removeField()
 	 */
 	public function removeField(name:String):IField
 	{
-		var i:ASTIterator = new ASTIterator(findContent());
-		while (i.hasNext())
-		{
-			var member:IParserNode = i.next();
-			if (member.isKind(AS3NodeKind.FIELD_LIST))
-			{
-				var field:IField = new FieldNode(member);
-				if (field.name == name)
-				{
-					i.remove();
-					return field;
-				}
-			}
-		}
-		return null;
+		return FieldUtil.removeField(findContent(), name);
 	}
-	
 	//--------------------------------------------------------------------------
 	//
 	//  Private :: Methods

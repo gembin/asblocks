@@ -353,7 +353,7 @@ public class AS3FragmentParser
 	private static function createParser(source:String):AS3Parser
 	{
 		var parser:AS3Parser = new AS3Parser();
-		parser.scanner.setLines(Vector.<String>([source]));
+		parser.scanner.setLines(Vector.<String>(source.split("\n")));
 		return parser
 	}
 }

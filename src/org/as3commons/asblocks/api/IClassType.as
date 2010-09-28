@@ -47,7 +47,7 @@ package org.as3commons.asblocks.api
  * @see org.as3commons.asblocks.api.IASProject#newClass()
  * @see org.as3commons.asblocks.api.ICompilationUnit
  */
-public interface IClassType extends IType
+public interface IClassType extends IType, IFieldAware
 {
 	//--------------------------------------------------------------------------
 	//
@@ -123,18 +123,6 @@ public interface IClassType extends IType
 	 */
 	function get implementedInterfaces():Vector.<String>;
 	
-	//----------------------------------
-	//  fields
-	//----------------------------------
-	
-	/**
-	 * Returns all <code>IField</code> instances declared in the class content.
-	 * 
-	 * <p>This property will never return <code>null</code>, if fields are 
-	 * not found, an empty Vector is returned.</p>
-	 */
-	function get fields():Vector.<IField>;
-	
 	//--------------------------------------------------------------------------
 	//
 	//  Methods
@@ -163,34 +151,5 @@ public interface IClassType extends IType
 	 * @return A Boolean indicating whether the implementation was added.
 	 */
 	function removeImplementedInterface(name:String):Boolean;
-	
-	/**
-	 * Creates, appends and returns a new <code>IField</code> instance.
-	 * 
-	 * @param name The <code>String</code> name of the field.
-	 * @param visibility The <code>Visibility</code> of the field.
-	 * @param type The type of the field.
-	 * @return A new <code>IField</code> instance appended to the class type.
-	 */
-	function newField(name:String, 
-					  visibility:Visibility, 
-					  type:String):IField;
-	
-	/**
-	 * Returns an <code>IField</code> instance if found or <code>null</code> 
-	 * if the type does not contain a field by name.
-	 * 
-	 * @return The <code>IField</code> instance by name or <code>null</code>.
-	 */
-	function getField(name:String):IField;
-	
-	/**
-	 * Attemps to remove an <code>IField</code> instance by name.
-	 * 
-	 * @param name The <code>String</code> name of the field.
-	 * @return An <code>IField</code> indicating whether a field by name was 
-	 * found and removed (<code>IField</code>), or (<code>null</code>) if not.
-	 */
-	function removeField(name:String):IField;
 }
 }

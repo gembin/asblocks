@@ -1,8 +1,6 @@
 package testSuites
 {
 
-import flexunit.framework.Test;
-
 import org.as3commons.asblocks.TestASFactory;
 import org.as3commons.asblocks.impl.TestASProject;
 import org.as3commons.asblocks.impl.TestArrayAccessExpressionNode;
@@ -42,7 +40,10 @@ import org.as3commons.asblocks.impl.TestTryStatementNode;
 import org.as3commons.asblocks.impl.TestTypeNode;
 import org.as3commons.asblocks.impl.TestWhileStatementNode;
 import org.as3commons.asblocks.impl.TestWithStatementNode;
-import org.as3commons.asblocks.parser.impl.TestSwitchStatement;
+import org.as3commons.mxmlblocks.impl.TestApplicationTypeNode;
+import org.as3commons.mxmlblocks.impl.TestAttributeNode;
+import org.as3commons.mxmlblocks.impl.TestTagListNode;
+import org.as3commons.mxmlblocks.impl.TestXMLNamespaceNode;
 
 [Suite]
 [RunWith("org.flexunit.runners.Suite")]
@@ -97,6 +98,10 @@ public class AS3BlocksTestSuite
 	public var testPrefixExpressionNode:TestPrefixExpressionNode;
 	public var testStatementList:TestStatementList;
 	
-	
+	// MXML
+	public var testMXMLApplicationNode:TestApplicationTypeNode;
+	public var testAttributeNode:TestAttributeNode;
+	public var testTagListNode:TestTagListNode;
+	public var testXMLNamespaceNode:TestXMLNamespaceNode;
 }
 }

@@ -17,43 +17,19 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.as3commons.asblocks.parser.api
+package org.as3commons.mxmlblocks.api
 {
 
+import org.as3commons.asblocks.api.IMetaDataAware;
+
 /**
- * The <strong>MXMLNodeKind</strong> enumeration of <strong>.mxml</strong> 
- * node kinds.
+ * TODO DOCME
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class MXMLNodeKind
+public interface IMetadataBlock extends IMetaDataAware
 {
-	public static const ATT:String = "att";
-	
-	public static const AS_DOC:String = "as-doc";
-	
-	public static const BINDING:String = "binding";
-	
-	public static const CDATA:String = "cdata";
-	
-	public static const COMPILATION_UNIT:String = "compilation-unit";
-	
-	public static const LOCAL_NAME:String = "local-name";
-	
-	public static const NAME:String = "name";
-	
-	public static const PROC_INST:String = "proc-inst";
-	
-	public static const STATE:String = "state";
-	
-	public static const TAG_LIST:String = "tag-list";
-	
-	public static const URI:String = "uri";
-	
-	public static const VALUE:String = "value";
-	
-	public static const XML_NS:String = "xml-ns";
 }
 }

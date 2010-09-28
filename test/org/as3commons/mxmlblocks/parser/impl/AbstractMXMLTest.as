@@ -1,4 +1,4 @@
-package org.as3commons.asblocks.parser.impl
+package org.as3commons.mxmlblocks.parser.impl
 {
 
 import flexunit.framework.Assert;
@@ -26,8 +26,8 @@ public class AbstractMXMLTest
 	}
 	
 	protected function assertUnit(message:String, 
-									   input:String, 
-									   expected:String):void
+								  input:String, 
+								  expected:String):void
 	{
 		var result:String = ASTUtil.convert(parseUnit(input));
 		Assert.assertEquals(message, expected, result);

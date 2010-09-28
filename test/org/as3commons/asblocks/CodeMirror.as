@@ -63,7 +63,8 @@ public class CodeMirror
 		
 		if (ast1.isKind(AS3NodeKind.NAME))
 		{
-			assertEquals("At " + path, ast1.stringValue, ast2.stringValue);
+			assertEquals("[sv] At " + path, ast1.stringValue, ast2.stringValue);
+			//assertEquals("[kind] At " + path, ast1.kind, ast2.kind);
 		}
 		assertEquals("At " + path + " child count mismatch: " + 
 			stringifyFirstLevel(ast1) + " vs. " + stringifyFirstLevel(ast2), 

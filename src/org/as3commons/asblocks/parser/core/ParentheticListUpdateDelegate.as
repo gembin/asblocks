@@ -49,6 +49,12 @@ public class ParentheticListUpdateDelegate implements ITokenListUpdateDelegate
 	 */
 	private var close:String;
 	
+	public function setBoundaries(open:String, close:String):void
+	{
+		this.open = open;
+		this.close = close;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

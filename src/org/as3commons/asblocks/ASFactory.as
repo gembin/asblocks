@@ -20,10 +20,6 @@
 package org.as3commons.asblocks
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.api.KeyWords;
-import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.api.IArrayAccessExpression;
 import org.as3commons.asblocks.api.IArrayLiteral;
 import org.as3commons.asblocks.api.IAssignmentExpression;
@@ -47,7 +43,7 @@ import org.as3commons.asblocks.api.ISimpleNameExpression;
 import org.as3commons.asblocks.api.IStatement;
 import org.as3commons.asblocks.api.IStringLiteral;
 import org.as3commons.asblocks.api.IUndefinedLiteral;
-import org.as3commons.asblocks.impl.ASParser;
+import org.as3commons.asblocks.impl.ASParserImpl;
 import org.as3commons.asblocks.impl.ASProject;
 import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ASWriter;
@@ -72,7 +68,15 @@ import org.as3commons.asblocks.impl.StatementList;
 import org.as3commons.asblocks.impl.StringLiteralNode;
 import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.impl.UndefinedLiteralNode;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.api.KeyWords;
+import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.mxmlblocks.IMXMLParser;
+import org.as3commons.mxmlblocks.api.IBlockTag;
+import org.as3commons.mxmlblocks.impl.MXMLParserImpl;
+import org.as3commons.mxmlblocks.impl.TagList;
 
 /**
  * TODO DOCME
@@ -115,6 +119,26 @@ public class ASFactory
 	public function newInterface(qualifiedName:String):ICompilationUnit
 	{
 		return ASTBuilder.synthesizeInterface(qualifiedName);
+	}
+	
+	// FIXME move to MXMLFactory
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newApplication(qualifiedName:String, 
+								   superQualifiedName:String):ICompilationUnit
+	{
+		return ASTBuilder.synthesizeApplication(qualifiedName, superQualifiedName);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newTag(name:String, binding:String = null):IBlockTag
+	{
+		var ast:IParserNode = ASTBuilder.newTag(name, binding);
+		return new TagList(ast);
 	}
 	
 	//----------------------------------
@@ -687,7 +711,15 @@ public class ASFactory
 	 */
 	public function newParser():IASParser
 	{
-		return new ASParser();
+		return new ASParserImpl();
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newMXMLParser():IMXMLParser
+	{
+		return new MXMLParserImpl();
 	}
 	
 	/**

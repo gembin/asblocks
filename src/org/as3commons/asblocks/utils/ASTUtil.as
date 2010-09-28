@@ -20,7 +20,12 @@
 package org.as3commons.asblocks.utils
 {
 
+import org.as3commons.asblocks.ASBlocksSyntaxError;
+import org.as3commons.asblocks.impl.ASTBuilder;
+import org.as3commons.asblocks.impl.ASTPrinter;
+import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParser;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 import org.as3commons.asblocks.parser.api.IToken;
@@ -31,10 +36,9 @@ import org.as3commons.asblocks.parser.errors.NullTokenError;
 import org.as3commons.asblocks.parser.errors.UnExpectedTokenError;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.parser.impl.AS3Parser;
-import org.as3commons.asblocks.ASBlocksSyntaxError;
-import org.as3commons.asblocks.impl.ASTBuilder;
-import org.as3commons.asblocks.impl.ASTPrinter;
-import org.as3commons.asblocks.impl.TokenBuilder;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
+import org.as3commons.mxmlblocks.parser.api.MXMLNodeKind;
+import org.as3commons.mxmlblocks.parser.impl.MXMLParser;
 
 /**
  * TODO DOCME
@@ -46,6 +50,123 @@ import org.as3commons.asblocks.impl.TokenBuilder;
 public class ASTUtil
 {
 	private static var adapter:LinkedListTreeAdaptor = new LinkedListTreeAdaptor();
+	
+	public static function getLastTagList(ast:IParserNode):IParserNode
+	{
+		var i:ASTIterator = new ASTIterator(ast);
+		var child:IParserNode;
+		while (i.hasNext())
+		{
+			child = i.search(MXMLNodeKind.TAG_LIST);
+		}
+		
+		return child;
+	}
+	
+	public static function findTagStart(ast:IParserNode):LinkedListToken
+	{
+		if (ast == null)
+			return null;
+		
+		// <tag>\n
+		// \t<tag2 ti="s">\n
+		// \t</tag2>\n
+		// </tag>
+		var startAST:IParserNode = ast;
+		if (ast.hasKind(MXMLNodeKind.TAG_LIST))
+		{
+			startAST = getLastTagList(ast);
+		}
+		
+		var tok:LinkedListToken = startAST.startToken;
+		while (tok.text != ">")
+		{
+			if (tok.next == null) 
+			{
+				break;
+			}
+			tok = tok.next;
+		}
+		
+		return tok;
+	}
+	
+	public static function findTagStop(ast:IParserNode):LinkedListToken
+	{
+		if (ast == null)
+			return null;
+		// <tag>\n
+		// \t<tag2 ti="s">\n
+		// \t</tag2>\n
+		// </tag>
+		
+		var endAST:IParserNode = ast;
+		if (ast.hasKind(MXMLNodeKind.TAG_LIST))
+		{
+			endAST = getLastTagList(ast);
+		}
+		
+		var tok:LinkedListToken = endAST.stopToken;
+		while (tok.text != "</")
+		{
+			if (tok.previous == null) 
+			{
+				break;
+			}
+			tok = tok.previous;
+		}
+		
+		return tok;
+	}
+	
+	public static function findXMLIndent(node:IParserNode):String
+	{
+		if (node == null)
+			return "";
+		
+		var tok:LinkedListToken = node.startToken;
+		tok = tok.next;
+		if (!tok)
+		{
+			return findIndent(node.parent);
+		}
+		
+		// the start-token of this AST node is actually whitespace, so
+		// scan forward until we hit a non-WS token,
+		while (tok.kind == AS3NodeKind.NL || tok.kind == AS3NodeKind.WS)
+		{
+			if (tok.next == null) 
+			{
+				break;
+			}
+			tok = tok.next;
+		}
+		// search backwards though the tokens, looking for the start of
+		// the line,
+		for (; tok.previous != null; tok = tok.previous)
+		{
+			if (tok.kind == AS3NodeKind.NL)
+			{
+				break;
+			}
+		}
+		if (tok.kind == AS3NodeKind.WS)
+		{
+			return tok.text;
+		}
+		if (tok.kind != AS3NodeKind.NL) 
+		{
+			return "";
+		}
+		
+		var startOfLine:LinkedListToken = tok.next;
+		
+		if (startOfLine.kind == AS3NodeKind.WS)
+		{
+			return startOfLine.text;
+		}
+		return "";
+	}
 	
 	public static function findIndent(node:IParserNode):String
 	{
@@ -577,8 +698,18 @@ public class ASTUtil
 		
 	}
 	
+	public static function parseMXML(code:ISourceCode):MXMLParser
+	{
+		var parser:MXMLParser = new MXMLParser();
+		var source:String = code.code;
+		source = source.split("\r\n").join("\n");
+		parser.scanner.setLines(Vector.<String>(source.split("\n")));
+		return parser;
+		
+	}
+	
 	public static function constructSyntaxError(statement:String, 
-												parser:AS3Parser,
+												parser:IParser,
 												cause:Error):ASBlocksSyntaxError
 	{
 		var message:String = "";
@@ -626,6 +757,21 @@ public class ASTUtil
 		}
 		
 		return result;
+	}
+	
+	public static function findIndentForXMLComment(ast:IParserNode):String
+	{
+		var last:IParserNode = ast.getLastChild();
+		var indent:String;
+		if (last == null)
+		{
+			indent = "\t" + findXMLIndent(ast);
+		}
+		else
+		{
+			indent = findXMLIndent(last);
+		}
+		return indent;
 	}
 	
 	public static function findIndentForComment(ast:IParserNode):String

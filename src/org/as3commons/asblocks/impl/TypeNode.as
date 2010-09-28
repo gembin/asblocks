@@ -20,16 +20,12 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.api.IDocComment;
 import org.as3commons.asblocks.api.IMetaData;
-import org.as3commons.asblocks.api.IMethod;
 import org.as3commons.asblocks.api.IType;
 import org.as3commons.asblocks.api.Visibility;
-import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.utils.DocCommentUtil;
 import org.as3commons.asblocks.utils.MetaDataUtil;
 import org.as3commons.asblocks.utils.ModifierUtil;
@@ -44,7 +40,7 @@ import org.as3commons.asblocks.utils.NameTypeUtil;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class TypeNode extends ScriptNode implements IType
+public class TypeNode extends ContentBlockNode implements IType
 {
 	//--------------------------------------------------------------------------
 	//
@@ -95,31 +91,7 @@ public class TypeNode extends ScriptNode implements IType
 	{
 		NameTypeUtil.setName(node, value);
 	}
-	
-	//----------------------------------
-	//  methods
-	//----------------------------------
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IType#methods
-	 */
-	public function get methods():Vector.<IMethod>
-	{
-		var result:Vector.<IMethod> = new Vector.<IMethod>();
-		var i:ASTIterator = new ASTIterator(findContent());
-		while (i.hasNext())
-		{
-			var member:IParserNode = i.next();
-			if (member.isKind(AS3NodeKind.FUNCTION)
-				|| member.isKind(AS3NodeKind.GET)
-				|| member.isKind(AS3NodeKind.SET))
-			{
-				result.push(new MethodNode(member));
-			}
-		}
-		return result;
-	}
-	
+
 	//--------------------------------------------------------------------------
 	//
 	//  IMetaDataAware API :: Properties
@@ -192,78 +164,6 @@ public class TypeNode extends ScriptNode implements IType
 	
 	//--------------------------------------------------------------------------
 	//
-	//  IType API :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IType#newMethod()
-	 */
-	public function newMethod(name:String, 
-							  visibility:Visibility, 
-							  returnType:String):IMethod
-	{
-		return null;
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IType#getMethod()
-	 */
-	public function getMethod(name:String):IMethod
-	{
-		var i:ASTIterator = new ASTIterator(findContent());
-		while (i.hasNext())
-		{
-			var member:IParserNode = i.next();
-			if (member.isKind(AS3NodeKind.FUNCTION)
-				|| member.isKind(AS3NodeKind.GET)
-				|| member.isKind(AS3NodeKind.SET))
-			{
-				var meth:IMethod = new MethodNode(member);
-				if (meth.name == name)
-				{
-					return meth;
-				}
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * @private
-	 * FIXME add addMethod() to public api ?
-	 */
-	public function addMethod(method:IMethod):void
-	{
-		ASTUtil.addChildWithIndentation(findContent(), method.node);
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.api.IType#removeMethod()
-	 */
-	public function removeMethod(name:String):IMethod
-	{
-		var i:ASTIterator = new ASTIterator(findContent());
-		while (i.hasNext())
-		{
-			var member:IParserNode = i.next();
-			if (member.isKind(AS3NodeKind.FUNCTION)
-				|| member.isKind(AS3NodeKind.GET)
-				|| member.isKind(AS3NodeKind.SET))
-			{
-				var meth:IMethod = new MethodNode(member);
-				if (meth.name == name)
-				{
-					i.remove();
-					return meth;
-				}
-			}
-		}
-		return null;
-	}
-	
-	//--------------------------------------------------------------------------
-	//
 	//  IMetaDataAware API :: Methods
 	//
 	//--------------------------------------------------------------------------
@@ -306,20 +206,6 @@ public class TypeNode extends ScriptNode implements IType
 	public function removeMetaData(metaData:IMetaData):Boolean
 	{
 		return MetaDataUtil.removeMetaData(node, metaData);
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Protected :: Properties
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	protected function findContent():IParserNode
-	{
-		return node.getKind(AS3NodeKind.CONTENT);
 	}
 }
 }

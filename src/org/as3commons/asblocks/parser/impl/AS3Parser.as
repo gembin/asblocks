@@ -371,6 +371,13 @@ public class AS3Parser extends ParserBase
 			consumeWS(Operators.RCURLY, result, false);
 		}
 		
+		if (pendingType.parent == null)
+		{
+			// parsing just metadata, this is a hack shortcut for now
+			pendingType.removeChild(pendingMetaList);
+			result.addChild(pendingMetaList);
+		}
+		
 		return result;
 	}
 	

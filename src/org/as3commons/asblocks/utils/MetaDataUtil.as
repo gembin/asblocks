@@ -20,14 +20,14 @@
 package org.as3commons.asblocks.utils
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.LinkedListToken;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.api.IMetaData;
 import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.MetaDataNode;
 import org.as3commons.asblocks.impl.TokenBuilder;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 
 /**
  * A utility class for working with the <code>IMetaDataAware</code> api.
@@ -64,13 +64,26 @@ public class MetaDataUtil
 			list = ASTUtil.newAST(AS3NodeKind.META_LIST);
 			ast.addChildAt(list, 0);
 		}
-		var indent:String = ASTUtil.findIndent(ast);
 		
+		var indent:String = ASTUtil.findIndent(ast);
 		var indentTok:LinkedListToken = TokenBuilder.newWhiteSpace(indent);
 		
-		list.addChild(metadata.node);
-		list.appendToken(TokenBuilder.newNewline());
-		list.appendToken(indentTok);
+		if (ast.startToken.kind == "nl")
+		{
+			list.addChild(metadata.node);
+			list.appendToken(TokenBuilder.newNewline());
+			list.appendToken(indentTok);
+		}
+		else // MetadataTag
+		{
+			indent += "\t";
+			list.appendToken(TokenBuilder.newNewline());
+			indentTok = TokenBuilder.newWhiteSpace(indent);
+			list.appendToken(indentTok);
+			
+			list.addChild(metadata.node);
+		}
+		
 		return metadata;
 	}
 	
