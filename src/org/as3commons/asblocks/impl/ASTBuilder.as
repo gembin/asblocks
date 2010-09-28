@@ -19,7 +19,6 @@ import org.as3commons.asblocks.parser.core.ParentheticListUpdateDelegate;
 import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.utils.ASTUtil;
-import org.as3commons.mxmlblocks.api.ITag;
 import org.as3commons.mxmlblocks.parser.api.MXMLNodeKind;
 
 public class ASTBuilder
@@ -507,10 +506,10 @@ public class ASTBuilder
 		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
 		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
 		ast.addChild(mods);
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newFunction());
 		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
 		var n:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME, name);
 		ast.addChild(n);
 		var params:IParserNode = ASTUtil.newParentheticAST(
@@ -529,6 +528,33 @@ public class ASTBuilder
 		ast.appendToken(TokenBuilder.newSpace());
 		var block:IParserNode = newBlock();
 		ast.addChild(block);
+		
+		return new MethodNode(ast);
+	}
+	
+	public static function newInterfaceMethod(name:String,
+											  returnType:String):IMethod
+	{
+		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
+		ast.appendToken(TokenBuilder.newFunction());
+		ast.appendToken(TokenBuilder.newSpace());
+		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
+		var n:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME, name);
+		ast.addChild(n);
+		var params:IParserNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.PARAMETER_LIST,
+			AS3NodeKind.LPAREN, "(",
+			AS3NodeKind.RPAREN, ")");
+		ast.addChild(params);
+		if (returnType)
+		{
+			var colon:LinkedListToken = TokenBuilder.newColon();
+			var typeAST:IParserNode = AS3FragmentParser.parseType(returnType);
+			typeAST.startToken.beforeInsert(colon);
+			typeAST.startToken = colon;
+			ast.addChild(typeAST);
+		}
+		ast.appendToken(TokenBuilder.newSemi());
 		
 		return new MethodNode(ast);
 	}

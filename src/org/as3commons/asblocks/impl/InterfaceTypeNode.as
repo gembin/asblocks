@@ -20,12 +20,14 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.api.IInterfaceType;
+import org.as3commons.asblocks.api.IMethod;
+import org.as3commons.asblocks.api.Visibility;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
-import org.as3commons.asblocks.api.IInterfaceType;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -35,8 +37,7 @@ import org.as3commons.asblocks.utils.ASTUtil;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class InterfaceTypeNode extends TypeNode 
-	implements IInterfaceType
+public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 {
 	//--------------------------------------------------------------------------
 	//
@@ -78,6 +79,24 @@ public class InterfaceTypeNode extends TypeNode
 	public function InterfaceTypeNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Overridden Public :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	override public function newMethod(name:String, 
+									   visibility:Visibility, 
+									   returnType:String):IMethod
+	{
+		var method:IMethod = ASTBuilder.newInterfaceMethod(name, returnType);
+		addMethod(method);
+		return method;
 	}
 	
 	//--------------------------------------------------------------------------

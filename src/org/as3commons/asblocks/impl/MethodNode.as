@@ -157,7 +157,6 @@ public class MethodNode extends MemberNode
 		var ast:IParserNode = (value == AccessorRole.GETTER) 
 			? ASTUtil.newAST(AS3NodeKind.GET, "get")
 			: ASTUtil.newAST(AS3NodeKind.SET, "set");
-		role.appendToken(TokenBuilder.newSpace());
 		if (role.numChildren == 0)
 		{
 			role.addChild(ast);
@@ -166,6 +165,7 @@ public class MethodNode extends MemberNode
 		{
 			role.setChildAt(ast, 0);
 		}
+		role.appendToken(TokenBuilder.newSpace());
 	}
 	
 	//--------------------------------------------------------------------------

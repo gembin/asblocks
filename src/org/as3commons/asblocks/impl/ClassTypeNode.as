@@ -325,6 +325,7 @@ public class ClassTypeNode extends TypeNode implements IClassType
 	{
 		return FieldUtil.removeField(findContent(), name);
 	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Private :: Methods

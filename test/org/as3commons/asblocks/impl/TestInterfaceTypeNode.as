@@ -1,15 +1,17 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.ASBlocksSyntaxError;
+import org.as3commons.asblocks.api.AccessorRole;
+import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.api.IInterfaceType;
+import org.as3commons.asblocks.api.IMethod;
+import org.as3commons.asblocks.api.Visibility;
 import org.flexunit.Assert;
 import org.flexunit.asserts.assertEquals;
 import org.flexunit.asserts.assertFalse;
 import org.flexunit.asserts.assertNotNull;
 import org.flexunit.asserts.assertTrue;
-import org.as3commons.asblocks.ASBlocksSyntaxError;
-import org.as3commons.asblocks.api.ICompilationUnit;
-import org.as3commons.asblocks.api.IInterfaceType;
-import org.as3commons.asblocks.api.Visibility;
 
 public class TestInterfaceTypeNode extends BaseASFactoryTest
 {
@@ -73,6 +75,38 @@ public class TestInterfaceTypeNode extends BaseASFactoryTest
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
 		assertFalse(typeNode.removeSuperInterface("IInterfaceC"));
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
+	}
+	
+	[Test]
+	public function test_newMethod():void
+	{
+		unit = project.newInterface("IA");
+		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
+		
+		var itype:IInterfaceType = unit.typeNode as IInterfaceType;
+		itype.newMethod("foo", Visibility.PUBLIC, "void");
+		assertPrint("package {\n\tpublic interface IA {\n\t\tfunction foo():void;\n\t}\n}", unit);
+	}
+	
+	[Test]
+	public function test_newAccessor():void
+	{
+		unit = project.newInterface("IA");
+		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
+		
+		var itype:IInterfaceType = unit.typeNode as IInterfaceType;
+		var m:IMethod = itype.newMethod("foo", Visibility.PUBLIC, "String");
+		m.accessorRole = AccessorRole.GETTER;
+		
+		assertPrint("package {\n\tpublic interface IA {\n\t\tfunction get foo():String;" +
+			"\n\t}\n}", unit);
+		
+		m = itype.newMethod("foo", Visibility.PUBLIC, "void");
+		m.accessorRole = AccessorRole.SETTER;
+		m.addParameter("value", "String");
+		
+		assertPrint("package {\n\tpublic interface IA {\n\t\tfunction get foo():String;" +
+			"\n\t\tfunction set foo(value:String):void;\n\t}\n}", unit);
 	}
 }
 }
