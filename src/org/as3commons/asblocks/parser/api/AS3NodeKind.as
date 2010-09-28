@@ -384,6 +384,8 @@ public class AS3NodeKind
 	
 	public static const CONTENT:String = "content";
 	
+	public static const INTERNAL_CONTENT:String = "internal-content";
+	
 	public static const CLASS:String = "class";
 	
 	public static const INTERFACE:String = "interface";

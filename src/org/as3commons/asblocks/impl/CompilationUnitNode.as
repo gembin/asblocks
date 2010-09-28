@@ -20,11 +20,19 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.api.IFunctionType;
+import org.as3commons.asblocks.api.IInternalClass;
+import org.as3commons.asblocks.api.IInternalFunction;
 import org.as3commons.asblocks.api.IPackage;
 import org.as3commons.asblocks.api.IType;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.core.TokenNode;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
+import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
  * The <code>ICompilationUnit</code> implementation.
@@ -93,6 +101,58 @@ public class CompilationUnitNode extends ScriptNode implements ICompilationUnit
 		return ast.typeNode;
 	}
 	
+	//----------------------------------
+	//  internalClasses
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ICompilationUnit#internalClasses
+	 */
+	public function get internalClasses():Vector.<IClassType>
+	{
+		var result:Vector.<IClassType> = new Vector.<IClassType>();
+		var ast:IParserNode = findContent();
+		if (!ast)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			var current:IParserNode = i.next();
+			if (current.isKind(AS3NodeKind.CLASS))
+			{
+				result.push(new ClassTypeNode(current));
+			}
+		}
+		return result;
+	}
+	
+	//----------------------------------
+	//  internalFunctions
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ICompilationUnit#internalFunctions
+	 */
+	public function get internalFunctions():Vector.<IFunctionType>
+	{
+		var result:Vector.<IFunctionType> = new Vector.<IFunctionType>();
+		var ast:IParserNode = findContent();
+		if (!ast)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			var current:IParserNode = i.next();
+			if (current.isKind(AS3NodeKind.FUNCTION))
+			{
+				result.push(new FunctionTypeNode(current));
+			}
+		}
+		return result;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -105,6 +165,48 @@ public class CompilationUnitNode extends ScriptNode implements ICompilationUnit
 	public function CompilationUnitNode(node:IParserNode)
 	{
 		super(node);
+	}
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ICompilationUnit#newInternalClass()
+	 */
+	public function newInternalClass(name:String):IInternalClass
+	{
+		var ast:IParserNode = ASTBuilder.synthesizeAS3Class(name, false);
+		addInternal(ast);
+		return new InternalClassNode(ast);
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ICompilationUnit#newInternalFunction()
+	 */
+	public function newInternalFunction(name:String, returnType:String):IInternalFunction
+	{
+		var ast:IParserNode = ASTBuilder.synthesizeAS3Function(name, returnType, false);
+		addInternal(ast);
+		return new InternalFunctionNode(ast);
+	}
+	
+	private function findContent():IParserNode
+	{
+		return node.getKind(AS3NodeKind.CONTENT);
+	}
+	
+	private function addInternal(ast:IParserNode):void
+	{
+		var content:IParserNode = findContent();
+		if (!content)
+		{
+			content = ASTUtil.newAST(AS3NodeKind.INTERNAL_CONTENT);
+			node.addChild(content);
+		}
+		content.appendToken(TokenBuilder.newNewline());
+		content.addChild(ast);
 	}
 }
 }

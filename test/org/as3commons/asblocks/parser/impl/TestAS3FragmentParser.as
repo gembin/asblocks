@@ -23,8 +23,8 @@ public class TestAS3FragmentParser
 		result = ASTUtil.convert(ast, false);
 		Assert.assertEquals("<compilation-unit><package><name>my.domain</name>" +
 			"<content><class><mod-list><mod>public</mod></mod-list><name>Test</name><content></content>" +
-			"</class></content></package><content><class><name>InternalClass</name>" +
-			"<content></content></class></content></compilation-unit>", result);
+			"</class></content></package><internal-content><class><name>InternalClass</name>" +
+			"<content></content></class></internal-content></compilation-unit>", result);
 	}
 	
 	[Test]

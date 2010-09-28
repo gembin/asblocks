@@ -702,16 +702,19 @@ public class ASTBuilder
 		return unit;
 	}
 	
-	private static function synthesizeAS3Class(className:String):IParserNode
+	public static function synthesizeAS3Class(className:String, addModList:Boolean = true):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CLASS);
 		//var metas:IParserNode = ASTUtil.newAST(AS3NodeKind.META_LIST);
 		//ast.addChild(metas);
-		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-		var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, "public");
-		mod.appendToken(TokenBuilder.newSpace());
-		mods.addChild(mod);
-		ast.addChild(mods);
+		if (addModList)
+		{
+			var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+			var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, "public");
+			mod.appendToken(TokenBuilder.newSpace());
+			mods.addChild(mod);
+			ast.addChild(mods);
+		}
 		ast.appendToken(TokenBuilder.newClass());
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, className));
@@ -738,14 +741,22 @@ public class ASTBuilder
 		return ast;
 	}
 	
-	private static function synthesizeAS3Function(name:String, returnType:String):IParserNode
+	public static function synthesizeAS3Function(name:String, 
+												 returnType:String, 
+												 addModList:Boolean = true):IParserNode
 	{
 		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
-		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, Visibility.PUBLIC.toString()));
-		ast.addChild(mods);
+		if (addModList)
+		{
+			var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+			mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, Visibility.PUBLIC.toString()));
+			ast.addChild(mods);
+		}
 		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
-		ast.appendToken(TokenBuilder.newSpace());
+		if (addModList)
+		{
+			ast.appendToken(TokenBuilder.newSpace());
+		}
 		ast.appendToken(TokenBuilder.newFunction());
 		ast.appendToken(TokenBuilder.newSpace());
 		var n:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME, name);

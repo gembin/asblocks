@@ -295,8 +295,7 @@ public class AS3Parser extends ParserBase
 		}
 		else
 		{
-			result.startToken.text = null;
-			result.stopToken.text = null;
+			result = adapter.empty(AS3NodeKind.INTERNAL_CONTENT, token);
 		}
 		
 		var pendingType:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);

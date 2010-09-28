@@ -118,5 +118,46 @@ public interface ICompilationUnit extends IScriptNode
 	 * @see org.as3commons.asblocks.api.IInterfaceType
 	 */
 	function get typeNode():IType;
+	
+	//----------------------------------
+	//  internalClasses
+	//----------------------------------
+	
+	/**
+	 * The internal <code>class</code> types found.
+	 */
+	function get internalClasses():Vector.<IClassType>;
+	
+	//----------------------------------
+	//  internalFunctions
+	//----------------------------------
+	
+	/**
+	 * The internal <code>function</code> types found.
+	 */
+	function get internalFunctions():Vector.<IFunctionType>;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Creates a new internal class within the compilation unit.
+	 * 
+	 * @param name The String class name.
+	 * @return A new <code>IInternalClass</code> instance.
+	 */
+	function newInternalClass(name:String):IInternalClass;
+	
+	/**
+	 * Creates a new internal function within the compilation unit.
+	 * 
+	 * @param name The String function name.
+	 * @param returnType The String return type.
+	 * @return A new <code>IInternalFunction</code> instance.
+	 */
+	function newInternalFunction(name:String, returnType:String):IInternalFunction;
 }
 }

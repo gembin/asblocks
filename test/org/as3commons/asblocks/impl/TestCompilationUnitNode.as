@@ -85,5 +85,23 @@ public class TestCompilationUnitNode extends BaseASFactoryTest
 		assertTrue(unit.typeNode is IInterfaceType);
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
 	}
+	
+	[Test]
+	public function test_newInternalClass():void
+	{
+		unit = project.newClass("A");
+		unit.newInternalClass("Foo");
+		
+		assertPrint("package {\n\tpublic class A {\n\t}\n}\nclass Foo {\n}", unit);
+	}
+	
+	[Test]
+	public function test_newInternalFunction():void
+	{
+		unit = project.newClass("A");
+		unit.newInternalFunction("foo", "void");
+		
+		assertPrint("package {\n\tpublic class A {\n\t}\n}\nfunction foo():void {\n}", unit);
+	}
 }
 }
