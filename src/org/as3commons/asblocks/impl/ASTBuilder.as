@@ -229,7 +229,7 @@ public class ASTBuilder
 		nti.addChild(ASTUtil.newNameAST(name));
 		
 		var colon:LinkedListToken = TokenBuilder.newColon();
-		var typeAST:IParserNode = ASTUtil.newTypeAST(type);
+		var typeAST:IParserNode = AS3FragmentParser.parseType(type);
 		typeAST.startToken.beforeInsert(colon);
 		typeAST.startToken = colon;
 		nti.addChild(typeAST);
@@ -592,7 +592,7 @@ public class ASTBuilder
 		{
 			// field-list/name-type-init/type
 			nti.appendToken(TokenBuilder.newColon());
-			nti.addChild(ASTUtil.newTypeAST(type));
+			nti.addChild(AS3FragmentParser.parseType(type));
 		}
 		ast.appendToken(TokenBuilder.newSemi());
 		return new FieldNode(ast);

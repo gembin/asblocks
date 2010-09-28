@@ -20,13 +20,16 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.api.IFunction;
 import org.as3commons.asblocks.api.IParameter;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.asblocks.utils.NameTypeUtil;
 
 /**
  * The <code>IFunction</code> implementation.
@@ -99,10 +102,7 @@ public class FunctionCommon implements IFunction
 	 */
 	public function get returnType():String
 	{
-		var ast:IParserNode = findType();
-		if (ast)
-			return ASTUtil.typeText(ast);
-		return null;
+		return NameTypeUtil.getType(node);
 	}
 	
 	/**
@@ -120,8 +120,10 @@ public class FunctionCommon implements IFunction
 			return;
 		}
 		
-		var typeAST:IParserNode = ASTBuilder.newType(value);
-		
+		var typeAST:IParserNode = AS3FragmentParser.parseType(value);
+		var colon:LinkedListToken = TokenBuilder.newColon();
+		typeAST.startToken.beforeInsert(colon);
+		typeAST.startToken = colon;
 		if (ast == null) // SHOULDN'T BE
 		{
 			
@@ -302,7 +304,12 @@ public class FunctionCommon implements IFunction
 	 */
 	private function findType():IParserNode
 	{
-		return node.getKind(AS3NodeKind.TYPE);
+		var ast:IParserNode = node.getKind(AS3NodeKind.TYPE);
+		if (!ast)
+		{
+			ast = node.getKind(AS3NodeKind.VECTOR);
+		}
+		return ast;
 	}
 	
 	/**

@@ -133,6 +133,15 @@ public class TestMemberNode extends BaseASFactoryTest
 	}
 	
 	[Test]
+	public function test_VectorType():void
+	{
+		//unit = factory.newClass("A");
+		//type = unit.typeNode as IClassType;
+		//member = type.newField("foo", Visibility.PUBLIC, "Vector.<String>");
+		//assertPrint("package {\n\tpublic class A {\n\t\tpublic static var foo:int;\n\t}\n}", unit);
+	}
+	
+	[Test]
 	public function test_isStatic():void
 	{
 		unit = factory.newClass("A");

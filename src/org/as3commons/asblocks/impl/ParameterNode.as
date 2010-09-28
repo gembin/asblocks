@@ -20,10 +20,11 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.api.IParameter;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.api.IParameter;
 import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.asblocks.utils.NameTypeUtil;
 
 /**
  * The <code>IParameter</code> implementation.
@@ -110,12 +111,7 @@ public class ParameterNode extends ScriptNode implements IParameter
 		if (isRest)
 			return null;
 	
-		var ast:IParserNode = findNameTypeInit();
-		var type:IParserNode = ast.getKind(AS3NodeKind.TYPE);
-		if (type)
-			return ASTUtil.typeText(type);
-	
-		return null;
+		return NameTypeUtil.getType(findNameTypeInit());
 	}
 	
 	/**
@@ -141,9 +137,7 @@ public class ParameterNode extends ScriptNode implements IParameter
 	 */
 	public function get hasType():Boolean
 	{
-		var ast:IParserNode = findNameTypeInit();
-		var type:IParserNode = ast.getKind(AS3NodeKind.TYPE);
-		return type != null;
+		return NameTypeUtil.hasType(findNameTypeInit());
 	}
 	
 	//----------------------------------
