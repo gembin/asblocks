@@ -23,6 +23,7 @@ package org.as3commons.asblocks
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.api.IField;
+import org.as3commons.asblocks.api.IFunctionType;
 import org.as3commons.asblocks.api.IInterfaceType;
 import org.as3commons.asblocks.api.IMember;
 import org.as3commons.asblocks.api.IMethod;
@@ -92,6 +93,14 @@ public interface IASWalker
 	 * <code>IPackage</code>.
 	 */
 	function walkInterface(element:IInterfaceType):void;
+	
+	/**
+	 * Walks an <code>IFunctionType</code> of the <code>IPackage</code>.
+	 * 
+	 * @param element The <code>IFunctionType</code> of the 
+	 * <code>IPackage</code>.
+	 */
+	function walkFunction(element:IFunctionType):void;
 	
 	/**
 	 * Called just before <code>visitMethod()</code> or 

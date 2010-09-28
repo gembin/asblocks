@@ -25,6 +25,7 @@ import org.as3commons.asblocks.IASVisitor;
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.api.IField;
+import org.as3commons.asblocks.api.IFunctionType;
 import org.as3commons.asblocks.api.IInterfaceType;
 import org.as3commons.asblocks.api.IMember;
 import org.as3commons.asblocks.api.IMethod;
@@ -79,6 +80,13 @@ public class NullASVisitor implements IASVisitor
 	 * @private
 	 */	
 	public function visitInterface(element:IInterfaceType):void
+	{
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function visitFunction(element:IFunctionType):void
 	{
 	}
 	

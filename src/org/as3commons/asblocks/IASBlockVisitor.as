@@ -33,6 +33,7 @@ import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.api.IConditionalExpression;
 import org.as3commons.asblocks.api.IContinueStatement;
+import org.as3commons.asblocks.api.IDeclaration;
 import org.as3commons.asblocks.api.IDeclarationStatement;
 import org.as3commons.asblocks.api.IDefaultXMLNamespaceStatement;
 import org.as3commons.asblocks.api.IDoWhileStatement;
@@ -69,7 +70,6 @@ import org.as3commons.asblocks.api.IThisStatement;
 import org.as3commons.asblocks.api.IThrowStatement;
 import org.as3commons.asblocks.api.ITryStatement;
 import org.as3commons.asblocks.api.IUndefinedLiteral;
-import org.as3commons.asblocks.api.IDeclaration;
 import org.as3commons.asblocks.api.IWhileStatement;
 import org.as3commons.asblocks.api.IWithStatement;
 

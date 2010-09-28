@@ -26,6 +26,7 @@ import org.as3commons.asblocks.IASWalker;
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.api.IField;
+import org.as3commons.asblocks.api.IFunctionType;
 import org.as3commons.asblocks.api.IInterfaceType;
 import org.as3commons.asblocks.api.IMember;
 import org.as3commons.asblocks.api.IMethod;
@@ -164,6 +165,14 @@ public class ASWalker implements IASWalker
 			walkMember(method);
 			walkMethod(method);
 		}
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASWalker#walkFunction()
+	 */
+	public function walkFunction(element:IFunctionType):void
+	{
+		visitor.visitFunction(element);
 	}
 	
 	/**
