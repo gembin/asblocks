@@ -454,7 +454,60 @@ public class TestCompilationUnit
 			"</package></compilation-unit>");
 	}
 	
+	// Internal Package content
 	
+	[Test]
+	public function testInnerClass():void
+	{
+		var input:String = "package { public class A { } } class Inner { }";
+		assertCompilationUnitPrint(input);
+		assertCompilationUnit("1", input,
+			"<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
+			"column=\"1\"><content line=\"1\" column=\"9\"><class line=\"1\" " +
+			"column=\"18\"><mod-list line=\"1\" column=\"11\"><mod line=\"1\" " +
+			"column=\"11\">public</mod></mod-list><name line=\"1\" column=\"24\">" +
+			"A</name><content line=\"1\" column=\"26\"></content></class></content>" +
+			"</package><content line=\"1\" column=\"32\"><class line=\"1\" " +
+			"column=\"32\"><name line=\"1\" column=\"38\">Inner</name><content " +
+			"line=\"1\" column=\"44\"></content></class></content>" +
+			"</compilation-unit>");
+	}
+	
+	[Test]
+	public function testInnerFunction():void
+	{
+		var input:String = "package { public class A { } } function innerFunction():void { }";
+		assertCompilationUnitPrint(input);
+		assertCompilationUnit("1", input,
+			"<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
+			"column=\"1\"><content line=\"1\" column=\"9\"><class line=\"1\" " +
+			"column=\"18\"><mod-list line=\"1\" column=\"11\"><mod line=\"1\" " +
+			"column=\"11\">public</mod></mod-list><name line=\"1\" column=\"24\">" +
+			"A</name><content line=\"1\" column=\"26\"></content></class></content>" +
+			"</package><content line=\"1\" column=\"32\"><function line=\"1\" " +
+			"column=\"32\"><accessor-role line=\"1\" column=\"41\"></accessor-role>" +
+			"<name line=\"1\" column=\"41\">innerFunction</name><parameter-list " +
+			"line=\"1\" column=\"54\"></parameter-list><type line=\"1\" " +
+			"column=\"57\">void</type><block line=\"1\" column=\"62\"></block>" +
+			"</function></content></compilation-unit>");
+	}
+	
+	[Test]
+	public function testInnerImportUse():void
+	{
+		var input:String = "package { public class A { } } import my.domain.Type; use namespace Type;";
+		assertCompilationUnitPrint(input);
+		assertCompilationUnit("1", input,
+			"<compilation-unit line=\"-1\" column=\"-1\"><package line=\"1\" " +
+			"column=\"1\"><content line=\"1\" column=\"9\"><class line=\"1\" " +
+			"column=\"18\"><mod-list line=\"1\" column=\"11\"><mod line=\"1\" " +
+			"column=\"11\">public</mod></mod-list><name line=\"1\" column=\"24\">" +
+			"A</name><content line=\"1\" column=\"26\"></content></class>" +
+			"</content></package><content line=\"1\" column=\"32\"><import " +
+			"line=\"1\" column=\"32\"><type line=\"1\" column=\"39\">my.domain.Type" +
+			"</type></import><use line=\"1\" column=\"55\"><name line=\"1\" " +
+			"column=\"69\">Type</name></use></content></compilation-unit>");
+	}
 	
 	protected function assertCompilationUnitPrint(input:String):void
 	{

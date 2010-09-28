@@ -18,7 +18,7 @@ public class FormatterUtil
 		// - find the paren
 		// - check to see if a nl is before any token other than ws
 		
-		if (breakIt)
+		if (paren && breakIt)
 		{
 			// add the nl before the curly
 			paren.beforeInsert(TokenBuilder.newNewline());

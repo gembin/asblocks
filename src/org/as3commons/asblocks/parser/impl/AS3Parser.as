@@ -284,11 +284,19 @@ public class AS3Parser extends ParserBase
 		result.line = token.line;
 		result.column = token.column;
 		
-		var internalParse:Boolean = tokIs(KeyWords.CLASS) || tokIs(KeyWords.FUNCTION);
+		// TODO figure out all that can exist internally
+		var internalParse:Boolean = tokIs(KeyWords.CLASS) 
+			|| tokIs(KeyWords.FUNCTION) || tokIs(KeyWords.IMPORT)
+			|| tokIs(KeyWords.USE) || tokIs(KeyWords.INCLUDE);
 		
 		if (!internalParse)
 		{
 			consumeWS(Operators.LCURLY, result);
+		}
+		else
+		{
+			result.startToken.text = null;
+			result.stopToken.text = null;
 		}
 		
 		var pendingType:TokenNode = adapter.empty(AS3NodeKind.PRIMARY, token);

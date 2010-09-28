@@ -88,7 +88,10 @@ public class FieldNode extends MemberNode
 	override public function get type():String
 	{
 		var i:ASTIterator = new ASTIterator(nameTypeInit);
-		return ASTUtil.typeText(i.find(AS3NodeKind.TYPE));
+		var result:IParserNode = i.search(AS3NodeKind.TYPE);
+		if (!result)
+			return null;
+		return result.stringValue;
 	}
 	
 	/**

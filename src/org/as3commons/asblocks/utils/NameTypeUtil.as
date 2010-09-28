@@ -1,10 +1,10 @@
 package org.as3commons.asblocks.utils
 {
 
+import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
-import org.as3commons.asblocks.ASBlocksSyntaxError;
 
 public class NameTypeUtil
 {
@@ -32,7 +32,10 @@ public class NameTypeUtil
 	public static function getType(ast:IParserNode):String
 	{
 		var i:ASTIterator = new ASTIterator(ast);
-		return i.find(AS3NodeKind.TYPE).stringValue;
+		var result:IParserNode = i.search(AS3NodeKind.TYPE);
+		if (!result)
+			return null;
+		return result.stringValue;
 	}
 	
 	public static function setType(ast:IParserNode, type:String):void
