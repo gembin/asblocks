@@ -32,15 +32,15 @@ public class TestSwitchStatement extends AbstractStatementTest
 	[Test]
 	public function testFullFeatured():void
 	{
-		var input:String = "switch( x ){ case 1 : trace('one'); break; default : trace('unknown'); }";
+		var input:String = "switch( x ) { case 1 : trace('one'); break; default : trace('unknown'); }";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<switch line=\"1\" column=\"1\"><condition line=\"1\" column=\"7\"><primary line=\"1\" column=\"9\">x</primary></condition><cases line=\"1\" column=\"12\"><case line=\"1\" column=\"14\"><number line=\"1\" column=\"19\">1</number><switch-block line=\"1\" column=\"23\"><expr-stmnt line=\"1\" column=\"23\"><call line=\"1\" column=\"28\"><primary line=\"1\" column=\"23\">trace</primary><arguments line=\"1\" column=\"28\"><string line=\"1\" column=\"29\">'one'</string></arguments></call></expr-stmnt><break line=\"1\" column=\"37\"></break></switch-block></case><case line=\"1\" column=\"44\"><default line=\"1\" column=\"44\"></default><switch-block line=\"1\" column=\"54\"><expr-stmnt line=\"1\" column=\"54\"><call line=\"1\" column=\"59\"><primary line=\"1\" column=\"54\">trace</primary><arguments line=\"1\" column=\"59\"><string line=\"1\" column=\"60\">'unknown'</string></arguments></call></expr-stmnt></switch-block></case></cases></switch>");
+			"<switch line=\"1\" column=\"1\"><condition line=\"1\" column=\"7\"><primary line=\"1\" column=\"9\">x</primary></condition><cases line=\"1\" column=\"13\"><case line=\"1\" column=\"15\"><number line=\"1\" column=\"20\">1</number><switch-block line=\"1\" column=\"24\"><expr-stmnt line=\"1\" column=\"24\"><call line=\"1\" column=\"29\"><primary line=\"1\" column=\"24\">trace</primary><arguments line=\"1\" column=\"29\"><string line=\"1\" column=\"30\">'one'</string></arguments></call></expr-stmnt><break line=\"1\" column=\"38\"></break></switch-block></case><case line=\"1\" column=\"45\"><default line=\"1\" column=\"45\"></default><switch-block line=\"1\" column=\"55\"><expr-stmnt line=\"1\" column=\"55\"><call line=\"1\" column=\"60\"><primary line=\"1\" column=\"55\">trace</primary><arguments line=\"1\" column=\"60\"><string line=\"1\" column=\"61\">'unknown'</string></arguments></call></expr-stmnt></switch-block></case></cases></switch>");
 		
-		input = "switch( x ){ case 1 : break; default:}";
+		input = "switch( x ) { case 1 : break; default:}";
 		assertStatementPrint(input);
 		assertStatement("2", input,
-			"<switch line=\"1\" column=\"1\"><condition line=\"1\" column=\"7\"><primary line=\"1\" column=\"9\">x</primary></condition><cases line=\"1\" column=\"12\"><case line=\"1\" column=\"14\"><number line=\"1\" column=\"19\">1</number><switch-block line=\"1\" column=\"23\"><break line=\"1\" column=\"23\"></break></switch-block></case><case line=\"1\" column=\"30\"><default line=\"1\" column=\"30\"></default><switch-block line=\"1\" column=\"38\"></switch-block></case></cases></switch>");
+			"<switch line=\"1\" column=\"1\"><condition line=\"1\" column=\"7\"><primary line=\"1\" column=\"9\">x</primary></condition><cases line=\"1\" column=\"13\"><case line=\"1\" column=\"15\"><number line=\"1\" column=\"20\">1</number><switch-block line=\"1\" column=\"24\"><break line=\"1\" column=\"24\"></break></switch-block></case><case line=\"1\" column=\"31\"><default line=\"1\" column=\"31\"></default><switch-block line=\"1\" column=\"39\"></switch-block></case></cases></switch>");
 	}
 }
 }

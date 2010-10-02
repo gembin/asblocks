@@ -2491,6 +2491,7 @@ public class AS3Parser extends ParserBase
 		consume(KeyWords.SWITCH, result);
 		
 		result.addChild(parseCondition());
+		consumeWhitespace(result);
 		result.addChild(parseSwitchCases());
 		
 		return result;
