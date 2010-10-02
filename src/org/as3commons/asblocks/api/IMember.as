@@ -100,6 +100,15 @@ public interface IMember
 	function set name(value:String):void;
 	
 	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * The qualified name of the member.
+	 */
+	function get qualifiedName():String;
+	
+	//----------------------------------
 	//  type
 	//----------------------------------
 	

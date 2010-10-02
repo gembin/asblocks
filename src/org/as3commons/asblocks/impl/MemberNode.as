@@ -93,6 +93,18 @@ public class MemberNode extends ScriptNode implements IMember
 	}
 	
 	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IMember#qualifiedName
+	 */
+	public function get qualifiedName():String
+	{
+		return NameTypeUtil.getQualfiedName(this);
+	}
+	
+	//----------------------------------
 	//  type
 	//----------------------------------
 	

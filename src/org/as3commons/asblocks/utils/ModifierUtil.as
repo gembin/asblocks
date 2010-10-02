@@ -20,12 +20,12 @@
 package org.as3commons.asblocks.utils
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.api.Modifier;
 import org.as3commons.asblocks.api.Visibility;
 import org.as3commons.asblocks.impl.TokenBuilder;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 
 /**
  * TODO DOCME
@@ -110,7 +110,38 @@ public class ModifierUtil
 				return Visibility.getVisibility(child.stringValue);
 			}
 		}
+		
+		i.reset();
+		
+		while (i.hasNext())
+		{
+			child = i.next();
+			if (!isReservedModifier(child.stringValue))
+			{
+				return Visibility.create(child.stringValue);
+			}
+		}
+		
 		return null;
+	}
+	
+	private static var modifiers:Array = 
+		[
+			"override",
+			"static",
+			"final",
+			"dynamic",
+			"native"
+		];
+	
+	public static function isReservedModifier(modifier:String):Boolean
+	{
+		for each (var mod:String in modifiers)
+		{
+			if (mod == modifier)
+				return true;
+		}
+		return false;
 	}
 	
 	public static function setVisibility(ast:IParserNode, visibility:Visibility):void
