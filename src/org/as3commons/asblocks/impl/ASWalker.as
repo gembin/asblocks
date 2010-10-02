@@ -112,11 +112,17 @@ public class ASWalker implements IASWalker
 	public function walkType(element:IType):void
 	{
 		visitor.visitType(element);
-		if (element is IClassType) {
+		if (element is IClassType)
+		{
 			walkClass(IClassType(element));
 		}
-		if (element is IInterfaceType) {
+		else if (element is IInterfaceType)
+		{
 			walkInterface(IInterfaceType(element));
+		}
+		else if (element is IFunctionType)
+		{
+			walkFunction(IFunctionType(element));
 		}
 	}
 	

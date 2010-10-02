@@ -20,11 +20,11 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.core.SourceCode;
 import org.as3commons.asblocks.ASFactory;
 import org.as3commons.asblocks.IASProject;
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.parser.core.SourceCode;
 import org.as3commons.asblocks.utils.FileUtil;
 
 /**
@@ -42,16 +42,36 @@ public class ASProject implements IASProject
 	//
 	//--------------------------------------------------------------------------
 	
-	/**
-	 * @private
-	 */
-	protected var factory:ASFactory;
+	
+	
+	private var resources:Vector.<IResourceRoot>;
 	
 	//--------------------------------------------------------------------------
 	//
 	//  IASProject API :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  factory
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _factory:ASFactory;
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#factory
+	 */
+	public function get factory():ASFactory
+	{
+		return _factory;
+	}
+	
+	//----------------------------------
+	//  compilationUnits
+	//----------------------------------
 	
 	/**
 	 * @private
@@ -72,6 +92,10 @@ public class ASProject implements IASProject
 		}
 		return result;
 	}
+	
+	//----------------------------------
+	//  classPathEntries
+	//----------------------------------
 	
 	/**
 	 * @private
@@ -129,7 +153,7 @@ public class ASProject implements IASProject
 	 */
 	public function ASProject(factory:ASFactory)
 	{
-		this.factory = factory;
+		_factory = factory;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -180,6 +204,7 @@ public class ASProject implements IASProject
 		}
 		
 		_compilationUnits.push(unit);
+		compilationUnitAdded(unit);
 		return true;
 	}
 	
@@ -195,6 +220,7 @@ public class ASProject implements IASProject
 			if (element === unit)
 			{
 				_compilationUnits.splice(i, 1);
+				compilationUnitRemoved(unit);
 				return true;
 			}	
 		}
@@ -240,6 +266,27 @@ public class ASProject implements IASProject
 	}
 	
 	/**
+	 * @copy org.as3commons.asblocks.IASProject#addResourceRoot()
+	 */
+	public function addResourceRoot(resource:IResourceRoot):void
+	{
+		if (!resources)
+		{
+			resources = new Vector.<IResourceRoot>();
+		}
+		
+		resources.push(resource);
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#removeResourceRoot()
+	 */
+	public function removeResourceRoot(resource:IResourceRoot):void
+	{
+		
+	}
+	
+	/**
 	 * @copy org.as3commons.asblocks.IASProject#writeAll()
 	 */
 	public function writeAll():void
@@ -254,6 +301,13 @@ public class ASProject implements IASProject
 		}
 	}
 	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#readAll()
+	 */
+	public function readAll():void
+	{
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Protected :: Methods
@@ -265,6 +319,28 @@ public class ASProject implements IASProject
 	public function get sourceCodeList():Array
 	{
 		return _sourceCodeList;
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function compilationUnitAdded(unit:ICompilationUnit):void
+	{
+		if (unit is CompilationUnitNode)
+		{
+			CompilationUnitNode(unit)._project = this;
+		}
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function compilationUnitRemoved(unit:ICompilationUnit):void
+	{
+		if (unit is CompilationUnitNode)
+		{
+			CompilationUnitNode(unit)._project = null;
+		}
 	}
 	
 	/**

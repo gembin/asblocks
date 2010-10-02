@@ -26,7 +26,7 @@ package org.as3commons.asblocks.api
  * 
  * <pre>
  * var factory:ASFactory = new ASFactory();
- * var project:IASProject = new ASFactory(factory);
+ * var project:IASProject = new ASProject(factory);
  * var unit:ICompilationUnit = project.newInterface("my.domain.IInterfaceType");
  * var type:IInterfaceType = unit.typeNode as IInterfaceType;
  * </pre>
@@ -63,6 +63,24 @@ public interface IInterfaceType extends IType, IContentBlock
 	 * Returns a Vector of interfaces this interface type extends.
 	 */
 	function get superInterfaces():Vector.<String>;
+	
+	//----------------------------------
+	//  qualifiedSuperInterfaces
+	//----------------------------------
+	
+	/**
+	 * Returns a Vector of qualified interfaces this interface type extends.
+	 */
+	function get qualifiedSuperInterfaces():Vector.<String>;
+	
+	//----------------------------------
+	//  isSubType
+	//----------------------------------
+	
+	/**
+	 * Whether the <code>extends</code> clause is present.
+	 */
+	function get isSubType():Boolean;
 	
 	//--------------------------------------------------------------------------
 	//

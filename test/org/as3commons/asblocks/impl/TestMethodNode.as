@@ -82,6 +82,18 @@ public class TestMethodNode extends BaseASFactoryTest
 	}
 	
 	[Test]
+	public function test_qualifiedReturnType():void
+	{
+		method = type.newMethod("test", Visibility.PUBLIC, "Vector.<String>");
+		Assert.assertEquals("Vector.<String>", method.qualifiedReturnType);
+		method.returnType = "void";
+		Assert.assertEquals("void", method.qualifiedReturnType);
+		unit.packageName = "my.domain";
+		method.returnType = "MyClass";
+		Assert.assertEquals("my.domain.MyClass", method.qualifiedReturnType);
+	}
+	
+	[Test]
 	public function test_addParameter():void
 	{
 	}

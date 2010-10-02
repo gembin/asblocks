@@ -77,6 +77,15 @@ public interface IFunction
 	 */
 	function set returnType(value:String):void;
 	
+	//----------------------------------
+	//  qualifiedReturnType
+	//----------------------------------
+	
+	/**
+	 * The qualified return type (resolved from imports or package).
+	 */
+	function get qualifiedReturnType():String;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Methods

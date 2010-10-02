@@ -21,6 +21,9 @@ package org.as3commons.asblocks.utils
 {
 
 import org.as3commons.asblocks.ASBlocksSyntaxError;
+import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.api.IType;
+import org.as3commons.asblocks.impl.ASQName;
 import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ASTPrinter;
 import org.as3commons.asblocks.impl.TokenBuilder;
@@ -686,7 +689,7 @@ public class ASTUtil
 		return kind;
 	}
 	
-
+	
 	
 	public static function parse(code:ISourceCode):AS3Parser
 	{
@@ -825,6 +828,88 @@ public class ASTUtil
 		return null;
 	}
 	
+	public static function qualifiedNameFor(unit:ICompilationUnit):String
+	{
+		var name:String;
+		var packageName:String = unit.packageName;
+		var typeName:String = unit.typeNode.name;
+		if (packageName == null || packageName == "")
+		{
+			name = typeName;
+		}
+		else
+		{
+			name = packageName + "." + typeName;
+		}
+		return name;
+	}
 	
+	public static function packageNameForType(type:IType):String
+	{
+		var ast:IParserNode = getPackageAST(type.node);
+		return nameText(ast.getKind(AS3NodeKind.NAME));
+	}
+	
+	public static function qualifiedNameForType(type:IType):String
+	{
+		var name:String;
+		var ast:IParserNode = getPackageAST(type.node);
+		
+		var packageName:String = packageNameForType(type);
+		var typeName:String = type.name;
+		if (packageName == null || packageName == "")
+		{
+			name = typeName;
+		}
+		else
+		{
+			name = packageName + "." + typeName;
+		}
+		return name;
+	}
+	
+	public static function qualifiedNameForTypeString(node:IParserNode, name:String):String
+	{
+		var packageAST:IParserNode = getPackageAST(node);
+		var contentAST:IParserNode = packageAST.getKind(AS3NodeKind.CONTENT);
+		var packageName:String = nameText(packageAST.getKind(AS3NodeKind.NAME));
+		
+		if (TopLevelUtil.isTopLevel(name))
+			return name;
+		
+		var i:ASTIterator = new ASTIterator(contentAST);
+		while (i.hasNext())
+		{
+			var imp:IParserNode = i.search(AS3NodeKind.IMPORT);
+			if (!imp)
+				break;
+			
+			var type:String = typeText(imp.getKind(AS3NodeKind.TYPE));
+			var qimp:ASQName = new ASQName(type);
+			if (qimp.localName ==  name)
+			{
+				return qimp.qualifiedName;
+			}
+		}
+		
+		if (packageName == null) // toplevel
+			return name;
+		
+		return packageName + "." + name;
+	}
+	
+	
+	
+	public static function getPackageAST(ast:IParserNode):IParserNode
+	{
+		while (ast != null)
+		{
+			if (ast.isKind(AS3NodeKind.PACKAGE))
+				return ast;
+			
+			ast = ast.parent;
+		}
+		return null;
+	}
 }
 }

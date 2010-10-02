@@ -20,6 +20,7 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.IASProject;
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.api.IFunctionType;
@@ -29,7 +30,9 @@ import org.as3commons.asblocks.api.IPackage;
 import org.as3commons.asblocks.api.IType;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.api.ISourceCode;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.core.SourceCode;
 import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.utils.ASTUtil;
@@ -50,6 +53,52 @@ public class CompilationUnitNode extends ScriptNode implements ICompilationUnit
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  project
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	internal var _project:IASProject;
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ICompilationUnit#project
+	 */
+	public function get project():IASProject
+	{
+		return _project;
+	}
+	
+	//----------------------------------
+	//  sourceCode
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _sourceCode:ISourceCode;
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ICompilationUnit#sourceCode
+	 */
+	public function get sourceCode():ISourceCode
+	{
+		if (!_sourceCode)
+		{
+			_sourceCode = new SourceCode();
+		}
+		return _sourceCode;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set sourceCode(value:ISourceCode):void
+	{
+		_sourceCode = value;
+	}
+	
+	//----------------------------------
 	//  packageName
 	//----------------------------------
 	
@@ -67,6 +116,20 @@ public class CompilationUnitNode extends ScriptNode implements ICompilationUnit
 	public function set packageName(value:String):void
 	{
 		packageNode.name = value;
+	}
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ICompilationUnit#packageName
+	 */
+	public function get qname():ASQName
+	{
+		var qname:ASQName = new ASQName();
+		qname.define(typeNode.name, packageNode.name);
+		return qname;
 	}
 	
 	//----------------------------------
@@ -99,6 +162,26 @@ public class CompilationUnitNode extends ScriptNode implements ICompilationUnit
 			return null;
 		
 		return ast.typeNode;
+	}
+	
+	//----------------------------------
+	//  typeName
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ICompilationUnit#typeName
+	 */
+	public function get typeName():String
+	{
+		return typeNode.name;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set typeName(value:String):void
+	{
+		typeNode.name = value;
 	}
 	
 	//----------------------------------

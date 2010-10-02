@@ -55,7 +55,7 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 	public function get superInterfaces():Vector.<String>
 	{
 		var result:Vector.<String> = new Vector.<String>();
-		var extndz:IParserNode = node.getKind(AS3NodeKind.EXTENDS);
+		var extndz:IParserNode = findExtends();
 		if (extndz)
 		{
 			var i:ASTIterator = new ASTIterator(extndz);
@@ -65,6 +65,41 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 			}
 		}
 		return result;
+	}
+	
+	//----------------------------------
+	//  qualifiedSuperInterfaces
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IInterfaceType#qualifiedSuperInterfaces
+	 */
+	public function get qualifiedSuperInterfaces():Vector.<String>
+	{
+		var result:Vector.<String> = new Vector.<String>();
+		var extndz:IParserNode = findExtends();
+		if (extndz)
+		{
+			var i:ASTIterator = new ASTIterator(extndz);
+			while (i.hasNext())
+			{
+				var type:String = ASTUtil.typeText(i.next());
+				result.push(ASTUtil.qualifiedNameForTypeString(node, type));
+			}
+		}
+		return result;
+	}
+	
+	//----------------------------------
+	//  isSubType
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IClassType#isSubType
+	 */
+	public function get isSubType():Boolean
+	{
+		return findExtends() != null;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -113,7 +148,7 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 		if (containsSuper(name))
 			return false;
 		
-		var extndz:IParserNode = node.getKind(AS3NodeKind.EXTENDS);
+		var extndz:IParserNode = findExtends();
 		var type:IParserNode = AS3FragmentParser.parseType(name);
 		if (!extndz)
 		{
@@ -139,7 +174,7 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 	 */
 	public function removeSuperInterface(name:String):Boolean
 	{
-		var extndz:IParserNode = node.getKind(AS3NodeKind.EXTENDS);
+		var extndz:IParserNode = findExtends();
 		if (!extndz)
 			return false;
 		
@@ -181,12 +216,17 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 	//
 	//--------------------------------------------------------------------------
 	
+	protected function findExtends():IParserNode
+	{
+		return node.getKind(AS3NodeKind.EXTENDS);
+	}
+	
 	/**
 	 * @private
 	 */
 	private function containsSuper(name:String):Boolean
 	{
-		var ast:IParserNode = node.getKind(AS3NodeKind.EXTENDS);
+		var ast:IParserNode = findExtends();
 		if (!ast)
 			return false;
 		

@@ -20,13 +20,14 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.api.IDocComment;
 import org.as3commons.asblocks.api.IMember;
 import org.as3commons.asblocks.api.IMetaData;
 import org.as3commons.asblocks.api.Modifier;
 import org.as3commons.asblocks.api.Visibility;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.asblocks.utils.DocCommentUtil;
 import org.as3commons.asblocks.utils.MetaDataUtil;
 import org.as3commons.asblocks.utils.ModifierUtil;
@@ -109,6 +110,21 @@ public class MemberNode extends ScriptNode implements IMember
 	public function set type(value:String):void
 	{
 		NameTypeUtil.setType(node, value);
+	}
+	
+	//----------------------------------
+	//  qualifiedType
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IFunction#qualifiedType
+	 */
+	public function get qualifiedType():String
+	{
+		if (!type)
+			return null;
+		
+		return ASTUtil.qualifiedNameForTypeString(node, type);
 	}
 	
 	//----------------------------------

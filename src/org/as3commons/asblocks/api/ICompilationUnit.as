@@ -19,6 +19,9 @@
 
 package org.as3commons.asblocks.api
 {
+import org.as3commons.asblocks.IASProject;
+import org.as3commons.asblocks.impl.ASQName;
+import org.as3commons.asblocks.parser.api.ISourceCode;
 
 /**
  * The <code>ICompilationUnit</code> is the toplevel AST wrapper class that 
@@ -73,6 +76,25 @@ public interface ICompilationUnit extends IScriptNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  project
+	//----------------------------------
+	
+	/**
+	 * The owner project (if any).
+	 */
+	function get project():IASProject;
+	
+	//----------------------------------
+	//  sourceCode
+	//----------------------------------
+	
+	/**
+	 * The container that holds the source code and file path location for the 
+	 * compilation unit.
+	 */
+	function get sourceCode():ISourceCode;
+	
+	//----------------------------------
 	//  packageNode
 	//----------------------------------
 	
@@ -118,6 +140,31 @@ public interface ICompilationUnit extends IScriptNode
 	 * @see org.as3commons.asblocks.api.IInterfaceType
 	 */
 	function get typeNode():IType;
+	
+	//----------------------------------
+	//  typeName
+	//----------------------------------
+	
+	/**
+	 * The name of the type.
+	 * 
+	 * @see org.as3commons.asblocks.api.IPackage#typeName
+	 */
+	function get typeName():String;
+	
+	/**
+	 * @private
+	 */
+	function set typeName(value:String):void;
+	
+	//----------------------------------
+	//  qualifiedName
+	//----------------------------------
+	
+	/**
+	 * The qualified name of the unit, packageName plus typeName.
+	 */
+	function get qname():ASQName;
 	
 	//----------------------------------
 	//  internalClasses

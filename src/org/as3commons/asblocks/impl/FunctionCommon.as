@@ -134,6 +134,21 @@ public class FunctionCommon implements IFunction
 		}
 	}
 	
+	//----------------------------------
+	//  qualifiedReturnType
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IFunction#qualifiedReturnType
+	 */
+	public function get qualifiedReturnType():String
+	{
+		if (!returnType)
+			return null;
+		
+		return ASTUtil.qualifiedNameForTypeString(node, returnType);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

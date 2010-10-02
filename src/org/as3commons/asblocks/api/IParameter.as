@@ -86,6 +86,15 @@ public interface IParameter extends IScriptNode
 	function set type(value:String):void;
 	
 	//----------------------------------
+	//  qualifiedType
+	//----------------------------------
+	
+	/**
+	 * The qualified (resolved from imports or package) type.
+	 */
+	function get qualifiedType():String;
+	
+	//----------------------------------
 	//  hasType
 	//----------------------------------
 	

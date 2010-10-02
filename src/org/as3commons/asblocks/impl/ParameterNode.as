@@ -129,6 +129,21 @@ public class ParameterNode extends ScriptNode implements IParameter
 	}
 	
 	//----------------------------------
+	//  qualifiedType
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IParameter#qualifiedType
+	 */
+	public function get qualifiedType():String
+	{
+		if (!type)
+			return null;
+		
+		return ASTUtil.qualifiedNameForTypeString(node, type);
+	}
+	
+	//----------------------------------
 	//  hasType
 	//----------------------------------
 	

@@ -26,6 +26,7 @@ import org.as3commons.asblocks.api.IMetaData;
 import org.as3commons.asblocks.api.IType;
 import org.as3commons.asblocks.api.Visibility;
 import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.asblocks.utils.DocCommentUtil;
 import org.as3commons.asblocks.utils.MetaDataUtil;
 import org.as3commons.asblocks.utils.ModifierUtil;
@@ -91,7 +92,31 @@ public class TypeNode extends ContentBlockNode implements IType
 	{
 		NameTypeUtil.setName(node, value);
 	}
-
+	
+	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IType#packageName
+	 */
+	public function get packageName():String
+	{
+		return ASTUtil.packageNameForType(this);
+	}
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IType#qualifiedName
+	 */
+	public function get qualifiedName():String
+	{
+		return ASTUtil.qualifiedNameForType(this);
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  IMetaDataAware API :: Properties

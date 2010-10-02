@@ -17,51 +17,83 @@
 // mschmalle at teotigraphix dot com
 ////////////////////////////////////////////////////////////////////////////////
 
-package org.as3commons.asblocks.api
+package org.as3commons.asblocks.utils
 {
 
 /**
- * 
+ * Toplevel types in the Flash Player.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IDocComment extends IScriptNode
+public class TopLevelUtil
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Properties
+	//  Private Class :: Variables
 	//
 	//--------------------------------------------------------------------------
-	
-	//----------------------------------
-	//  description
-	//----------------------------------
-	
-	/**
-	 * TODO Docme
-	 */
-	function get description():String;
 	
 	/**
 	 * @private
 	 */
-	function set description(value:String):void;
+	private static var toplevel:Object =
+		{
+			ArgumentError:true,
+			arguments:true,
+			Array:true,
+			Boolean:true,
+			Class:true,
+			Date:true,
+			DefinitionError:true,
+			Error:true,
+			EvalError:true,
+			Function:true,
+			int:true,
+			Math:true,
+			Namespace:true,
+			Number:true,
+			Object:true,
+			QName:true,
+			RangeError:true,
+			ReferenceError:true,
+			RegExp:true,
+			SecurityError:true,
+			String:true,
+			SyntaxError:true,
+			TypeError:true,
+			uint:true,
+			URIError:true,
+			Vector:true,
+			VerifyError:true,
+			XML:true,
+			XMLList:true
+			// specail
+			// *:true,
+			// void:true,
+			// Null:true
+		}
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Methods
+	//  Public Class :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Returns whether the type is a toplevel type in the Flash Player.
+	 * 
+	 * @param type A String type name.
+	 * @return A Boolean indicating whether the type is a Flash Player 
+	 * toplevel type.
 	 */
-	function newDocTag(name:String, body:String = null):IDocTag;
-	
-	function removeDocTag(tag:IDocTag):Boolean;
-	
-	function hasDocTag(name:String):Boolean;
+	public static function isTopLevel(type:String):Boolean
+	{
+		if (type == "*" || type == "void" || type == "Null")
+			return true;
+		
+		return toplevel[type];
+	}
 }
 }

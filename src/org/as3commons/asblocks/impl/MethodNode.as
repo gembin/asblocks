@@ -218,6 +218,18 @@ public class MethodNode extends MemberNode
 		functionMixin.returnType = value;
 	}
 	
+	//----------------------------------
+	//  qualifiedReturnType
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IFunction#qualifiedReturnType
+	 */
+	public function get qualifiedReturnType():String
+	{
+		return functionMixin.qualifiedReturnType;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor

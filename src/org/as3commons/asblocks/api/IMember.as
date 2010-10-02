@@ -118,6 +118,15 @@ public interface IMember
 	function set type(value:String):void;
 	
 	//----------------------------------
+	//  qualifiedType
+	//----------------------------------
+	
+	/**
+	 * The qualified type of the member.
+	 */
+	function get qualifiedType():String;
+	
+	//----------------------------------
 	//  isStatic
 	//----------------------------------
 	

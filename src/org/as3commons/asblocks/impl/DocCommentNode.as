@@ -194,6 +194,11 @@ public class DocCommentNode extends ScriptNode
 		return false;
 	}
 	
+	public function hasDocTag(name:String):Boolean
+	{
+		return false;
+	}
+	
 	private function commitAST():void
 	{
 		// the asdoc ast needs to go back into the node's as-doc node.stringValue

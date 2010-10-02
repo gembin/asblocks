@@ -138,6 +138,37 @@ public class ClassTypeNode extends TypeNode implements IClassType
 	}
 	
 	//----------------------------------
+	//  qualifiedSuperClass
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IClassType#qualifiedSuperClass
+	 */
+	public function get qualifiedSuperClass():String
+	{
+		if (!findExtends())
+			return null;
+		
+		var qname:ASQName = new ASQName(superClass);
+		if (qname.isQualified)
+			return qname.qualifiedName;
+		
+		return ASTUtil.qualifiedNameForTypeString(node, superClass);
+	}
+	
+	//----------------------------------
+	//  isSubType
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IClassType#isSubType
+	 */
+	public function get isSubType():Boolean
+	{
+		return findExtends() != null;
+	}
+	
+	//----------------------------------
 	//  implementedInterfaces
 	//----------------------------------
 	
@@ -155,6 +186,30 @@ public class ClassTypeNode extends TypeNode implements IClassType
 		while (i.hasNext())
 		{
 			result.push(ASTUtil.typeText(i.next()));
+		}
+		
+		return result;
+	}
+	
+	//----------------------------------
+	//  qualifiedImplementedInterfaces
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IClassType#qualifiedImplementedInterfaces
+	 */
+	public function get qualifiedImplementedInterfaces():Vector.<String>
+	{
+		var result:Vector.<String> = new Vector.<String>();
+		var ast:IParserNode = findImplements();
+		if (!ast)
+			return result;
+		
+		var i:ASTIterator = new ASTIterator(ast);
+		while (i.hasNext())
+		{
+			var impl:String = ASTUtil.typeText(i.next());
+			result.push(ASTUtil.qualifiedNameForTypeString(node, impl));
 		}
 		
 		return result;

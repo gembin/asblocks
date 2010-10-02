@@ -22,6 +22,7 @@ package org.as3commons.asblocks
 
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.impl.IResourceRoot;
 
 /**
  * TODO DOCME
@@ -37,6 +38,15 @@ public interface IASProject
 	//  Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  factory
+	//----------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function get factory():ASFactory;
 	
 	//----------------------------------
 	//  compilationUnits
@@ -105,6 +115,21 @@ public interface IASProject
 	 * TODO DOCME
 	 */
 	function removeClassPath(classPath:String):Boolean;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function addResourceRoot(resource:IResourceRoot):void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function removeResourceRoot(resource:IResourceRoot):void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function readAll():void;
 	
 	/**
 	 * TODO DOCME

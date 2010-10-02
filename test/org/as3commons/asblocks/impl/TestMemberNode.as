@@ -133,6 +133,16 @@ public class TestMemberNode extends BaseASFactoryTest
 	}
 	
 	[Test]
+	public function test_qualifiedType():void
+	{
+		unit = factory.newClass("A");
+		type = unit.typeNode as IClassType;
+		member = type.newField("foo", Visibility.PUBLIC, "int");
+		Assert.assertEquals("int", member.qualifiedType);
+		
+	}
+	
+	[Test]
 	public function test_VectorType():void
 	{
 		//unit = factory.newClass("A");

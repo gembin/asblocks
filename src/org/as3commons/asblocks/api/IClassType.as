@@ -26,7 +26,7 @@ package org.as3commons.asblocks.api
  * 
  * <pre>
  * var factory:ASFactory = new ASFactory();
- * var project:IASProject = new ASFactory(factory);
+ * var project:IASProject = new ASProject(factory);
  * var unit:ICompilationUnit = project.newClass("my.domain.ClassType");
  * var type:IClassType = unit.typeNode as IClassType;
  * </pre>
@@ -110,6 +110,24 @@ public interface IClassType extends IType, IContentBlock, IFieldAware
 	function set superClass(value:String):void;
 	
 	//----------------------------------
+	//  qualifiedSuperClass
+	//----------------------------------
+	
+	/**
+	 * The qualified super class name.
+	 */
+	function get qualifiedSuperClass():String
+	
+	//----------------------------------
+	//  isSubType
+	//----------------------------------
+	
+	/**
+	 * Whether the <code>extends</code> clause is present.
+	 */
+	function get isSubType():Boolean;
+	
+	//----------------------------------
 	//  implementedInterfaces
 	//----------------------------------
 	
@@ -122,6 +140,18 @@ public interface IClassType extends IType, IContentBlock, IFieldAware
 	 * empty Vector is returned.</p>
 	 */
 	function get implementedInterfaces():Vector.<String>;
+	
+	//----------------------------------
+	//  qualifiedImplementedInterfaces
+	//----------------------------------
+	
+	/**
+	 * Returns all qualified String values declared after the 
+	 * <code>implements</code> keyword.
+	 * 
+	 * @see #implementedInterfaces
+	 */
+	function get qualifiedImplementedInterfaces():Vector.<String>;
 	
 	//--------------------------------------------------------------------------
 	//

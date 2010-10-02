@@ -20,8 +20,9 @@
 package org.as3commons.asblocks.api
 {
 
+
 /**
- * The <code>IClassType</code> is the supertype for the <code>IClassType</code>,
+ * The <code>IType</code> is the supertype for the <code>IClassType</code>,
  * <code>IInterfaceType</code> and <code>IFunctionType</code> types.
  * 
  * @author Michael Schmalle
@@ -82,5 +83,23 @@ public interface IType extends IMetaDataAware, IDocCommentAware
 	 * @private
 	 */
 	function set name(value:String):void;
+	
+	//----------------------------------
+	//  packageName
+	//----------------------------------
+	
+	/**
+	 * The package name the type is contained within.
+	 */
+	function get packageName():String;
+	
+	//----------------------------------
+	//  name
+	//----------------------------------
+	
+	/**
+	 * The qualified type name, includes package and type name with dot separation.
+	 */
+	function get qualifiedName():String;
 }
 }
