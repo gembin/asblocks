@@ -22,8 +22,10 @@ package org.as3commons.asblocks.parser.core
 
 import flash.errors.IllegalOperationError;
 
+import org.as3commons.asblocks.ASBlocksSyntaxError;
+
 /**
- * TODO DOCME
+ * A linked list token implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -31,6 +33,12 @@ import flash.errors.IllegalOperationError;
  */
 public class LinkedListToken extends Token
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
 	//----------------------------------
 	//  channel
 	//----------------------------------
@@ -84,12 +92,14 @@ public class LinkedListToken extends Token
 	public function set previous(value:LinkedListToken):void
 	{
 		if (this == value)
-			throw new Error("Loop detected");
+			throw new ASBlocksSyntaxError("Loop detected");
 		
 		_previous = value;
 		
 		if (_previous)
+		{
 			_previous._next = this;
+		}
 	}
 	
 	//----------------------------------
@@ -115,14 +125,25 @@ public class LinkedListToken extends Token
 	public function set next(value:LinkedListToken):void
 	{
 		if (this == value)
-			throw new Error("Loop detected");
+			throw new ASBlocksSyntaxError("Loop detected");
 		
 		_next = value;
 		
 		if (_next)
+		{
 			_next._previous = this;
+		}
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 */
 	public function LinkedListToken(kind:String, 
 									text:String, 
 									line:int = -1, 
@@ -133,46 +154,70 @@ public class LinkedListToken extends Token
 		this.kind = kind;
 	}
 	
-	public function afterInsert(insert:LinkedListToken):void
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	public function append(insert:LinkedListToken):void
 	{
 		if (insert.previous)
-			throw new IllegalOperationError("afterInsert(" + insert + ") : previous was not null");
+			throw new IllegalOperationError("append(" + insert + ") : previous was not null");
 		
 		if (insert.next)
-			throw new IllegalOperationError("afterInsert(" + next + ") : previous was not null");
+			throw new IllegalOperationError("append(" + next + ") : previous was not null");
 		
 		insert._next = _next;
 		insert._previous = this;
 		
 		if (_next)
+		{
 			_next._previous = insert;
+		}
 		
 		_next = insert;
 	}
 	
-	public function beforeInsert(insert:LinkedListToken):void
+	/**
+	 * @private
+	 */
+	public function prepend(insert:LinkedListToken):void
 	{
 		if (insert.previous)
-			throw new IllegalOperationError("afterInsert(" + insert + ") : previous was not null");
+			throw new IllegalOperationError("prepend(" + insert + ") : previous was not null");
 		
 		if (insert.next)
-			throw new IllegalOperationError("afterInsert(" + next + ") : previous was not null");
+			throw new IllegalOperationError("prepend(" + next + ") : previous was not null");
 		
 		insert._previous = _previous;
 		insert._next = this;
 		
 		if (_previous)
+		{
 			_previous._next = insert;
+		}
 		
 		_previous = insert;
 	}
 	
+	/**
+	 * @private
+	 */
 	public function remove():void
 	{
 		if (_previous)
+		{
 			_previous._next = _next;
+		}
+		
 		if (_next)
+		{
 			_next._previous = _previous;
+		}
 		
 		_next = null;
 		_previous = null;

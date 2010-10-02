@@ -126,7 +126,7 @@ public class MXMLParser extends ParserBase
 		
 		result.addChild(parseProcInst());
 		
-		nextNonWhiteSpaceToken(result); // chomp all whitespace
+		nextTokenConsume(result); // chomp all whitespace
 		
 		if (tokenStartsWith("<!---")) // this will be the class asdoc
 		{
@@ -197,7 +197,7 @@ public class MXMLParser extends ParserBase
 				asdocLine,
 				asdocColumn);
 		
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		
 		return result;
 	}
@@ -236,7 +236,7 @@ public class MXMLParser extends ParserBase
 		var firstNode:TokenNode = adapter.empty(MXMLNodeKind.LOCAL_NAME, localNameToken);
 		var tagName:String = localNameToken.text;
 		
-		nextNonWhiteSpaceToken(firstNode); // (:|TAG_NAME)
+		nextTokenConsume(firstNode); // (:|TAG_NAME)
 		
 		if (tokIs(Operators.COLON))
 		{
@@ -267,16 +267,16 @@ public class MXMLParser extends ParserBase
 		// only call next if there was a binding, if not we are already there
 		if (bindingFound)
 		{
-			nextNonWhiteSpaceToken(result); // maybe xmlns or att or <
+			nextTokenConsume(result); // maybe xmlns or att or <
 		}
 		
 		// added to solve . error in tag name (state)
 		// TODO edit ast to include tag state
 		if (tokIs("."))
 		{
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			tagName = tagName + "." + token.text;
-			nextNonWhiteSpaceToken(result); // maybe xmlns or att or <
+			nextTokenConsume(result); // maybe xmlns or att or <
 		}
 		
 		var inAttList:Boolean = true;
@@ -344,7 +344,7 @@ public class MXMLParser extends ParserBase
 				
 				if (!tokIs("</"))
 				{
-					nextNonWhiteSpaceToken(result);
+					nextTokenConsume(result);
 				}
 			}
 		}
@@ -418,7 +418,7 @@ public class MXMLParser extends ParserBase
 			{
 				result.addChild(parseAtt());
 			}
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 		}
 		
 		return result;
@@ -444,7 +444,7 @@ public class MXMLParser extends ParserBase
 		{
 			consume(":", result);
 			result.addChild(adapter.copy(MXMLNodeKind.LOCAL_NAME, token));
-			nextNonWhiteSpaceToken(result); // s binding
+			nextTokenConsume(result); // s binding
 		}
 		
 		consume("=", result);
@@ -472,7 +472,7 @@ public class MXMLParser extends ParserBase
 		// current token "all string data in between CDATA tags"
 		var result:TokenNode = adapter.copy(MXMLNodeKind.CDATA, token);
 		
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		
 		return result;
 	}
@@ -494,12 +494,12 @@ public class MXMLParser extends ParserBase
 		
 		result.addChild(adapter.copy(MXMLNodeKind.NAME, token));
 		
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		if (tokIs("."))
 		{
 			skip(".", result);
 			result.addChild(adapter.copy(MXMLNodeKind.STATE, token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 		}
 		
 		if (!tokIs("="))
@@ -519,7 +519,7 @@ public class MXMLParser extends ParserBase
 		return result;
 	}
 	
-	override protected function nextNonWhiteSpaceToken(node:TokenNode):void
+	override protected function nextTokenConsume(node:TokenNode):void
 	{
 		if (!consumeWhitespace(node))
 		{
@@ -528,7 +528,7 @@ public class MXMLParser extends ParserBase
 			if (tokIs(" ") || tokIs("\t") || tokIs("\n")
 				|| (tokenStartsWith("<!--") && !tokenStartsWith("<!---")))
 			{
-				nextNonWhiteSpaceToken(node);
+				nextTokenConsume(node);
 			}
 		}
 	}

@@ -218,13 +218,13 @@ public class AS3Parser extends ParserBase
 			AS3NodeKind.COMPILATION_UNIT);
 		
 		// start the parse, eat whitespace up to a '/**' or 'package'
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		
 		// if the package has a doc comment, save it
 		if (tokenStartsWith(ASDOC_COMMENT))
 		{
 			result.addChild(parseASdoc());
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 		}
 		
 		// go into package
@@ -233,7 +233,7 @@ public class AS3Parser extends ParserBase
 			result.addChild(parsePackage());
 		}
 		
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		
 		if (!tokIs(KeyWords.EOF))
 		{
@@ -364,11 +364,11 @@ public class AS3Parser extends ParserBase
 					pendingModList.addChild(adapter.copy(
 						AS3NodeKind.MODIFIER, token));
 					
-					nextNonWhiteSpaceToken(pendingModList);
+					nextTokenConsume(pendingModList);
 				}
 				else
 				{
-					nextNonWhiteSpaceToken(pendingType);
+					nextTokenConsume(pendingType);
 				}
 			}
 		}
@@ -404,7 +404,7 @@ public class AS3Parser extends ParserBase
 		result.addChild(adapter.copy(
 			AS3NodeKind.NAME, token));
 		
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		
 		while (!tokIs(Operators.LCURLY))
 		{
@@ -418,7 +418,7 @@ public class AS3Parser extends ParserBase
 			}
 			else
 			{
-				nextNonWhiteSpaceToken(result);
+				nextTokenConsume(result);
 			}
 		}
 		
@@ -441,7 +441,7 @@ public class AS3Parser extends ParserBase
 		result.addChild(adapter.copy(
 			AS3NodeKind.NAME, token));
 		
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		
 		while (!tokIs(Operators.LCURLY))
 		{
@@ -451,7 +451,7 @@ public class AS3Parser extends ParserBase
 			}
 			else
 			{
-				nextNonWhiteSpaceToken(result);
+				nextTokenConsume(result);
 			}
 		}
 		
@@ -488,7 +488,7 @@ public class AS3Parser extends ParserBase
 				current.appendToken(adapter.createToken(
 					AS3NodeKind.AS_DOC, token.text));
 				currentAsDoc = parseASdoc();
-				nextNonWhiteSpaceToken(current);
+				nextTokenConsume(current);
 			}
 			else if (tokIs(KeyWords.INCLUDE))
 			{
@@ -559,11 +559,11 @@ public class AS3Parser extends ParserBase
 					pendingModList.addChild(adapter.copy(
 						AS3NodeKind.MODIFIER, token));
 					
-					nextNonWhiteSpaceToken(pendingModList);
+					nextTokenConsume(pendingModList);
 				}
 				else
 				{
-					nextNonWhiteSpaceToken(pendingMember);
+					nextTokenConsume(pendingMember);
 				}
 			}
 		}
@@ -584,13 +584,13 @@ public class AS3Parser extends ParserBase
 		var buffer:String = "";
 		consumeWhitespace(result);
 		buffer += token.text;
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		while (tokIs(Operators.DOT) || tokIs(Operators.DBL_COLON))
 		{
 			buffer += token.text;
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			buffer += token.text;
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 		}
 		
 		result.stringValue = buffer;
@@ -686,7 +686,7 @@ public class AS3Parser extends ParserBase
 		result.addChild(adapter.copy(
 			AS3NodeKind.NAME, token));
 		
-		nextNonWhiteSpaceToken(result); // name
+		nextTokenConsume(result); // name
 		
 		if (tokIs(Operators.LPAREN))
 		{
@@ -741,7 +741,7 @@ public class AS3Parser extends ParserBase
 		var nameOrValue:TokenNode = adapter.copy(AS3NodeKind.NAME, token);
 		result.addChild(nameOrValue);
 		
-		nextNonWhiteSpaceToken(result); // = or , or ]
+		nextTokenConsume(result); // = or , or ]
 		
 		if (tokIs(Operators.ASSIGN))
 		{
@@ -957,7 +957,7 @@ public class AS3Parser extends ParserBase
 		result.addChild(adapter.copy(
 			AS3NodeKind.NAME, token));
 		
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		if (tokIs(Operators.COLON))
 		{
 			result.addChild(parseOptionalType(result));
@@ -971,7 +971,7 @@ public class AS3Parser extends ParserBase
 				else if (!tokIs(Operators.COMMA)
 					&& !tokIs(Operators.RPAREN))
 				{
-					nextNonWhiteSpaceToken(result);
+					nextTokenConsume(result);
 				}
 			}
 			else
@@ -1104,7 +1104,7 @@ public class AS3Parser extends ParserBase
 		// function name
 		result.addChild(adapter.copy(AS3NodeKind.NAME, token));
 		
-		nextNonWhiteSpaceToken(result); // should be (
+		nextTokenConsume(result); // should be (
 		
 		// function parameters
 		result.addChild(parseParameterList());
@@ -1129,7 +1129,7 @@ public class AS3Parser extends ParserBase
 		if (!tokIs(Operators.LCURLY))
 		{
 			// {
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 		}
 		
 		result.addChild(parseBlock());
@@ -1137,7 +1137,7 @@ public class AS3Parser extends ParserBase
 		// if not a package function, need this to exit package content
 		if (!tokIs(Operators.RCURLY))
 		{
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 		}
 		
 		return result;
@@ -1175,7 +1175,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(Operators.LAND_ASSIGN) || tokIs(Operators.LOR_ASSIGN))
 		{
 			result.addChild(adapter.copy(assignmentMap.getValue(token.text), token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1206,13 +1206,12 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseOrExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.OR, token, parseAndExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.OR, token);
+		result.addChild(parseAndExpression());
 		while (tokIs(Operators.LOR))
 		{
 			result.addChild(adapter.copy(AS3NodeKind.LOR, token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseAndExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1223,13 +1222,12 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseAndExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.AND, token, parseBitwiseOrExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.AND, token);
+		result.addChild(parseBitwiseOrExpression());
 		while (tokIs(Operators.LAND))
 		{
 			result.addChild(adapter.copy(AS3NodeKind.LAND, token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseBitwiseOrExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1240,13 +1238,12 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseBitwiseOrExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.B_OR, token, parseBitwiseXorExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.B_OR, token);
+		result.addChild(parseBitwiseXorExpression());
 		while (tokIs(Operators.BOR))
 		{
 			result.addChild(adapter.copy(AS3NodeKind.BOR, token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseBitwiseXorExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1257,13 +1254,12 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseBitwiseXorExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.B_XOR, token, parseBitwiseAndExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.B_XOR, token);
+		result.addChild(parseBitwiseAndExpression());
 		while (tokIs(Operators.BXOR))
 		{
 			result.addChild(adapter.copy(AS3NodeKind.BXOR, token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseBitwiseAndExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1274,13 +1270,12 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseBitwiseAndExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.B_AND, token, parseEqualityExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.B_AND, token);
+		result.addChild(parseEqualityExpression());
 		while (tokIs(Operators.BAND))
 		{
 			result.addChild(adapter.copy(AS3NodeKind.BAND, token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseEqualityExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1291,14 +1286,13 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseEqualityExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.EQUALITY, token, parseRelationalExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.EQUALITY, token);
+		result.addChild(parseRelationalExpression());
 		while (tokIs(Operators.EQUAL) || tokIs(Operators.NOT_EQUAL)
 			|| tokIs(Operators.STRICT_EQUAL) || tokIs(Operators.STRICT_NOT_EQUAL))
 		{
 			result.addChild(adapter.copy(equalityMap.getValue(token.text), token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseRelationalExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1309,9 +1303,8 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseRelationalExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.RELATIONAL, token, parseShiftExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.RELATIONAL, token);
+		result.addChild(parseShiftExpression());
 		while (!isInFor && tokIs(KeyWords.IN) 
 			|| tokIs(Operators.LT) || tokIs(Operators.GT)
 			|| tokIs(Operators.LE) || tokIs(Operators.GE)
@@ -1319,7 +1312,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(KeyWords.INSTANCE_OF))
 		{
 			result.addChild(adapter.copy(relationMap.getValue(token.text), token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseShiftExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1330,14 +1323,13 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseShiftExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.SHIFT, token, parseAdditiveExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.SHIFT, token);
+		result.addChild(parseAdditiveExpression());
 		while (tokIs(Operators.SL) || tokIs(Operators.SR)
 			|| tokIs(Operators.SSL) || tokIs(Operators.BSR))
 		{
 			result.addChild(adapter.copy(shiftMap.getValue(token.text), token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseAdditiveExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1348,13 +1340,12 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseAdditiveExpression():IParserNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.ADDITIVE, token, parseMultiplicativeExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.ADDITIVE, token);
+		result.addChild(parseMultiplicativeExpression());
 		while (tokIs(Operators.PLUS) || tokIs(Operators.MINUS))
 		{
 			result.addChild(adapter.copy(additiveMap.getValue(token.text), token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseMultiplicativeExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1374,7 +1365,7 @@ public class AS3Parser extends ParserBase
 			|| tokIs(Operators.MOD))
 		{
 			result.addChild(adapter.copy(multiplicativeMap.getValue(token.text), token));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseUnaryExpression(result));
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -1391,43 +1382,43 @@ public class AS3Parser extends ParserBase
 		
 		if (tokIs(Operators.INC))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.PRE_INC,
 				Operators.INC, 
 				token.line, 
-				token.column,
-				parseUnaryExpression(node));
+				token.column);
+			result.addChild(parseUnaryExpression(node));
 		}
 		else if (tokIs(Operators.DEC))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.PRE_DEC,
 				Operators.DEC, 
 				line, 
-				column,
-				parseUnaryExpression(node));
+				column);
+			result.addChild(parseUnaryExpression(node));
 		}
 		else if (tokIs(Operators.MINUS))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.MINUS,
 				Operators.MINUS, 
 				token.line, 
-				token.column,
-				parseUnaryExpression(node));
+				token.column);
+			result.addChild(parseUnaryExpression(node));
 		}
 		else if (tokIs(Operators.PLUS))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.PLUS,
 				Operators.PLUS, 
 				token.line, 
-				token.column,
-				parseUnaryExpression(node));
+				token.column);
+			result.addChild(parseUnaryExpression(node));
 		}
 		else
 		{
@@ -1444,53 +1435,53 @@ public class AS3Parser extends ParserBase
 		var result:TokenNode;
 		if (tokIs(KeyWords.DELETE))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.DELETE,
 				KeyWords.DELETE, 
 				token.line, 
-				token.column,
-				parseExpression());
+				token.column);
+			result.addChild(parseExpression());
 		}
 		else if (tokIs(KeyWords.VOID))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.VOID,
 				KeyWords.VOID, 
 				token.line, 
-				token.column,
-				parseExpression());
+				token.column);
+			result.addChild(parseExpression());
 		}
 		else if (tokIs(KeyWords.TYPEOF))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.TYPEOF,
 				KeyWords.TYPEOF, 
 				token.line, 
-				token.column,
-				parseExpression());
+				token.column);
+			result.addChild(parseExpression());
 		}
 		else if (tokIs(Operators.LNOT))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.NOT,
 				Operators.LNOT, 
 				token.line, 
-				token.column,
-				parseExpression());
+				token.column);
+			result.addChild(parseExpression());
 		}
 		else if (tokIs(Operators.BNOT))
 		{
-			nextNonWhiteSpaceToken(node);
+			nextTokenConsume(node);
 			result = adapter.create(
 				AS3NodeKind.B_NOT,
 				Operators.BNOT, 
 				token.line, 
-				token.column,
-				parseExpression());
+				token.column);
+			result.addChild(parseExpression());
 		}
 		else
 		{
@@ -1571,7 +1562,7 @@ public class AS3Parser extends ParserBase
 			result.stringValue = token.text;
 			result.token.text = token.text;
 			
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 		}
 		
 		return result;
@@ -1634,7 +1625,7 @@ public class AS3Parser extends ParserBase
 		result.addChild(adapter.copy(
 			AS3NodeKind.NAME, token));
 		
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		
 		consume(Operators.COLON, result);
 		var value:TokenNode = adapter.empty(
@@ -1656,11 +1647,11 @@ public class AS3Parser extends ParserBase
 		consume(KeyWords.FUNCTION, result);
 		
 		result.addChild(parseParameterList());
-		nextNonWhiteSpaceToken(result);
+		nextTokenConsume(result);
 		if (!tokIs(Operators.LCURLY))
 		{
 			result.addChild(parseOptionalType(result));
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 		}
 		result.addChild(parseBlock());
 		
@@ -1845,7 +1836,7 @@ public class AS3Parser extends ParserBase
 			consume(Operators.REST, result);
 			var rest:TokenNode = adapter.copy(
 				AS3NodeKind.REST, token);
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(rest);
 		}
 		else
@@ -1894,9 +1885,8 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseArrayAccessor(node:TokenNode):TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.ARRAY_ACCESSOR, token, node);
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.ARRAY_ACCESSOR, token);
+		result.addChild(node);
 		while (tokIs(Operators.LBRACK))
 		{
 			consume(Operators.LBRACK, result); // [
@@ -1911,9 +1901,8 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseFunctionCall(node:TokenNode):TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.CALL, token, node);
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.CALL, token);
+		result.addChild(node);
 		while (tokIs(Operators.LPAREN))
 		{
 			result.addChild(parseArgumentList());
@@ -1968,12 +1957,12 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseDot(node:TokenNode):TokenNode
 	{
-		var result:TokenNode = adapter.empty(AS3NodeKind.DOT, token, node);
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.DOT, token);
+		result.addChild(node);
 		if (tokIs(Operators.E4X_DESC))
 		{
-			result = adapter.empty(
-				AS3NodeKind.E4X_DESCENDENT, token, node);
+			result = adapter.empty(AS3NodeKind.E4X_DESCENDENT, token);
+			result.addChild(node);
 			consume(Operators.E4X_DESC, result);
 			result.addChild(parseExpression());
 			return result;
@@ -2005,9 +1994,8 @@ public class AS3Parser extends ParserBase
 		}
 		else if (tokIs(Operators.STAR))
 		{
-			result = adapter.empty(
-				AS3NodeKind.E4X_STAR, token, node);
-			
+			result = adapter.empty(AS3NodeKind.E4X_STAR, token);
+			result.addChild(node);
 			return result;
 		}
 		else if (tokIs(Operators.E4X_ATTRI))
@@ -2033,7 +2021,7 @@ public class AS3Parser extends ParserBase
 		
 		if (tokIs(Operators.LBRACK))
 		{
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseExpression());
 			consume(Operators.RBRACK, result);
 		}
@@ -2101,7 +2089,7 @@ public class AS3Parser extends ParserBase
 					break;
 				}
 				
-				nextNonWhiteSpaceToken(result);
+				nextTokenConsume(result);
 			}
 		}
 		
@@ -2124,7 +2112,7 @@ public class AS3Parser extends ParserBase
 		
 		while (tokIs(Operators.COMMA))
 		{
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseAssignmentExpression());
 		}
 		return result.numChildren > 1 ? result : result.getChild(0);
@@ -2690,7 +2678,7 @@ public class AS3Parser extends ParserBase
 			token.line, 
 			token.column))
 		
-		nextNonWhiteSpaceToken(result); // name
+		nextTokenConsume(result); // name
 		
 		if (tokIs(Operators.COLON))
 		{
@@ -2700,7 +2688,7 @@ public class AS3Parser extends ParserBase
 				token.text, 
 				token.line, 
 				token.column));
-			nextNonWhiteSpaceToken(result); // name
+			nextTokenConsume(result); // name
 		}
 		consume(Operators.RPAREN, result);
 		result.addChild(parseBlock());
@@ -2786,7 +2774,7 @@ public class AS3Parser extends ParserBase
 		while (tokIs(Operators.COMMA))
 		{
 			// FIXME eat comma
-			nextNonWhiteSpaceToken(result);
+			nextTokenConsume(result);
 			result.addChild(parseAssignmentExpression());
 		}
 		

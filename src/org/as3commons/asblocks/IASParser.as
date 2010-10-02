@@ -20,6 +20,9 @@
 package org.as3commons.asblocks
 {
 
+import flash.events.IEventDispatcher;
+
+import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 
@@ -39,6 +42,13 @@ public interface IASParser
 	//  Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * TODO DOCME
+	 */
+	function parseAsync(sourceCode:ISourceCode, 
+						entry:IClassPathEntry, 
+						parseBlocks:Boolean = true):IEventDispatcher;
 	
 	/**
 	 * Parses the <code>ISourceCode</code>'s source code data.

@@ -169,7 +169,17 @@ public class ParserBase implements IParser
 	 */
 	public function nextToken():void
 	{
-		moveToNextToken();
+		//moveToNextToken();
+		token = scanner.nextToken();
+		
+		if (token == null)
+		{
+			throw new NullTokenError(fileName);
+		}
+		if (token.text == null)
+		{
+			throw new NullTokenError(fileName);
+		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -229,7 +239,7 @@ public class ParserBase implements IParser
 	 * 
 	 * @throws NullTokenError
 	 */
-	protected function moveToNextToken():void
+	protected function _moveToNextToken():void
 	{
 		token = scanner.nextToken();
 		
@@ -253,18 +263,14 @@ public class ParserBase implements IParser
 	 * @param node A TokenNode to add whitespace tokens to.
 	 * @see #tokIsWhitespace()
 	 */
-	protected function nextNonWhiteSpaceToken(node:TokenNode):void
+	protected function nextTokenConsume(node:TokenNode):void
 	{
-		if (!consumeWhitespace(node))
-		{
-			nextToken();
-			
-			if (tokIs(" ") || tokIs("\t") || tokIs("\n") || tokenStartsWith("//")
-				|| (tokenStartsWith("/*") && !tokenStartsWith("/**")))
-			{
-				nextNonWhiteSpaceToken(node);
-			}
-		}
+		if (consumeWhitespace(node))
+			return;
+		
+		nextToken();
+		
+		consumeWhitespace(node);
 	}
 	
 	/**
@@ -275,7 +281,8 @@ public class ParserBase implements IParser
 	protected function nextTokenAllowWhiteSpace():void
 	{
 		scanner.allowWhiteSpace = true;
-		moveToNextToken();
+		//moveToNextToken();
+		nextToken();
 		scanner.allowWhiteSpace = false;
 	}
 	
@@ -308,7 +315,7 @@ public class ParserBase implements IParser
 	 */
 	protected function tokIsWhitespace():Boolean
 	{
-		return token.text == "\n" || token.text == "\t" || token.text == " "
+		return token.text == " " ||  token.text == "\t" || token.text == "\n"
 			|| tokenStartsWith("/*") || tokenStartsWith("//");
 	}
 	
@@ -399,8 +406,8 @@ public class ParserBase implements IParser
 		
 		var advanced:Boolean = false;
 		
-		while (tokIs(" ") || tokIs("\t") || tokIs("\n") || tokenStartsWith("//")
-			|| (tokenStartsWith("/*") && ! tokenStartsWith("/**")))
+		while (tokIs(" ") || tokIs("\t") || tokIs("\n") || token.text.indexOf("//") == 0 
+			|| (token.text.indexOf("/*") == 0 && !token.text.indexOf("/**") == 0))
 		{
 			if (tokIs(" "))
 			{
@@ -414,8 +421,8 @@ public class ParserBase implements IParser
 			{
 				appendNewline(node);
 			}
-			else if (tokenStartsWith("//") 
-				|| (tokenStartsWith("/*") && ! tokenStartsWith("/**")))
+			else if (token.text.indexOf("//") == 0 
+				|| (token.text.indexOf("/*") == 0 && !token.text.indexOf("/**") == 0))
 			{
 				appendComment(node);
 			}

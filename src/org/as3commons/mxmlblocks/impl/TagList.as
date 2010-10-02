@@ -121,7 +121,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 			if (stop.text == "</")
 			{
 				var end:LinkedListToken =  TokenBuilder.newToken("b-end", value + ":");
-				stop.afterInsert(end);
+				stop.append(end);
 			}
 		}
 		else

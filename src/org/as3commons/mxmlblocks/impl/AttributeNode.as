@@ -126,7 +126,7 @@ public class AttributeNode extends ScriptNode implements IAttribute
 		{
 			var dot:LinkedListToken = TokenBuilder.newDot();
 			ast = ASTUtil.newAST(MXMLNodeKind.STATE, value);
-			ast.startToken.beforeInsert(dot);
+			ast.startToken.prepend(dot);
 			ast.startToken = dot;
 		}
 		

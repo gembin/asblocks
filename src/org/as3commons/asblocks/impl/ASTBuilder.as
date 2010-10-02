@@ -32,15 +32,15 @@ public class ASTBuilder
 		{
 			var colon:LinkedListToken = TokenBuilder.newColon();
 			var name:IParserNode = ASTUtil.newAST(MXMLNodeKind.LOCAL_NAME, localName);
-			name.startToken.beforeInsert(colon);
+			name.startToken.prepend(colon);
 			name.startToken = colon;
 			ast.addChild(name);
 		}
 		var assign:LinkedListToken = TokenBuilder.newAssign();
 		var uriAST:IParserNode = ASTUtil.newAST(MXMLNodeKind.URI, uri);
-		uriAST.startToken.beforeInsert(assign);
+		uriAST.startToken.prepend(assign);
 		uriAST.startToken = assign;
-		assign.afterInsert(TokenBuilder.newQuote());
+		assign.append(TokenBuilder.newQuote());
 		ast.addChild(uriAST);
 		uriAST.appendToken(TokenBuilder.newQuote());
 		return ast;
@@ -56,7 +56,7 @@ public class ASTBuilder
 		{
 			var dot:LinkedListToken = TokenBuilder.newDot();
 			var stateAST:IParserNode = ASTUtil.newAST(MXMLNodeKind.STATE, state);
-			stateAST.startToken.beforeInsert(dot);
+			stateAST.startToken.prepend(dot);
 			stateAST.startToken = dot;
 			ast.addChild(stateAST);
 		}
@@ -217,7 +217,7 @@ public class ASTBuilder
 	{
 		var colon:LinkedListToken = TokenBuilder.newColon();
 		var ast:IParserNode = AS3FragmentParser.parseType(type);
-		ast.startToken.beforeInsert(colon);
+		ast.startToken.prepend(colon);
 		ast.startToken = colon;
 		return ast;
 	}
@@ -230,7 +230,7 @@ public class ASTBuilder
 		
 		var colon:LinkedListToken = TokenBuilder.newColon();
 		var typeAST:IParserNode = AS3FragmentParser.parseType(type);
-		typeAST.startToken.beforeInsert(colon);
+		typeAST.startToken.prepend(colon);
 		typeAST.startToken = colon;
 		nti.addChild(typeAST);
 		
@@ -251,7 +251,7 @@ public class ASTBuilder
 		var restAST:IParserNode = ASTUtil.newAST(AS3NodeKind.REST, name);
 		ast.addChild(restAST);
 		var rest:LinkedListToken = TokenBuilder.newToken(AS3NodeKind.REST_PARM, "...");
-		ast.startToken.beforeInsert(rest);
+		ast.startToken.prepend(rest);
 		ast.startToken = rest;
 		return ast;
 	}
@@ -327,10 +327,10 @@ public class ASTBuilder
 		var stop:LinkedListToken = ASTUtil.findTagStop(ast).previous; // nl
 		
 		var nl:LinkedListToken = TokenBuilder.newNewline();
-		stop.beforeInsert(nl);
+		stop.prepend(nl);
 		var sp:LinkedListToken = TokenBuilder.newWhiteSpace(indent + "\t");
-		nl.afterInsert(sp);
-		sp.afterInsert(comment);
+		nl.append(sp);
+		sp.append(comment);
 		
 		
 		
@@ -521,7 +521,7 @@ public class ASTBuilder
 		{
 			var colon:LinkedListToken = TokenBuilder.newColon();
 			var typeAST:IParserNode = AS3FragmentParser.parseType(returnType);
-			typeAST.startToken.beforeInsert(colon);
+			typeAST.startToken.prepend(colon);
 			typeAST.startToken = colon;
 			ast.addChild(typeAST);
 		}
@@ -550,7 +550,7 @@ public class ASTBuilder
 		{
 			var colon:LinkedListToken = TokenBuilder.newColon();
 			var typeAST:IParserNode = AS3FragmentParser.parseType(returnType);
-			typeAST.startToken.beforeInsert(colon);
+			typeAST.startToken.prepend(colon);
 			typeAST.startToken = colon;
 			ast.addChild(typeAST);
 		}
@@ -770,7 +770,7 @@ public class ASTBuilder
 		{
 			var colon:LinkedListToken = TokenBuilder.newColon();
 			var typeAST:IParserNode = AS3FragmentParser.parseType(returnType);
-			typeAST.startToken.beforeInsert(colon);
+			typeAST.startToken.prepend(colon);
 			typeAST.startToken = colon;
 			ast.addChild(typeAST);
 		}
@@ -925,7 +925,7 @@ public class ASTBuilder
 			AS3NodeKind.RCURLY, "}");
 		var nl:LinkedListToken = TokenBuilder.newNewline();
 		// insert the \n after the {
-		ast.initialInsertionAfter.afterInsert(nl);
+		ast.initialInsertionAfter.append(nl);
 		// set new insertion point after \n
 		ast.initialInsertionAfter = nl;
 		return ast;
@@ -1043,7 +1043,7 @@ public class ASTBuilder
 		
 		var colon:LinkedListToken = TokenBuilder.newColon();
 		var typeAST:IParserNode = AS3FragmentParser.parseType("void");
-		typeAST.startToken.beforeInsert(colon);
+		typeAST.startToken.prepend(colon);
 		typeAST.startToken = colon;
 		ast.addChild(typeAST);
 		
@@ -1217,8 +1217,8 @@ public class ASTBuilder
 	
 	private static function spaceEitherSide(token:LinkedListToken):void
 	{
-		token.beforeInsert(TokenBuilder.newSpace());
-		token.afterInsert(TokenBuilder.newSpace());
+		token.prepend(TokenBuilder.newSpace());
+		token.append(TokenBuilder.newSpace());
 	}
 	
 	/**

@@ -132,7 +132,7 @@ public class TryStatementNode extends ContainerDelegate
 		
 		var space:LinkedListToken = TokenBuilder.newSpace();
 		// add a space before the catch keyword
-		ast.startToken.beforeInsert(space);
+		ast.startToken.prepend(space);
 		// set the start of the chain to the space
 		ast.startToken = space;
 		

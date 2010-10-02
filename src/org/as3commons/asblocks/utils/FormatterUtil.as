@@ -21,11 +21,11 @@ public class FormatterUtil
 		if (paren && breakIt)
 		{
 			// add the nl before the curly
-			paren.beforeInsert(TokenBuilder.newNewline());
+			paren.prepend(TokenBuilder.newNewline());
 			
 			// add indentation
 			var indent:String = ASTUtil.findIndent(element.node);
-			paren.beforeInsert(TokenBuilder.newWhiteSpace(indent));
+			paren.prepend(TokenBuilder.newWhiteSpace(indent));
 		}
 
 	}
@@ -50,8 +50,8 @@ public class FormatterUtil
 		var len:int = count;
 		for (var i:int = 0; i < len; i++)
 		{
-			token.beforeInsert(TokenBuilder.newNewline());
-			token.beforeInsert(TokenBuilder.newWhiteSpace(indent));
+			token.prepend(TokenBuilder.newNewline());
+			token.prepend(TokenBuilder.newWhiteSpace(indent));
 		}
 	}
 }

@@ -63,7 +63,7 @@ public class Token implements IToken
 	/**
 	 * @copy org.as3commons.as3parser.api.IToken#column
 	 */
-	public function get column():int
+	public final function get column():int
 	{
 		return _column;
 	}
@@ -71,7 +71,7 @@ public class Token implements IToken
 	/**
 	 * @private
 	 */
-	public function set column(value:int):void
+	public final function set column(value:int):void
 	{
 		_column = value;
 	}
@@ -88,7 +88,7 @@ public class Token implements IToken
 	/**
 	 * @copy org.as3commons.as3parser.api.IToken#line
 	 */
-	public function get line():int
+	public final function get line():int
 	{
 		return _line;
 	}
@@ -96,7 +96,7 @@ public class Token implements IToken
 	/**
 	 * @private
 	 */
-	public function set line(value:int):void
+	public final function set line(value:int):void
 	{
 		_line = value;
 	}
@@ -113,7 +113,7 @@ public class Token implements IToken
 	/**
 	 * The token's kind.
 	 */
-	public function get kind():String
+	public final function get kind():String
 	{
 		return _kind;
 	}
@@ -121,7 +121,7 @@ public class Token implements IToken
 	/**
 	 * @private
 	 */
-	public function set kind(value:String):void
+	public final function set kind(value:String):void
 	{
 		_kind = value;
 	}
@@ -138,7 +138,7 @@ public class Token implements IToken
 	/**
 	 * @copy org.as3commons.as3parser.api.IToken#text
 	 */
-	public function get text():String
+	public final function get text():String
 	{
 		return _text;
 	}
@@ -146,7 +146,7 @@ public class Token implements IToken
 	/**
 	 * @private
 	 */
-	public function set text(value:String):void
+	public final function set text(value:String):void
 	{
 		_text = value;
 	}

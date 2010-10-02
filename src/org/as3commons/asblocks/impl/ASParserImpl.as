@@ -20,7 +20,10 @@
 package org.as3commons.asblocks.impl
 {
 
+import flash.events.IEventDispatcher;
+
 import org.as3commons.asblocks.IASParser;
+import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.ISourceCode;
@@ -44,17 +47,36 @@ public class ASParserImpl implements IASParser
 	//
 	//--------------------------------------------------------------------------
 	
+	private static var parser:AS3Parser;
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASParser#parseAsync()
+	 */
+	public function parseAsync(sourceCode:ISourceCode, 
+							   entry:IClassPathEntry, 
+							   parseBlocks:Boolean = true):IEventDispatcher
+	{
+		var parserInfo:ParserInfo = new ParserInfo(this, sourceCode, entry, parseBlocks);
+		return parserInfo;
+	}
+	
 	/**
 	 * @copy org.as3commons.asblocks.IASParser#parse()
 	 */
-	public function parse(code:ISourceCode, parseBlocks:Boolean = true):ICompilationUnit
+	public function parse(sourceCode:ISourceCode, parseBlocks:Boolean = true):ICompilationUnit
 	{
-		var parser:AS3Parser = ASTUtil.parse(code);
+		if (!parser)
+		{
+			parser = ASTUtil.parseAS();
+		}
+		//var parser:AS3Parser = ASTUtil.parseAS();
 		parser.parseBlocks = parseBlocks;
 		var ast:IParserNode;
 		try
 		{
-			ast = parser.parseCompilationUnit();
+			var source:String = sourceCode.code;
+			source = source.split("\r\n").join("\n");
+			ast = parser.buildAst(Vector.<String>(source.split("\n")), sourceCode.filePath);
 		}
 		catch (e:UnExpectedTokenError)
 		{

@@ -80,7 +80,7 @@ public class XMLNamespaceNode extends ScriptNode implements IXMLNamespace
 			// then it will be removed when the local name is set to null
 			var colon:LinkedListToken = TokenBuilder.newColon();
 			ast = ASTUtil.newAST(MXMLNodeKind.LOCAL_NAME, value);
-			ast.startToken.beforeInsert(colon);
+			ast.startToken.prepend(colon);
 			ast.startToken = colon;
 			node.addChildAt(ast, 0);
 		}

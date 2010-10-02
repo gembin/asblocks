@@ -124,7 +124,7 @@ public class ClassTypeNode extends TypeNode implements IClassType
 			extendz.appendToken(TokenBuilder.newSpace());
 			// space is between className and 'extends' keyword
 			var space:LinkedListToken = TokenBuilder.newSpace();
-			extendz.startToken.beforeInsert(space);
+			extendz.startToken.prepend(space);
 			extendz.startToken = space;
 			var i:ASTIterator = new ASTIterator(node);
 			i.find(AS3NodeKind.NAME);
@@ -271,7 +271,7 @@ public class ClassTypeNode extends TypeNode implements IClassType
 			i.insertBeforeCurrent(ast);
 			// adds a space before the 'implements' keyword
 			var space:LinkedListToken = TokenBuilder.newSpace();
-			ast.startToken.beforeInsert(space);
+			ast.startToken.prepend(space);
 		}
 		else
 		{

@@ -122,7 +122,7 @@ public class FunctionCommon implements IFunction
 		
 		var typeAST:IParserNode = AS3FragmentParser.parseType(value);
 		var colon:LinkedListToken = TokenBuilder.newColon();
-		typeAST.startToken.beforeInsert(colon);
+		typeAST.startToken.prepend(colon);
 		typeAST.startToken = colon;
 		if (ast == null) // SHOULDN'T BE
 		{

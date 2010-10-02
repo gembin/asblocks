@@ -44,9 +44,9 @@ public class UnExpectedTokenError extends Error
 										 fileName:String)
 	{
 		super("Unexpected token: "
-			+ actual + " in file (" + fileName + ") at " 
-			+ position.line + ":" + position.column
-			+ ". Expecting " + expected );
+			+ actual + " in file (" + fileName + ") at line[" 
+			+ position.line + "]: column[" + position.column
+			+ "] Expecting " + expected );
 	}
 }
 }

@@ -7,11 +7,20 @@ import org.as3commons.asblocks.parser.api.IParserNode;
 
 public class LinkedListTreeAdaptor
 {
+	protected var delegate:TokenListUpdateDelegate;
+	private var parenDelegate:ParentheticListUpdateDelegate;
+	private var curlyDelegate:ParentheticListUpdateDelegate;
+	private var bracketDelegate:ParentheticListUpdateDelegate;
+	private var cdataDelegate:ParentheticListUpdateDelegate;
+	
 	public function LinkedListTreeAdaptor()
 	{
+		delegate = new TokenListUpdateDelegate();
+		parenDelegate = new ParentheticListUpdateDelegate(AS3NodeKind.LPAREN, AS3NodeKind.RPAREN);
+		curlyDelegate = new ParentheticListUpdateDelegate(AS3NodeKind.LCURLY, AS3NodeKind.RCURLY);
+		bracketDelegate = new ParentheticListUpdateDelegate(AS3NodeKind.LBRACKET, AS3NodeKind.RBRACKET);
+		cdataDelegate = new ParentheticListUpdateDelegate("lcdata", "rcdata");
 	}
-	
-	protected var delegate:TokenListUpdateDelegate = new TokenListUpdateDelegate();
 	
 	public function createToken(kind:String, 
 								text:String = null,
@@ -30,52 +39,44 @@ public class LinkedListTreeAdaptor
 		return token;
 	}
 	
-	
-	public function empty(kind:String, token:Token, child:IParserNode = null):TokenNode 
+	public function empty(kind:String, token:Token):TokenNode 
 	{
 		var result:LinkedListToken = new LinkedListToken(kind, null);
 		result.line = token.line;
 		result.column = token.column;
 		var node:TokenNode = createNode(result);
-		if (child)
-		{
-			node.addChild(child);
-		}
 		return node;
 	}
 	
-	public function copy(kind:String, token:Token, child:IParserNode = null):TokenNode 
+	public function copy(kind:String, token:Token):TokenNode 
 	{
 		var result:LinkedListToken = new LinkedListToken(kind, token.text);
 		result.line = token.line;
 		result.column = token.column;
 		var node:TokenNode = createNode(result);
-		if (child)
-		{
-			node.addChild(child);
-		}
 		return node;
 	}
 	
 	public function create(kind:String, 
 						   text:String = null,
 						   line:int = -1, 
-						   column:int = -1,
-						   child:IParserNode = null):TokenNode 
+						   column:int = -1):TokenNode 
 	{
 		var token:LinkedListToken = new LinkedListToken(kind, text);
 		token.line = line;
 		token.column = column;
 		var node:TokenNode = createNode(token);
-		if (child)
-		{
-			node.addChild(child);
-		}
 		return node;
 	}
 	
 	public function createNode(payload:LinkedListToken):TokenNode 
 	{
+		//parenDelegate = new ParentheticListUpdateDelegate(AS3NodeKind.LPAREN, AS3NodeKind.RPAREN);
+//		curlyDelegate = new ParentheticListUpdateDelegate(AS3NodeKind.LCURLY, AS3NodeKind.RCURLY);
+		//bracketDelegate = new ParentheticListUpdateDelegate(AS3NodeKind.LBRACKET, AS3NodeKind.RBRACKET);
+		//cdataDelegate = new ParentheticListUpdateDelegate("lcdata", "rcdata");
+		
+		
 		var result:TokenNode = new TokenNode(
 			payload.kind, 
 			payload.text, 
@@ -95,28 +96,25 @@ public class LinkedListTreeAdaptor
 		/*|| payload.kind == AS3NodeKind.ARRAY_ACCESSOR*/
 			|| payload.kind == AS3NodeKind.META)
 		{
-			TokenNode(result).tokenListUpdater = 
-				new ParentheticListUpdateDelegate(AS3NodeKind.LBRACKET, AS3NodeKind.RBRACKET);
+			TokenNode(result).tokenListUpdater = bracketDelegate;
 		}
 		else if (payload.kind == AS3NodeKind.OBJECT
 			|| payload.kind == AS3NodeKind.BLOCK
 			|| payload.kind == AS3NodeKind.CONTENT
 			|| payload.kind == AS3NodeKind.CASES)
 		{
-			TokenNode(result).tokenListUpdater = 
-				new ParentheticListUpdateDelegate(AS3NodeKind.LCURLY, AS3NodeKind.RCURLY);
+			curlyDelegate = new ParentheticListUpdateDelegate(AS3NodeKind.LCURLY, AS3NodeKind.RCURLY);
+			TokenNode(result).tokenListUpdater = curlyDelegate;
 		}
 		else if (payload.kind == AS3NodeKind.PARAMETER_LIST
 			|| payload.kind == AS3NodeKind.ARGUMENTS
 			|| payload.kind == AS3NodeKind.CONDITION)
 		{
-			TokenNode(result).tokenListUpdater = 
-				new ParentheticListUpdateDelegate(AS3NodeKind.LPAREN, AS3NodeKind.RPAREN);
+			TokenNode(result).tokenListUpdater = parenDelegate;
 		}
 		else if (payload.kind == "cdata")
 		{
-			TokenNode(result).tokenListUpdater = 
-				new ParentheticListUpdateDelegate("lcdata", "rcdata");
+			TokenNode(result).tokenListUpdater = cdataDelegate;
 		}
 		
 		if (payload is LinkedListToken) 

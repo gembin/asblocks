@@ -20,6 +20,8 @@
 package org.as3commons.asblocks.impl
 {
 
+import flash.events.EventDispatcher;
+
 import org.as3commons.asblocks.ASFactory;
 import org.as3commons.asblocks.IASProject;
 import org.as3commons.asblocks.api.IClassPathEntry;
@@ -34,7 +36,7 @@ import org.as3commons.asblocks.utils.FileUtil;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class ASProject implements IASProject
+public class ASProject extends EventDispatcher implements IASProject
 {
 	//--------------------------------------------------------------------------
 	//
@@ -299,6 +301,13 @@ public class ASProject implements IASProject
 			var element:ICompilationUnit = compilationUnits[i] as ICompilationUnit;
 			write(outputLocation, element);
 		}
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#readAllAsync()
+	 */
+	public function readAllAsync():void
+	{
 	}
 	
 	/**

@@ -20,12 +20,14 @@
 package org.as3commons.mxmlblocks.impl
 {
 
+import flash.events.IEventDispatcher;
+
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ApplicationUnitNode;
-import org.as3commons.asblocks.impl.CompilationUnitNode;
+import org.as3commons.asblocks.impl.ParserInfo;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 import org.as3commons.asblocks.parser.core.SourceCode;
@@ -49,6 +51,15 @@ public class MXMLParserImpl implements IMXMLParser
 	//  IMXMLParser API :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.as3commons.mxmlblocks.IMXMLParser#parseAsync()
+	 */
+	public function parseAsync(sourceCode:ISourceCode, entry:IClassPathEntry):IEventDispatcher
+	{
+		var parserInfo:MXMLParserInfo = new MXMLParserInfo(this, sourceCode, entry);
+		return parserInfo;
+	}
 	
 	/**
 	 * @copy org.as3commons.mxmlblocks.IMXMLParser#parse()

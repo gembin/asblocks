@@ -265,7 +265,7 @@ public class ASTUtil
 		}
 		
 		var indent:LinkedListToken = TokenBuilder.newWhiteSpace(indentStr);
-		tok.beforeInsert(indent);
+		tok.prepend(indent);
 		
 		return indent;
 	}
@@ -689,7 +689,12 @@ public class ASTUtil
 		return kind;
 	}
 	
-	
+	public static function parseAS():AS3Parser
+	{
+		var parser:AS3Parser = new AS3Parser();
+		return parser;
+		
+	}
 	
 	public static function parse(code:ISourceCode):AS3Parser
 	{

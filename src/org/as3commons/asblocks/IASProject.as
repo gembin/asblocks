@@ -20,6 +20,8 @@
 package org.as3commons.asblocks
 {
 
+import flash.events.IEventDispatcher;
+
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.impl.IResourceRoot;
@@ -31,7 +33,7 @@ import org.as3commons.asblocks.impl.IResourceRoot;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public interface IASProject
+public interface IASProject extends IEventDispatcher
 {
 	//--------------------------------------------------------------------------
 	//
@@ -130,6 +132,11 @@ public interface IASProject
 	 * TODO DOCME
 	 */
 	function readAll():void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function readAllAsync():void;
 	
 	/**
 	 * TODO DOCME

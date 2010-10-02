@@ -158,7 +158,7 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 			i.insertBeforeCurrent(extndz);
 			// adds a space before the 'implements' keyword
 			var space:LinkedListToken = TokenBuilder.newSpace();
-			extndz.startToken.beforeInsert(space);
+			extndz.startToken.prepend(space);
 		}
 		else
 		{
