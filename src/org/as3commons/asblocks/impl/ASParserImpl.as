@@ -20,13 +20,13 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.IASParser;
+import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 import org.as3commons.asblocks.parser.core.SourceCode;
 import org.as3commons.asblocks.parser.errors.UnExpectedTokenError;
 import org.as3commons.asblocks.parser.impl.AS3Parser;
-import org.as3commons.asblocks.IASParser;
-import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -47,9 +47,10 @@ public class ASParserImpl implements IASParser
 	/**
 	 * @copy org.as3commons.asblocks.IASParser#parse()
 	 */
-	public function parse(code:ISourceCode):ICompilationUnit
+	public function parse(code:ISourceCode, parseBlocks:Boolean = true):ICompilationUnit
 	{
 		var parser:AS3Parser = ASTUtil.parse(code);
+		parser.parseBlocks = parseBlocks;
 		var ast:IParserNode;
 		try
 		{
@@ -65,9 +66,9 @@ public class ASParserImpl implements IASParser
 	/**
 	 * @copy org.as3commons.asblocks.IASParser#parseString()
 	 */
-	public function parseString(source:String):ICompilationUnit
+	public function parseString(source:String, parseBlocks:Boolean = true):ICompilationUnit
 	{
-		return parse(new SourceCode(source));
+		return parse(new SourceCode(source), parseBlocks);
 	}
 }
 }

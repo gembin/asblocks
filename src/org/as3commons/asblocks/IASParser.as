@@ -20,8 +20,8 @@
 package org.as3commons.asblocks
 {
 
-import org.as3commons.asblocks.parser.api.ISourceCode;
 import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.parser.api.ISourceCode;
 
 /**
  * Parse an entire ActionScript source file from the given 
@@ -48,7 +48,7 @@ public interface IASParser
 	 * @return An <code>ICompilationUnit</code> detailing the source code.
 	 * @throws org.as3commons.asblocks.ASBlocksSyntaxError
 	 */
-	function parse(code:ISourceCode):ICompilationUnit;
+	function parse(code:ISourceCode, parseBlocks:Boolean = true):ICompilationUnit;
 	
 	/**
 	 * Parses the <code>String</code> source code data.
@@ -57,6 +57,6 @@ public interface IASParser
 	 * @return An <code>ICompilationUnit</code> detailing the source code.
 	 * @throws org.as3commons.asblocks.ASBlocksSyntaxError
 	 */
-	function parseString(source:String):ICompilationUnit;
+	function parseString(source:String, parseBlocks:Boolean = true):ICompilationUnit;
 }
 }
