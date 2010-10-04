@@ -54,7 +54,6 @@ import org.as3commons.asblocks.impl.ArrayLiteralNode;
 import org.as3commons.asblocks.impl.BooleanLiteralNode;
 import org.as3commons.asblocks.impl.CompilationUnitNode;
 import org.as3commons.asblocks.impl.ConditionalExpressionNode;
-import org.as3commons.asblocks.impl.DeclarationStatementNode;
 import org.as3commons.asblocks.impl.ExpressionBuilder;
 import org.as3commons.asblocks.impl.FieldAccessExpressionNode;
 import org.as3commons.asblocks.impl.FunctionLiteralNode;
@@ -73,7 +72,6 @@ import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.impl.UndefinedLiteralNode;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.api.KeyWords;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.mxmlblocks.IMXMLParser;
@@ -116,6 +114,68 @@ public class ASFactory
 	public function ASFactory()
 	{
 		super();
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Public Global Creation :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Creates a new <code>IASProject</code> project.
+	 * 
+	 * <p>Note: Subclasses can override the default behavior and return their
+	 * own custom instances of <code>IASProject</code>.</p>
+	 * 
+	 * @param outputLocation A <code>String</code> indicating the output location
+	 * of the project's source code.
+	 * @return The implemented <code>IASProject</code> project.
+	 * 
+	 * @see org.as3commons.asblocks.IASProject
+	 * @see org.as3commons.asblocks.impl.ASProject
+	 */
+	public function newEmptyASProject(outputLocation:String):IASProject
+	{
+		var result:IASProject = new ASProject(this);
+		result.outputLocation = outputLocation;
+		return result;
+	}
+	
+	/**
+	 * Returns a new <code>IASParser</code> implementation.
+	 * 
+	 * @return The implemented <code>IASParser</code> parser.
+	 * 
+	 * @see org.as3commons.asblocks.IASParser
+	 */
+	public function newParser():IASParser
+	{
+		return new ASParserImpl();
+	}
+	
+	/**
+	 * Returns a new <code>IMXMLParser</code> implementation.
+	 * 
+	 * @return The implemented <code>IMXMLParser</code> parser.
+	 * 
+	 * @see org.as3commons.mxmlblocks.IMXMLParser
+	 */
+	public function newMXMLParser():IMXMLParser
+	{
+		return new MXMLParserImpl();
+	}
+	
+	/**
+	 * Returns a new <code>IASWriter</code> implementation.
+	 * 
+	 * @return The implemented <code>IASWriter</code> writer.
+	 * 
+	 * @see org.as3commons.asblocks.IASWriter
+	 */
+	public function newWriter():IASWriter
+	{
+		return new ASWriter();
 	}
 	
 	//--------------------------------------------------------------------------
@@ -303,9 +363,11 @@ public class ASFactory
 		return new FunctionLiteralNode(ast);
 	}
 	
-	//----------------------------------
-	//  Expressions
-	//----------------------------------
+	//--------------------------------------------------------------------------
+	//
+	//  Public Expressions Creation :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
 	 * TODO DOCME
@@ -317,32 +379,18 @@ public class ASFactory
 		return ExpressionBuilder.build(ast);
 	}
 	
-	/**
-	 * TODO DOCME
-	 */
-	public function newStatement(expression:String):IStatement
-	{
-		var ast:IParserNode = AS3FragmentParser.parseStatement(expression);
-		ast.parent = null;
-		return StatementBuilder.build(ast);
-	}
-	
-	/**
-	 * TODO DOCME
-	 */
-	public function newDeclaration(declaration:String):IDeclarationStatement
-	{
-		var ast:IParserNode = AS3FragmentParser.parseDecList(declaration);
-		ast.parent = null;
-		return StatementBuilder.build(ast) as IDeclarationStatement;
-	}
-	
 	//----------------------------------
-	//  Assignment Expressions
+	//  Assignment
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a = b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newAssignExpression(left:IExpression,
 										right:IExpression):IAssignmentExpression
@@ -351,7 +399,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a += b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newAddAssignExpression(left:IExpression,
 										   right:IExpression):IAssignmentExpression
@@ -360,7 +414,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &amp;= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newBitAndAssignExpression(left:IExpression,
 											  right:IExpression):IAssignmentExpression
@@ -369,7 +429,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a |= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newBitOrAssignExpression(left:IExpression,
 											 right:IExpression):IAssignmentExpression
@@ -378,7 +444,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a ^= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newBitXorAssignExpression(left:IExpression,
 											  right:IExpression):IAssignmentExpression
@@ -387,7 +459,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a \= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newDivideAssignExpression(left:IExpression,
 											  right:IExpression):IAssignmentExpression
@@ -396,7 +474,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a %= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newModuloAssignExpression(left:IExpression,
 											  right:IExpression):IAssignmentExpression
@@ -405,7 +489,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a *= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newMultiplyAssignExpression(left:IExpression,
 												right:IExpression):IAssignmentExpression
@@ -414,7 +504,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &lt;&lt;= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newShiftLeftAssignExpression(left:IExpression,
 												 right:IExpression):IAssignmentExpression
@@ -423,7 +519,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &gt;&gt;= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newShiftRightAssignExpression(left:IExpression,
 												  right:IExpression):IAssignmentExpression
@@ -432,7 +534,7 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * @private
 	 */
 	public function newShiftRightUnsignedAssignExpression(left:IExpression,
 														  right:IExpression):IAssignmentExpression
@@ -441,7 +543,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a -= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IAssignmentExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IAssignmentExpression
 	 */
 	public function newSubtractAssignExpression(left:IExpression,
 												right:IExpression):IAssignmentExpression
@@ -450,11 +558,17 @@ public class ASFactory
 	}
 	
 	//----------------------------------
-	//  Binary Expressions
+	//  Binary
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a + b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newAddExpression(left:IExpression, 
 									 right:IExpression):IBinaryExpression
@@ -463,7 +577,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &amp;&amp; b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newAndExpression(left:IExpression, 
 									 right:IExpression):IBinaryExpression
@@ -472,7 +592,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &amp; b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newBitAndExpression(left:IExpression, 
 										right:IExpression):IBinaryExpression
@@ -481,7 +607,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a | b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newBitOrExpression(left:IExpression, 
 									   right:IExpression):IBinaryExpression
@@ -490,7 +622,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a ^ b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newBitXorExpression(left:IExpression, 
 										right:IExpression):IBinaryExpression
@@ -499,7 +637,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a / b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newDivisionExpression(left:IExpression, 
 										  right:IExpression):IBinaryExpression
@@ -508,7 +652,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a == b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newEqualsExpression(left:IExpression, 
 										right:IExpression):IBinaryExpression
@@ -517,7 +667,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &gt;= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newGreaterEqualsExpression(left:IExpression, 
 											   right:IExpression):IBinaryExpression
@@ -526,7 +682,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &gt; b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newGreaterThanExpression(left:IExpression, 
 											 right:IExpression):IBinaryExpression
@@ -535,7 +697,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &lt;= b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newLessEqualsExpression(left:IExpression, 
 											right:IExpression):IBinaryExpression
@@ -544,7 +712,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &lt; b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newLessThanExpression(left:IExpression, 
 										  right:IExpression):IBinaryExpression
@@ -553,7 +727,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a % b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newModuloExpression(left:IExpression, 
 										right:IExpression):IBinaryExpression
@@ -562,7 +742,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a * b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newMultiplyExpression(left:IExpression, 
 										  right:IExpression):IBinaryExpression
@@ -571,7 +757,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a != b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newNotEqualsExpression(left:IExpression, 
 										   right:IExpression):IBinaryExpression
@@ -580,7 +772,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a || b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newOrExpression(left:IExpression, 
 									right:IExpression):IBinaryExpression
@@ -589,7 +787,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &lt;&lt; b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newShiftLeftExpression(left:IExpression, 
 										   right:IExpression):IBinaryExpression
@@ -598,7 +802,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &gt;&gt; b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newShiftRightExpression(left:IExpression, 
 											right:IExpression):IBinaryExpression
@@ -607,7 +817,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a &gt;&gt;&gt; b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newShiftRightUnsignedExpression(left:IExpression, 
 													right:IExpression):IBinaryExpression
@@ -616,7 +832,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>a - b</code> expression.
+	 * 
+	 * @param left The left side <code>IExpression</code>.
+	 * @param right The right side <code>IExpression</code>.
+	 * @return A new <code>IBinaryExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBinaryExpression
 	 */
 	public function newSubtractExpression(left:IExpression, 
 										  right:IExpression):IBinaryExpression
@@ -625,11 +847,18 @@ public class ASFactory
 	}
 	
 	//----------------------------------
-	//  Conditional Expression
+	//  Conditional
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>condition ? then : else</code> expression.
+	 * 
+	 * @param conditionExpression The evaluated condition <code>IExpression</code>.
+	 * @param thenExpression The <code>true</code> executed <code>IExpression</code>.
+	 * @param elseExpression The <code>false</code> executed <code>IExpression</code>.
+	 * @return A new <code>IConditionalExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IConditionalExpression
 	 */
 	public function newConditionalExpression(conditionExpression:IExpression, 
 											 thenExpression:IExpression,
@@ -641,83 +870,123 @@ public class ASFactory
 	}
 	
 	//----------------------------------
-	//  Invocation Expressions
+	//  Invocation
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>target(arguments)</code> expression.
+	 * 
+	 * @param target The invocation target <code>IExpression</code>.
+	 * @param arguments The <code>Vector</code> of <code>IExpression</code> 
+	 * invocation arguments.
+	 * @return A new <code>IINvocationExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IINvocationExpression
 	 */
 	public function newInvocationExpression(target:IExpression, 
-											args:Vector.<IExpression>):IINvocationExpression
+											arguments:Vector.<IExpression>):IINvocationExpression
 	{
 		var ast:IParserNode = ASTBuilder.newInvocationExpression(target.node);
 		var result:IINvocationExpression = new InvocationExpressionNode(ast);
-		result.arguments = args;
+		result.arguments = arguments;
 		return result;
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>new Target(arguments)</code> expression.
+	 * 
+	 * @param target The instantiation invocation target <code>IExpression</code>.
+	 * @param arguments The <code>Vector</code> of <code>IExpression</code> 
+	 * invocation arguments.
+	 * @return A new <code>INewExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.INewExpression
 	 */
 	public function newNewExpression(target:IExpression, 
-									 args:Vector.<IExpression>):INewExpression
+									 arguments:Vector.<IExpression>):INewExpression
 	{
 		var ast:IParserNode = ASTBuilder.newNewExpression(target.node);
 		var result:INewExpression = new NewExpressionNode(ast);
-		result.arguments = args;
+		result.arguments = arguments;
 		return result;
 	}
 	
 	//----------------------------------
-	//  Post & Prefix Expressions
+	//  Prefix & Post
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>expression--</code> expression.
+	 * 
+	 * @param expression The decrement <code>IExpression</code>.
+	 * @return A new <code>IPostfixExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IPostfixExpression
 	 */
-	public function newPostDecExpression(sub:IExpression):IPostfixExpression
+	public function newPostDecExpression(expression:IExpression):IPostfixExpression
 	{
 		var ast:IParserNode = ASTBuilder.newPostfixExpression(
-			TokenBuilder.newPostDec(), sub.node);
+			TokenBuilder.newPostDec(), expression.node);
 		return new PostfixExpressionNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>expression++</code> expression.
+	 * 
+	 * @param expression The increment <code>IExpression</code>.
+	 * @return A new <code>IPostfixExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IPostfixExpression
 	 */
-	public function newPostIncExpression(sub:IExpression):IPostfixExpression
+	public function newPostIncExpression(expression:IExpression):IPostfixExpression
 	{
 		var ast:IParserNode = ASTBuilder.newPostfixExpression(
-			TokenBuilder.newPostInc(), sub.node);
+			TokenBuilder.newPostInc(), expression.node);
 		return new PostfixExpressionNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>--expression</code> expression.
+	 * 
+	 * @param expression The decrement <code>IExpression</code>.
+	 * @return A new <code>IPrefixExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IPrefixExpression
 	 */
-	public function newPreDecExpression(sub:IExpression):IPrefixExpression
+	public function newPreDecExpression(expression:IExpression):IPrefixExpression
 	{
 		var ast:IParserNode = ASTBuilder.newPrefixExpression(
-			TokenBuilder.newPreDec(), sub.node);
+			TokenBuilder.newPreDec(), expression.node);
 		return new PrefixExpressionNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>++expression</code> expression.
+	 * 
+	 * @param expression The increment <code>IExpression</code>.
+	 * @return A new <code>IPrefixExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IPrefixExpression
 	 */
-	public function newPreIncExpression(sub:IExpression):IPrefixExpression
+	public function newPreIncExpression(expression:IExpression):IPrefixExpression
 	{
 		var ast:IParserNode = ASTBuilder.newPrefixExpression(
-			TokenBuilder.newPreInc(), sub.node);
+			TokenBuilder.newPreInc(), expression.node);
 		return new PrefixExpressionNode(ast);
 	}
 	
 	//----------------------------------
-	//  Access Expressions
+	//  Access
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>target.name</code> expression.
+	 * 
+	 * @param target The target access <code>IExpression</code>.
+	 * @param name The name of the target access <code>IExpression</code>.
+	 * @return A new <code>IFieldAccessExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IFieldAccessExpression
 	 */
 	public function newFieldAccessExpression(target:IExpression, 
 											 name:String):IFieldAccessExpression
@@ -728,7 +997,13 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>target[subscript]</code> expression.
+	 * 
+	 * @param target The target access <code>IExpression</code>.
+	 * @param target The subscript of the target access <code>IExpression</code>.
+	 * @return A new <code>IArrayAccessExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IArrayAccessExpression
 	 */
 	public function newArrayAccessExpression(target:IExpression, 
 											 subscript:IExpression):IArrayAccessExpression
@@ -747,11 +1022,16 @@ public class ASFactory
 	}
 	
 	//----------------------------------
-	//  Name Expressions
+	//  Name
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>name</code> expression.
+	 * 
+	 * @param name The <code>String</code> name.
+	 * @return A new <code>ISimpleNameExpression</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.ISimpleNameExpression
 	 */
 	public function newSimpleNameExpression(name:String):ISimpleNameExpression
 	{
@@ -760,12 +1040,36 @@ public class ASFactory
 		return result;
 	}
 	
-	//----------------------------------
-	//  Statements
-	//----------------------------------
+	//--------------------------------------------------------------------------
+	//
+	//  Public Statement Creation :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new statement using the <code>AS3FragmentParser.parseStatement()</code>
+	 * and the <code>StatementBuilder.build()</code> to construct the new statement.
+	 * 
+	 * @param statement The <code>String</code> statement to be parsed and built.
+	 * @return A new <code>IStatement</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IStatement
+	 */
+	public function newStatement(statement:String):IStatement
+	{
+		var ast:IParserNode = AS3FragmentParser.parseStatement(statement);
+		ast.parent = null;
+		return StatementBuilder.build(ast);
+	}
+	
+	/**
+	 * Creates a new block statement <code>{ }</code>.
+	 * 
+	 * @return A new <code>IBlock</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBlock
+	 * @see org.as3commons.asblocks.api.IStatement
+	 * @see org.as3commons.asblocks.api.IStatementContainer
 	 */
 	public function newBlock():IBlock
 	{
@@ -774,51 +1078,18 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>var i:int = 0;</code> that can be turned into
+	 * a <code>const i:int = 0, j:int = 1;</code> statement.
+	 * 
+	 * @return A new <code>IDeclarationStatement</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IDeclarationStatement
 	 */
-	public function parseDeclarationStatement(assignment:String):IDeclarationStatement
+	public function newDeclaration(declaration:String):IDeclarationStatement
 	{
-		var ast:IParserNode = AS3FragmentParser.parseDecList(assignment);
-		return new DeclarationStatementNode(ast);
+		var ast:IParserNode = AS3FragmentParser.parseDecList(declaration);
+		ast.parent = null;
+		return StatementBuilder.build(ast) as IDeclarationStatement;
 	}
-	
-	
-	
-	
-	/**
-	 * TODO DOCME
-	 */
-	public function newEmptyASProject(outputLocation:String):IASProject
-	{
-		var result:IASProject = new ASProject(this);
-		result.outputLocation = outputLocation;
-		return result;
-	}
-	
-	/**
-	 * TODO DOCME
-	 */
-	public function newParser():IASParser
-	{
-		return new ASParserImpl();
-	}
-	
-	/**
-	 * TODO DOCME
-	 */
-	public function newMXMLParser():IMXMLParser
-	{
-		return new MXMLParserImpl();
-	}
-	
-	/**
-	 * TODO DOCME
-	 */
-	public function newWriter():IASWriter
-	{
-		return new ASWriter();
-	}
-	
-	
 }
 }

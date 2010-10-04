@@ -258,7 +258,7 @@ public class TestStatementList
 		
 		// test setting initializer
 		// can be either IDeclarationStatement or IExpression (assignment)
-		forstmt.initializer = factory.parseDeclarationStatement("j:int = 0");
+		forstmt.initializer = factory.newDeclaration("j:int = 0");
 		assertPrint("{\n\tfor (var j:int = 0; i < len + 1; ++i) {\n\t\ttrace" +
 			"('Hello World ' + i);\n\t}\n}", forstmt);
 		
@@ -289,7 +289,7 @@ public class TestStatementList
 		assertPrint("{\n\tfor each (name in object) {\n\t}\n}", forstmt);
 		
 		// test setting variable
-		forstmt.initializer = factory.parseDeclarationStatement("prop:String");
+		forstmt.initializer = factory.newDeclaration("prop:String");
 		assertPrint("{\n\tfor each (var prop:String in object) {\n\t}\n}", forstmt);
 		
 		// test setting iterated
@@ -307,7 +307,7 @@ public class TestStatementList
 		assertPrint("{\n\tfor (name in object) {\n\t}\n}", forstmt);
 		
 		// test setting variable
-		forstmt.initializer = factory.parseDeclarationStatement("prop:String");
+		forstmt.initializer = factory.newDeclaration("prop:String");
 		assertPrint("{\n\tfor (var prop:String in object) {\n\t}\n}", forstmt);
 		
 		// test setting iterated
