@@ -132,9 +132,9 @@ public class MethodNode extends MemberNode
 		var role:IParserNode = findAccessorRoleNode();
 		if (role.numChildren > 0)
 		{
-			if (role.getFirstChild().isKind(AS3NodeKind.GET))
+			if (role.getFirstChild().isKind(AS3NodeKind.SET))
 			{
-				return AccessorRole.GETTER;
+				return AccessorRole.SETTER;
 			}
 			else if (role.getFirstChild().isKind(AS3NodeKind.GET))
 			{

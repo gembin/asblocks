@@ -406,7 +406,8 @@ public class ParserBase implements IParser
 		
 		var advanced:Boolean = false;
 		
-		while (tokIs(" ") || tokIs("\t") || tokIs("\n") || token.text.indexOf("//") == 0 
+		while (tokIs(" ") || tokIs("\t") || tokIs("\n") 
+			|| token.text.indexOf("//") == 0 
 			|| (token.text.indexOf("/*") == 0 && !token.text.indexOf("/**") == 0))
 		{
 			if (tokIs(" "))

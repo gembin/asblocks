@@ -35,6 +35,7 @@ import org.as3commons.asblocks.parser.api.IToken;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.LinkedListTreeAdaptor;
 import org.as3commons.asblocks.parser.core.SourceCode;
+import org.as3commons.asblocks.parser.core.Token;
 import org.as3commons.asblocks.parser.errors.NullTokenError;
 import org.as3commons.asblocks.parser.errors.UnExpectedTokenError;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
@@ -214,6 +215,39 @@ public class ASTUtil
 			return startOfLine.text;
 		}
 		return "";
+	}
+	
+	public static function newParenAST(kind:String, token:Token):IParserNode
+	{
+		var result:IParserNode = ASTUtil.newParentheticAST(
+			kind,
+			AS3NodeKind.LPAREN, "(",
+			AS3NodeKind.RPAREN, ")");
+		result.line = token.line;
+		result.column = token.column;
+		return result;
+	}
+	
+	public static function newCurlyAST(kind:String, token:Token):IParserNode
+	{
+		var result:IParserNode = ASTUtil.newParentheticAST(
+			kind,
+			AS3NodeKind.LCURLY, "{",
+			AS3NodeKind.RCURLY, "}");
+		result.line = token.line;
+		result.column = token.column;
+		return result;
+	}
+	
+	public static function newBracketAST(kind:String, token:Token):IParserNode
+	{
+		var result:IParserNode = ASTUtil.newParentheticAST(
+			kind,
+			AS3NodeKind.LBRACKET, "[",
+			AS3NodeKind.RBRACKET, "]");
+		result.line = token.line;
+		result.column = token.column;
+		return result;
 	}
 	
 	public static function newParentheticAST(kind:String, 

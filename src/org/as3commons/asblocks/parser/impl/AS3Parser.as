@@ -144,8 +144,6 @@ public class AS3Parser extends ParserBase
 	
 	private var isInFor:Boolean = false;
 	
-	private var qualifiedNameEnd:int = -1;
-	
 	//----------------------------------
 	//  parseBlocks
 	//----------------------------------
@@ -214,8 +212,7 @@ public class AS3Parser extends ParserBase
 	 */
 	override public function parseCompilationUnit():IParserNode
 	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.COMPILATION_UNIT);
+		var result:TokenNode = adapter.create(AS3NodeKind.COMPILATION_UNIT);
 		
 		// start the parse, eat whitespace up to a '/**' or 'package'
 		nextTokenConsume(result);
@@ -277,12 +274,8 @@ public class AS3Parser extends ParserBase
 	 */
 	internal function parsePackageContent():IParserNode
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.CONTENT,
-			AS3NodeKind.LCURLY, "{",
-			AS3NodeKind.RCURLY, "}") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newCurlyAST(
+			AS3NodeKind.CONTENT, token) as TokenNode;
 		
 		// TODO figure out all that can exist internally
 		var internalParse:Boolean = tokIs(KeyWords.CLASS) 
@@ -465,12 +458,8 @@ public class AS3Parser extends ParserBase
 	 */
 	internal function parseTypeContent():TokenNode
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.CONTENT,
-			AS3NodeKind.LCURLY, "{",
-			AS3NodeKind.RCURLY, "}") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newCurlyAST(
+			AS3NodeKind.CONTENT, token) as TokenNode;
 		
 		consumeWS(Operators.LCURLY, result);
 		
@@ -545,7 +534,6 @@ public class AS3Parser extends ParserBase
 			}
 			else
 			{
-				var isWhitespace:Boolean = tokIsWhitespace();
 				if (!tokIsWhitespace())
 				{
 					addAsDoc(pendingMember);
@@ -578,18 +566,17 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseTypeSpec(kind:String):TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			kind, token);
+		var result:TokenNode = adapter.empty(kind, token);
 		
 		var buffer:String = "";
 		consumeWhitespace(result);
-		buffer += token.text;
-		nextTokenConsume(result);
+		buffer += token.text; // name
+		nextTokenConsume(result); 
 		while (tokIs(Operators.DOT) || tokIs(Operators.DBL_COLON))
 		{
-			buffer += token.text;
-			nextTokenConsume(result);
-			buffer += token.text;
+			buffer += token.text; // '.', '::'
+			nextTokenConsume(result); 
+			buffer += token.text; // name
 			nextTokenConsume(result);
 		}
 		
@@ -610,9 +597,8 @@ public class AS3Parser extends ParserBase
 		while (tokIs(Operators.DOT) || tokIs(Operators.DBL_COLON))
 		{
 			buffer += token.text;
-			nextToken();
+			nextToken(); // '.' '::'
 			buffer += token.text;
-			qualifiedNameEnd = scanner.offset;
 			nextToken(); // name
 		}
 		return buffer;
@@ -623,12 +609,9 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseInclude():TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.INCLUDE, token);
-		
-		consume(KeyWords.INCLUDE, result);
-		result.addChild(parseExpression());
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.INCLUDE, token);
+		consume(KeyWords.INCLUDE, result); // include
+		result.addChild(parseExpression()); // expression
 		return result;
 	}
 	
@@ -637,15 +620,10 @@ public class AS3Parser extends ParserBase
 	 */
 	internal function parseImport():TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.IMPORT, token);
-		
-		consume(KeyWords.IMPORT, result);
-		
-		result.addChild(parseTypeSpec(AS3NodeKind.TYPE));
-		
-		skip(Operators.SEMI, result);
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.IMPORT, token);
+		consume(KeyWords.IMPORT, result); // import
+		result.addChild(parseTypeSpec(AS3NodeKind.TYPE)); // foo.bar
+		skip(Operators.SEMI, result); // ;
 		return result;
 	}
 	
@@ -654,16 +632,11 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseUse():TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.USE, token);
-		
-		consume(KeyWords.USE, result);
-		consume(KeyWords.NAMESPACE, result);
-		
-		result.addChild(parseTypeSpec(AS3NodeKind.NAME));
-		
-		skip(Operators.SEMI, result);
-		
+		var result:TokenNode = adapter.empty(AS3NodeKind.USE, token);
+		consume(KeyWords.USE, result); // use
+		consume(KeyWords.NAMESPACE, result); // namespace
+		result.addChild(parseTypeSpec(AS3NodeKind.NAME)); // name
+		skip(Operators.SEMI, result); // ;
 		return result;
 	}
 	
@@ -672,29 +645,21 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseMetaData():Node
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.META,
-			AS3NodeKind.LBRACKET, "[",
-			AS3NodeKind.RBRACKET, "]") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newBracketAST(
+			AS3NodeKind.META, token) as TokenNode;
 		
-		addAsDoc(result);
+		addAsDoc(result); // '/**'
 		
-		consumeWS(Operators.LBRACK, result);
-		
-		result.addChild(adapter.copy(
-			AS3NodeKind.NAME, token));
-		
+		consumeWS(Operators.LBRACK, result); // '['
+		result.addChild(adapter.copy(AS3NodeKind.NAME, token));
 		nextTokenConsume(result); // name
 		
-		if (tokIs(Operators.LPAREN))
+		if (tokIs(Operators.LPAREN)) // '('
 		{
 			result.addChild(parseMetaDataParameterList())
 		}
 		
-		consumeWS(Operators.RBRACK, result, false);
-		
+		consumeWS(Operators.RBRACK, result, false); // ']'
 		return result;
 	}
 	
@@ -703,12 +668,8 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseMetaDataParameterList():Node
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.PARAMETER_LIST,
-			AS3NodeKind.LPAREN, "(",
-			AS3NodeKind.RPAREN, ")") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newParenAST(
+			AS3NodeKind.PARAMETER_LIST, token) as TokenNode;
 		
 		consumeWS(Operators.LPAREN, result);
 		
@@ -1574,12 +1535,8 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseArrayLiteral():TokenNode
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.ARRAY,
-			AS3NodeKind.LBRACKET, "[",
-			AS3NodeKind.RBRACKET, "]") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newBracketAST(
+			AS3NodeKind.ARRAY, token) as TokenNode;
 		
 		consumeWS(Operators.LBRACK, result);
 		while (!tokIs(Operators.RBRACK))
@@ -1597,12 +1554,8 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseObjectLiteral():TokenNode
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.OBJECT,
-			AS3NodeKind.LCURLY, "{",
-			AS3NodeKind.RCURLY, "}") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newCurlyAST(
+			AS3NodeKind.OBJECT, token) as TokenNode;
 		
 		consumeWS(Operators.LCURLY, result);
 		while (!tokIs(Operators.RCURLY))
@@ -1619,20 +1572,13 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseObjectLiteralPropertyDeclaration():TokenNode
 	{
-		var result:TokenNode = adapter.empty(
-			AS3NodeKind.PROP, token);
-		
-		result.addChild(adapter.copy(
-			AS3NodeKind.NAME, token));
-		
-		nextTokenConsume(result);
-		
-		consume(Operators.COLON, result);
-		var value:TokenNode = adapter.empty(
-			AS3NodeKind.VALUE, token);
-		value.addChild(parseExpression());
+		var result:TokenNode = adapter.empty(AS3NodeKind.PROP, token);
+		result.addChild(adapter.copy(AS3NodeKind.NAME, token));
+		nextTokenConsume(result); // name
+		consume(Operators.COLON, result); // ':'
+		var value:TokenNode = adapter.empty(AS3NodeKind.VALUE, token);
+		value.addChild(parseExpression()); // expression
 		result.addChild(value);
-		
 		return result;
 	}
 	
@@ -1801,12 +1747,8 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseParameterList():TokenNode
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.PARAMETER_LIST,
-			AS3NodeKind.LPAREN, "(",
-			AS3NodeKind.RPAREN, ")") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newParenAST(
+			AS3NodeKind.PARAMETER_LIST, token) as TokenNode;
 		
 		consumeWS(Operators.LPAREN, result);
 		while (!tokIs(Operators.RPAREN))
@@ -1980,12 +1922,8 @@ public class AS3Parser extends ParserBase
 		
 		if (tokIs(Operators.LPAREN))
 		{
-			result = ASTUtil.newParentheticAST(
-				AS3NodeKind.E4X_FILTER,
-				AS3NodeKind.LPAREN, "(",
-				AS3NodeKind.RPAREN, ")") as TokenNode;
-			result.line = token.line;
-			result.column = token.column;
+			result = ASTUtil.newParenAST(
+				AS3NodeKind.E4X_FILTER, token) as TokenNode;
 			consumeWS(Operators.LPAREN, result);
 			result.addChild(node);
 			result.addChild(parseExpression());
@@ -2051,12 +1989,8 @@ public class AS3Parser extends ParserBase
 	 */
 	internal function parseBlock():IParserNode
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.BLOCK,
-			AS3NodeKind.LCURLY, "{",
-			AS3NodeKind.RCURLY, "}") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newCurlyAST(
+			AS3NodeKind.BLOCK, token) as TokenNode;
 		
 		consumeWS(Operators.LCURLY, result);
 		
@@ -2385,12 +2319,8 @@ public class AS3Parser extends ParserBase
 	 */
 	internal function parseCondition():IParserNode
 	{
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.CONDITION,
-			AS3NodeKind.LPAREN, "(",
-			AS3NodeKind.RPAREN, ")") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newParenAST(
+			AS3NodeKind.CONDITION, token) as TokenNode;
 		
 		consumeWS(Operators.LPAREN, result);
 		result.addChild(parseExpression());
@@ -2497,12 +2427,8 @@ public class AS3Parser extends ParserBase
 		
 		var caseNode:TokenNode;
 		
-		var result:TokenNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.CASES,
-			AS3NodeKind.LCURLY, "{",
-			AS3NodeKind.RCURLY, "}") as TokenNode;
-		result.line = token.line;
-		result.column = token.column;
+		var result:TokenNode = ASTUtil.newCurlyAST(
+			AS3NodeKind.CASES, token) as TokenNode;
 		
 		consumeWS(Operators.LCURLY, result, true);
 		
@@ -2733,13 +2659,13 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseASdoc():TokenNode
 	{
+		var sc:ISourceCodeScanner = ISourceCodeScanner(scanner);
 		var result:TokenNode = adapter.create(
 			AS3NodeKind.AS_DOC,
 			token.text, 
-			ISourceCodeScanner(scanner).commentLine,
-			ISourceCodeScanner(scanner).commentColumn);
-		ISourceCodeScanner(scanner).commentLine = -1;
-		ISourceCodeScanner(scanner).commentColumn = -1;
+			sc.commentLine,	sc.commentColumn);
+		sc.commentLine = -1;
+		sc.commentColumn = -1;
 		result.start = scanner.offset - token.text.length;
 		result.end = scanner.offset;
 		
@@ -2761,7 +2687,6 @@ public class AS3Parser extends ParserBase
 		}
 	}
 	
-	// AS3FragmentParser
 	/**
 	 * @private
 	 */
@@ -2782,30 +2707,12 @@ public class AS3Parser extends ParserBase
 		
 		return result;
 	}
-	
+	/**
+	 * @private
+	 */
 	internal function parseMetaDatas():IParserNode
 	{
 		return parseTypeContent();
-	}
-	
-	internal function parseMembers(kind:String):IParserNode
-	{
-		return parseTypeContent();
-	}
-	
-	internal function parseConstants():IParserNode
-	{
-		return parseMembers(AS3NodeKind.CONST);
-	}
-	
-	internal function parseVariables():IParserNode
-	{
-		return parseMembers(AS3NodeKind.VAR);
-	}
-	
-	internal function parseMethods():IParserNode
-	{
-		return parseMembers(AS3NodeKind.FUNCTION);
 	}
 }
 }
