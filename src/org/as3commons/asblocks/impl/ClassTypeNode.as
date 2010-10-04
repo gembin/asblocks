@@ -336,7 +336,8 @@ public class ClassTypeNode extends TypeNode implements IClassType
 									   visibility:Visibility, 
 									   returnType:String):IMethod
 	{
-		var method:IMethod = ASTBuilder.newMethod(name, visibility, returnType);
+		var ast:IParserNode = ASTTypeBuilder.newMethodAST(name, visibility, returnType);
+		var method:IMethod = new MethodNode(ast);
 		addMethod(method);
 		return method;
 	}

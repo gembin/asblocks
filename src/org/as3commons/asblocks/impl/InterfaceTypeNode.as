@@ -129,7 +129,8 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 									   visibility:Visibility, 
 									   returnType:String):IMethod
 	{
-		var method:IMethod = ASTBuilder.newInterfaceMethod(name, returnType);
+		var ast:IParserNode = ASTTypeBuilder.newInterfaceMethodAST(name, returnType);
+		var method:IMethod = new MethodNode(ast);
 		addMethod(method);
 		return method;
 	}

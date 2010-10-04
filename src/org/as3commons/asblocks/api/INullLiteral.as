@@ -24,7 +24,7 @@ package org.as3commons.asblocks.api
  * A null literal; <code>null</code>.
  * 
  * <pre>
- * var nl:INullLiteral = factory.newNullLiteral()
+ * var nl:INullLiteral = factory.newNullLiteral();
  * </pre>
  * 
  * <p>Will produce; <code>null</code></p>

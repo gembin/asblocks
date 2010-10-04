@@ -46,10 +46,13 @@ import org.as3commons.asblocks.api.IUndefinedLiteral;
 import org.as3commons.asblocks.impl.ASParserImpl;
 import org.as3commons.asblocks.impl.ASProject;
 import org.as3commons.asblocks.impl.ASTBuilder;
+import org.as3commons.asblocks.impl.ASTLiteralBuilder;
+import org.as3commons.asblocks.impl.ASTTypeBuilder;
 import org.as3commons.asblocks.impl.ASWriter;
 import org.as3commons.asblocks.impl.ArrayAccessExpressionNode;
 import org.as3commons.asblocks.impl.ArrayLiteralNode;
 import org.as3commons.asblocks.impl.BooleanLiteralNode;
+import org.as3commons.asblocks.impl.CompilationUnitNode;
 import org.as3commons.asblocks.impl.ConditionalExpressionNode;
 import org.as3commons.asblocks.impl.DeclarationStatementNode;
 import org.as3commons.asblocks.impl.ExpressionBuilder;
@@ -75,15 +78,29 @@ import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.mxmlblocks.IMXMLParser;
 import org.as3commons.mxmlblocks.api.IBlockTag;
+import org.as3commons.mxmlblocks.impl.ASTMXMLBuilder;
 import org.as3commons.mxmlblocks.impl.MXMLParserImpl;
 import org.as3commons.mxmlblocks.impl.TagList;
 
 /**
- * TODO DOCME
+ * The <code>ASFactory</code> is the main interface for asblocks.
+ * 
+ * <pre>
+ * var factory:ASFactory = new ASFactory();
+ * var cunit:ICompilationUnit = factory.newClass("foo.bar.Baz");
+ * // or
+ * var factory:ASFactory = new ASFactory();
+ * var project:ASProject = new ASProject(factory);
+ * // this is a short-cut that automatically adds the compilation unit
+ * // to the project
+ * var cunit:ICompilationUnit = project.newClass("foo.bar.Baz");
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.IASProject
  */
 public class ASFactory
 {
@@ -101,32 +118,53 @@ public class ASFactory
 		super();
 	}
 	
-	//----------------------------------
-	//  Types
-	//----------------------------------
+	//--------------------------------------------------------------------------
+	//
+	//  Public Type Creation :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new public <strong>class</strong> <code>ICompilationUnit</code>.
+	 * 
+	 * @param qualifiedName The <code>String</code> qualified name of the class.
+	 * @return A new class <code>ICompilationUnit</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IClassType
 	 */
 	public function newClass(qualifiedName:String):ICompilationUnit
 	{
-		return ASTBuilder.synthesizeClass(qualifiedName);
+		var ast:IParserNode = ASTTypeBuilder.newClassCompilationUnitAST(qualifiedName);
+		return new CompilationUnitNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new public <strong>interface</strong> <code>ICompilationUnit</code>.
+	 * 
+	 * @param qualifiedName The <code>String</code> qualified name of the interface.
+	 * @return A new interface <code>ICompilationUnit</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IInterfaceType
 	 */
 	public function newInterface(qualifiedName:String):ICompilationUnit
 	{
-		return ASTBuilder.synthesizeInterface(qualifiedName);
+		var ast:IParserNode = ASTTypeBuilder.newInterfaceCompilationUnitAST(qualifiedName);
+		return new CompilationUnitNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new public <strong>function</strong> <code>ICompilationUnit</code>.
+	 * 
+	 * @param qualifiedName The <code>String</code> qualified name of the function.
+	 * @param returnType The <code>String</code> return type of the function.
+	 * @return A new interface <code>ICompilationUnit</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IFunctionType
 	 */
 	public function newFunction(qualifiedName:String, returnType:String):ICompilationUnit
 	{
-		return ASTBuilder.synthesizeFunction(qualifiedName, returnType);
+		var ast:IParserNode = ASTTypeBuilder.newFunctionCompilationUnitAST(qualifiedName, returnType);
+		return new CompilationUnitNode(ast);
 	}
 	
 	// FIXME move to MXMLFactory
@@ -137,7 +175,7 @@ public class ASFactory
 	public function newApplication(qualifiedName:String, 
 								   superQualifiedName:String):ICompilationUnit
 	{
-		return ASTBuilder.synthesizeApplication(qualifiedName, superQualifiedName);
+		return ASTMXMLBuilder.newApplicationCompilationUnit(qualifiedName, superQualifiedName);
 	}
 	
 	/**
@@ -145,80 +183,123 @@ public class ASFactory
 	 */
 	public function newTag(name:String, binding:String = null):IBlockTag
 	{
-		var ast:IParserNode = ASTBuilder.newTag(name, binding);
+		var ast:IParserNode = ASTMXMLBuilder.newTag(name, binding);
 		return new TagList(ast);
 	}
 	
-	//----------------------------------
-	//  Literals
-	//----------------------------------
+	//--------------------------------------------------------------------------
+	//
+	//  Public Literals Creation :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>Number</code> literal.
+	 * 
+	 * @param number The <code>Number</code> value for the literal.
+	 * @return A new <code>INumberLiteral</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.INumberLiteral
 	 */
 	public function newNumberLiteral(number:Number):INumberLiteral
 	{
-		return new NumberLiteralNode(ASTUtil.newAST(AS3NodeKind.NUMBER, number.toString()));
+		var ast:IParserNode = ASTLiteralBuilder.newNumberLiteral(number);
+		return new NumberLiteralNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>null</code> literal.
+	 * 
+	 * @return A new <code>INullLiteral</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.INullLiteral
 	 */
 	public function newNullLiteral():INullLiteral
 	{
-		return new NullLiteralNode(ASTUtil.newAST(AS3NodeKind.NULL, KeyWords.NULL));
+		var ast:IParserNode = ASTLiteralBuilder.newNullLiteral();
+		return new NullLiteralNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>undefined</code> literal.
+	 * 
+	 * @return A new <code>IUndefinedLiteral</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IUndefinedLiteral
 	 */
 	public function newUndefinedLiteral():IUndefinedLiteral
 	{
-		return new UndefinedLiteralNode(ASTUtil.newAST(AS3NodeKind.UNDEFINED, KeyWords.UNDEFINED));
+		var ast:IParserNode = ASTLiteralBuilder.newUndefinedLiteral();
+		return new UndefinedLiteralNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>Boolean</code> literal.
+	 * 
+	 * @param boolean The <code>Boolean</code> value for the literal.
+	 * @return A new <code>IBooleanLiteral</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBooleanLiteral
 	 */
 	public function newBooleanLiteral(boolean:Boolean):IBooleanLiteral
 	{
-		var kind:String = (boolean) ? AS3NodeKind.TRUE : AS3NodeKind.FALSE;
-		var text:String = (boolean) ? KeyWords.TRUE : KeyWords.FALSE;
-		return new BooleanLiteralNode(ASTUtil.newAST(kind, text));
+		var ast:IParserNode = ASTLiteralBuilder.newBooleanLiteral(boolean);
+		return new BooleanLiteralNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>String</code> literal.
+	 * 
+	 * <p>Note: The passed value does not inlude the start and end quotes, 
+	 * unless they need to be escaped.</p>
+	 * 
+	 * @param string The <code>String</code> value for the literal.
+	 * @return A new <code>IStringLiteral</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IStringLiteral
 	 */
 	public function newStringLiteral(string:String):IStringLiteral
 	{
-		return new StringLiteralNode(ASTUtil.newAST(AS3NodeKind.STRING, ASTBuilder.escapeString(string)));
+		var ast:IParserNode = ASTLiteralBuilder.newStringLiteral(string);
+		return new StringLiteralNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>[a, b, c]</code> literal.
+	 * 
+	 * @return A new <code>IArrayLiteral</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IArrayLiteral
 	 */
 	public function newArrayLiteral():IArrayLiteral
 	{
-		var ast:IParserNode = ASTBuilder.newArrayLiteral();
+		var ast:IParserNode = ASTLiteralBuilder.newArrayLiteral();
 		return new ArrayLiteralNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>{a:1, b:2, c:3}</code> literal.
+	 * 
+	 * @return A new <code>IObjectLiteral</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IObjectLiteral
 	 */
 	public function newObjectLiteral():IObjectLiteral
 	{
-		var ast:IParserNode = ASTBuilder.newObjectLiteral();
+		var ast:IParserNode = ASTLiteralBuilder.newObjectLiteral();
 		return new ObjectLiteralNode(ast);
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>function():void {}</code> literal.
+	 * 
+	 * @return A new <code>IFunctionLiteral</code> instance.
+	 * 
+	 * @see org.as3commons.asblocks.api.IFunctionLiteral
 	 */
 	public function newFunctionLiteral():IFunctionLiteral
 	{
-		var ast:IParserNode = ASTBuilder.newFunctionLiteral();
+		var ast:IParserNode = ASTLiteralBuilder.newFunctionLiteral();
 		return new FunctionLiteralNode(ast);
 	}
 	

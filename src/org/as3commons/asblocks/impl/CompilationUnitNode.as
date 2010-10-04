@@ -260,7 +260,7 @@ public class CompilationUnitNode extends ScriptNode implements ICompilationUnit
 	 */
 	public function newInternalClass(name:String):IInternalClass
 	{
-		var ast:IParserNode = ASTBuilder.synthesizeAS3Class(name, false);
+		var ast:IParserNode = ASTTypeBuilder.newClassAST(name, false);
 		addInternal(ast);
 		return new InternalClassNode(ast);
 	}
@@ -270,7 +270,7 @@ public class CompilationUnitNode extends ScriptNode implements ICompilationUnit
 	 */
 	public function newInternalFunction(name:String, returnType:String):IInternalFunction
 	{
-		var ast:IParserNode = ASTBuilder.synthesizeAS3Function(name, returnType, false);
+		var ast:IParserNode = ASTBuilder.newFunctionAST(name, returnType, false);
 		addInternal(ast);
 		return new InternalFunctionNode(ast);
 	}

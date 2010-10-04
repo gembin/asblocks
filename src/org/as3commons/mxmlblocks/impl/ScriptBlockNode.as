@@ -24,7 +24,9 @@ import org.as3commons.asblocks.api.IField;
 import org.as3commons.asblocks.api.IMethod;
 import org.as3commons.asblocks.api.Visibility;
 import org.as3commons.asblocks.impl.ASTBuilder;
+import org.as3commons.asblocks.impl.ASTTypeBuilder;
 import org.as3commons.asblocks.impl.ContentBlockNode;
+import org.as3commons.asblocks.impl.MethodNode;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.utils.FieldUtil;
 import org.as3commons.mxmlblocks.api.IScriptBlock;
@@ -80,7 +82,8 @@ public class ScriptBlockNode extends ContentBlockNode implements IScriptBlock
 									   visibility:Visibility, 
 									   returnType:String):IMethod
 	{
-		var method:IMethod = ASTBuilder.newMethod(name, visibility, returnType);
+		var ast:IParserNode = ASTTypeBuilder.newMethodAST(name, visibility, returnType);
+		var method:IMethod = new MethodNode(ast);
 		addMethod(method);
 		return method;
 	}

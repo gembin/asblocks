@@ -26,6 +26,7 @@ import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.impl.ASTBuilder;
+import org.as3commons.asblocks.impl.ASTTypeBuilder;
 import org.as3commons.asblocks.impl.ApplicationUnitNode;
 import org.as3commons.asblocks.impl.ParserInfo;
 import org.as3commons.asblocks.parser.api.IParserNode;
@@ -93,13 +94,13 @@ public class MXMLParserImpl implements IMXMLParser
 		qualifiedName = qualifiedName.split("/").join(".");
 		
 		var unit:ICompilationUnit = new ApplicationUnitNode(
-			ASTBuilder._synthesizeClass(qualifiedName), ast);
-		var pname:String = ASTBuilder.packageNameFrom(qualifiedName);
+			ASTTypeBuilder.newClassCompilationUnitAST(qualifiedName), ast);
+		var pname:String = ASTTypeBuilder.packageNameFrom(qualifiedName);
 		if (pname != null)
 		{
 			unit.packageName = pname;
 		}
-		unit.typeNode.name = ASTBuilder.typeNameFrom(qualifiedName);
+		unit.typeNode.name = ASTTypeBuilder.typeNameFrom(qualifiedName);
 		IClassType(unit.typeNode).superClass = superQualifiedName;
 		
 		return unit;

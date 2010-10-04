@@ -32,6 +32,15 @@ package org.as3commons.asblocks
  */
 public class ASBlocksSyntaxError extends Error
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Public :: Variables
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * The original syntax error.
+	 */
 	public var cause:Error;
 	
 	//--------------------------------------------------------------------------
@@ -41,7 +50,10 @@ public class ASBlocksSyntaxError extends Error
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Constructor.
+	 * Creates a new instance of <code>ASBlocksSyntaxError</code>.
+	 * 
+	 * @param message A String error message.
+	 * @param cause The Error that triggered the syntax error.
 	 */
 	public function ASBlocksSyntaxError(message:String, cause:Error = null)
 	{

@@ -4,6 +4,7 @@ package org.as3commons.asblocks.utils
 import org.as3commons.asblocks.api.IField;
 import org.as3commons.asblocks.api.Visibility;
 import org.as3commons.asblocks.impl.ASTBuilder;
+import org.as3commons.asblocks.impl.ASTTypeBuilder;
 import org.as3commons.asblocks.impl.FieldNode;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
@@ -34,7 +35,8 @@ public class FieldUtil
 									visibility:Visibility, 
 									type:String):IField
 	{
-		var field:IField = ASTBuilder.newField(name, visibility, type);
+		var fieldAST:IParserNode = ASTTypeBuilder.newFieldAST(name, visibility, type);
+		var field:IField = new FieldNode(fieldAST);
 		addField(ast, field);
 		return field;
 	}

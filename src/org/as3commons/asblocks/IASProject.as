@@ -142,5 +142,10 @@ public interface IASProject extends IEventDispatcher
 	 * TODO DOCME
 	 */
 	function writeAll():void;
+	
+	/**
+	 * TODO DOCME
+	 */
+	function writeAllAsync():void;
 }
 }

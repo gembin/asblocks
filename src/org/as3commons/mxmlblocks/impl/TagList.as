@@ -281,7 +281,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 	 */
 	override public function addComment(text:String):IToken
 	{
-		return ASTBuilder.newXMLComment(node, text);
+		return ASTMXMLBuilder.newXMLComment(node, text);
 	}
 	
 	/**
@@ -290,7 +290,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 	override public function newXMLNS(localName:String, uri:String):IXMLNamespace
 	{
 		var list:IParserNode = findOrCreateAttList();		
-		var ast:IParserNode = ASTBuilder.newXMLNS(localName, uri);
+		var ast:IParserNode = ASTMXMLBuilder.newXMLNS(localName, uri);
 		list.addChild(ast);
 		return new XMLNamespaceNode(ast);
 	}
@@ -301,7 +301,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 	override public function newAttribute(name:String, value:String, state:String = null):IAttribute
 	{
 		var list:IParserNode = findOrCreateAttList();	
-		var ast:IParserNode = ASTBuilder.newAttribute(name, value, state);
+		var ast:IParserNode = ASTMXMLBuilder.newAttribute(name, value, state);
 		list.addChild(ast);
 		return new AttributeNode(ast);
 	}
@@ -311,7 +311,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 	 */
 	override public function newTag(name:String, binding:String = null):IBlockTag
 	{
-		var ast:IParserNode = ASTBuilder.newTag(name, binding);
+		var ast:IParserNode = ASTMXMLBuilder.newTag(name, binding);
 		addTag(ast);
 		return new TagList(ast);
 	}
@@ -321,7 +321,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 	 */
 	override public function newScriptTag(code:String = null):IScriptTag
 	{
-		var ast:IParserNode = ASTBuilder.newScriptTag(code);
+		var ast:IParserNode = ASTMXMLBuilder.newScriptTag(code);
 		addTag(ast);
 		return new ScriptTagNode(ast);
 	}
@@ -331,7 +331,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 	 */
 	override public function newMetadataTag(code:String = null):IMetadataTag
 	{
-		var ast:IParserNode = ASTBuilder.newMetadataTag(code);
+		var ast:IParserNode = ASTMXMLBuilder.newMetadataTag(code);
 		addTag(ast);
 		return new MetadataTagNode(ast);
 	}

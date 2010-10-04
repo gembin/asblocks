@@ -289,6 +289,20 @@ public class ASProject extends EventDispatcher implements IASProject
 	}
 	
 	/**
+	 * @copy org.as3commons.asblocks.IASProject#readAllAsync()
+	 */
+	public function readAllAsync():void
+	{
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#readAll()
+	 */
+	public function readAll():void
+	{
+	}
+	
+	/**
 	 * @copy org.as3commons.asblocks.IASProject#writeAll()
 	 */
 	public function writeAll():void
@@ -304,17 +318,11 @@ public class ASProject extends EventDispatcher implements IASProject
 	}
 	
 	/**
-	 * @copy org.as3commons.asblocks.IASProject#readAllAsync()
+	 * @copy org.as3commons.asblocks.IASProject#writeAll()
 	 */
-	public function readAllAsync():void
+	public function writeAllAsync():void
 	{
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.IASProject#readAll()
-	 */
-	public function readAll():void
-	{
+		
 	}
 	
 	//--------------------------------------------------------------------------

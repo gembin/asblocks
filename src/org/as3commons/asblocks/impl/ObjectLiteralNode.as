@@ -86,7 +86,7 @@ public class ObjectLiteralNode extends LiteralNode
 	 */
 	public function newField(name:String, expression:IExpression):IPropertyField
 	{
-		var ast:IParserNode = ASTBuilder.newObjectField(name, expression.node);
+		var ast:IParserNode = ASTLiteralBuilder.newObjectField(name, expression.node);
 		var indent:String = ASTUtil.findIndent(node) + "\t";
 		ASTUtil.increaseIndent(ast, indent);
 		if (node.numChildren > 0)

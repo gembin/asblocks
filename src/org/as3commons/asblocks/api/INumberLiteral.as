@@ -24,7 +24,7 @@ package org.as3commons.asblocks.api
  * A Number literal; <code>42</code>, <code>.420</code> or <code>0xf42</code>.
  * 
  * <pre>
- * var nl:INumberLiteral = factory.newNumberLiteral(42)
+ * var nl:INumberLiteral = factory.newNumberLiteral(42);
  * </pre>
  * 
  * <p>Will produce; <code>42</code></p>
