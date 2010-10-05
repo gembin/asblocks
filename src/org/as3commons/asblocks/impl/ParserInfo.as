@@ -4,6 +4,7 @@ import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
 
+import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.IASParser;
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
@@ -60,6 +61,31 @@ public class ParserInfo extends EventDispatcher implements IParserInfo
 	public function get unit():ICompilationUnit
 	{
 		return _unit;
+	}
+	
+	//----------------------------------
+	//  error
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _error:ASBlocksSyntaxError;
+	
+	/**
+	 * doc
+	 */
+	public function get error():ASBlocksSyntaxError
+	{
+		return _error;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set error(value:ASBlocksSyntaxError):void
+	{
+		_error = value;
 	}
 	
 	public var parser:Object;

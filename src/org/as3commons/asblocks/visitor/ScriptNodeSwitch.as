@@ -85,19 +85,44 @@ import org.as3commons.asblocks.api.IWithStatement;
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
  * @see org.as3commons.asblocks.IASBlockVisitor
  */
 public class ScriptNodeSwitch implements IScriptNodeStrategy
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Variables
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
 	private var visitor:IASBlockVisitor;
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 */
 	public function ScriptNodeSwitch(visitor:IASBlockVisitor)
 	{
 		this.visitor = visitor;
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  IScriptNodeStrategy API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
 	/**
-	 * throws IllegalOperationError unhandled ScriptNode
+	 * @throws IllegalOperationError unhandled ScriptNode
 	 */
 	public function handle(element:IScriptNode):void
 	{

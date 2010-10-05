@@ -285,7 +285,16 @@ public class ASProject extends EventDispatcher implements IASProject
 	 */
 	public function removeResourceRoot(resource:IResourceRoot):void
 	{
-		
+		var len:int = resources.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IResourceRoot = resources[i] as IResourceRoot;
+			if (element == resource)
+			{
+				_classPathEntries.splice(i, 1);
+				return;
+			}	
+		}
 	}
 	
 	/**

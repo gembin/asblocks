@@ -24,6 +24,7 @@ import flash.events.IEventDispatcher;
 
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.impl.IParserInfo;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 
 /**
@@ -46,7 +47,7 @@ public interface IMXMLParser
 	/**
 	 * TODO DOCME
 	 */
-	function parseAsync(sourceCode:ISourceCode, entry:IClassPathEntry):IEventDispatcher;
+	function parseAsync(sourceCode:ISourceCode, entry:IClassPathEntry):IParserInfo;
 	
 	/**
 	 * Parses the <code>ISourceCode</code>'s source code data.

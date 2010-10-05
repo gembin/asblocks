@@ -74,11 +74,17 @@ import org.as3commons.asblocks.api.IWhileStatement;
 import org.as3commons.asblocks.api.IWithStatement;
 
 /**
- * TODO DOCME
+ * Visits elements within an <code>IPackage</code>, <code>IClassType</code>, 
+ * <code>IInterfaceType</code> and <code>IStatementContainer</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IPackage
+ * @see org.as3commons.asblocks.api.IClassType
+ * @see org.as3commons.asblocks.api.IInterfaceType
+ * @see org.as3commons.asblocks.api.IStatementContainer
  */
 public interface IASBlockVisitor
 {

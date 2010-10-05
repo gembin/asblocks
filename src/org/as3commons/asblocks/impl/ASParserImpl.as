@@ -54,7 +54,7 @@ public class ASParserImpl implements IASParser
 	 */
 	public function parseAsync(sourceCode:ISourceCode, 
 							   entry:IClassPathEntry, 
-							   parseBlocks:Boolean = true):IEventDispatcher
+							   parseBlocks:Boolean = true):IParserInfo
 	{
 		var parserInfo:ParserInfo = new ParserInfo(this, sourceCode, entry, parseBlocks);
 		return parserInfo;
@@ -63,7 +63,8 @@ public class ASParserImpl implements IASParser
 	/**
 	 * @copy org.as3commons.asblocks.IASParser#parse()
 	 */
-	public function parse(sourceCode:ISourceCode, parseBlocks:Boolean = true):ICompilationUnit
+	public function parse(sourceCode:ISourceCode, 
+						  parseBlocks:Boolean = true):ICompilationUnit
 	{
 		if (!parser)
 		{

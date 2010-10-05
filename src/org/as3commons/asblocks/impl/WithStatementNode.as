@@ -43,23 +43,23 @@ public class WithStatementNode extends ContainerDelegate
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  object
+	//  scope
 	//----------------------------------
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.IWithStatement#object
+	 * @copy org.as3commons.asblocks.api.IWithStatement#scope
 	 */
-	public function get object():IExpression
+	public function get scope():IExpression
 	{
-		return ExpressionBuilder.build(findConditionNode().getFirstChild());
+		return ExpressionBuilder.build(findScope().getFirstChild());
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set object(value:IExpression):void
+	public function set scope(value:IExpression):void
 	{
-		findConditionNode().setChildAt(value.node, 0);
+		findScope().setChildAt(value.node, 0);
 	}
 	
 	//----------------------------------
@@ -71,7 +71,7 @@ public class WithStatementNode extends ContainerDelegate
 	 */
 	public function get body():IStatement
 	{
-		return StatementBuilder.build(findBlockNode());
+		return StatementBuilder.build(findBlock());
 	}
 	
 	//--------------------------------------------------------------------------
@@ -111,7 +111,7 @@ public class WithStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */
-	private function findConditionNode():IParserNode
+	private function findScope():IParserNode
 	{
 		return node.getFirstChild();
 	}
@@ -119,7 +119,7 @@ public class WithStatementNode extends ContainerDelegate
 	/**
 	 * @private
 	 */
-	private function findBlockNode():IParserNode
+	private function findBlock():IParserNode
 	{
 		return node.getLastChild();
 	}

@@ -28,6 +28,7 @@ import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ASTTypeBuilder;
 import org.as3commons.asblocks.impl.ApplicationUnitNode;
+import org.as3commons.asblocks.impl.IParserInfo;
 import org.as3commons.asblocks.impl.ParserInfo;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.ISourceCode;
@@ -56,7 +57,8 @@ public class MXMLParserImpl implements IMXMLParser
 	/**
 	 * @copy org.as3commons.mxmlblocks.IMXMLParser#parseAsync()
 	 */
-	public function parseAsync(sourceCode:ISourceCode, entry:IClassPathEntry):IEventDispatcher
+	public function parseAsync(sourceCode:ISourceCode, 
+							   entry:IClassPathEntry):IParserInfo
 	{
 		var parserInfo:MXMLParserInfo = new MXMLParserInfo(this, sourceCode, entry);
 		return parserInfo;
@@ -65,7 +67,8 @@ public class MXMLParserImpl implements IMXMLParser
 	/**
 	 * @copy org.as3commons.mxmlblocks.IMXMLParser#parse()
 	 */
-	public function parse(sourceCode:ISourceCode, entry:IClassPathEntry):ICompilationUnit
+	public function parse(sourceCode:ISourceCode, 
+						  entry:IClassPathEntry):ICompilationUnit
 	{
 		var parser:MXMLParser = ASTUtil.parseMXML(sourceCode);
 		var ast:IParserNode;

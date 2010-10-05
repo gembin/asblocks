@@ -54,18 +54,18 @@ public interface IWithStatement extends IStatement, IStatementContainer
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  object
+	//  scope
 	//----------------------------------
 	
 	/**
-	 * The target object that each statement within the body resolves to.
+	 * The target object's scope that each statement within the body resolves to.
 	 */
-	function get object():IExpression;
+	function get scope():IExpression;
 	
 	/**
 	 * @private
 	 */
-	function set object(value:IExpression):void;
+	function set scope(value:IExpression):void;
 	
 	//----------------------------------
 	//  body

@@ -68,9 +68,9 @@ public class TestWithStatementNode extends BaseASFactoryTest
 		block = factory.newBlock();
 		var object:IExpression = factory.newExpression("foo.bar");
 		statement = block.newWith(object);
-		Assert.assertTrue(statement.object is IFieldAccessExpression);
-		statement.object = factory.newExpression("getName()");
-		Assert.assertTrue(statement.object is IINvocationExpression);
+		Assert.assertTrue(statement.scope is IFieldAccessExpression);
+		statement.scope = factory.newExpression("getName()");
+		Assert.assertTrue(statement.scope is IINvocationExpression);
 		assertPrint("{\n\twith (getName()){\n\t}\n}", block);
 	}
 }
