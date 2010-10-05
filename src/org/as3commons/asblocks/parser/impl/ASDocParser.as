@@ -20,6 +20,7 @@
 package org.as3commons.asblocks.parser.impl
 {
 
+import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.parser.api.ASDocNodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.IScanner;
@@ -27,7 +28,6 @@ import org.as3commons.asblocks.parser.api.KeyWords;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.LinkedListTreeAdaptor;
 import org.as3commons.asblocks.parser.core.TokenNode;
-import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -338,12 +338,15 @@ public class ASDocParser extends ParserBase
 				text = "";
 				
 				var nl:TokenNode = adapter.create(ASDocNodeKind.NL);
-				nl.appendToken(TokenBuilder.newNewline())
-				result.addChild(nl);
 				
 				nextToken();
 				
-				consumeLeft(result);
+				if (!tokIs(KeyWords.EOF))
+				{
+					nl.appendToken(TokenBuilder.newNewline())
+					result.addChild(nl);
+					consumeLeft(result);
+				}
 			}
 		}
 		

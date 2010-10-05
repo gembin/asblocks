@@ -3,9 +3,9 @@ package org.as3commons.asblocks.parser.impl
 
 import flexunit.framework.Assert;
 
+import org.as3commons.asblocks.impl.ASTPrinter;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.core.SourceCode;
-import org.as3commons.asblocks.impl.ASTPrinter;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 public class TestASDocParser
@@ -19,6 +19,18 @@ public class TestASDocParser
 	{
 		parser = new ASDocParser();
 		scanner = parser.scanner as ASDocScanner;
+	}
+	
+	[Test]
+	public function test_parseBody():void
+	{
+		var input:String = "A document comment description.";
+		
+		var ast:IParserNode = ASDocFragmentParser.parseBody(input);
+		
+		var result:String = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<body><text-block><text>A document comment description." +
+			"</text></text-block></body>", result);
 	}
 	
 	[Test]
