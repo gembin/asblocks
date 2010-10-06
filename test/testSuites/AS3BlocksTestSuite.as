@@ -16,6 +16,7 @@ import org.as3commons.asblocks.impl.TestContinueStatementNode;
 import org.as3commons.asblocks.impl.TestDeclarationStatementNode;
 import org.as3commons.asblocks.impl.TestDefaultXMLNamespaceStatementNode;
 import org.as3commons.asblocks.impl.TestDoWhileStatementNode;
+import org.as3commons.asblocks.impl.TestDocCommentNode;
 import org.as3commons.asblocks.impl.TestExpressionNodes;
 import org.as3commons.asblocks.impl.TestFieldAccessExpressionNode;
 import org.as3commons.asblocks.impl.TestFieldNode;
@@ -73,6 +74,7 @@ public class AS3BlocksTestSuite
 	public var testContinueStatementNode:TestContinueStatementNode;
 	public var testDeclarationStatementNode:TestDeclarationStatementNode;
 	public var testDefaultXMLNamespaceStatementNode:TestDefaultXMLNamespaceStatementNode;
+	public var testDocCommentNode:TestDocCommentNode;
 	public var testDoWhileStatementNode:TestDoWhileStatementNode;
 	public var testFieldAccessExpressionNode:TestFieldAccessExpressionNode;
 	public var testForEachInStatementNode:TestForEachInStatementNode;

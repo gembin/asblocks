@@ -34,6 +34,18 @@ public class TestASDocParser
 	}
 	
 	[Test]
+	public function test_parseBodyWithNL():void
+	{
+		var input:String = "A document comment description\nwith a second line.";
+		
+		var ast:IParserNode = ASDocFragmentParser.parseBody(input);
+		
+		var result:String = ASTUtil.convert(ast, false);
+		Assert.assertEquals("<body><text-block><text>A document comment description</text>" +
+			"<nl></nl><text>with a second line.</text></text-block></body>", result);
+	}
+	
+	[Test]
 	public function test_shortNoSpace():void
 	{
 		var input:Array =

@@ -278,9 +278,10 @@ public class AS3Parser extends ParserBase
 			AS3NodeKind.CONTENT, token) as TokenNode;
 		
 		// TODO figure out all that can exist internally
-		var internalParse:Boolean = tokIs(KeyWords.CLASS) 
-			|| tokIs(KeyWords.FUNCTION) || tokIs(KeyWords.IMPORT)
-			|| tokIs(KeyWords.USE) || tokIs(KeyWords.INCLUDE);
+		var internalParse:Boolean = 
+			tokIs(KeyWords.CLASS) || tokIs(KeyWords.FUNCTION) 
+			|| tokIs(KeyWords.IMPORT) || tokIs(KeyWords.INCLUDE)
+			|| tokIs(KeyWords.USE);
 		
 		if (!internalParse)
 		{
@@ -386,16 +387,13 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseClass(result:TokenNode):TokenNode
 	{
-		//addAsDoc(result);
-		
 		result.kind = AS3NodeKind.CLASS;
 		result.line = token.line;
 		result.column = token.column;
 		
 		consume(KeyWords.CLASS, result);
 		
-		result.addChild(adapter.copy(
-			AS3NodeKind.NAME, token));
+		result.addChild(adapter.copy(AS3NodeKind.NAME, token));
 		
 		nextTokenConsume(result);
 		

@@ -41,9 +41,25 @@ import org.as3commons.asblocks.parser.impl.ASDocParser;
  */
 public class DocCommentUtil
 {
+	public static function createDocComment(ast:IParserNode):IDocComment
+	{
+		return new DocCommentNode(ast);
+	}
+	
+	
+	
+	
+	
+	
 	public static function buildOrAddAsDocAST(parent:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.AS_DOC, "/** */");
+		var ast:IParserNode = parent.getKind(AS3NodeKind.AS_DOC);
+		if (ast)
+		{
+			return buildASDoc(parent);
+		}
+		
+		ast = ASTUtil.newAST(AS3NodeKind.AS_DOC, "/** */");
 		var index:int = !parent.hasKind(AS3NodeKind.META_LIST) ? 0 : 1;
 		parent.addChildAt(ast, index);
 		
@@ -66,16 +82,11 @@ public class DocCommentUtil
 		// rebuild an ast of the asdoc using the existing string value of the token
 		var newAST:IParserNode = parser.buildAst(
 			Vector.<String>(asdoc.stringValue.split("\n")), null);
-		
-		var t:String = stringifyNode(newAST);
-		
+
 		return newAST;
 	}
 	
-	public static function createDocComment(ast:IParserNode):IDocComment
-	{
-		return new DocCommentNode(ast);
-	}
+
 	
 	private static function getCommentBody(ast:IParserNode):String
 	{
@@ -85,7 +96,7 @@ public class DocCommentUtil
 	
 	private static function parse(input:String):IParserNode
 	{
-		var ast:IParserNode = ASDocFragmentParser.parseDescription(input);
+		var ast:IParserNode = ASDocFragmentParser.parseBody(input);
 		return ast;
 	}
 	
@@ -95,67 +106,135 @@ public class DocCommentUtil
 		return ast;
 	}
 	
+	public static function getDescription(ast:IParserNode):String
+	{
+		var asdoc:IParserNode = buildASDoc(ast);
+		if (asdoc == null) {
+			return null;
+		}
+		var desc:IParserNode = asdoc.getFirstChild().getFirstChild();
+		return stringify(desc);
+	}
+	
+	public static function stringify(ast:IParserNode):String
+	{
+		var result:String = "";
+		for (var tok:LinkedListToken =  ast.startToken; tok != null && tok.kind != null; tok = tok.next)
+		{
+			if (tok.text != null && tok.channel != "hidden")
+			{
+				result += tok.text;
+			}
+			else if (tok.kind == "nl" && tok.channel != "hidden")
+			{
+				result += "\n";
+			}
+			
+			if (tok == ast.stopToken)
+			{
+				break;
+			}
+		}
+		return result;
+	}
+	
 	public static function setDescription(parent:IParserNode, description:String):void
 	{
 		// find the token in the parent
 		var asdoc:IParserNode = parent.getKind(AS3NodeKind.AS_DOC);
-		var desc:IParserNode;
 		
-		if (asdoc)
-		{
-			asdoc = parse(getCommentBody(asdoc));
-			desc = asdoc.getFirstChild();
-		}
-		else
-		{
-			
-		}
+		//if (!asdoc)
+		//{
+		//	var body:String = getCommentBody(asdoc);
+		//	asdoc = parse(body);
+		//}
+		//else
+		//{
+		//	
+		//}
 		
+		// '\n\t * '
 		var newline:String = getNewlineText(parent, asdoc);
+		// this allows the description to start with a newline atrix
 		if (description.indexOf("\n") != 0)
 		{
 			description = "\n" + description;
 		}
 		
+		// replace all \n in the description with proper '\n\t * ' newline headers
 		description = description.replace(/\n/g, newline);
+		
+		// create the ast for the description
 		var newDesc:IParserNode = parseDescription(description);
+		// find the indent based on the parent nodes indentation
 		var indent:String = ASTUtil.findIndent(parent);
-		var result:String = "/**" + ASTUtil.stringifyNode(newDesc)/* + "\n"*/ + indent + " */";
+		
+		// token before this comment takes care of it's own \n\t indent
+		// !!! Tokens and blocks always end with [newline][indent]
+		var result:String = "/**" + ASTUtil.stringifyNode(newDesc) + "\n" + indent + " */";
 		
 		if (asdoc == null)
 		{
 			// FIXME this is for parenthetic updates such as meta []
 			// the /** */ needs to go before the [
 			asdoc = ASTUtil.newAST(AS3NodeKind.AS_DOC, result);
+			asdoc.startToken.text = null;
+			
 			var index:int = 0;
 			if (parent.hasKind(AS3NodeKind.META_LIST))
 			{
 				index++;
 			}
+			
 			TokenNode(parent).absolute = true;
 			parent.addChildAt(asdoc, index);
+			var rs:String = ASTUtil.convert(asdoc, false);
 			TokenNode(parent).absolute = false;
-			// FIXME is this right, explain why
-			var indentTok:LinkedListToken = TokenBuilder.newWhiteSpace(indent);
-			asdoc.appendToken(TokenBuilder.newNewline());
-			asdoc.appendToken(indentTok);
+			
+			var tok:LinkedListToken = TokenBuilder.newMLComment(result);
+			asdoc.startToken.prepend(tok);
+			
+			// append the \n\t to the end of the */
+			appendNewline(parent, asdoc);
 		}
 		else
 		{
-			asdoc.stringValue = result;
+			asdoc.stringValue = "/**" + description + "\n" + indent + " */";
+			asdoc.startToken.text = null;
+			var atok:LinkedListToken = getASDocToken(asdoc);
+			atok.text = asdoc.stringValue;
 		}
 	}
 	
-	public static function getNewlineText(ast:IParserNode, javadoc:IParserNode):String
+	public static function getASDocToken(asdoc:IParserNode):LinkedListToken
+	{
+		for (var tok:LinkedListToken =  asdoc.startToken; tok != null; tok = tok.previous)
+		{
+			if (tok.kind == "ml-comment")
+				return tok;
+		}
+		return null;
+	}
+	
+	
+	public static function appendNewline(parent:IParserNode, ast:IParserNode):void
+	{
+		var indent:String = ASTUtil.findIndent(parent);
+		var indentTok:LinkedListToken = TokenBuilder.newWhiteSpace(indent);
+		ast.appendToken(TokenBuilder.newNewline());
+		ast.appendToken(indentTok);
+	}
+	
+	public static function getNewlineText(ast:IParserNode, asdoc:IParserNode):String
 	{
 		var newline:String = null;
-		if (javadoc != null)
-		{
-			newline = findNewline(javadoc);
-		}
+		//if (asdoc != null)
+		//{
+		//	newline = findNewline(asdoc);
+		//}
 		if (newline == null)
 		{
-			newline = "\n" + ASTUtil.findIndent(ast) + " * ";  // TODO: use document existing end-of-line format
+			newline = "\n" + ASTUtil.findIndent(ast) + " * ";
 		}
 		return newline;
 	}
@@ -173,8 +252,8 @@ public class DocCommentUtil
 		}
 		for (; tok != null; tok = tok.previous)
 		{
-			if (tok.text == "\n") {
-				
+			if (tok.text == "\n")
+			{
 				return tok.text;
 			}
 		}
@@ -211,7 +290,7 @@ public class DocCommentUtil
 		var len:int = split.length;
 		for (var i:int = 0; i < len; i++)
 		{
-			var middle:String = (i == 0) ? " * " : " *";
+			var middle:String = (i == 0) ? "" : " * ";
 			result += indent + middle + split[i] + "\n";
 		}
 		

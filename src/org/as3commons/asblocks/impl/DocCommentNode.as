@@ -20,13 +20,14 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.api.IDocComment;
+import org.as3commons.asblocks.api.IDocTag;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.ASDocNodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
-import org.as3commons.asblocks.api.IDocComment;
-import org.as3commons.asblocks.api.IDocTag;
 import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.asblocks.utils.DocCommentUtil;
 
@@ -46,8 +47,7 @@ What needs to happen.
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class DocCommentNode extends ScriptNode 
-	implements IDocComment
+public class DocCommentNode extends ScriptNode implements IDocComment
 {
 	private var asdoc:IParserNode;
 	
@@ -66,7 +66,7 @@ public class DocCommentNode extends ScriptNode
 	 */
 	public function get description():String
 	{
-		return null;
+		return DocCommentUtil.getDescription(node);
 	}
 	
 	/**
@@ -139,8 +139,13 @@ public class DocCommentNode extends ScriptNode
 		{
 			list = ASTUtil.newAST(ASDocNodeKind.DOCTAG_LIST) as TokenNode;
 			var content:IParserNode = asdoc.getKind(ASDocNodeKind.DESCRIPTION);
-
 			content.addChild(list);
+			
+			var i:String = ASTUtil.findIndent(node);
+			var newline:String = DocCommentUtil.getNewlineText(node, list);
+			var ws:LinkedListToken = TokenBuilder.newWhiteSpace("* \n" + i + " ");
+			list.startToken.prepend(ws);
+			list.startToken = ws;
 		}
 		
 		var tag:IParserNode = ASTUtil.newAST(ASDocNodeKind.DOCTAG);
@@ -152,13 +157,9 @@ public class DocCommentNode extends ScriptNode
 		if (body)
 		{
 			tag.appendToken(TokenBuilder.newSpace());
-			var newline:String = DocCommentUtil.getNewlineText(node, tag);
-			//if (description.indexOf("\n") != 0)
-			//{
-			//	description = "\n" + description;
-			//}
+			var nl:String = DocCommentUtil.getNewlineText(node, tag);
 			
-			body = body.replace(/\n/g, newline);
+			body = body.replace(/\n/g, nl);
 			tag.addChild(ASTUtil.newAST(ASDocNodeKind.BODY, body));
 		}
 		
@@ -187,6 +188,10 @@ public class DocCommentNode extends ScriptNode
 			if (t === tag.node)
 			{
 				list.removeChild(t);
+				if (list.numChildren == 0)
+				{
+					list.parent.removeChild(list);
+				}
 				commitAST();
 				return true;
 			}
@@ -201,16 +206,14 @@ public class DocCommentNode extends ScriptNode
 	
 	private function commitAST():void
 	{
-		// the asdoc ast needs to go back into the node's as-doc node.stringValue
-		var content:IParserNode = asdoc.getKind(ASDocNodeKind.DESCRIPTION);
-		var body:IParserNode = content.getKind(ASDocNodeKind.BODY);
+		var result:String = ASTUtil.stringifyNode(asdoc);
 		
-		var t:String = ASTUtil.stringifyNode(asdoc);
+		var asdoc:IParserNode = node.getKind(AS3NodeKind.AS_DOC);
+		asdoc.stringValue = result;
+		asdoc.startToken.text = null;
 		
-		var anode:IParserNode = node.getKind(AS3NodeKind.AS_DOC);
-		//var nast:IParserNode = ASTUtil.newAST("as-doc", t);
-		//node.setChildAt(nast, node.getChildIndex(anode));
-		anode.stringValue = t;
+		var tok:LinkedListToken = DocCommentUtil.getASDocToken(asdoc);
+		tok.text = result;
 	}
 	
 

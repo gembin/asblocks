@@ -21,8 +21,6 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * 
- * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0

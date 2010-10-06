@@ -313,6 +313,9 @@ public class NestedNode
 		
 		_children.splice(index, 0, child);
 		
+		if (child)
+			child.parent = this as IParserNode;
+		
 		if (!noUpdate && tokenListUpdater)
 		{
 			tokenListUpdater.addedChildAt(this as IParserNode, index, child);
