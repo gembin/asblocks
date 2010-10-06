@@ -117,7 +117,7 @@ public class SwitchStatementNode extends ScriptNode
 	 */
 	public function newCase(label:String):ISwitchCase
 	{
-		var ast:IParserNode = ASTBuilder.newSwitchCase(node, label);
+		var ast:IParserNode = ASTStatementBuilder.newSwitchCase(node, label);
 		return new SwitchCaseNode(ast);
 	}
 	
@@ -126,7 +126,7 @@ public class SwitchStatementNode extends ScriptNode
 	 */
 	public function newDefault():ISwitchDefault
 	{
-		var ast:IParserNode = ASTBuilder.newSwitchDefault(node);
+		var ast:IParserNode = ASTStatementBuilder.newSwitchDefault(node);
 		return new SwitchDefaultNode(ast);
 	}
 	

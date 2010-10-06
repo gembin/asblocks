@@ -32,7 +32,7 @@ public class ASTTypeBuilder
 			past.appendToken(TokenBuilder.newSpace());
 		}
 		
-		var block:IParserNode = ASTBuilder.newBlock(AS3NodeKind.CONTENT);
+		var block:IParserNode = ASTStatementBuilder.newBlock(AS3NodeKind.CONTENT);
 		past.addChild(block);
 		
 		var className:String = typeNameFrom(qualifiedName);
@@ -57,7 +57,7 @@ public class ASTTypeBuilder
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, className));
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(ASTBuilder.newBlock(AS3NodeKind.CONTENT));
+		ast.addChild(ASTStatementBuilder.newBlock(AS3NodeKind.CONTENT));
 		return ast;
 	}
 	
@@ -81,7 +81,7 @@ public class ASTTypeBuilder
 			past.appendToken(TokenBuilder.newSpace());
 		}
 		
-		var block:IParserNode = ASTBuilder.newBlock(AS3NodeKind.CONTENT);
+		var block:IParserNode = ASTStatementBuilder.newBlock(AS3NodeKind.CONTENT);
 		past.addChild(block);
 		
 		var interfaceName:String = typeNameFrom(qualifiedName);
@@ -105,7 +105,7 @@ public class ASTTypeBuilder
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, name));
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(ASTBuilder.newBlock(AS3NodeKind.CONTENT));
+		ast.addChild(ASTStatementBuilder.newBlock(AS3NodeKind.CONTENT));
 		return ast;
 	}
 	
@@ -132,7 +132,7 @@ public class ASTTypeBuilder
 			past.appendToken(TokenBuilder.newSpace());
 		}
 		
-		var block:IParserNode = ASTBuilder.newBlock(AS3NodeKind.CONTENT);
+		var block:IParserNode = ASTStatementBuilder.newBlock(AS3NodeKind.CONTENT);
 		past.addChild(block);
 		
 		var functionName:String = typeNameFrom(qualifiedName);
@@ -201,7 +201,7 @@ public class ASTTypeBuilder
 			ast.addChild(typeAST);
 		}
 		ast.appendToken(TokenBuilder.newSpace());
-		var block:IParserNode = ASTBuilder.newBlock();
+		var block:IParserNode = ASTStatementBuilder.newBlock();
 		ast.addChild(block);
 		
 		return ast;

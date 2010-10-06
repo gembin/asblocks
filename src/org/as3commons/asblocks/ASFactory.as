@@ -47,6 +47,7 @@ import org.as3commons.asblocks.impl.ASParserImpl;
 import org.as3commons.asblocks.impl.ASProject;
 import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ASTLiteralBuilder;
+import org.as3commons.asblocks.impl.ASTStatementBuilder;
 import org.as3commons.asblocks.impl.ASTTypeBuilder;
 import org.as3commons.asblocks.impl.ASWriter;
 import org.as3commons.asblocks.impl.ArrayAccessExpressionNode;
@@ -1073,7 +1074,7 @@ public class ASFactory
 	 */
 	public function newBlock():IBlock
 	{
-		var ast:IParserNode = ASTBuilder.newBlock();
+		var ast:IParserNode = ASTStatementBuilder.newBlock();
 		return new StatementList(ast);
 	}
 	

@@ -20,15 +20,15 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.LinkedListToken;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.api.ICatchClause;
 import org.as3commons.asblocks.api.IFinallyClause;
 import org.as3commons.asblocks.api.IStatementContainer;
 import org.as3commons.asblocks.api.ITryStatement;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -128,7 +128,7 @@ public class TryStatementNode extends ContainerDelegate
 	 */
 	public function newCatchClause(name:String, type:String):ICatchClause
 	{
-		var ast:IParserNode = ASTBuilder.newCatchClause(name, type);
+		var ast:IParserNode = ASTStatementBuilder.newCatchClause(name, type);
 		
 		var space:LinkedListToken = TokenBuilder.newSpace();
 		// add a space before the catch keyword
@@ -175,7 +175,7 @@ public class TryStatementNode extends ContainerDelegate
 		{
 			throw new ASBlocksSyntaxError("only one finally-clause allowed");
 		}
-		ast = ASTBuilder.newFinallyClause();
+		ast = ASTStatementBuilder.newFinallyClause();
 		node.addChild(ast);
 		return new FinallyClauseNode(ast);
 	}

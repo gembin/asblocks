@@ -20,13 +20,13 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.api.IBlock;
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.IIfStatement;
 import org.as3commons.asblocks.api.IStatementContainer;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -109,7 +109,7 @@ public class IfStatementNode extends ContainerDelegate
 		var ast:IParserNode = findElseClause();
 		if (!ast)
 		{
-			setElseClause(ASTBuilder.newBlock());
+			setElseClause(ASTStatementBuilder.newBlock());
 			ast = findElseClause();
 		}
 		

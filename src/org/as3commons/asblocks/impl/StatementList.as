@@ -186,7 +186,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newBreak(label:String = null):IBreakStatement
 	{
-		var ast:IParserNode = ASTBuilder.newBreak(label);
+		var ast:IParserNode = ASTStatementBuilder.newBreak(label);
 		_addStatement(ast);
 		return new BreakStatementNode(ast);
 	}
@@ -196,7 +196,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newContinue(label:String = null):IContinueStatement
 	{
-		var ast:IParserNode = ASTBuilder.newContinue(label);
+		var ast:IParserNode = ASTStatementBuilder.newContinue(label);
 		_addStatement(ast);
 		return new ContinueStatementNode(ast);
 	}
@@ -216,7 +216,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement
 	{
-		var ast:IParserNode = ASTBuilder.newDefaultXMLNamespace(
+		var ast:IParserNode = ASTStatementBuilder.newDefaultXMLNamespace(
 			AS3FragmentParser.parsePrimaryExpression(namespace));
 		_addStatement(ast);
 		return new DefaultXMLNamespaceStatementNode(ast);
@@ -227,7 +227,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newDoWhile(condition:IExpression):IDoWhileStatement
 	{
-		var ast:IParserNode = ASTBuilder.newDoWhile(condition.node);
+		var ast:IParserNode = ASTStatementBuilder.newDoWhile(condition.node);
 		_addStatement(ast);
 		return new DoWhileStatementNode(ast);
 	}
@@ -253,7 +253,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		var cond:IParserNode = condition ? condition.node : null;
 		var iter:IParserNode = iterator ? iterator.node : null;
 		
-		var ast:IParserNode = ASTBuilder.newFor(init, cond, iter);
+		var ast:IParserNode = ASTStatementBuilder.newFor(init, cond, iter);
 		appendBlock(ast);
 		_addStatement(ast);
 		return new ForStatementNode(ast);
@@ -285,7 +285,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 			iter = AS3FragmentParser.parseForIter(iterator);
 		}
 		
-		var ast:IParserNode = ASTBuilder.newFor(init, cond, iter);
+		var ast:IParserNode = ASTStatementBuilder.newFor(init, cond, iter);
 		appendBlock(ast);
 		_addStatement(ast);
 		return new ForStatementNode(ast);
@@ -302,7 +302,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		if (!expression)
 			throw new Error("");
 		
-		var ast:IParserNode = ASTBuilder.newForEachIn(declaration.node, expression.node);
+		var ast:IParserNode = ASTStatementBuilder.newForEachIn(declaration.node, expression.node);
 		appendBlock(ast);
 		_addStatement(ast);
 		return new ForEachInStatementNode(ast);
@@ -319,7 +319,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 		if (!expression)
 			throw new Error("");
 		
-		var ast:IParserNode = ASTBuilder.newForIn(declaration.node, expression.node);
+		var ast:IParserNode = ASTStatementBuilder.newForIn(declaration.node, expression.node);
 		appendBlock(ast);
 		_addStatement(ast);
 		return new ForInStatementNode(ast);
@@ -328,7 +328,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	public function appendBlock(ast:IParserNode):IParserNode
 	{
 		ast.appendToken(TokenBuilder.newSpace());
-		var block:IParserNode = ASTBuilder.newBlock();
+		var block:IParserNode = ASTStatementBuilder.newBlock();
 		ast.addChild(block);
 		return block;
 	}
@@ -338,7 +338,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newIf(condition:IExpression):IIfStatement
 	{
-		var ifStmt:IParserNode = ASTBuilder.newIf(condition.node);
+		var ifStmt:IParserNode = ASTStatementBuilder.newIf(condition.node);
 		_addStatement(ifStmt);
 		return new IfStatementNode(ifStmt);
 	}
@@ -350,7 +350,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	{
 		var expr:IParserNode = ASTUtil.newAST(AS3NodeKind.EXPR_STMNT);
 		expr.addChild(AS3FragmentParser.parseExpression(name));
-		var ast:IParserNode = ASTBuilder.newLabel(expr);
+		var ast:IParserNode = ASTStatementBuilder.newLabel(expr);
 		_addStatement(ast);
 		return new LabelStatementNode(ast);
 	}
@@ -362,7 +362,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	{
 		var expr:IParserNode = ASTUtil.newAST(AS3NodeKind.EXPR_STMNT);
 		expr.addChild(AS3FragmentParser.parseExpression(name));
-		var ast:IParserNode = ASTBuilder.newForLabel(expr, kind);
+		var ast:IParserNode = ASTStatementBuilder.newForLabel(expr, kind);
 		_addStatement(ast);
 		return new ForLabelStatementNode(ast);
 	}
@@ -372,7 +372,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newReturn(expression:IExpression = null):IReturnStatement
 	{
-		var result:IParserNode = ASTBuilder.newReturn((expression) ? expression.node : null);
+		var result:IParserNode = ASTStatementBuilder.newReturn((expression) ? expression.node : null);
 		_addStatement(result);
 		return new ReturnStatementNode(result);
 	}
@@ -382,7 +382,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newSuper(arguments:Vector.<IArgument>):ISuperStatement
 	{
-		var result:IParserNode = ASTBuilder.newSuper(null);
+		var result:IParserNode = ASTStatementBuilder.newSuper(null);
 		_addStatement(result);
 		return new SuperStatementNode(result);
 	}
@@ -392,7 +392,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newSwitch(condition:IExpression):ISwitchStatement
 	{
-		var result:IParserNode = ASTBuilder.newSwitch(condition.node);
+		var result:IParserNode = ASTStatementBuilder.newSwitch(condition.node);
 		_addStatement(result);
 		return new SwitchStatementNode(result);
 	}
@@ -402,7 +402,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newThis(expression:IExpression):IThisStatement
 	{
-		var result:IParserNode = ASTBuilder.newThis(expression.node);
+		var result:IParserNode = ASTStatementBuilder.newThis(expression.node);
 		_addStatement(result);
 		return new ThisStatementNode(result);
 	}
@@ -412,7 +412,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newThrow(expression:IExpression):IThrowStatement
 	{
-		var result:IParserNode = ASTBuilder.newThrow(expression.node);
+		var result:IParserNode = ASTStatementBuilder.newThrow(expression.node);
 		_addStatement(result);
 		return new ThrowStatementNode(result);
 	}
@@ -422,9 +422,9 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newTryCatch(name:String, type:String):ITryStatement
 	{
-		var result:IParserNode = ASTBuilder.newTryStatement();
+		var result:IParserNode = ASTStatementBuilder.newTryStatement();
 		result.appendToken(TokenBuilder.newSpace());
-		result.addChild(ASTBuilder.newCatchClause(name, type));
+		result.addChild(ASTStatementBuilder.newCatchClause(name, type));
 		_addStatement(result);
 		return new TryStatementNode(result);
 	}
@@ -434,9 +434,9 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newTryFinally():ITryStatement
 	{
-		var result:IParserNode = ASTBuilder.newTryStatement();
+		var result:IParserNode = ASTStatementBuilder.newTryStatement();
 		result.appendToken(TokenBuilder.newSpace());
-		result.addChild(ASTBuilder.newFinallyClause());
+		result.addChild(ASTStatementBuilder.newFinallyClause());
 		_addStatement(result);
 		return new TryStatementNode(result);
 	}
@@ -446,7 +446,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newWhile(condition:IExpression):IWhileStatement
 	{
-		var result:IParserNode = ASTBuilder.newWhile(condition.node);
+		var result:IParserNode = ASTStatementBuilder.newWhile(condition.node);
 		_addStatement(result);
 		return new WhileStatementNode(result);
 	}
@@ -456,7 +456,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newWith(condition:IExpression):IWithStatement
 	{
-		var result:IParserNode = ASTBuilder.newWith(condition.node);
+		var result:IParserNode = ASTStatementBuilder.newWith(condition.node);
 		_addStatement(result);
 		return new WithStatementNode(result);
 	}

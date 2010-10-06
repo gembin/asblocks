@@ -69,7 +69,7 @@ public class ASTLiteralBuilder
 	 */
 	public static function newObjectLiteral():IParserNode
 	{
-		return ASTBuilder.newBlock(AS3NodeKind.OBJECT);
+		return ASTStatementBuilder.newBlock(AS3NodeKind.OBJECT);
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class ASTLiteralBuilder
 		ast.addChild(typeAST);
 		
 		ast.appendToken(TokenBuilder.newSpace());
-		var block:IParserNode = ASTBuilder.newBlock();
+		var block:IParserNode = ASTStatementBuilder.newBlock();
 		ast.addChild(block);
 		return ast;
 	}

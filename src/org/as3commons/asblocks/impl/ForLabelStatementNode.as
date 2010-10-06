@@ -20,13 +20,11 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.api.IForLabelStatement;
 import org.as3commons.asblocks.api.IForStatement;
-import org.as3commons.asblocks.api.ILabelStatement;
-import org.as3commons.asblocks.api.IStatement;
 import org.as3commons.asblocks.api.IStatementContainer;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -62,7 +60,7 @@ public class ForLabelStatementNode extends LabelStatementNode
 		var ast:IParserNode = node.getLastChild();
 		if (!ast.getLastChild().isKind(AS3NodeKind.BLOCK))
 		{
-			ASTUtil.addChildWithIndentation(ast, ASTBuilder.newBlock());
+			ASTUtil.addChildWithIndentation(ast, ASTStatementBuilder.newBlock());
 		}
 		return new ForStatementNode(ast);
 	}
