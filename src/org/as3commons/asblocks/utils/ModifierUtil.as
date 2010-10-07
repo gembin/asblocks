@@ -22,6 +22,7 @@ package org.as3commons.asblocks.utils
 
 import org.as3commons.asblocks.api.Modifier;
 import org.as3commons.asblocks.api.Visibility;
+import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
@@ -64,7 +65,7 @@ public class ModifierUtil
 			{
 				index++;
 			}
-			list = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+			list = ASTBuilder.newAST(AS3NodeKind.MOD_LIST);
 			ast.addChildAt(list, index);
 		}
 		
@@ -88,7 +89,7 @@ public class ModifierUtil
 		
 		if (flag)
 		{
-			var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, modifier.name);
+			var mod:IParserNode = ASTBuilder.newAST(AS3NodeKind.MODIFIER, modifier.name);
 			mod.appendToken(TokenBuilder.newSpace());
 			list.addChild(mod);
 		}
@@ -156,7 +157,7 @@ public class ModifierUtil
 			{
 				index++;
 			}
-			list = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
+			list = ASTBuilder.newAST(AS3NodeKind.MOD_LIST);
 			ast.addChildAt(list, index);
 		}
 		
@@ -199,7 +200,7 @@ public class ModifierUtil
 			}
 		}
 		
-		var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name);
+		var mod:IParserNode = ASTBuilder.newAST(AS3NodeKind.MODIFIER, visibility.name);
 		mod.appendToken(TokenBuilder.newSpace());
 		if (list.numChildren == 0)
 		{

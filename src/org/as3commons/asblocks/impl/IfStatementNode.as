@@ -206,7 +206,7 @@ public class IfStatementNode extends ContainerDelegate
 	private function setElseClause(ast:IParserNode):void
 	{
 		var indent:String = ASTUtil.findIndent(node);
-		var east:IParserNode = ASTUtil.newAST(AS3NodeKind.ELSE);
+		var east:IParserNode = ASTBuilder.newAST(AS3NodeKind.ELSE);
 		east.appendToken(TokenBuilder.newSpace());
 		east.appendToken(TokenBuilder.newElse());
 		node.addChild(east);

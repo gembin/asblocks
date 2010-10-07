@@ -161,8 +161,8 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 	 */
 	public function addParameter(value:String):IMetaDataParameter
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.PRIMARY, value));
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.PARAMETER);
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.PRIMARY, value));
 		
 		_addParameter(ast);
 		return new MetaDataParameterNode(ast);
@@ -173,10 +173,10 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 	 */
 	public function addNamedParameter(name:String, value:String):IMetaDataParameter
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
-		ast.addChild(ASTUtil.newNameAST(name));
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.PARAMETER);
+		ast.addChild(ASTBuilder.newNameAST(name));
 		ast.appendToken(TokenBuilder.newAssign());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.PRIMARY, value));
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.PRIMARY, value));
 		
 		_addParameter(ast);
 		return new MetaDataParameterNode(ast);
@@ -187,10 +187,10 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 	 */
 	public function addNamedStringParameter(name:String, value:String):IMetaDataParameter
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
-		ast.addChild(ASTUtil.newNameAST(name));
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.PARAMETER);
+		ast.addChild(ASTBuilder.newNameAST(name));
 		ast.appendToken(TokenBuilder.newAssign());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.STRING, ASTBuilder.escapeString(value)));
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.STRING, ASTUtil.escapeString(value)));
 		
 		_addParameter(ast);
 		return new MetaDataParameterNode(ast);
@@ -212,11 +212,11 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 			var parameter:MetaDataParameterNode = new MetaDataParameterNode(current);
 			if (parameter.name == name)
 			{
-				if (i.getCurrentIndex() < ast.numChildren - 1)
+				if (i.currentIndex < ast.numChildren - 1)
 				{
 					ASTUtil.removeTrailingWhitespaceAndComma(current.stopToken);
 				} 
-				else if (i.getCurrentIndex() > 0)
+				else if (i.currentIndex > 0)
 				{
 					ASTUtil.removePreceedingWhitespaceAndComma(current.startToken);
 				}
@@ -244,11 +244,11 @@ public class MetaDataNode extends ScriptNode implements IMetaData
 		
 		var result:IMetaDataParameter = new MetaDataParameterNode(current);
 		
-		if (ast.numChildren - 1 > i.getCurrentIndex())
+		if (ast.numChildren - 1 > i.currentIndex)
 		{
 			ASTUtil.removeTrailingWhitespaceAndComma(current.stopToken);
 		} 
-		else if (i.getCurrentIndex() > 0)
+		else if (i.currentIndex > 0)
 		{
 			ASTUtil.removePreceedingWhitespaceAndComma(current.startToken);
 		}

@@ -137,7 +137,7 @@ public class DocCommentNode extends ScriptNode implements IDocComment
 		var list:TokenNode = findDoctagList() as TokenNode;
 		if (!list)
 		{
-			list = ASTUtil.newAST(ASDocNodeKind.DOCTAG_LIST) as TokenNode;
+			list = ASTBuilder.newAST(ASDocNodeKind.DOCTAG_LIST) as TokenNode;
 			var content:IParserNode = asdoc.getKind(ASDocNodeKind.DESCRIPTION);
 			content.addChild(list);
 			
@@ -148,19 +148,19 @@ public class DocCommentNode extends ScriptNode implements IDocComment
 			list.startToken = ws;
 		}
 		
-		var tag:IParserNode = ASTUtil.newAST(ASDocNodeKind.DOCTAG);
+		var tag:IParserNode = ASTBuilder.newAST(ASDocNodeKind.DOCTAG);
 		//tag.appendToken(TokenBuilder.newToken("\t", "\t"));
 		tag.appendToken(TokenBuilder.newToken("*", "*"));
 		tag.appendToken(TokenBuilder.newToken(" ", " "));
 		tag.appendToken(TokenBuilder.newToken("@", "@"));
-		tag.addChild(ASTUtil.newNameAST(name));
+		tag.addChild(ASTBuilder.newNameAST(name));
 		if (body)
 		{
 			tag.appendToken(TokenBuilder.newSpace());
 			var nl:String = DocCommentUtil.getNewlineText(node, tag);
 			
 			body = body.replace(/\n/g, nl);
-			tag.addChild(ASTUtil.newAST(ASDocNodeKind.BODY, body));
+			tag.addChild(ASTBuilder.newAST(ASDocNodeKind.BODY, body));
 		}
 		
 		tag.appendToken(TokenBuilder.newToken("\n", "\n"));

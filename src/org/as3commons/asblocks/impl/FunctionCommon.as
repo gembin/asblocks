@@ -183,7 +183,7 @@ public class FunctionCommon implements IFunction
 			throw new ASBlocksSyntaxError("a parameter name [" + name + "] already exists");
 		}
 		
-		var ast:IParserNode = ASTBuilder.newParameter(name, type, defaultValue);
+		var ast:IParserNode = ASTFunctionBuilder.newParameter(name, type, defaultValue);
 		return createParameter(ast);
 	}
 	
@@ -218,7 +218,7 @@ public class FunctionCommon implements IFunction
 			throw new ASBlocksSyntaxError("only one rest parameter allowed");
 		}
 		
-		var ast:IParserNode = ASTBuilder.newRestParameter(name);
+		var ast:IParserNode = ASTFunctionBuilder.newRestParameter(name);
 		return createParameter(ast);
 	}
 	

@@ -117,7 +117,7 @@ public class ASTIterator
 		parent.addChildAt(insert, index + 1);
 	}
 	
-	public function getCurrentIndex():int
+	public function get currentIndex():int
 	{
 		return index;
 	}

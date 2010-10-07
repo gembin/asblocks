@@ -18,8 +18,8 @@ public class ASTTypeBuilder
 	
 	public static function newClassCompilationUnitAST(qualifiedName:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.COMPILATION_UNIT);
-		var past:IParserNode = ASTUtil.newAST(AS3NodeKind.PACKAGE, "package");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.COMPILATION_UNIT);
+		var past:IParserNode = ASTBuilder.newAST(AS3NodeKind.PACKAGE, "package");
 		
 		//past.appendToken(TokenBuilder.newSpace());
 		ast.addChild(past);
@@ -44,18 +44,18 @@ public class ASTTypeBuilder
 	
 	public static function newClassAST(className:String, addModList:Boolean = true):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CLASS);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.CLASS);
 		if (addModList)
 		{
-			var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-			var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, "public");
+			var mods:IParserNode = ASTBuilder.newAST(AS3NodeKind.MOD_LIST);
+			var mod:IParserNode = ASTBuilder.newAST(AS3NodeKind.MODIFIER, "public");
 			mod.appendToken(TokenBuilder.newSpace());
 			mods.addChild(mod);
 			ast.addChild(mods);
 		}
 		ast.appendToken(TokenBuilder.newClass());
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, className));
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.NAME, className));
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTStatementBuilder.newBlock(AS3NodeKind.CONTENT));
 		return ast;
@@ -68,8 +68,8 @@ public class ASTTypeBuilder
 	
 	public static function newInterfaceCompilationUnitAST(qualifiedName:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.COMPILATION_UNIT);
-		var past:IParserNode = ASTUtil.newAST(AS3NodeKind.PACKAGE, "package");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.COMPILATION_UNIT);
+		var past:IParserNode = ASTBuilder.newAST(AS3NodeKind.PACKAGE, "package");
 		
 		ast.addChild(past);
 		past.appendToken(TokenBuilder.newSpace());
@@ -93,17 +93,17 @@ public class ASTTypeBuilder
 	
 	private static function newInterfaceAST(name:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.INTERFACE);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.INTERFACE);
 		//var metas:IParserNode = ASTUtil.newAST(AS3NodeKind.META_LIST);
 		//ast.addChild(metas);
-		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-		var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, "public");
+		var mods:IParserNode = ASTBuilder.newAST(AS3NodeKind.MOD_LIST);
+		var mod:IParserNode = ASTBuilder.newAST(AS3NodeKind.MODIFIER, "public");
 		mod.appendToken(TokenBuilder.newSpace());
 		mods.addChild(mod);
 		ast.addChild(mods);
 		ast.appendToken(TokenBuilder.newInterface());
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.NAME, name));
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.NAME, name));
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTStatementBuilder.newBlock(AS3NodeKind.CONTENT));
 		return ast;
@@ -119,8 +119,8 @@ public class ASTTypeBuilder
 	public static function newFunctionCompilationUnitAST(qualifiedName:String, 
 														 returnType:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.COMPILATION_UNIT);
-		var past:IParserNode = ASTUtil.newAST(AS3NodeKind.PACKAGE, "package");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.COMPILATION_UNIT);
+		var past:IParserNode = ASTBuilder.newAST(AS3NodeKind.PACKAGE, "package");
 		
 		ast.addChild(past);
 		past.appendToken(TokenBuilder.newSpace());
@@ -136,7 +136,7 @@ public class ASTTypeBuilder
 		past.addChild(block);
 		
 		var functionName:String = typeNameFrom(qualifiedName);
-		var func:IParserNode = ASTBuilder.newFunctionAST(functionName, returnType);
+		var func:IParserNode = ASTFunctionBuilder.newFunctionAST(functionName, returnType);
 		ASTUtil.addChildWithIndentation(block, func);
 		
 		return ast;
@@ -146,23 +146,23 @@ public class ASTTypeBuilder
 									   visibility:Visibility, 
 									   type:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_LIST);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.FIELD_LIST);
 		// field-list/mod-list
-		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-		var mod:IParserNode = ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name);
+		var mods:IParserNode = ASTBuilder.newAST(AS3NodeKind.MOD_LIST);
+		var mod:IParserNode = ASTBuilder.newAST(AS3NodeKind.MODIFIER, visibility.name);
 		mods.addChild(mod);
 		mod.appendToken(TokenBuilder.newSpace());
 		ast.addChild(mods);
 		// field-list/field-role
-		var frole:IParserNode = ASTUtil.newAST(AS3NodeKind.FIELD_ROLE);
-		frole.addChild(ASTUtil.newAST(AS3NodeKind.VAR, "var"));
+		var frole:IParserNode = ASTBuilder.newAST(AS3NodeKind.FIELD_ROLE);
+		frole.addChild(ASTBuilder.newAST(AS3NodeKind.VAR, "var"));
 		ast.addChild(frole);
 		ast.appendToken(TokenBuilder.newSpace());
 		// field-list/name-type-init
-		var nti:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME_TYPE_INIT);
+		var nti:IParserNode = ASTBuilder.newAST(AS3NodeKind.NAME_TYPE_INIT);
 		ast.addChild(nti);
 		// field-list/name-type-init/name
-		nti.addChild(ASTUtil.newNameAST(name));
+		nti.addChild(ASTBuilder.newNameAST(name));
 		if (type)
 		{
 			// field-list/name-type-init/type
@@ -177,15 +177,15 @@ public class ASTTypeBuilder
 										visibility:Visibility, 
 										returnType:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
-		var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-		mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, visibility.name));
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.FUNCTION);
+		var mods:IParserNode = ASTBuilder.newAST(AS3NodeKind.MOD_LIST);
+		mods.addChild(ASTBuilder.newAST(AS3NodeKind.MODIFIER, visibility.name));
 		ast.addChild(mods);
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newFunction());
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
-		var n:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME, name);
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.ACCESSOR_ROLE));
+		var n:IParserNode = ASTBuilder.newAST(AS3NodeKind.NAME, name);
 		ast.addChild(n);
 		var params:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.PARAMETER_LIST,
@@ -210,11 +210,11 @@ public class ASTTypeBuilder
 	public static function newInterfaceMethodAST(name:String,
 												 returnType:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.FUNCTION);
 		ast.appendToken(TokenBuilder.newFunction());
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
-		var n:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME, name);
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.ACCESSOR_ROLE));
+		var n:IParserNode = ASTBuilder.newAST(AS3NodeKind.NAME, name);
 		ast.addChild(n);
 		var params:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.PARAMETER_LIST,

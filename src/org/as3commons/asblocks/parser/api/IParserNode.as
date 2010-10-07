@@ -308,11 +308,11 @@ public interface IParserNode
 	/**
 	 * TODO Docme
 	 */
-	function addTokenAt(token:LinkedListToken, index:int):void;
+	function appendToken(token:LinkedListToken):void;
 	
 	/**
 	 * TODO Docme
 	 */
-	function appendToken(token:LinkedListToken):void;
+	function addTokenAt(token:LinkedListToken, index:int):void;
 }
 }

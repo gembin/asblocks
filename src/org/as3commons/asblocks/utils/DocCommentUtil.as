@@ -23,6 +23,7 @@ package org.as3commons.asblocks.utils
 import mx.utils.StringUtil;
 
 import org.as3commons.asblocks.api.IDocComment;
+import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.DocCommentNode;
 import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
@@ -59,7 +60,7 @@ public class DocCommentUtil
 			return buildASDoc(parent);
 		}
 		
-		ast = ASTUtil.newAST(AS3NodeKind.AS_DOC, "/** */");
+		ast = ASTBuilder.newAST(AS3NodeKind.AS_DOC, "/** */");
 		var index:int = !parent.hasKind(AS3NodeKind.META_LIST) ? 0 : 1;
 		parent.addChildAt(ast, index);
 		
@@ -177,7 +178,7 @@ public class DocCommentUtil
 		{
 			// FIXME this is for parenthetic updates such as meta []
 			// the /** */ needs to go before the [
-			asdoc = ASTUtil.newAST(AS3NodeKind.AS_DOC, result);
+			asdoc = ASTBuilder.newAST(AS3NodeKind.AS_DOC, result);
 			asdoc.startToken.text = null;
 			
 			var index:int = 0;

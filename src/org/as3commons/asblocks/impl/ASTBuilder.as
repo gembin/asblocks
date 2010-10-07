@@ -7,11 +7,63 @@ import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.IToken;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.parser.core.LinkedListTreeAdaptor;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 public class ASTBuilder
 {
+	private static var adapter:LinkedListTreeAdaptor = new LinkedListTreeAdaptor();
+	
+	public static function newAST(kind:String, text:String = null):IParserNode
+	{
+		return adapter.create(kind, text);
+	}
+	
+	public static function newPrimaryAST(name:String = null):IParserNode
+	{
+		return newAST(AS3NodeKind.PRIMARY, name);
+	}
+	
+	public static function newNameAST(name:String):IParserNode
+	{
+		return newAST(AS3NodeKind.NAME, name);
+	}
+	
+	public static function newTypeAST(type:String):IParserNode
+	{
+		return newAST(AS3NodeKind.TYPE, type);
+	}
+	
+	public static function parseTypeAST(type:String):IParserNode
+	{
+		var ast:IParserNode = AS3FragmentParser.parseType(type);
+		var colon:LinkedListToken = TokenBuilder.newColon();
+		ast.startToken.prepend(colon);
+		ast.startToken = colon;
+		return ast;
+	}
+	
+	public static function newMetaData(name:String):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.META, 
+			AS3NodeKind.LBRACKET, "[", 
+			AS3NodeKind.RBRACKET, "]");
+		ast.addChild(newNameAST(name));
+		return ast;
+	}
+	
+	public static function newCondition(expression:IParserNode):IParserNode
+	{
+		var ast:IParserNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.CONDITION, 
+			AS3NodeKind.LPAREN, "(", 
+			AS3NodeKind.RPAREN, ")");
+		ast.addChild(expression);
+		return ast;
+	}
+	
 	public static function newComment(ast:IParserNode, text:String):IToken
 	{
 		var comment:LinkedListToken = TokenBuilder.newSLComment("//" + text);
@@ -22,150 +74,6 @@ public class ASTBuilder
 		return comment;
 	}
 	
-	public static function newType(type:String):IParserNode
-	{
-		var colon:LinkedListToken = TokenBuilder.newColon();
-		var ast:IParserNode = AS3FragmentParser.parseType(type);
-		ast.startToken.prepend(colon);
-		ast.startToken = colon;
-		return ast;
-	}
-	
-	public static function newParameter(name:String, type:String, defaultValue:String):IParserNode
-	{
-		var ast:IParserNode = ASTUtil.newParamterAST();
-		var nti:IParserNode = ast.getKind(AS3NodeKind.NAME_TYPE_INIT);
-		nti.addChild(ASTUtil.newNameAST(name));
-		
-		var colon:LinkedListToken = TokenBuilder.newColon();
-		var typeAST:IParserNode = AS3FragmentParser.parseType(type);
-		typeAST.startToken.prepend(colon);
-		typeAST.startToken = colon;
-		nti.addChild(typeAST);
-		
-		if (defaultValue)
-		{
-			nti.appendToken(TokenBuilder.newSpace());
-			nti.appendToken(TokenBuilder.newAssign());
-			nti.appendToken(TokenBuilder.newSpace());
-			nti.addChild(ASTUtil.newInitAST(defaultValue));
-		}
-		
-		return ast;
-	}
-	
-	public static function newRestParameter(name:String):IParserNode
-	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.PARAMETER);
-		var restAST:IParserNode = ASTUtil.newAST(AS3NodeKind.REST, name);
-		ast.addChild(restAST);
-		var rest:LinkedListToken = TokenBuilder.newToken(AS3NodeKind.REST_PARM, "...");
-		ast.startToken.prepend(rest);
-		ast.startToken = rest;
-		return ast;
-	}
-	
-	public static function newMetaData(name:String):IMetaData
-	{
-		var ast:IParserNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.META, 
-			AS3NodeKind.LBRACKET, "[", 
-			AS3NodeKind.RBRACKET, "]");
-		
-		ast.addChild(ASTUtil.newNameAST(name));
-		
-		return new MetaDataNode(ast);
-	}
-	
-	public static function newFunctionAST(name:String, 
-										  returnType:String, 
-										  addModList:Boolean = true):IParserNode
-	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FUNCTION);
-		if (addModList)
-		{
-			var mods:IParserNode = ASTUtil.newAST(AS3NodeKind.MOD_LIST);
-			mods.addChild(ASTUtil.newAST(AS3NodeKind.MODIFIER, Visibility.PUBLIC.toString()));
-			ast.addChild(mods);
-		}
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.ACCESSOR_ROLE));
-		if (addModList)
-		{
-			ast.appendToken(TokenBuilder.newSpace());
-		}
-		ast.appendToken(TokenBuilder.newFunction());
-		ast.appendToken(TokenBuilder.newSpace());
-		var n:IParserNode = ASTUtil.newAST(AS3NodeKind.NAME, name);
-		ast.addChild(n);
-		var params:IParserNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.PARAMETER_LIST,
-			AS3NodeKind.LPAREN, "(",
-			AS3NodeKind.RPAREN, ")");
-		ast.addChild(params);
-		if (returnType)
-		{
-			var colon:LinkedListToken = TokenBuilder.newColon();
-			var typeAST:IParserNode = AS3FragmentParser.parseType(returnType);
-			typeAST.startToken.prepend(colon);
-			typeAST.startToken = colon;
-			ast.addChild(typeAST);
-		}
-		ast.appendToken(TokenBuilder.newSpace());
-		var block:IParserNode = ASTStatementBuilder.newBlock();
-		ast.addChild(block);
-		return ast;
-	}
-	
-	public static function newCondition(expr:IParserNode):IParserNode
-	{
-		var cond:IParserNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.CONDITION, 
-			AS3NodeKind.LPAREN, "(", 
-			AS3NodeKind.RPAREN, ")");
-		cond.addChild(expr);
-		return cond;
-	}
-	
-	
-	/**
-	 * Escape the given String and place within double quotes so that it
-	 * will be a valid ActionScript string literal.
-	 */
-	public static function escapeString(string:String):String
-	{
-		var result:String = "\"";
-		
-		var len:int = string.length;
-		for (var i:int = 0; i < len; i++) 
-		{
-			var c:String = string.charAt(i);
-			
-			switch (c) 
-			{
-				case '\n':
-					result += "\\n";
-					break;
-				case '\t':
-					result += "\\t";
-					break;
-				case '\r':
-					result += "\\r";
-					break;
-				case '"':
-					result += "\\\"";
-					break;
-				case '\\':
-					result += "\\\\";
-					break;
-				default:
-					result += c;
-			}
-		}
-		result += '"';
-		
-		return result;
-	}
-	
 	public static function spaceEitherSide(token:LinkedListToken):void
 	{
 		token.prepend(TokenBuilder.newSpace());
@@ -174,12 +82,12 @@ public class ASTBuilder
 	
 	public static function parenthise(expression:IParserNode):IParserNode
 	{
-		var result:IParserNode = ASTUtil.newParentheticAST(
+		var ast:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.ENCAPSULATED, 
 			AS3NodeKind.LPAREN, "(", 
 			AS3NodeKind.RPAREN, ")");
-		result.addChild(expression);
-		return result;
+		ast.addChild(expression);
+		return ast;
 	}
 	
 	public static function precidence(ast:IParserNode):int

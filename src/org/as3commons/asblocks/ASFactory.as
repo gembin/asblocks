@@ -45,6 +45,7 @@ import org.as3commons.asblocks.api.IStringLiteral;
 import org.as3commons.asblocks.api.IUndefinedLiteral;
 import org.as3commons.asblocks.impl.ASParserImpl;
 import org.as3commons.asblocks.impl.ASProject;
+import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ASTExpressionBuilder;
 import org.as3commons.asblocks.impl.ASTLiteralBuilder;
 import org.as3commons.asblocks.impl.ASTStatementBuilder;
@@ -74,7 +75,6 @@ import org.as3commons.asblocks.impl.UndefinedLiteralNode;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
-import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.mxmlblocks.IMXMLParser;
 import org.as3commons.mxmlblocks.api.IBlockTag;
 import org.as3commons.mxmlblocks.impl.ASTMXMLBuilder;
@@ -993,7 +993,7 @@ public class ASFactory
 											 name:String):IFieldAccessExpression
 	{
 		var ast:IParserNode = ASTExpressionBuilder.newFieldAccessExpression(
-			target.node, ASTUtil.newAST(AS3NodeKind.NAME, name));
+			target.node, ASTBuilder.newAST(AS3NodeKind.NAME, name));
 		return new FieldAccessExpressionNode(ast);
 	}
 	
@@ -1009,17 +1009,14 @@ public class ASFactory
 	public function newArrayAccessExpression(target:IExpression, 
 											 subscript:IExpression):IArrayAccessExpression
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.ARRAY_ACCESSOR);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.ARRAY_ACCESSOR);
 		var targetAST:IParserNode = target.node;
 		ast.addChild(targetAST);
 		ast.appendToken(TokenBuilder.newLeftBracket());
 		var subAST:IParserNode = subscript.node;
 		ast.addChild(subAST);
 		ast.appendToken(TokenBuilder.newRightBracket());
-		
-		var result:ArrayAccessExpressionNode = new ArrayAccessExpressionNode(ast);
-		
-		return result;
+		return new ArrayAccessExpressionNode(ast);
 	}
 	
 	//----------------------------------
@@ -1037,8 +1034,7 @@ public class ASFactory
 	public function newSimpleNameExpression(name:String):ISimpleNameExpression
 	{
 		var ast:IParserNode = AS3FragmentParser.parsePrimaryExpression(name);
-		var result:ISimpleNameExpression = new SimpleNameExpressionNode(ast);
-		return result;
+		return new SimpleNameExpressionNode(ast);
 	}
 	
 	//--------------------------------------------------------------------------

@@ -38,7 +38,6 @@ import org.as3commons.asblocks.parser.core.SourceCode;
 import org.as3commons.asblocks.parser.core.Token;
 import org.as3commons.asblocks.parser.errors.NullTokenError;
 import org.as3commons.asblocks.parser.errors.UnExpectedTokenError;
-import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.parser.impl.AS3Parser;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.mxmlblocks.parser.api.MXMLNodeKind;
@@ -256,7 +255,7 @@ public class ASTUtil
 											 endKind:String,
 											 endText:String):IParserNode
 	{
-		var ast:IParserNode = newAST(kind);
+		var ast:IParserNode = ASTBuilder.newAST(kind);
 		var start:LinkedListToken = TokenBuilder.newToken(startKind, startText);
 		ast.startToken = start;
 		var stop:LinkedListToken = TokenBuilder.newToken(endKind, endText);
@@ -354,86 +353,9 @@ public class ASTUtil
 		return result;
 	}
 	
-	public static function newAST(kind:String, text:String = null):IParserNode
-	{
-		return adapter.create(kind, text);
-	}
+
 	
-	public static function newPrimaryAST(name:String = null):IParserNode
-	{
-		return adapter.create(AS3NodeKind.PRIMARY, name);
-	}
-	
-	public static function newPrefixAST(op:LinkedListToken):IParserNode
-	{
-		if (op.kind == AS3NodeKind.PRE_INC)
-		{
-			return newAST(AS3NodeKind.PRE_INC, op.text);
-		}
-		else if (op.kind == AS3NodeKind.PRE_DEC)
-		{
-			return newAST(AS3NodeKind.PRE_DEC, op.text);
-		}
-		return null;
-	}
-	
-	public static function newPostfixAST(op:LinkedListToken):IParserNode
-	{
-		if (op.kind == AS3NodeKind.POST_INC)
-		{
-			return newAST(AS3NodeKind.POST_INC, op.text);
-		}
-		else if (op.kind == AS3NodeKind.POST_DEC)
-		{
-			return newAST(AS3NodeKind.POST_DEC, op.text);
-		}
-		return null;
-	}
-	
-	public static function newBinaryAST(op:LinkedListToken):IParserNode
-	{
-		if (AS3Parser.additiveMap.containsValue(op.kind))
-		{
-			return newAST(AS3NodeKind.ADDITIVE);
-		}
-		else if (AS3Parser.equalityMap.containsValue(op.kind))
-		{
-			return newAST(AS3NodeKind.EQUALITY);
-		}
-		else if (AS3Parser.relationMap.containsValue(op.kind))
-		{
-			return newAST(AS3NodeKind.RELATIONAL);
-		}
-		else if (AS3Parser.shiftMap.containsValue(op.kind))
-		{
-			return newAST(AS3NodeKind.SHIFT);
-		}
-		else if (AS3Parser.multiplicativeMap.containsValue(op.kind))
-		{
-			return newAST(AS3NodeKind.MULTIPLICATIVE);
-		}
-		else if (op.kind == AS3NodeKind.LAND)
-		{
-			return newAST(AS3NodeKind.AND);
-		}
-		else if (op.kind == AS3NodeKind.LOR)
-		{
-			return newAST(AS3NodeKind.OR);
-		}
-		else if (op.kind == AS3NodeKind.BAND)
-		{
-			return newAST(AS3NodeKind.B_AND);
-		}
-		else if (op.kind == AS3NodeKind.BOR)
-		{
-			return newAST(AS3NodeKind.B_OR);
-		}
-		else if (op.kind == AS3NodeKind.BXOR)
-		{
-			return newAST(AS3NodeKind.B_XOR);
-		}
-		return null;
-	}
+
 	
 	public static function newTokenAST(token:LinkedListToken):IParserNode
 	{
@@ -447,39 +369,6 @@ public class ASTUtil
 	public static function findChildByType(ast:IParserNode, kind:String):IParserNode
 	{
 		return ast.getKind(kind);
-	}
-	
-	public static function newNameAST(name:String):IParserNode
-	{
-		var ast:IParserNode = newAST(AS3NodeKind.NAME, name);
-		return ast;
-	}
-	
-	public static function newTypeAST(type:String):IParserNode
-	{
-		var ast:IParserNode = newAST(AS3NodeKind.TYPE, type);
-		return ast;
-	}
-	
-	public static function newInitAST(defaultValue:String):IParserNode
-	{
-		var ast:IParserNode = newAST(AS3NodeKind.INIT);
-		var init:IParserNode = AS3FragmentParser.parsePrimaryExpression(defaultValue);
-		ast.addChild(init);
-		return ast;
-	}
-	
-	public static function newParamterListAST():IParserNode
-	{
-		var ast:IParserNode = newAST(AS3NodeKind.PARAMETER_LIST);
-		return ast;
-	}
-	
-	public static function newParamterAST():IParserNode
-	{
-		var ast:IParserNode = newAST(AS3NodeKind.PARAMETER);
-		ast.addChild(newAST(AS3NodeKind.NAME_TYPE_INIT));
-		return ast;
 	}
 	
 	public static function addChildWithIndentation(ast:IParserNode, 
@@ -631,6 +520,45 @@ public class ASTUtil
 		return result;
 	}
 	
+	/**
+	 * Escape the given String and place within double quotes so that it
+	 * will be a valid ActionScript string literal.
+	 */
+	public static function escapeString(string:String):String
+	{
+		var result:String = "\"";
+		
+		var len:int = string.length;
+		for (var i:int = 0; i < len; i++) 
+		{
+			var c:String = string.charAt(i);
+			
+			switch (c) 
+			{
+				case '\n':
+					result += "\\n";
+					break;
+				case '\t':
+					result += "\\t";
+					break;
+				case '\r':
+					result += "\\r";
+					break;
+				case '"':
+					result += "\\\"";
+					break;
+				case '\\':
+					result += "\\\\";
+					break;
+				default:
+					result += c;
+			}
+		}
+		result += '"';
+		
+		return result;
+	}
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Private Class :: Methods
@@ -771,7 +699,7 @@ public class ASTUtil
 			}
 			else
 			{
-				message = "Problem parsing " + ASTBuilder.escapeString(statement);
+				message = "Problem parsing " + escapeString(statement);
 			}
 		}
 		return new ASBlocksSyntaxError(message, cause);

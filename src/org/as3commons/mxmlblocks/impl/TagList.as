@@ -110,7 +110,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 		
 		if (!ast)
 		{
-			ast = ASTUtil.newAST(MXMLNodeKind.BINDING, value);
+			ast = ASTBuilder.newAST(MXMLNodeKind.BINDING, value);
 			var colon:LinkedListToken = TokenBuilder.newColon();
 			ast.appendToken(colon);
 			//ast.startToken.beforeInsert(colon);
@@ -400,7 +400,7 @@ public class TagList extends TagContainerDelegate implements IBlockTag
 		var ast:IParserNode = findAttList();
 		if (!ast)
 		{
-			ast = ASTUtil.newAST(MXMLNodeKind.ATT_LIST);
+			ast = ASTBuilder.newAST(MXMLNodeKind.ATT_LIST);
 			node.addChildAt(ast, findAttListInsertion());
 		}
 		return ast;

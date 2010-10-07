@@ -348,7 +348,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newLabel(name:String):ILabelStatement
 	{
-		var expr:IParserNode = ASTUtil.newAST(AS3NodeKind.EXPR_STMNT);
+		var expr:IParserNode = ASTBuilder.newAST(AS3NodeKind.EXPR_STMNT);
 		expr.addChild(AS3FragmentParser.parseExpression(name));
 		var ast:IParserNode = ASTStatementBuilder.newLabel(expr);
 		_addStatement(ast);
@@ -360,7 +360,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function newForLabel(name:String, kind:String):ILabelStatement
 	{
-		var expr:IParserNode = ASTUtil.newAST(AS3NodeKind.EXPR_STMNT);
+		var expr:IParserNode = ASTBuilder.newAST(AS3NodeKind.EXPR_STMNT);
 		expr.addChild(AS3FragmentParser.parseExpression(name));
 		var ast:IParserNode = ASTStatementBuilder.newForLabel(expr, kind);
 		_addStatement(ast);

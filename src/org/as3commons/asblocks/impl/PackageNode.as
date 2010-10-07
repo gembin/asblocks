@@ -222,7 +222,7 @@ public class PackageNode extends ScriptNode implements IPackage
 		var index:int = 0;
 		while (i.search(AS3NodeKind.IMPORT))
 		{
-			index = i.getCurrentIndex() + 1;
+			index = i.currentIndex + 1;
 		}
 		return index;
 	}

@@ -153,7 +153,7 @@ public class InterfaceTypeNode extends TypeNode implements IInterfaceType
 		var type:IParserNode = AS3FragmentParser.parseType(name);
 		if (!extndz)
 		{
-			extndz = ASTUtil.newAST(AS3NodeKind.EXTENDS, "extends");
+			extndz = ASTBuilder.newAST(AS3NodeKind.EXTENDS, "extends");
 			var i:ASTIterator = new ASTIterator(node);
 			i.find(AS3NodeKind.CONTENT);
 			i.insertBeforeCurrent(extndz);

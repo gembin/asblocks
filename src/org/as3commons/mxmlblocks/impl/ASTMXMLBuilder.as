@@ -3,6 +3,7 @@ package org.as3commons.mxmlblocks.impl
 
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ASTTypeBuilder;
 import org.as3commons.asblocks.impl.ApplicationUnitNode;
 import org.as3commons.asblocks.impl.TokenBuilder;
@@ -25,8 +26,8 @@ public class ASTMXMLBuilder
 		var packageName:String = ASTTypeBuilder.packageNameFrom(superQualifiedName);
 		var className:String = ASTTypeBuilder.typeNameFrom(superQualifiedName);
 		
-		var appAST:IParserNode = ASTUtil.newAST(MXMLNodeKind.COMPILATION_UNIT);
-		appAST.addChild(ASTUtil.newAST(MXMLNodeKind.PROC_INST, 
+		var appAST:IParserNode = ASTBuilder.newAST(MXMLNodeKind.COMPILATION_UNIT);
+		appAST.addChild(ASTBuilder.newAST(MXMLNodeKind.PROC_INST, 
 			"<?xml version=\"1.0\" encoding=\"utf-8\"?>"));
 		appAST.appendToken(TokenBuilder.newNewline());
 		
@@ -44,19 +45,19 @@ public class ASTMXMLBuilder
 	
 	public static function newXMLNS(localName:String, uri:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(MXMLNodeKind.XML_NS);
+		var ast:IParserNode = ASTBuilder.newAST(MXMLNodeKind.XML_NS);
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newToken("xmlns", "xmlns"));
 		if (localName)
 		{
 			var colon:LinkedListToken = TokenBuilder.newColon();
-			var name:IParserNode = ASTUtil.newAST(MXMLNodeKind.LOCAL_NAME, localName);
+			var name:IParserNode = ASTBuilder.newAST(MXMLNodeKind.LOCAL_NAME, localName);
 			name.startToken.prepend(colon);
 			name.startToken = colon;
 			ast.addChild(name);
 		}
 		var assign:LinkedListToken = TokenBuilder.newAssign();
-		var uriAST:IParserNode = ASTUtil.newAST(MXMLNodeKind.URI, uri);
+		var uriAST:IParserNode = ASTBuilder.newAST(MXMLNodeKind.URI, uri);
 		uriAST.startToken.prepend(assign);
 		uriAST.startToken = assign;
 		assign.append(TokenBuilder.newQuote());
@@ -67,14 +68,14 @@ public class ASTMXMLBuilder
 	
 	public static function newAttribute(name:String, value:String, state:String = null):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(MXMLNodeKind.ATT);
+		var ast:IParserNode = ASTBuilder.newAST(MXMLNodeKind.ATT);
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(ASTUtil.newAST(MXMLNodeKind.NAME, name));
+		ast.addChild(ASTBuilder.newAST(MXMLNodeKind.NAME, name));
 		
 		if (state)
 		{
 			var dot:LinkedListToken = TokenBuilder.newDot();
-			var stateAST:IParserNode = ASTUtil.newAST(MXMLNodeKind.STATE, state);
+			var stateAST:IParserNode = ASTBuilder.newAST(MXMLNodeKind.STATE, state);
 			stateAST.startToken.prepend(dot);
 			stateAST.startToken = dot;
 			ast.addChild(stateAST);
@@ -82,25 +83,25 @@ public class ASTMXMLBuilder
 		
 		ast.appendToken(TokenBuilder.newAssign());
 		ast.appendToken(TokenBuilder.newQuote());
-		ast.addChild(ASTUtil.newAST(MXMLNodeKind.VALUE, value));
+		ast.addChild(ASTBuilder.newAST(MXMLNodeKind.VALUE, value));
 		ast.appendToken(TokenBuilder.newQuote());
 		return ast;
 	}
 	
 	public static function newTag(name:String, binding:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST("tag-list");
-		var body:IParserNode = ASTUtil.newAST("body");
+		var ast:IParserNode = ASTBuilder.newAST("tag-list");
+		var body:IParserNode = ASTBuilder.newAST("body");
 		
 		ast.appendToken(TokenBuilder.newLess());
 		
 		if (binding)
 		{
-			ast.addChild(ASTUtil.newAST("binding", binding));
+			ast.addChild(ASTBuilder.newAST("binding", binding));
 			ast.appendToken(TokenBuilder.newColon());
 		}
 		
-		ast.addChild(ASTUtil.newAST("local-name", name));
+		ast.addChild(ASTBuilder.newAST("local-name", name));
 		ast.appendToken(TokenBuilder.newGreater());
 		
 		ast.addChild(body);
@@ -127,7 +128,7 @@ public class ASTMXMLBuilder
 			code = "";
 		}
 		
-		var ast:IParserNode = ASTUtil.newAST("script");
+		var ast:IParserNode = ASTBuilder.newAST("script");
 		
 		var contentAST:IParserNode = AS3FragmentParser.parseClassContent(code);
 		
@@ -139,7 +140,7 @@ public class ASTMXMLBuilder
 		contentAST.stopToken.text = "]]>";
 		contentAST.stopToken.kind = "rcdata";
 		
-		var body:IParserNode = ASTUtil.newAST(MXMLNodeKind.BODY);
+		var body:IParserNode = ASTBuilder.newAST(MXMLNodeKind.BODY);
 		
 		var binding:String = "fx";
 		var name:String = "Script";
@@ -148,11 +149,11 @@ public class ASTMXMLBuilder
 		
 		if (binding)
 		{
-			ast.addChild(ASTUtil.newAST(MXMLNodeKind.BINDING, binding));
+			ast.addChild(ASTBuilder.newAST(MXMLNodeKind.BINDING, binding));
 			ast.appendToken(TokenBuilder.newColon());
 		}
 		
-		ast.addChild(ASTUtil.newAST(MXMLNodeKind.LOCAL_NAME, name));
+		ast.addChild(ASTBuilder.newAST(MXMLNodeKind.LOCAL_NAME, name));
 		ast.appendToken(TokenBuilder.newGreater());
 		ast.appendToken(TokenBuilder.newNewline());
 		
@@ -183,7 +184,7 @@ public class ASTMXMLBuilder
 			code = "";
 		}
 		
-		var ast:IParserNode = ASTUtil.newAST("script");
+		var ast:IParserNode = ASTBuilder.newAST("script");
 		
 		var contentAST:IParserNode = AS3FragmentParser.parseClassContent(code);
 		
@@ -195,7 +196,7 @@ public class ASTMXMLBuilder
 		contentAST.stopToken.text = "]]>";
 		contentAST.stopToken.kind = "rcdata";
 		
-		var body:IParserNode = ASTUtil.newAST(MXMLNodeKind.BODY);
+		var body:IParserNode = ASTBuilder.newAST(MXMLNodeKind.BODY);
 		
 		var binding:String = "fx";
 		var name:String = "Metadata";
@@ -204,11 +205,11 @@ public class ASTMXMLBuilder
 		
 		if (binding)
 		{
-			ast.addChild(ASTUtil.newAST(MXMLNodeKind.BINDING, binding));
+			ast.addChild(ASTBuilder.newAST(MXMLNodeKind.BINDING, binding));
 			ast.appendToken(TokenBuilder.newColon());
 		}
 		
-		ast.addChild(ASTUtil.newAST(MXMLNodeKind.LOCAL_NAME, name));
+		ast.addChild(ASTBuilder.newAST(MXMLNodeKind.LOCAL_NAME, name));
 		ast.appendToken(TokenBuilder.newGreater());
 		ast.appendToken(TokenBuilder.newNewline());
 		

@@ -20,13 +20,14 @@
 package org.as3commons.mxmlblocks.impl
 {
 
-import org.as3commons.mxmlblocks.api.IAttribute;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.mxmlblocks.parser.api.MXMLNodeKind;
-import org.as3commons.asblocks.parser.core.LinkedListToken;
-import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ScriptNode;
 import org.as3commons.asblocks.impl.TokenBuilder;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.mxmlblocks.api.IAttribute;
+import org.as3commons.mxmlblocks.parser.api.MXMLNodeKind;
 
 /**
  * The <code>IAttribute</code> implementation.
@@ -125,7 +126,7 @@ public class AttributeNode extends ScriptNode implements IAttribute
 		if (!ast)
 		{
 			var dot:LinkedListToken = TokenBuilder.newDot();
-			ast = ASTUtil.newAST(MXMLNodeKind.STATE, value);
+			ast = ASTBuilder.newAST(MXMLNodeKind.STATE, value);
 			ast.startToken.prepend(dot);
 			ast.startToken = dot;
 		}

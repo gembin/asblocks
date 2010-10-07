@@ -7,9 +7,9 @@ import org.as3commons.asblocks.api.IField;
 import org.as3commons.asblocks.api.IMethod;
 import org.as3commons.asblocks.api.IScriptNode;
 import org.as3commons.asblocks.api.IType;
+import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ClassTypeNode;
 import org.as3commons.asblocks.impl.InterfaceTypeNode;
-import org.as3commons.asblocks.impl.TypeNode;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
@@ -35,7 +35,7 @@ public class NameTypeUtil
 		}
 		var i:ASTIterator = new ASTIterator(ast);
 		i.find(AS3NodeKind.NAME);
-		i.replace(ASTUtil.newAST(AS3NodeKind.NAME, name));
+		i.replace(ASTBuilder.newAST(AS3NodeKind.NAME, name));
 	}
 	
 	public static function getType(ast:IParserNode):String
@@ -58,7 +58,7 @@ public class NameTypeUtil
 	{
 		var i:ASTIterator = new ASTIterator(ast);
 		i.find(AS3NodeKind.TYPE);
-		i.replace(ASTUtil.newAST(AS3NodeKind.TYPE, type));
+		i.replace(ASTBuilder.newAST(AS3NodeKind.TYPE, type));
 	}
 	
 	public static function hasType(ast:IParserNode):Boolean

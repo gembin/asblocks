@@ -155,8 +155,8 @@ public class MethodNode extends MemberNode
 		}
 		var role:IParserNode = findAccessorRoleNode();
 		var ast:IParserNode = (value == AccessorRole.GETTER) 
-			? ASTUtil.newAST(AS3NodeKind.GET, "get")
-			: ASTUtil.newAST(AS3NodeKind.SET, "set");
+			? ASTBuilder.newAST(AS3NodeKind.GET, "get")
+			: ASTBuilder.newAST(AS3NodeKind.SET, "set");
 		if (role.numChildren == 0)
 		{
 			role.addChild(ast);

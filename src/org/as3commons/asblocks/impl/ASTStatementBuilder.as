@@ -31,11 +31,11 @@ public class ASTStatementBuilder
 	
 	public static function newBreak(label:String = null):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.BREAK, "break");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.BREAK, "break");
 		if (label)
 		{
 			ast.appendToken(TokenBuilder.newSpace());
-			ast.addChild(ASTUtil.newPrimaryAST(label));
+			ast.addChild(ASTBuilder.newPrimaryAST(label));
 		}
 		ast.appendToken(TokenBuilder.newSemi());
 		return ast;
@@ -43,14 +43,14 @@ public class ASTStatementBuilder
 	
 	public static function newCatchClause(name:String, type:String):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CATCH, "catch");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.CATCH, "catch");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newLParen());
-		ast.addChild(ASTUtil.newNameAST(name));
+		ast.addChild(ASTBuilder.newNameAST(name));
 		if (type)
 		{
 			ast.appendToken(TokenBuilder.newColon());
-			ast.addChild(ASTUtil.newTypeAST(type));
+			ast.addChild(ASTBuilder.newTypeAST(type));
 		}
 		ast.appendToken(TokenBuilder.newRParen());
 		ast.appendToken(TokenBuilder.newSpace());
@@ -60,11 +60,11 @@ public class ASTStatementBuilder
 	
 	public static function newContinue(label:String = null):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CONTINUE, "continue");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.CONTINUE, "continue");
 		if (label)
 		{
 			ast.appendToken(TokenBuilder.newSpace());
-			ast.addChild(ASTUtil.newPrimaryAST(label));
+			ast.addChild(ASTBuilder.newPrimaryAST(label));
 		}
 		ast.appendToken(TokenBuilder.newSemi());
 		return ast;
@@ -72,8 +72,8 @@ public class ASTStatementBuilder
 	
 	public static function newDeclaration(assignment:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEC_LIST);
-		var role:IParserNode = ASTUtil.newAST(AS3NodeKind.DEC_ROLE, "var");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.DEC_LIST);
+		var role:IParserNode = ASTBuilder.newAST(AS3NodeKind.DEC_ROLE, "var");
 		ast.addChild(role);
 		if (assignment)
 		{
@@ -86,7 +86,7 @@ public class ASTStatementBuilder
 	
 	public static function newDefaultXMLNamespace(namespace:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.XML_NAMESPACE);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.XML_NAMESPACE);
 		ast.appendToken(TokenBuilder.newDefault());
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newXML());
@@ -102,7 +102,7 @@ public class ASTStatementBuilder
 	
 	public static function newDoWhile(condition:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DO, "do");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.DO, "do");
 		ast.appendToken(TokenBuilder.newSpace());
 		var block:IParserNode = newBlock();
 		ast.addChild(block);
@@ -116,7 +116,7 @@ public class ASTStatementBuilder
 	
 	public static function newFinallyClause():IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FINALLY, "finally");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.FINALLY, "finally");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(newBlock());
 		return ast;
@@ -125,16 +125,16 @@ public class ASTStatementBuilder
 	public static function newForEachIn(declaration:IParserNode, 
 										target:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOREACH, "for");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.FOREACH, "for");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newEach());
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newLParen());
-		var initAST:IParserNode = ASTUtil.newAST(AS3NodeKind.INIT);
+		var initAST:IParserNode = ASTBuilder.newAST(AS3NodeKind.INIT);
 		initAST.addChild(declaration);
 		ast.addChild(initAST);
 		ast.appendToken(TokenBuilder.newSpace());
-		var inAST:IParserNode = ASTUtil.newAST(AS3NodeKind.IN, "in");
+		var inAST:IParserNode = ASTBuilder.newAST(AS3NodeKind.IN, "in");
 		inAST.appendToken(TokenBuilder.newSpace());
 		inAST.addChild(target);
 		ast.addChild(inAST);
@@ -145,14 +145,14 @@ public class ASTStatementBuilder
 	public static function newForIn(declaration:IParserNode, 
 									target:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FORIN, "for");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.FORIN, "for");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newLParen());
-		var initAST:IParserNode = ASTUtil.newAST(AS3NodeKind.INIT);
+		var initAST:IParserNode = ASTBuilder.newAST(AS3NodeKind.INIT);
 		initAST.addChild(declaration);
 		ast.addChild(initAST);
 		ast.appendToken(TokenBuilder.newSpace());
-		var inAST:IParserNode = ASTUtil.newAST(AS3NodeKind.IN, "in");
+		var inAST:IParserNode = ASTBuilder.newAST(AS3NodeKind.IN, "in");
 		inAST.appendToken(TokenBuilder.newSpace());
 		inAST.addChild(target);
 		ast.addChild(inAST);
@@ -162,7 +162,7 @@ public class ASTStatementBuilder
 	
 	public static function newLabel(ast:IParserNode):IParserNode
 	{
-		var result:IParserNode = ASTUtil.newAST(AS3NodeKind.LABEL);
+		var result:IParserNode = ASTBuilder.newAST(AS3NodeKind.LABEL);
 		result.addChild(ast);
 		result.appendToken(TokenBuilder.newSpace());
 		result.appendToken(TokenBuilder.newColon());
@@ -173,7 +173,7 @@ public class ASTStatementBuilder
 	
 	public static function newForLabel(ast:IParserNode, kind:String):IParserNode
 	{
-		var result:IParserNode = ASTUtil.newAST(AS3NodeKind.LABEL);
+		var result:IParserNode = ASTBuilder.newAST(AS3NodeKind.LABEL);
 		result.addChild(ast);
 		result.appendToken(TokenBuilder.newSpace());
 		result.appendToken(TokenBuilder.newColon());
@@ -190,7 +190,7 @@ public class ASTStatementBuilder
 								  condition:IParserNode, 
 								  iterator:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.FOR, "for");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.FOR, "for");
 		
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.appendToken(TokenBuilder.newLParen());
@@ -214,13 +214,13 @@ public class ASTStatementBuilder
 	public static function newForInit(initializer:IParserNode):IParserNode
 	{
 		if (!initializer)
-			return ASTUtil.newAST(AS3NodeKind.INIT);
+			return ASTBuilder.newAST(AS3NodeKind.INIT);
 		
 		var ast:IParserNode = initializer;
 		// check that node is init
 		if (!initializer.isKind(AS3NodeKind.INIT))
 		{
-			ast = ASTUtil.newAST(AS3NodeKind.INIT);
+			ast = ASTBuilder.newAST(AS3NodeKind.INIT);
 			ast.addChild(initializer);
 		}
 		return ast;
@@ -229,13 +229,13 @@ public class ASTStatementBuilder
 	public static function newForCond(condition:IParserNode):IParserNode
 	{
 		if (!condition)
-			return ASTUtil.newAST(AS3NodeKind.COND);
+			return ASTBuilder.newAST(AS3NodeKind.COND);
 		
 		var ast:IParserNode = condition;
 		// check that node is cond
 		if (!condition.isKind(AS3NodeKind.COND))
 		{
-			ast = ASTUtil.newAST(AS3NodeKind.COND);
+			ast = ASTBuilder.newAST(AS3NodeKind.COND);
 			ast.addChild(condition);
 		}
 		return ast;
@@ -244,13 +244,13 @@ public class ASTStatementBuilder
 	public static function newForIter(iterator:IParserNode):IParserNode
 	{
 		if (!iterator)
-			return ASTUtil.newAST(AS3NodeKind.ITER);
+			return ASTBuilder.newAST(AS3NodeKind.ITER);
 		
 		var ast:IParserNode = iterator;
 		// check that node is iter
 		if (!iterator.isKind(AS3NodeKind.ITER))
 		{
-			ast = ASTUtil.newAST(AS3NodeKind.ITER);
+			ast = ASTBuilder.newAST(AS3NodeKind.ITER);
 			ast.addChild(iterator);
 		}
 		return ast;
@@ -258,7 +258,7 @@ public class ASTStatementBuilder
 	
 	public static function newIf(ast:IParserNode):IParserNode
 	{
-		var ifStmnt:IParserNode = ASTUtil.newAST(AS3NodeKind.IF, "if");
+		var ifStmnt:IParserNode = ASTBuilder.newAST(AS3NodeKind.IF, "if");
 		ifStmnt.appendToken(TokenBuilder.newSpace());
 		ifStmnt.addChild(ASTBuilder.newCondition(ast));
 		ifStmnt.appendToken(TokenBuilder.newSpace());
@@ -269,7 +269,7 @@ public class ASTStatementBuilder
 	
 	public static function newReturn(expression:IParserNode = null):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.RETURN, "return");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.RETURN, "return");
 		if (expression)
 		{
 			ast.appendToken(TokenBuilder.newSpace());
@@ -281,7 +281,7 @@ public class ASTStatementBuilder
 	
 	public static function newSuper(arguments:Vector.<IArgument>):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.SUPER, "super");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.SUPER, "super");
 		var args:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.ARGUMENTS, 
 			AS3NodeKind.LPAREN, "(", 
@@ -293,7 +293,7 @@ public class ASTStatementBuilder
 	
 	public static function newSwitch(condition:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.SWITCH, "switch");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.SWITCH, "switch");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTBuilder.newCondition(condition));
 		ast.appendToken(TokenBuilder.newSpace());
@@ -305,11 +305,11 @@ public class ASTStatementBuilder
 	public static function newSwitchCase(node:IParserNode, label:String):IParserNode
 	{
 		var cases:IParserNode = node.getKind(AS3NodeKind.CASES);
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CASE, "case");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.CASE, "case");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(AS3FragmentParser.parseExpression(label));
 		ast.appendToken(TokenBuilder.newColon());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.SWITCH_BLOCK));
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.SWITCH_BLOCK));
 		ASTUtil.addChildWithIndentation(cases, ast);
 		return ast;
 	}
@@ -317,16 +317,16 @@ public class ASTStatementBuilder
 	public static function newSwitchDefault(node:IParserNode):IParserNode
 	{
 		var cases:IParserNode = node.getKind(AS3NodeKind.CASES);
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.DEFAULT, "default");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.DEFAULT, "default");
 		ast.appendToken(TokenBuilder.newColon());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.SWITCH_BLOCK));
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.SWITCH_BLOCK));
 		ASTUtil.addChildWithIndentation(cases, ast);
 		return ast;
 	}
 	
 	public static function newThis(expression:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.THIS, "this");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.THIS, "this");
 		ast.appendToken(TokenBuilder.newDot());
 		ast.addChild(expression);
 		ast.appendToken(TokenBuilder.newSemi());
@@ -335,7 +335,7 @@ public class ASTStatementBuilder
 	
 	public static function newThrow(expression:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.THROW, "throw");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.THROW, "throw");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(expression);
 		ast.appendToken(TokenBuilder.newSemi());
@@ -344,14 +344,14 @@ public class ASTStatementBuilder
 	
 	public static function newTryStatement():IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.TRY_STMNT);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.TRY_STMNT);
 		ast.addChild(newTry());
 		return ast;
 	}
 	
 	public static function newTry():IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.TRY, "try");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.TRY, "try");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(newBlock());
 		return ast;
@@ -359,7 +359,7 @@ public class ASTStatementBuilder
 	
 	public static function newWhile(condition:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.WHILE, "while");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.WHILE, "while");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTBuilder.newCondition(condition));
 		var block:IParserNode = newBlock();
@@ -369,7 +369,7 @@ public class ASTStatementBuilder
 	
 	public static function newWith(condition:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.WITH, "with");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.WITH, "with");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(ASTBuilder.newCondition(condition));
 		var block:IParserNode = newBlock();

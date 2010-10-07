@@ -187,7 +187,7 @@ public class ParameterNode extends ScriptNode implements IParameter
 		var initAST:IParserNode = ast.getKind(AS3NodeKind.INIT);
 		if (!initAST)
 		{
-			initAST = ASTUtil.newAST(AS3NodeKind.INIT);
+			initAST = ASTBuilder.newAST(AS3NodeKind.INIT);
 			ast.addChild(initAST);
 		}
 		

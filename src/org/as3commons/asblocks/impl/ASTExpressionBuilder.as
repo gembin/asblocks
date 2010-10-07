@@ -6,8 +6,10 @@ import org.as3commons.asblocks.api.IBinaryExpression;
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.AS3ParserMap;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.TokenNode;
+import org.as3commons.asblocks.parser.impl.AS3Parser;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 public class ASTExpressionBuilder
@@ -41,7 +43,7 @@ public class ASTExpressionBuilder
 	public static function newPostfixExpression(op:LinkedListToken, 
 												subExpr:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newPostfixAST(op);
+		var ast:IParserNode = newPostfixAST(op);
 		TokenNode(ast).noUpdate = true;
 		ast.addChild(subExpr);
 		TokenNode(ast).noUpdate = false;
@@ -53,7 +55,7 @@ public class ASTExpressionBuilder
 	public static function newPrefixExpression(op:LinkedListToken, 
 											   subExpr:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newPrefixAST(op);
+		var ast:IParserNode = newPrefixAST(op);
 		ast.addChild(subExpr);
 		return ast;
 	}
@@ -63,7 +65,7 @@ public class ASTExpressionBuilder
 											   right:IExpression):IAssignmentExpression
 	{
 		// assignment[left,op(assign[=]),right]
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.ASSIGNMENT);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.ASSIGNMENT);
 		
 		var leftAST:IParserNode = left.node;
 		var rightAST:IParserNode = right.node;
@@ -79,7 +81,7 @@ public class ASTExpressionBuilder
 		
 		ast.addChild(leftAST);
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(ASTUtil.newAST(AS3NodeKind.ASSIGN, op.text));
+		ast.addChild(ASTBuilder.newAST(AS3NodeKind.ASSIGN, op.text));
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(rightAST);
 		
@@ -91,7 +93,7 @@ public class ASTExpressionBuilder
 											   left:IExpression,
 											   right:IExpression):IBinaryExpression
 	{
-		var ast:IParserNode = ASTUtil.newBinaryAST(op);
+		var ast:IParserNode = newBinaryAST(op);
 		var opAST:IParserNode = ASTUtil.newTokenAST(op);
 		
 		var leftExpr:IParserNode = left.node;
@@ -125,7 +127,7 @@ public class ASTExpressionBuilder
 	
 	public static function newInvocationExpression(subExpr:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.CALL);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.CALL);
 		ast.addChild(subExpr);
 		var arguments:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.ARGUMENTS, 
@@ -137,7 +139,7 @@ public class ASTExpressionBuilder
 	
 	public static function newNewExpression(subExpr:IParserNode):IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.NEW, "new");
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.NEW, "new");
 		ast.appendToken(TokenBuilder.newSpace());
 		ast.addChild(subExpr);
 		var arguments:IParserNode = ASTUtil.newParentheticAST(
@@ -167,5 +169,77 @@ public class ASTExpressionBuilder
 		
 		return ast;
 	}
+	
+	public static function newPrefixAST(op:LinkedListToken):IParserNode
+	{
+		if (op.kind == AS3NodeKind.PRE_INC)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.PRE_INC, op.text);
+		}
+		else if (op.kind == AS3NodeKind.PRE_DEC)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.PRE_DEC, op.text);
+		}
+		return null;
+	}
+	
+	public static function newPostfixAST(op:LinkedListToken):IParserNode
+	{
+		if (op.kind == AS3NodeKind.POST_INC)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.POST_INC, op.text);
+		}
+		else if (op.kind == AS3NodeKind.POST_DEC)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.POST_DEC, op.text);
+		}
+		return null;
+	}
+	
+	public static function newBinaryAST(op:LinkedListToken):IParserNode
+	{
+		if (AS3ParserMap.additive.containsValue(op.kind))
+		{
+			return ASTBuilder.newAST(AS3NodeKind.ADDITIVE);
+		}
+		else if (AS3ParserMap.equality.containsValue(op.kind))
+		{
+			return ASTBuilder.newAST(AS3NodeKind.EQUALITY);
+		}
+		else if (AS3ParserMap.relation.containsValue(op.kind))
+		{
+			return ASTBuilder.newAST(AS3NodeKind.RELATIONAL);
+		}
+		else if (AS3ParserMap.shift.containsValue(op.kind))
+		{
+			return ASTBuilder.newAST(AS3NodeKind.SHIFT);
+		}
+		else if (AS3ParserMap.multiplicative.containsValue(op.kind))
+		{
+			return ASTBuilder.newAST(AS3NodeKind.MULTIPLICATIVE);
+		}
+		else if (op.kind == AS3NodeKind.LAND)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.AND);
+		}
+		else if (op.kind == AS3NodeKind.LOR)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.OR);
+		}
+		else if (op.kind == AS3NodeKind.BAND)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.B_AND);
+		}
+		else if (op.kind == AS3NodeKind.BOR)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.B_OR);
+		}
+		else if (op.kind == AS3NodeKind.BXOR)
+		{
+			return ASTBuilder.newAST(AS3NodeKind.B_XOR);
+		}
+		return null;
+	}
+	
 }
 }

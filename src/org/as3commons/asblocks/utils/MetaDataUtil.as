@@ -57,11 +57,12 @@ public class MetaDataUtil
 	
 	public static function newMetaData(ast:IParserNode, name:String):IMetaData
 	{
-		var metadata:IMetaData = ASTBuilder.newMetaData(name);
+		var metadataAST:IParserNode = ASTBuilder.newMetaData(name);
+		var metadata:IMetaData = new MetaDataNode(metadataAST);
 		var list:IParserNode = ast.getKind(AS3NodeKind.META_LIST);
 		if (!list)
 		{
-			list = ASTUtil.newAST(AS3NodeKind.META_LIST);
+			list = ASTBuilder.newAST(AS3NodeKind.META_LIST);
 			ast.addChildAt(list, 0);
 		}
 		

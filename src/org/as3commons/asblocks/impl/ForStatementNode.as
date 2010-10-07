@@ -20,14 +20,13 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.IForStatement;
 import org.as3commons.asblocks.api.IScriptNode;
 import org.as3commons.asblocks.api.IStatementContainer;
-import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
 
 /**
  * The <code>IForStatement</code> implementation.
@@ -86,7 +85,7 @@ public class ForStatementNode extends ContainerDelegate
 		{
 			if (!ast)
 			{
-				ast = ASTUtil.newAST(AS3NodeKind.INIT);
+				ast = ASTBuilder.newAST(AS3NodeKind.INIT);
 				node.addChildAt(ast, 0);
 			}
 			
@@ -131,7 +130,7 @@ public class ForStatementNode extends ContainerDelegate
 		{
 			if (!ast)
 			{
-				ast = ASTUtil.newAST(AS3NodeKind.COND);
+				ast = ASTBuilder.newAST(AS3NodeKind.COND);
 				node.addChildAt(ast, 1); // FIXME this index is not certain
 			}
 			
@@ -169,7 +168,7 @@ public class ForStatementNode extends ContainerDelegate
 		{
 			if (!ast)
 			{
-				ast = ASTUtil.newAST(AS3NodeKind.ITER);
+				ast = ASTBuilder.newAST(AS3NodeKind.ITER);
 				node.addChildAt(ast, 2); // FIXME this index is not certain
 			}
 			

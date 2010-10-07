@@ -120,7 +120,7 @@ public class ClassTypeNode extends TypeNode implements IClassType
 		var type:IParserNode = AS3FragmentParser.parseType(value);
 		if (!extendz)
 		{
-			extendz = ASTUtil.newAST(AS3NodeKind.EXTENDS, "extends");
+			extendz = ASTBuilder.newAST(AS3NodeKind.EXTENDS, "extends");
 			extendz.appendToken(TokenBuilder.newSpace());
 			// space is between className and 'extends' keyword
 			var space:LinkedListToken = TokenBuilder.newSpace();
@@ -265,7 +265,7 @@ public class ClassTypeNode extends TypeNode implements IClassType
 		var type:IParserNode = AS3FragmentParser.parseType(name);
 		if (!ast)
 		{
-			ast = ASTUtil.newAST(AS3NodeKind.IMPLEMENTS, "implements");
+			ast = ASTBuilder.newAST(AS3NodeKind.IMPLEMENTS, "implements");
 			var i:ASTIterator = new ASTIterator(node);
 			i.find(AS3NodeKind.CONTENT);
 			i.insertBeforeCurrent(ast);

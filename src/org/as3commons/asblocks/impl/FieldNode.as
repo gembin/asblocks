@@ -20,14 +20,14 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.ASBlocksSyntaxError;
+import org.as3commons.asblocks.api.IExpression;
+import org.as3commons.asblocks.api.IField;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
-import org.as3commons.asblocks.ASBlocksSyntaxError;
-import org.as3commons.asblocks.api.IExpression;
-import org.as3commons.asblocks.api.IField;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -75,7 +75,7 @@ public class FieldNode extends MemberNode
 		}
 		var i:ASTIterator = new ASTIterator(nameTypeInit);
 		i.find(AS3NodeKind.NAME);
-		i.replace(ASTUtil.newAST(AS3NodeKind.NAME, value));
+		i.replace(ASTBuilder.newAST(AS3NodeKind.NAME, value));
 	}
 	
 	//----------------------------------
@@ -101,7 +101,7 @@ public class FieldNode extends MemberNode
 	{
 		var i:ASTIterator = new ASTIterator(nameTypeInit);
 		i.find(AS3NodeKind.TYPE);
-		i.replace(ASTUtil.newAST(AS3NodeKind.TYPE, value));
+		i.replace(ASTBuilder.newAST(AS3NodeKind.TYPE, value));
 	}
 	
 	//--------------------------------------------------------------------------
@@ -205,7 +205,7 @@ public class FieldNode extends MemberNode
 		var init:IParserNode = nti.getKind(AS3NodeKind.INIT);
 		if (init == null)
 		{
-			init = ASTUtil.newAST(AS3NodeKind.INIT, "=");
+			init = ASTBuilder.newAST(AS3NodeKind.INIT, "=");
 			// TODO get addTokenAt() in public API
 			TokenNode(init).addTokenAt(TokenBuilder.newSpace(), 0);
 			init.appendToken(TokenBuilder.newSpace());

@@ -20,12 +20,12 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.api.IDeclaration;
 import org.as3commons.asblocks.api.IDeclarationStatement;
 import org.as3commons.asblocks.api.IExpression;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -122,8 +122,8 @@ public class DeclarationStatementNode extends ScriptNode
 			return;
 		
 		var kind:String = (value) ? AS3NodeKind.CONST : AS3NodeKind.VAR;
-		var role:IParserNode = ASTUtil.newAST(AS3NodeKind.DEC_ROLE);
-		var ast:IParserNode = ASTUtil.newAST(kind);
+		var role:IParserNode = ASTBuilder.newAST(AS3NodeKind.DEC_ROLE);
+		var ast:IParserNode = ASTBuilder.newAST(kind);
 		role.addChild(ast);
 		role.appendToken(TokenBuilder.newToken(kind, kind));
 		node.setChildAt(role, 0);

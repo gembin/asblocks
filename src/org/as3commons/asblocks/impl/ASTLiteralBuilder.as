@@ -15,7 +15,7 @@ public class ASTLiteralBuilder
 	 */
 	public static function newNumberLiteral(number:Number):IParserNode
 	{
-		return ASTUtil.newAST(AS3NodeKind.NUMBER, number.toString());
+		return ASTBuilder.newAST(AS3NodeKind.NUMBER, number.toString());
 	}
 	
 	/**
@@ -23,7 +23,7 @@ public class ASTLiteralBuilder
 	 */
 	public static function newNullLiteral():IParserNode
 	{
-		return ASTUtil.newAST(AS3NodeKind.NULL, KeyWords.NULL);
+		return ASTBuilder.newAST(AS3NodeKind.NULL, KeyWords.NULL);
 	}
 	
 	/**
@@ -31,7 +31,7 @@ public class ASTLiteralBuilder
 	 */
 	public static function newUndefinedLiteral():IParserNode
 	{
-		return ASTUtil.newAST(AS3NodeKind.UNDEFINED, KeyWords.UNDEFINED);
+		return ASTBuilder.newAST(AS3NodeKind.UNDEFINED, KeyWords.UNDEFINED);
 	}
 	
 	/**
@@ -41,7 +41,7 @@ public class ASTLiteralBuilder
 	{
 		var kind:String = (boolean) ? AS3NodeKind.TRUE : AS3NodeKind.FALSE;
 		var text:String = (boolean) ? KeyWords.TRUE : KeyWords.FALSE;
-		return ASTUtil.newAST(kind, text);
+		return ASTBuilder.newAST(kind, text);
 	}
 	
 	/**
@@ -49,7 +49,7 @@ public class ASTLiteralBuilder
 	 */
 	public static function newStringLiteral(string:String):IParserNode
 	{
-		return ASTUtil.newAST(AS3NodeKind.STRING, ASTBuilder.escapeString(string));
+		return ASTBuilder.newAST(AS3NodeKind.STRING, ASTUtil.escapeString(string));
 	}
 	
 	/**
@@ -78,7 +78,7 @@ public class ASTLiteralBuilder
 	public static function newObjectField(name:String, 
 										  node:IParserNode):IParserNode
 	{
-		var field:IParserNode = ASTUtil.newAST(AS3NodeKind.PROP);
+		var field:IParserNode = ASTBuilder.newAST(AS3NodeKind.PROP);
 		field.addChild(AS3FragmentParser.parsePrimaryExpression(name));
 		field.appendToken(TokenBuilder.newColon());
 		field.appendToken(TokenBuilder.newSpace());
@@ -91,7 +91,7 @@ public class ASTLiteralBuilder
 	 */
 	public static function newFunctionLiteral():IParserNode
 	{
-		var ast:IParserNode = ASTUtil.newAST(AS3NodeKind.LAMBDA);
+		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.LAMBDA);
 		ast.appendToken(TokenBuilder.newFunction());
 		//ast.appendToken(TokenBuilder.newSpace());
 		// TODO: placeholder for name?
