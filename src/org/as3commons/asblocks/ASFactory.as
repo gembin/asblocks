@@ -45,7 +45,7 @@ import org.as3commons.asblocks.api.IStringLiteral;
 import org.as3commons.asblocks.api.IUndefinedLiteral;
 import org.as3commons.asblocks.impl.ASParserImpl;
 import org.as3commons.asblocks.impl.ASProject;
-import org.as3commons.asblocks.impl.ASTBuilder;
+import org.as3commons.asblocks.impl.ASTExpressionBuilder;
 import org.as3commons.asblocks.impl.ASTLiteralBuilder;
 import org.as3commons.asblocks.impl.ASTStatementBuilder;
 import org.as3commons.asblocks.impl.ASTTypeBuilder;
@@ -396,7 +396,7 @@ public class ASFactory
 	public function newAssignExpression(left:IExpression,
 										right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newAssign(), left, right);
 	}
 	
 	/**
@@ -411,7 +411,7 @@ public class ASFactory
 	public function newAddAssignExpression(left:IExpression,
 										   right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newAddAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newAddAssign(), left, right);
 	}
 	
 	/**
@@ -426,7 +426,7 @@ public class ASFactory
 	public function newBitAndAssignExpression(left:IExpression,
 											  right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newBitAndAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newBitAndAssign(), left, right);
 	}
 	
 	/**
@@ -441,7 +441,7 @@ public class ASFactory
 	public function newBitOrAssignExpression(left:IExpression,
 											 right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newBitOrAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newBitOrAssign(), left, right);
 	}
 	
 	/**
@@ -456,7 +456,7 @@ public class ASFactory
 	public function newBitXorAssignExpression(left:IExpression,
 											  right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newBitXorAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newBitXorAssign(), left, right);
 	}
 	
 	/**
@@ -471,7 +471,7 @@ public class ASFactory
 	public function newDivideAssignExpression(left:IExpression,
 											  right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newDivAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newDivAssign(), left, right);
 	}
 	
 	/**
@@ -486,7 +486,7 @@ public class ASFactory
 	public function newModuloAssignExpression(left:IExpression,
 											  right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newModAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newModAssign(), left, right);
 	}
 	
 	/**
@@ -501,7 +501,7 @@ public class ASFactory
 	public function newMultiplyAssignExpression(left:IExpression,
 												right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newStarAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newStarAssign(), left, right);
 	}
 	
 	/**
@@ -516,7 +516,7 @@ public class ASFactory
 	public function newShiftLeftAssignExpression(left:IExpression,
 												 right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newSLAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newSLAssign(), left, right);
 	}
 	
 	/**
@@ -531,7 +531,7 @@ public class ASFactory
 	public function newShiftRightAssignExpression(left:IExpression,
 												  right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newSRAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newSRAssign(), left, right);
 	}
 	
 	/**
@@ -540,7 +540,7 @@ public class ASFactory
 	public function newShiftRightUnsignedAssignExpression(left:IExpression,
 														  right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newSRUAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newSRUAssign(), left, right);
 	}
 	
 	/**
@@ -555,7 +555,7 @@ public class ASFactory
 	public function newSubtractAssignExpression(left:IExpression,
 												right:IExpression):IAssignmentExpression
 	{
-		return ASTBuilder.newAssignExpression(TokenBuilder.newSubAssign(), left, right);
+		return ASTExpressionBuilder.newAssignExpression(TokenBuilder.newSubAssign(), left, right);
 	}
 	
 	//----------------------------------
@@ -574,7 +574,7 @@ public class ASFactory
 	public function newAddExpression(left:IExpression, 
 									 right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newPlus(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newPlus(), left, right);
 	}
 	
 	/**
@@ -589,7 +589,7 @@ public class ASFactory
 	public function newAndExpression(left:IExpression, 
 									 right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newAnd(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newAnd(), left, right);
 	}
 	
 	/**
@@ -604,7 +604,7 @@ public class ASFactory
 	public function newBitAndExpression(left:IExpression, 
 										right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newBitAnd(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newBitAnd(), left, right);
 	}
 	
 	/**
@@ -619,7 +619,7 @@ public class ASFactory
 	public function newBitOrExpression(left:IExpression, 
 									   right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newBitOr(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newBitOr(), left, right);
 	}
 	
 	/**
@@ -634,7 +634,7 @@ public class ASFactory
 	public function newBitXorExpression(left:IExpression, 
 										right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newBitXor(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newBitXor(), left, right);
 	}
 	
 	/**
@@ -649,7 +649,7 @@ public class ASFactory
 	public function newDivisionExpression(left:IExpression, 
 										  right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newDiv(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newDiv(), left, right);
 	}
 	
 	/**
@@ -664,7 +664,7 @@ public class ASFactory
 	public function newEqualsExpression(left:IExpression, 
 										right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newEquals(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newEquals(), left, right);
 	}
 	
 	/**
@@ -679,7 +679,7 @@ public class ASFactory
 	public function newGreaterEqualsExpression(left:IExpression, 
 											   right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newGreaterEquals(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newGreaterEquals(), left, right);
 	}
 	
 	/**
@@ -694,7 +694,7 @@ public class ASFactory
 	public function newGreaterThanExpression(left:IExpression, 
 											 right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newGreater(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newGreater(), left, right);
 	}
 	
 	/**
@@ -709,7 +709,7 @@ public class ASFactory
 	public function newLessEqualsExpression(left:IExpression, 
 											right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newLessEquals(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newLessEquals(), left, right);
 	}
 	
 	/**
@@ -724,7 +724,7 @@ public class ASFactory
 	public function newLessThanExpression(left:IExpression, 
 										  right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newLess(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newLess(), left, right);
 	}
 	
 	/**
@@ -739,7 +739,7 @@ public class ASFactory
 	public function newModuloExpression(left:IExpression, 
 										right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newModulo(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newModulo(), left, right);
 	}
 	
 	/**
@@ -754,7 +754,7 @@ public class ASFactory
 	public function newMultiplyExpression(left:IExpression, 
 										  right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newMult(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newMult(), left, right);
 	}
 	
 	/**
@@ -769,7 +769,7 @@ public class ASFactory
 	public function newNotEqualsExpression(left:IExpression, 
 										   right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newNotEquals(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newNotEquals(), left, right);
 	}
 	
 	/**
@@ -784,7 +784,7 @@ public class ASFactory
 	public function newOrExpression(left:IExpression, 
 									right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newOr(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newOr(), left, right);
 	}
 	
 	/**
@@ -799,7 +799,7 @@ public class ASFactory
 	public function newShiftLeftExpression(left:IExpression, 
 										   right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newShiftLeft(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newShiftLeft(), left, right);
 	}
 	
 	/**
@@ -814,7 +814,7 @@ public class ASFactory
 	public function newShiftRightExpression(left:IExpression, 
 											right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newShiftRight(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newShiftRight(), left, right);
 	}
 	
 	/**
@@ -829,7 +829,7 @@ public class ASFactory
 	public function newShiftRightUnsignedExpression(left:IExpression, 
 													right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newShiftRightUnsigned(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newShiftRightUnsigned(), left, right);
 	}
 	
 	/**
@@ -844,7 +844,7 @@ public class ASFactory
 	public function newSubtractExpression(left:IExpression, 
 										  right:IExpression):IBinaryExpression
 	{
-		return ASTBuilder.newBinaryExpression(TokenBuilder.newMinus(), left, right);
+		return ASTExpressionBuilder.newBinaryExpression(TokenBuilder.newMinus(), left, right);
 	}
 	
 	//----------------------------------
@@ -865,7 +865,7 @@ public class ASFactory
 											 thenExpression:IExpression,
 											 elseExpression:IExpression):IConditionalExpression
 	{
-		var ast:IParserNode = ASTBuilder.newConditionalExpression(
+		var ast:IParserNode = ASTExpressionBuilder.newConditionalExpression(
 			conditionExpression.node, thenExpression.node, elseExpression.node);
 		return new ConditionalExpressionNode(ast);
 	}
@@ -887,7 +887,7 @@ public class ASFactory
 	public function newInvocationExpression(target:IExpression, 
 											arguments:Vector.<IExpression>):IINvocationExpression
 	{
-		var ast:IParserNode = ASTBuilder.newInvocationExpression(target.node);
+		var ast:IParserNode = ASTExpressionBuilder.newInvocationExpression(target.node);
 		var result:IINvocationExpression = new InvocationExpressionNode(ast);
 		result.arguments = arguments;
 		return result;
@@ -906,7 +906,7 @@ public class ASFactory
 	public function newNewExpression(target:IExpression, 
 									 arguments:Vector.<IExpression>):INewExpression
 	{
-		var ast:IParserNode = ASTBuilder.newNewExpression(target.node);
+		var ast:IParserNode = ASTExpressionBuilder.newNewExpression(target.node);
 		var result:INewExpression = new NewExpressionNode(ast);
 		result.arguments = arguments;
 		return result;
@@ -926,7 +926,7 @@ public class ASFactory
 	 */
 	public function newPostDecExpression(expression:IExpression):IPostfixExpression
 	{
-		var ast:IParserNode = ASTBuilder.newPostfixExpression(
+		var ast:IParserNode = ASTExpressionBuilder.newPostfixExpression(
 			TokenBuilder.newPostDec(), expression.node);
 		return new PostfixExpressionNode(ast);
 	}
@@ -941,7 +941,7 @@ public class ASFactory
 	 */
 	public function newPostIncExpression(expression:IExpression):IPostfixExpression
 	{
-		var ast:IParserNode = ASTBuilder.newPostfixExpression(
+		var ast:IParserNode = ASTExpressionBuilder.newPostfixExpression(
 			TokenBuilder.newPostInc(), expression.node);
 		return new PostfixExpressionNode(ast);
 	}
@@ -956,7 +956,7 @@ public class ASFactory
 	 */
 	public function newPreDecExpression(expression:IExpression):IPrefixExpression
 	{
-		var ast:IParserNode = ASTBuilder.newPrefixExpression(
+		var ast:IParserNode = ASTExpressionBuilder.newPrefixExpression(
 			TokenBuilder.newPreDec(), expression.node);
 		return new PrefixExpressionNode(ast);
 	}
@@ -971,7 +971,7 @@ public class ASFactory
 	 */
 	public function newPreIncExpression(expression:IExpression):IPrefixExpression
 	{
-		var ast:IParserNode = ASTBuilder.newPrefixExpression(
+		var ast:IParserNode = ASTExpressionBuilder.newPrefixExpression(
 			TokenBuilder.newPreInc(), expression.node);
 		return new PrefixExpressionNode(ast);
 	}
@@ -992,7 +992,7 @@ public class ASFactory
 	public function newFieldAccessExpression(target:IExpression, 
 											 name:String):IFieldAccessExpression
 	{
-		var ast:IParserNode = ASTBuilder.newFieldAccessExpression(
+		var ast:IParserNode = ASTExpressionBuilder.newFieldAccessExpression(
 			target.node, ASTUtil.newAST(AS3NodeKind.NAME, name));
 		return new FieldAccessExpressionNode(ast);
 	}
