@@ -141,12 +141,15 @@ public class ASTExpressionBuilder
 	{
 		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.NEW, "new");
 		ast.appendToken(TokenBuilder.newSpace());
-		ast.addChild(subExpr);
+		// parser puts target and args in 'call'
+		var callAST:IParserNode = ASTBuilder.newAST(AS3NodeKind.CALL);
+		callAST.addChild(subExpr);
 		var arguments:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.ARGUMENTS, 
 			AS3NodeKind.LPAREN, "(", 
 			AS3NodeKind.RPAREN, ")");
-		ast.addChild(arguments);
+		callAST.addChild(arguments);
+		ast.addChild(callAST);
 		return ast;
 	}
 	

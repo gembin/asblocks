@@ -121,7 +121,6 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_addImplementedInterface():void
 	{
-		// TODO block adding the same type
 		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);
 		var typeNode:IClassType = unit.typeNode as IClassType;
 		typeNode.addImplementedInterface("IInterfaceA");

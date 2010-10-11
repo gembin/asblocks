@@ -106,11 +106,18 @@ public class TestVarStatement extends AbstractStatementTest
 		var input:String = "var v:Vector.<DisplayObject> = new Vector.<Sprite>();";
 		assertStatementPrint(input);
 		assertStatement("1", input,
-			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\"><var line=\"1\" column=\"1\"></var></dec-role><name-type-init line=\"1\" column=\"5\"><name line=\"1\" column=\"5\">v</name><vector line=\"1\" column=\"7\"><type line=\"1\" column=\"15\">DisplayObject</type></vector><init line=\"1\" column=\"32\"><new line=\"1\" column=\"32\"><primary line=\"1\" column=\"36\">Vector</primary><arguments line=\"1\" column=\"51\"></arguments></new></init></name-type-init></dec-list>");
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\">" +
+			"<var line=\"1\" column=\"1\"></var></dec-role><name-type-init line=\"1\" " +
+			"column=\"5\"><name line=\"1\" column=\"5\">v</name><vector line=\"1\" " +
+			"column=\"7\"><type line=\"1\" column=\"15\">DisplayObject</type></vector>" +
+			"<init line=\"1\" column=\"32\"><new line=\"1\" column=\"32\"><call " +
+			"line=\"1\" column=\"36\"><vector line=\"1\" column=\"36\"><type line=\"1\" " +
+			"column=\"44\">Sprite</type></vector><arguments line=\"1\" column=\"51\">" +
+			"</arguments></call></new></init></name-type-init></dec-list>");
 		
 		input = "var v:Vector.< Vector.< String > >";
 		assertStatementPrint(input);
-		assertStatement("3", input,
+		assertStatement("2", input,
 			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" " +
 			"column=\"1\"><var line=\"1\" column=\"1\"></var></dec-role>" +
 			"<name-type-init line=\"1\" column=\"5\"><name line=\"1\" " +
@@ -130,8 +137,30 @@ public class TestVarStatement extends AbstractStatementTest
 		
 		input = "var HT:Vector.<BitString> = new Vector.<BitString>(251, true);";
 		assertStatementPrint(input);
-		assertStatement("3", input,
-			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\"><var line=\"1\" column=\"1\"></var></dec-role><name-type-init line=\"1\" column=\"5\"><name line=\"1\" column=\"5\">HT</name><vector line=\"1\" column=\"8\"><type line=\"1\" column=\"16\">BitString</type></vector><init line=\"1\" column=\"29\"><new line=\"1\" column=\"29\"><primary line=\"1\" column=\"33\">Vector</primary><arguments line=\"1\" column=\"51\"><number line=\"1\" column=\"52\">251</number><true line=\"1\" column=\"57\">true</true></arguments></new></init></name-type-init></dec-list>");
+		assertStatement("4", input,
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\"><var " +
+			"line=\"1\" column=\"1\"></var></dec-role><name-type-init line=\"1\" column=\"5\">" +
+			"<name line=\"1\" column=\"5\">HT</name><vector line=\"1\" column=\"8\">" +
+			"<type line=\"1\" column=\"16\">BitString</type></vector><init line=\"1\" " +
+			"column=\"29\"><new line=\"1\" column=\"29\"><call line=\"1\" column=\"33\">" +
+			"<vector line=\"1\" column=\"33\"><type line=\"1\" column=\"41\">BitString" +
+			"</type></vector><arguments line=\"1\" column=\"51\"><number line=\"1\" " +
+			"column=\"52\">251</number><true line=\"1\" column=\"57\">true</true>" +
+			"</arguments></call></new></init></name-type-init></dec-list>");
+		
+		input = "var v:Vector.< Vector.< String > > = new Vector.< Vector.< String > > (251, true);";
+		assertStatementPrint(input);
+		assertStatement("5", input,
+			"<dec-list line=\"1\" column=\"1\"><dec-role line=\"1\" column=\"1\"><var " +
+			"line=\"1\" column=\"1\"></var></dec-role><name-type-init line=\"1\" column=\"5\">" +
+			"<name line=\"1\" column=\"5\">v</name><vector line=\"1\" column=\"7\"><vector " +
+			"line=\"1\" column=\"16\"><type line=\"1\" column=\"25\">String</type></vector>" +
+			"</vector><init line=\"1\" column=\"38\"><new line=\"1\" column=\"38\"><call " +
+			"line=\"1\" column=\"42\"><vector line=\"1\" column=\"42\"><vector line=\"1\" " +
+			"column=\"51\"><type line=\"1\" column=\"60\">String</type></vector></vector>" +
+			"<arguments line=\"1\" column=\"71\"><number line=\"1\" column=\"72\">251</number>" +
+			"<true line=\"1\" column=\"77\">true</true></arguments></call></new></init>" +
+			"</name-type-init></dec-list>");
 	}
 }
 }

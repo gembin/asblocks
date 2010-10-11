@@ -21,13 +21,40 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * Nex expression; <code>new foo()</code> or <code>new Vector.<T>()</code>.
+ * Vector; <code>Vector.&lt;T&gt;</code>.
+ * 
+ * <pre>
+ * var vector:IVectorExpression = factory.newVector("String");
+ * </pre>
+ * 
+ * <p>Will produce; <code>Vector.&lt;String&gt;</code>.</p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.ASFactory#newVector()
  */
-public interface INewExpression extends IExpression, IINvocation
+public interface IVectorExpression extends IExpression, IScriptNode
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * The Vector's type, this could be another Vector.
+	 */
+	function get type():IExpression;
+	
+	/**
+	 * @private
+	 */
+	function set type(value:IExpression):void;
 }
 }

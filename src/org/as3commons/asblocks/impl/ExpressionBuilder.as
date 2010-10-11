@@ -22,9 +22,9 @@ package org.as3commons.asblocks.impl
 
 import flash.errors.IllegalOperationError;
 
+import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -105,6 +105,7 @@ public class ExpressionBuilder
 				return new AssignmentExpressionNode(ast);
 				
 			case AS3NodeKind.PRIMARY:
+			case AS3NodeKind.TYPE: // FIXME TEMP
 				return new SimpleNameExpressionNode(ast);
 			
 			case AS3NodeKind.ARRAY_ACCESSOR:
@@ -115,6 +116,9 @@ public class ExpressionBuilder
 				
 			case AS3NodeKind.DOT:
 				return new FieldAccessExpressionNode(ast);
+				
+			case AS3NodeKind.VECTOR:
+				return new VectorExpressionNode(ast);
 				
 			default:
 				throw new IllegalOperationError("unhandled expression node type: '" + 

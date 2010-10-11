@@ -32,6 +32,7 @@ import org.as3commons.asblocks.impl.TestLiteralNodes;
 import org.as3commons.asblocks.impl.TestMemberNode;
 import org.as3commons.asblocks.impl.TestMetaDataNode;
 import org.as3commons.asblocks.impl.TestMethodNode;
+import org.as3commons.asblocks.impl.TestNewExpressionNode;
 import org.as3commons.asblocks.impl.TestPackageNode;
 import org.as3commons.asblocks.impl.TestPrefixExpressionNode;
 import org.as3commons.asblocks.impl.TestStatementList;
@@ -41,6 +42,7 @@ import org.as3commons.asblocks.impl.TestThrowStatementNode;
 import org.as3commons.asblocks.impl.TestTokenBoundaries;
 import org.as3commons.asblocks.impl.TestTryStatementNode;
 import org.as3commons.asblocks.impl.TestTypeNode;
+import org.as3commons.asblocks.impl.TestVectorExpressionNode;
 import org.as3commons.asblocks.impl.TestWhileStatementNode;
 import org.as3commons.asblocks.impl.TestWithStatementNode;
 import org.as3commons.mxmlblocks.impl.TestApplicationTypeNode;
@@ -89,6 +91,7 @@ public class AS3BlocksTestSuite
 	
 	public var testMemberNode:TestMemberNode;
 	public var testMetaDataNode:TestMetaDataNode;
+	public var testNewExpressionNode:TestNewExpressionNode;
 	
 	public var testSwitchStatementNode:TestSwitchStatementNode;
 	public var testThisStatementNode:TestThisStatementNode;
@@ -103,6 +106,7 @@ public class AS3BlocksTestSuite
 	public var testMethodNode:TestMethodNode;
 	public var testPrefixExpressionNode:TestPrefixExpressionNode;
 	public var testStatementList:TestStatementList;
+	public var testVectorExpressionNode:TestVectorExpressionNode;
 	
 	// MXML
 	public var testMXMLApplicationNode:TestApplicationTypeNode;

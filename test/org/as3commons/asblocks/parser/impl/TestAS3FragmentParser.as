@@ -574,9 +574,9 @@ public class TestAS3FragmentParser
 		
 		ast = AS3FragmentParser.parsePrimaryExpression("function(a:Object):void{}");
 		result = ASTUtil.convert(ast, false);
-		Assert.assertEquals("<lambda><parameter-list><parameter>" +
-			"<name-type-init><name>a</name><type>Object</type></name-type-init>" +
-			"</parameter></parameter-list><block></block></lambda>", result);
+		Assert.assertEquals("<lambda><parameter-list><parameter><name-type-init>" +
+			"<name>a</name><type>Object</type></name-type-init></parameter>" +
+			"</parameter-list><type>void</type><block></block></lambda>", result);
 	}
 	
 	[Test]

@@ -20,11 +20,11 @@
 package org.as3commons.asblocks.impl
 {
 
+import org.as3commons.asblocks.api.IExpression;
+import org.as3commons.asblocks.api.IINvocation;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
-import org.as3commons.asblocks.api.IExpression;
-import org.as3commons.asblocks.api.IINvocation;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -51,7 +51,7 @@ public class InvocationNode extends ExpressionNode implements IINvocation
 	 */
 	public function get target():IExpression
 	{
-		return ExpressionBuilder.build(node.getFirstChild());
+		return ExpressionBuilder.build(findCall().getFirstChild());
 	}
 	
 	/**
@@ -59,7 +59,7 @@ public class InvocationNode extends ExpressionNode implements IINvocation
 	 */	
 	public function set target(value:IExpression):void
 	{
-		node.setChildAt(value.node, 0);
+		findCall().setChildAt(value.node, 0);
 	}
 	
 	//----------------------------------
@@ -109,39 +109,73 @@ public class InvocationNode extends ExpressionNode implements IINvocation
 	
 	//--------------------------------------------------------------------------
 	//
-	//  Private :: Methods
+	//  Protected :: Methods
 	//
 	//--------------------------------------------------------------------------
 	
 	/**
 	 * @private
 	 */
-	private function findArguments():IParserNode
+	protected function findCall():IParserNode
 	{
-		return node.getKind(AS3NodeKind.ARGUMENTS);
+		return node;
 	}
 	
 	/**
 	 * @private
 	 */
-	private function setArguments(value:Vector.<IExpression>):void
+	protected function findTarget():IParserNode
 	{
-		var args:IParserNode = node.getKind(AS3NodeKind.ARGUMENTS);
+		return findCall().getFirstChild();
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function findArguments():IParserNode
+	{
+		return findCall().getLastChild();
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function get hasArguments():Boolean
+	{
+		return findArguments() != null;
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function setArguments(value:Vector.<IExpression>):void
+	{
+		var ast:IParserNode = ASTUtil.newParentheticAST(
+			AS3NodeKind.ARGUMENTS,
+			AS3NodeKind.LPAREN, "(",
+			AS3NodeKind.RPAREN, ")");
 		
-		ASTUtil.removeAllChildren(args);
+		if (findCall().numChildren == 2)
+		{
+			findCall().setChildAt(ast, 1);
+		}
+		else
+		{
+			findCall().addChild(ast);
+		}
 		
-		if (!value)
+		if (value == null)
 			return;
 		
 		var len:int = value.length;
 		for (var i:int = 0; i < len; i++)
 		{
 			var element:IExpression = value[i] as IExpression;
-			args.addChild(element.node);
+			ast.addChild(element.node);
 			if (i < len - 1)
 			{
-				args.appendToken(TokenBuilder.newComma());
-				args.appendToken(TokenBuilder.newSpace());
+				ast.appendToken(TokenBuilder.newComma());
+				ast.appendToken(TokenBuilder.newSpace());
 			}
 		}
 	}

@@ -21,47 +21,43 @@ package org.as3commons.asblocks.impl
 {
 
 import org.as3commons.asblocks.api.IExpression;
-import org.as3commons.asblocks.api.INewExpression;
+import org.as3commons.asblocks.api.IVectorExpression;
 import org.as3commons.asblocks.parser.api.IParserNode;
 
 /**
- * The <code>INewExpression</code> implementation.
+ * The <code>IVectorExpression</code> implementation.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class NewExpressionNode extends InvocationNode implements INewExpression
+public class VectorExpressionNode extends ExpressionNode 
+	implements IVectorExpression
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Overridden Public :: Properties
+	//  IVectorExpression API :: Properties
 	//
 	//--------------------------------------------------------------------------
 	
+	//----------------------------------
+	//  type
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IVectorExpression#type
+	 */
+	public function get type():IExpression
+	{
+		return ExpressionBuilder.build(node.getFirstChild());
+	}
+	
 	/**
 	 * @private
-	 */
-	override public function set arguments(value:Vector.<IExpression>):void
+	 */	
+	public function set type(value:IExpression):void
 	{
-		if (hasArguments)
-		{
-			if (value == null)
-			{
-				findCall().removeChildAt(1);
-			}
-			else
-			{
-				super.arguments = value;
-			}
-		}
-		else
-		{
-			if (value != null)
-			{
-				super.arguments = value;
-			}
-		}
+		node.setChildAt(value.node, 0);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -73,23 +69,9 @@ public class NewExpressionNode extends InvocationNode implements INewExpression
 	/**
 	 * Constructor.
 	 */
-	public function NewExpressionNode(node:IParserNode)
+	public function VectorExpressionNode(node:IParserNode)
 	{
 		super(node);
-	}
-	
-	//--------------------------------------------------------------------------
-	//
-	//  Overridden Public :: Methods
-	//
-	//--------------------------------------------------------------------------
-	
-	/**
-	 * @private
-	 */
-	override protected function findCall():IParserNode
-	{
-		return node.getFirstChild();
 	}
 }
 }

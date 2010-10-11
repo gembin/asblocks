@@ -337,7 +337,10 @@ public class ParserBase implements IParser
 	{
 		var consumed:LinkedListToken;
 		
-		consumeWhitespace(node);
+		if (node != null && trim)
+		{
+			consumeWhitespace(node);
+		}
 		
 		if (!tokIs(text))
 		{
@@ -348,14 +351,14 @@ public class ParserBase implements IParser
 				fileName);
 		}
 		
-		if (node && node.stringValue != text)
+		if (node != null && node.stringValue != text)
 		{
 			consumed = append(node);
 		}
 		
 		nextToken();
 		
-		if (trim)
+		if (node != null && trim)
 		{
 			consumeWhitespace(node);
 		}
@@ -372,7 +375,11 @@ public class ParserBase implements IParser
 								 node:TokenNode = null, 
 								 trim:Boolean = true):void
 	{
-		consumeWhitespace(node);
+		
+		if (trim)
+		{
+			consumeWhitespace(node);
+		}
 		
 		if (!tokIs(text))
 		{
@@ -389,6 +396,22 @@ public class ParserBase implements IParser
 		{
 			consumeWhitespace(node);
 		}
+	}
+	
+	protected function consumeParenthetic(text:String, 
+										  node:TokenNode = null, 
+										  trim:Boolean = true):void
+	{
+		if (!tokIs(text))
+		{
+			throw new UnExpectedTokenError(
+				text, 
+				token.text, 
+				new Position(token.line, token.column, -1), 
+				fileName);
+		}
+		
+		nextToken();
 	}
 	
 	/**

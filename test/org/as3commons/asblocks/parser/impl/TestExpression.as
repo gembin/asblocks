@@ -447,6 +447,20 @@ public class TestExpression extends AbstractStatementTest
 	}
 	
 	[Test]
+	public function testNewVectorExpression():void
+	{
+		var input:String = "new Vector.<String>(true, 255);";
+		assertStatementPrint(input);
+		assertStatement("1",
+			input,
+			"<new line=\"1\" column=\"1\">" +
+			"<call line=\"1\" column=\"5\"><vector line=\"1\" column=\"5\"><type " +
+			"line=\"1\" column=\"13\">String</type></vector><arguments line=\"1\" " +
+			"column=\"20\"><true line=\"1\" column=\"21\">true</true><number line=\"1\" " +
+			"column=\"27\">255</number></arguments></call></new>");
+	}
+	
+	[Test]
 	public function testSuperiorInferiorXMLBug():void
 	{
 		assertStatement("1",

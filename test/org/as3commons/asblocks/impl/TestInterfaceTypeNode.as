@@ -30,7 +30,6 @@ public class TestInterfaceTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_addSuperInterface():void
 	{
-		// TODO block adding the same type
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
 		var typeNode:IInterfaceType = unit.typeNode as IInterfaceType;
 		typeNode.addSuperInterface("IInterfaceB");
@@ -46,7 +45,6 @@ public class TestInterfaceTypeNode extends BaseASFactoryTest
 	[Test]
 	public function test_addSuperInterfaceDuplicate():void
 	{
-		// TODO block adding the same type
 		assertPrint("package {\n\tpublic interface IA {\n\t}\n}", unit);
 		var typeNode:IInterfaceType = unit.typeNode as IInterfaceType;
 		typeNode.addSuperInterface("IInterfaceB");

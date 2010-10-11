@@ -69,40 +69,40 @@ public class TestPrimaryExpression
 	public function testPrimary():void
 	{
 		assertPrimary("myObj", "myObj");
-		assertPrimaryPrint("myObj", "myObj");
+		assertPrimaryPrint("myObj");
 	}
 	
 	[Test]
 	public function testBooleans():void
 	{
-		assertPrimaryPrint("true", "true");
+		assertPrimaryPrint("true");
 		assertPrimaryType("true", "true", "true");
 		
-		assertPrimaryPrint("false", "false");
+		assertPrimaryPrint("false");
 		assertPrimaryType("false", "false", "false");
 	}
 	
 	[Test]
 	public function testNull():void
 	{
-		assertPrimaryPrint("null", "null");
+		assertPrimaryPrint("null");
 		assertPrimaryType("null", "null", "null");
 	}
 	
 	[Test]
 	public function testUndefined():void
 	{
-		assertPrimaryPrint("undefined", "undefined");
+		assertPrimaryPrint("undefined");
 		assertPrimaryType("undefined", "undefined", "undefined");
 	}
 	
 	[Test]
 	public function testStrings():void
 	{
-		assertPrimaryPrint("\"string\"", "\"string\"");
+		assertPrimaryPrint("\"string\"");
 		assertPrimaryType("string", "\"string\"", "\"string\"");
 		
-		assertPrimaryPrint("'string'", "'string'");
+		assertPrimaryPrint("'string'");
 		assertPrimaryType("string", "'string'", "'string'");
 	}
 	
@@ -110,26 +110,26 @@ public class TestPrimaryExpression
 	public function testNumbers():void
 	{
 		assertNumber("1", "1");
-		assertPrimaryPrint("1", "1");
+		assertPrimaryPrint("1");
 		
 		assertNumber("0xff", "0xff");
-		assertPrimaryPrint("0xff", "0xff");
+		assertPrimaryPrint("0xff");
 		
 		assertNumber("0420", "0420");
-		assertPrimaryPrint("0420", "0420");
+		assertPrimaryPrint("0420");
 		
 		assertNumber(".42E2", ".42E2");
-		assertPrimaryPrint(".42E2", ".42E2");
+		assertPrimaryPrint(".42E2");
 	}
 	
 	[Test]
 	public function testInfinity():void
 	{
 		assertNumber("Infinity", "Infinity");
-		assertPrimaryPrint( "Infinity", "Infinity" );
+		assertPrimaryPrint("Infinity");
 		
 		assertNumber("-Infinity", "-Infinity");
-		assertPrimaryPrint( "-Infinity", "-Infinity" );
+		assertPrimaryPrint("-Infinity");
 	}
 	
 	[Test]
@@ -148,19 +148,26 @@ public class TestPrimaryExpression
 	public function testArrayLiteral():void
 	{
 		var input:String = "[1,2,3]";
-		assertPrimaryPrint(input, "[1,2,3]");
+		assertPrimaryPrint(input);
 		assertTopPrimary(input,
 			"<array line=\"1\" column=\"1\">" +
 			"<number line=\"1\" column=\"2\">1</number><number line=\"1\" " +
 			"column=\"4\">2</number><number line=\"1\" column=\"6\">3</number>" +
 			"</array>");
+		
+		input = "[ 1\t, 2\n , 3 ]";
+		assertPrimaryPrint(input);
+		assertTopPrimary(input,
+			"<array line=\"1\" column=\"1\"><number line=\"1\" column=\"3\">1" +
+			"</number><number line=\"1\" column=\"7\">2</number><number line=\"2\" " +
+			"column=\"4\">3</number></array>");
 	}
 	
 	[Test]
 	public function testObjectLiteral():void
 	{
 		var input:String = "{a:1,b:2}";
-		assertPrimaryPrint(input, "{a:1,b:2}");
+		assertPrimaryPrint(input);
 		assertTopPrimary( input,
 			"<object line=\"1\" column=\"1\">" +
 			"<prop line=\"1\" column=\"2\"><name line=\"1\" column=\"2\">a</name>" +
@@ -168,22 +175,41 @@ public class TestPrimaryExpression
 			"</number></value></prop><prop line=\"1\" column=\"6\"><name line=\"1\" " +
 			"column=\"6\">b</name><value line=\"1\" column=\"8\"><number line=\"1\" " +
 			"column=\"8\">2</number></value></prop></object>");
+		
+		input = "{ a :\t 1 ,\n b : 2 }";
+		assertPrimaryPrint(input);
+		assertTopPrimary( input,
+			"<object line=\"1\" column=\"1\"><prop line=\"1\" column=\"3\">" +
+			"<name line=\"1\" column=\"3\">a</name><value line=\"1\" column=\"8\">" +
+			"<number line=\"1\" column=\"8\">1</number></value></prop><prop line=\"2\" " +
+			"column=\"2\"><name line=\"2\" column=\"2\">b</name><value line=\"2\" " +
+			"column=\"6\"><number line=\"2\" column=\"6\">2</number></value>" +
+			"</prop></object>");
 	}
 	
 	[Test]
 	public function testFunctionLiteral():void
 	{
-		var input:String = "function ( a : Object ) : * { trace('test'); }";
-		assertPrimaryPrint(input, "function ( a : Object ) : * { trace('test'); }");
+		var input:String = "function ( a : Object ) : * \n{ \ntrace('test'); }";
+		assertPrimaryPrint(input);
 		assertTopPrimary( input,
-			"<lambda line=\"1\" column=\"1\"><parameter-list line=\"1\" column=\"10\"><parameter line=\"1\" column=\"12\"><name-type-init line=\"1\" column=\"12\"><name line=\"1\" column=\"12\">a</name><type line=\"1\" column=\"16\">Object</type></name-type-init></parameter></parameter-list><type line=\"1\" column=\"27\">*</type><block line=\"1\" column=\"29\"><expr-stmnt line=\"1\" column=\"31\"><call line=\"1\" column=\"36\"><primary line=\"1\" column=\"31\">trace</primary><arguments line=\"1\" column=\"36\"><string line=\"1\" column=\"37\">'test'</string></arguments></call></expr-stmnt></block></lambda>");
+			"<lambda line=\"1\" column=\"1\"><parameter-list line=\"1\" " +
+			"column=\"10\"><parameter line=\"1\" column=\"12\"><name-type-init " +
+			"line=\"1\" column=\"12\"><name line=\"1\" column=\"12\">a</name>" +
+			"<type line=\"1\" column=\"16\">Object</type></name-type-init>" +
+			"</parameter></parameter-list><type line=\"1\" column=\"27\">*" +
+			"</type><block line=\"2\" column=\"1\"><expr-stmnt line=\"3\" " +
+			"column=\"1\"><call line=\"3\" column=\"6\"><primary line=\"3\" " +
+			"column=\"1\">trace</primary><arguments line=\"3\" column=\"6\">" +
+			"<string line=\"3\" column=\"7\">'test'</string></arguments></call>" +
+			"</expr-stmnt></block></lambda>");
 	}
 	
 	[Test]
 	public function testNewLiteral():void
 	{
 		var input:String = "new ClassA()";
-		assertPrimaryPrint(input, "new ClassA()");
+		assertPrimaryPrint(input);
 		assertTopPrimary( input,
 			"<new line=\"1\" column=\"1\"><call line=\"1\" column=\"11\">" +
 			"<primary line=\"1\" column=\"5\">ClassA</primary><arguments " +
@@ -194,7 +220,7 @@ public class TestPrimaryExpression
 	public function testEncapsulatedLiteral():void
 	{
 		var input:String = "( world as Ball )";
-		assertPrimaryPrint(input, "( world as Ball )");
+		assertPrimaryPrint(input);
 		assertTopPrimary( input,
 			"<encapsulated line=\"1\" column=\"1\"><relational line=\"1\" " +
 			"column=\"3\"><primary line=\"1\" column=\"3\">world</primary><as " +
@@ -202,7 +228,7 @@ public class TestPrimaryExpression
 			"Ball</primary></relational></encapsulated>");
 		
 		input = "( \"world\" in myBall )";
-		assertPrimaryPrint(input, "( \"world\" in myBall )");
+		assertPrimaryPrint(input);
 		assertTopPrimary( input,
 			"<encapsulated line=\"1\" " +
 			"column=\"1\"><relational line=\"1\" column=\"3\"><string " +
@@ -249,20 +275,19 @@ public class TestPrimaryExpression
 	}
 	
 	private function assertTopPrimary(input:String, 
-								   expected:String):void
+									  expected:String):void
 	{
-		parser.scanner.setLines(Vector.<String>([input]));
+		parser.scanner.setLines(Vector.<String>(input.split("\n")));
 		parser.nextToken(); // first call
 		var result:String = ASTUtil.convert(parser.parsePrimaryExpression());
 		Assert.assertEquals(expected, result);
 	}
 	
-	private function assertPrimaryPrint(input:String, 
-										expected:String):void
+	private function assertPrimaryPrint(input:String):void
 	{
 		var printer:ASTPrinter = createPrinter();
 		printer.print(parsePrimary(input));
-		Assert.assertEquals(expected, printer.flush());
+		Assert.assertEquals(input, printer.flush());
 	}
 	
 	private function parsePrimary(input:String):IParserNode

@@ -43,6 +43,7 @@ import org.as3commons.asblocks.api.ISimpleNameExpression;
 import org.as3commons.asblocks.api.IStatement;
 import org.as3commons.asblocks.api.IStringLiteral;
 import org.as3commons.asblocks.api.IUndefinedLiteral;
+import org.as3commons.asblocks.api.IVectorExpression;
 import org.as3commons.asblocks.impl.ASParserImpl;
 import org.as3commons.asblocks.impl.ASProject;
 import org.as3commons.asblocks.impl.ASTBuilder;
@@ -72,6 +73,7 @@ import org.as3commons.asblocks.impl.StatementList;
 import org.as3commons.asblocks.impl.StringLiteralNode;
 import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.impl.UndefinedLiteralNode;
+import org.as3commons.asblocks.impl.VectorExpressionNode;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
@@ -378,6 +380,16 @@ public class ASFactory
 		var ast:IParserNode = AS3FragmentParser.parseExpression(expression);
 		ast.parent = null;
 		return ExpressionBuilder.build(ast);
+	}
+	
+	/**
+	 * TODO DOCME
+	 */
+	public function newVectorExpression(type:String):IVectorExpression
+	{
+		var ast:IParserNode = AS3FragmentParser.parseType("Vector.<" + type + ">");
+		ast.parent = null;
+		return new VectorExpressionNode(ast);
 	}
 	
 	//----------------------------------
@@ -904,11 +916,14 @@ public class ASFactory
 	 * @see org.as3commons.asblocks.api.INewExpression
 	 */
 	public function newNewExpression(target:IExpression, 
-									 arguments:Vector.<IExpression>):INewExpression
+									 arguments:Vector.<IExpression> = null):INewExpression
 	{
 		var ast:IParserNode = ASTExpressionBuilder.newNewExpression(target.node);
 		var result:INewExpression = new NewExpressionNode(ast);
-		result.arguments = arguments;
+		if (arguments != null)
+		{
+			result.arguments = arguments;
+		}
 		return result;
 	}
 	
