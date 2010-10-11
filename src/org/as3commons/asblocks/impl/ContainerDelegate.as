@@ -268,7 +268,7 @@ public class ContainerDelegate extends ScriptNode
 	/**
 	 * @private
 	 */
-	public function newSuper(arguments:Vector.<IArgument>):ISuperStatement
+	public function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement
 	{
 		return statementContainer.newSuper(arguments);
 	}

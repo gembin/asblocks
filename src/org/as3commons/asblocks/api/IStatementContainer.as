@@ -183,7 +183,7 @@ public interface IStatementContainer
 	/**
 	 * TODO Docme
 	 */
-	function newSuper(arguments:Vector.<IArgument>):ISuperStatement;
+	function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement;
 	
 	/**
 	 * @private

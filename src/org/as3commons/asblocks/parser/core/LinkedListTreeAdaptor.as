@@ -30,7 +30,8 @@ public class LinkedListTreeAdaptor
 		var token:LinkedListToken = new LinkedListToken(kind, text);
 		if (kind == AS3NodeKind.SPACE 
 			|| kind == AS3NodeKind.TAB 
-			|| kind == AS3NodeKind.NL)
+			|| kind == AS3NodeKind.NL
+			|| kind == AS3NodeKind.WS)
 		{
 			token.channel = AS3NodeKind.HIDDEN;
 		}

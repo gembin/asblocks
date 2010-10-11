@@ -282,11 +282,14 @@ public class ASTStatementBuilder
 	public static function newSuper(arguments:Vector.<IArgument>):IParserNode
 	{
 		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.SUPER, "super");
-		var args:IParserNode = ASTUtil.newParentheticAST(
+		var callAST:IParserNode = ASTBuilder.newAST(AS3NodeKind.CALL);
+		callAST.addChild(ASTBuilder.newAST(AS3NodeKind.PRIMARY));
+		var argumentAST:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.ARGUMENTS, 
 			AS3NodeKind.LPAREN, "(", 
 			AS3NodeKind.RPAREN, ")");
-		ast.addChild(args);
+		callAST.addChild(argumentAST);
+		ast.addChild(callAST);
 		ast.appendToken(TokenBuilder.newSemi());
 		return ast;
 	}

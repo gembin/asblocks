@@ -20,9 +20,12 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.api.IArgument;
+import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.api.ISuperStatement;
+import org.as3commons.asblocks.parser.api.AS3NodeKind;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
+import org.as3commons.asblocks.utils.ArgumentUtil;
 
 /**
  * The <code>ISuperStatement</code> implementation.
@@ -31,8 +34,7 @@ import org.as3commons.asblocks.api.ISuperStatement;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class SuperStatementNode extends ScriptNode 
-	implements ISuperStatement
+public class SuperStatementNode extends ScriptNode implements ISuperStatement
 {
 	//--------------------------------------------------------------------------
 	//
@@ -41,23 +43,57 @@ public class SuperStatementNode extends ScriptNode
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  expression
+	//  target
 	//----------------------------------
 	
 	/**
-	 * @copy org.as3commons.asblocks.api.ISuperStatement#arguments
+	 * doc
 	 */
-	public function get arguments():Vector.<IArgument>
+	public function get target():IExpression
 	{
-		return null;
+		var ast:IParserNode = findCall();
+		if (ast == null)
+			return null;
+		
+		return ExpressionBuilder.build(ast);
 	}
 	
 	/**
 	 * @private
 	 */	
-	public function set arguments(value:Vector.<IArgument>):void
+	public function set target(value:IExpression):void
 	{
-		//TODO IMPL
+		var ast:IParserNode = findCall();
+		if (ast == null)
+		{
+		}
+		else
+		{
+			var dot:LinkedListToken = TokenBuilder.newDot();
+			ast.startToken.prepend(dot);
+			ast.startToken = dot;
+			ast.setChildAt(value.node, 0);
+		}
+	}
+	
+	//----------------------------------
+	//  arguments
+	//----------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.ISuperStatement#arguments
+	 */
+	public function get arguments():Vector.<IExpression>
+	{
+		return ArgumentUtil.getArguments(findArguments());
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set arguments(value:Vector.<IExpression>):void
+	{
+		return ArgumentUtil.setArguments(findCall(), value);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -72,6 +108,21 @@ public class SuperStatementNode extends ScriptNode
 	public function SuperStatementNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	private function findCall():IParserNode
+	{
+		return node.getKind(AS3NodeKind.CALL);
+	}
+	
+	private function findArguments():IParserNode
+	{
+		var ast:IParserNode = findCall();
+		if (ast == null)
+		{
+			return node.getKind(AS3NodeKind.ARGUMENTS);
+		}
+		return ast.getLastChild();
 	}
 }
 }

@@ -152,9 +152,10 @@ public class TestReturnStatement extends AbstractStatementTest
 		assertStatementPrint(input);
 		assertStatement("1",
 			input,
-			"<super line=\"1\" column=\"1\"><arguments line=\"1\" column=\"6\"><primary " +
-			"line=\"1\" column=\"7\">arg0</primary><primary line=\"1\" column=\"13\">" +
-			"arg1</primary></arguments></super>");
+			"<super line=\"1\" column=\"1\"><call line=\"-1\" column=\"-1\">" +
+			"<primary line=\"-1\" column=\"-1\"></primary><arguments line=\"1\" " +
+			"column=\"6\"><primary line=\"1\" column=\"7\">arg0</primary><primary " +
+			"line=\"1\" column=\"13\">arg1</primary></arguments></call></super>");
 	}
 	
 	[Test]

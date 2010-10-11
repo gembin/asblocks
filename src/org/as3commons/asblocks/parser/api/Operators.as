@@ -332,6 +332,6 @@ public class Operators
 	/**
 	 * The <code>.<</code>
 	 */
-	public static const VECTOR:String = ".<";
+	public static const VECTOR_START:String = ".<";
 }
 }

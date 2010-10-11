@@ -415,7 +415,7 @@ public class FunctionNodeBase extends ScriptNode implements IStatementContainer
 	/**
 	 * @private
 	 */
-	public function newSuper(arguments:Vector.<IArgument>):ISuperStatement
+	public function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement
 	{
 		return containerMixin.newSuper(arguments);
 	}

@@ -35,17 +35,31 @@ public interface ISuperStatement extends IStatement
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
+	//  target
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get target():IExpression;
+	
+	/**
+	 * @private
+	 */
+	function set target(value:IExpression):void;
+	
+	//----------------------------------
 	//  expression
 	//----------------------------------
 	
 	/**
 	 * TODO Docme
 	 */
-	function get arguments():Vector.<IArgument>;
+	function get arguments():Vector.<IExpression>;
 	
 	/**
 	 * @private
 	 */
-	function set arguments(value:Vector.<IArgument>):void;
+	function set arguments(value:Vector.<IExpression>):void;
 }
 }

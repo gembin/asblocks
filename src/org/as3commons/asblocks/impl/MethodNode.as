@@ -483,7 +483,7 @@ public class MethodNode extends MemberNode
 	/**
 	 * @private
 	 */
-	public function newSuper(arguments:Vector.<IArgument>):ISuperStatement
+	public function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement
 	{
 		return containerMixin.newSuper(arguments);
 	}

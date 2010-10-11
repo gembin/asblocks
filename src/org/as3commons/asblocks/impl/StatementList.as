@@ -380,9 +380,9 @@ public class StatementList extends ContainerDelegate implements IBlock
 	/**
 	 * @private
 	 */
-	override public function newSuper(arguments:Vector.<IArgument>):ISuperStatement
+	override public function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement
 	{
-		var result:IParserNode = ASTStatementBuilder.newSuper(null);
+		var result:IParserNode = ASTStatementBuilder.newSuper(arguments);
 		_addStatement(result);
 		return new SuperStatementNode(result);
 	}

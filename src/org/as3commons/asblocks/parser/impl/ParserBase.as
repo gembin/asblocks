@@ -429,19 +429,21 @@ public class ParserBase implements IParser
 		
 		var advanced:Boolean = false;
 		
-		while (tokIs(" ") || tokIs("\t") || tokIs("\n") 
+		while (token.text == " " 
+			|| token.text == "\t" 
+			|| token.text == "\n" 
 			|| token.text.indexOf("//") == 0 
 			|| (token.text.indexOf("/*") == 0 && !token.text.indexOf("/**") == 0))
 		{
-			if (tokIs(" "))
+			if (token.text ==  " ")
 			{
 				appendSpace(node);
 			}
-			else if (tokIs("\t"))
+			else if (token.text == "\t")
 			{
 				appendTab(node);
 			}
-			else if (tokIs("\n"))
+			else if (token.text == "\n")
 			{
 				appendNewline(node);
 			}
@@ -525,7 +527,7 @@ public class ParserBase implements IParser
 		if (node)
 		{
 			node.appendToken(
-				adapter.createToken(AS3NodeKind.SPACE, " ",
+				adapter.createToken(AS3NodeKind.WS, " ",
 					token.line, token.column));
 		}
 		
@@ -543,7 +545,7 @@ public class ParserBase implements IParser
 		if (node)
 		{
 			node.appendToken(
-				adapter.createToken(AS3NodeKind.TAB, "\t",
+				adapter.createToken(AS3NodeKind.WS, "\t",
 					token.line, token.column));
 		}
 		
@@ -562,13 +564,13 @@ public class ParserBase implements IParser
 		
 		if (node)
 		{
-			tok = adapter.createToken("ws", "\n", 
+			tok = adapter.createToken(AS3NodeKind.WS, "\n", 
 				token.line, token.column);
 		}
 		
 		nextToken();
 		
-		if (tok && !tokIs("__END__"))
+		if (tok && !tokIs(KeyWords.EOF))
 		{
 			node.appendToken(tok);
 		}

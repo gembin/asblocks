@@ -26,6 +26,7 @@ import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
 import org.as3commons.asblocks.utils.ASTUtil;
+import org.as3commons.asblocks.utils.ArgumentUtil;
 
 /**
  * The <code>IINvocation</code> implementation.
@@ -71,18 +72,7 @@ public class InvocationNode extends ExpressionNode implements IINvocation
 	 */
 	public function get arguments():Vector.<IExpression>
 	{
-		var result:Vector.<IExpression> = new Vector.<IExpression>();
-		var ast:IParserNode = findArguments();
-		if (!ast)
-			return result;
-		
-		var i:ASTIterator = new ASTIterator(ast);
-		while (i.hasNext())
-		{
-			result.push(ExpressionBuilder.build(i.next()));
-		}
-		
-		return result;
+		return ArgumentUtil.getArguments(findArguments());
 	}
 	
 	/**
@@ -150,34 +140,7 @@ public class InvocationNode extends ExpressionNode implements IINvocation
 	 */
 	protected function setArguments(value:Vector.<IExpression>):void
 	{
-		var ast:IParserNode = ASTUtil.newParentheticAST(
-			AS3NodeKind.ARGUMENTS,
-			AS3NodeKind.LPAREN, "(",
-			AS3NodeKind.RPAREN, ")");
-		
-		if (findCall().numChildren == 2)
-		{
-			findCall().setChildAt(ast, 1);
-		}
-		else
-		{
-			findCall().addChild(ast);
-		}
-		
-		if (value == null)
-			return;
-		
-		var len:int = value.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var element:IExpression = value[i] as IExpression;
-			ast.addChild(element.node);
-			if (i < len - 1)
-			{
-				ast.appendToken(TokenBuilder.newComma());
-				ast.appendToken(TokenBuilder.newSpace());
-			}
-		}
+		ArgumentUtil.setArguments(findCall(), value);
 	}
 }
 }
