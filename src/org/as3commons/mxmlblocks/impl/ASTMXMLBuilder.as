@@ -33,7 +33,7 @@ public class ASTMXMLBuilder
 		
 		var tag:IParserNode = newTag(className, null);
 		appAST.addChild(tag);
-		// FIXME
+		
 		var ast:IParserNode = ASTTypeBuilder.newClassCompilationUnitAST(qualifiedName);
 		
 		var unit:ICompilationUnit = new ApplicationUnitNode(ast, appAST);

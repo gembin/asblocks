@@ -57,7 +57,7 @@ public interface IScanner
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The current scanner offset into the code.
 	 */
 	function get offset():int;
 	

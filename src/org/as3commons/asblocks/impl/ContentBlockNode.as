@@ -124,7 +124,7 @@ public class ContentBlockNode extends ScriptNode implements IContentBlock
 	
 	/**
 	 * @private
-	 * FIXME add addMethod() to public api ?
+	 * FIXME (mschmalle) add IContentBlock#addMethod() to public api ?
 	 */
 	public function addMethod(method:IMethod):void
 	{

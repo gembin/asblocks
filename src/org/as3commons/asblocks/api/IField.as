@@ -31,7 +31,7 @@ package org.as3commons.asblocks.api
  * <pre>
  * ...
  * {
- * 	public var foo:int = 0;
+ * 	public var foo:int;
  * }
  * ...
  * </pre>

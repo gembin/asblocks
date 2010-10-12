@@ -39,7 +39,7 @@ public interface ISuperStatement extends IStatement
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The target of the super call, if any.
 	 */
 	function get target():IExpression;
 	
@@ -53,7 +53,7 @@ public interface ISuperStatement extends IStatement
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The arguments to the super call.
 	 */
 	function get arguments():Vector.<IExpression>;
 	

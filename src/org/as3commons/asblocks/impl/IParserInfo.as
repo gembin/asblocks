@@ -10,13 +10,18 @@ import org.as3commons.asblocks.parser.api.ISourceCode;
 
 public interface IParserInfo extends IEventDispatcher
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
 	//  sourceCode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The source code.
 	 */
 	function get sourceCode():ISourceCode;
 	
@@ -25,7 +30,7 @@ public interface IParserInfo extends IEventDispatcher
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The class path entry (base path).
 	 */
 	function get entry():IClassPathEntry;
 	
@@ -34,7 +39,7 @@ public interface IParserInfo extends IEventDispatcher
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The parsed compilation unit.
 	 */
 	function get unit():ICompilationUnit;
 	
@@ -43,7 +48,7 @@ public interface IParserInfo extends IEventDispatcher
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The error thrown during parsing.
 	 */
 	function get error():ASBlocksSyntaxError;
 	
@@ -52,8 +57,14 @@ public interface IParserInfo extends IEventDispatcher
 	 */
 	function set error(value:ASBlocksSyntaxError):void;
 	
+	//--------------------------------------------------------------------------
+	//
+	//  Methods
+	//
+	//--------------------------------------------------------------------------
+	
 	/**
-	 * TODO Docme
+	 * Parses the sourceCode with the appropriate parser.
 	 */
 	function parse():ICompilationUnit;
 }

@@ -248,7 +248,7 @@ public class ASDocParser extends ParserBase
 		
 		consume(ML_END); // */
 		
-		// FIXME HACK need to drop last nl
+		// FIXME (mschmalle) HACK need to drop last nl
 		// */ " " /n
 		result.stopToken.previous.previous.channel = "hidden";
 		

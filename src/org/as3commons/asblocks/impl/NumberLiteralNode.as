@@ -30,8 +30,7 @@ import org.as3commons.asblocks.parser.api.IParserNode;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class NumberLiteralNode extends LiteralNode 
-	implements INumberLiteral
+public class NumberLiteralNode extends LiteralNode implements INumberLiteral
 {
 	//--------------------------------------------------------------------------
 	//
@@ -48,7 +47,7 @@ public class NumberLiteralNode extends LiteralNode
 	 */
 	public function get value():Number
 	{
-		return parseInt(tokenText); // TODO hex
+		return parseInt(tokenText);
 	}
 	
 	/**
@@ -56,7 +55,7 @@ public class NumberLiteralNode extends LiteralNode
 	 */
 	public function set value(value:Number):void
 	{
-		tokenText = value.toString(); // TODO hex
+		tokenText = value.toString();
 	}
 	
 	//--------------------------------------------------------------------------

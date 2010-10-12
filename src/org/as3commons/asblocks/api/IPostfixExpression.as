@@ -29,13 +29,18 @@ package org.as3commons.asblocks.api
  */
 public interface IPostfixExpression extends IExpression
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
 	//  expression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The postfix expression.
 	 */
 	function get expression():IExpression;
 	
@@ -44,13 +49,12 @@ public interface IPostfixExpression extends IExpression
 	 */
 	function set expression(value:IExpression):void;
 	
-	
 	//----------------------------------
 	//  operator
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The postfix operator.
 	 */
 	function get operator():PostfixOperator;
 	

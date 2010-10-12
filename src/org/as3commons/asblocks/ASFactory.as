@@ -230,10 +230,14 @@ public class ASFactory
 		return new CompilationUnitNode(ast);
 	}
 	
-	// FIXME move to MXMLFactory
-	
 	/**
-	 * TODO DOCME
+	 * Creates a new MXML Application.
+	 * 
+	 * @param qualifiedName The <code>String</code> qualified name of the 
+	 * application.
+	 * @param superQualifiedName The <code>String</code> qualified name of the 
+	 * application's super class.
+	 * @return A new application <code>ICompilationUnit</code>.
 	 */
 	public function newApplication(qualifiedName:String, 
 								   superQualifiedName:String):ICompilationUnit
@@ -242,7 +246,11 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new MXML tag.
+	 * 
+	 * @param name A String indicating the localName of the tag.
+	 * @param binding A String indicating the tag's namespace binding, if any.
+	 * @return A new <code>IBlockTag</code>.
 	 */
 	public function newTag(name:String, binding:String = null):IBlockTag
 	{
@@ -373,7 +381,10 @@ public class ASFactory
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>IExpression</code> by parsing the expression String.
+	 * 
+	 * @param expression A <code>String</code> expression to parse.
+	 * @return A new <code>IExpression</code>.
 	 */
 	public function newExpression(expression:String):IExpression
 	{
@@ -383,7 +394,10 @@ public class ASFactory
 	}
 	
 	/**
-	 * TODO DOCME
+	 * Creates a new <code>IVectorExpression</code> by parsing the type String.
+	 * 
+	 * @param type A <code>String</code> <code>Vector</code> type to parse.
+	 * @return A new <code>IVectorExpression</code>.
 	 */
 	public function newVectorExpression(type:String):IVectorExpression
 	{

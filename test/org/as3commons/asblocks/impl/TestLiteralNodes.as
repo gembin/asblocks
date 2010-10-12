@@ -170,7 +170,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testRegExpLiteralNode():void
 	{
-		// FIXME Impl testRegExpLiteralNode() unit test
+		// FIXME (mschmalle) ut testRegExpLiteralNode()
 	}
 	
 	[Test]
@@ -195,7 +195,7 @@ public class TestLiteralNodes
 	[Test]
 	public function testXMLLiteralNode():void
 	{
-		// FIXME Impl testXMLLiteralNode() unit test
+		// FIXME (mschmalle) ut testXMLLiteralNode()
 	}
 	
 	protected function assertPrintExpression(expected:String, 

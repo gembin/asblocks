@@ -23,11 +23,16 @@ package org.as3commons.mxmlblocks.api
 import org.as3commons.asblocks.api.IScriptNode;
 
 /**
- * TODO DOCME
+ * A Script tag in an mxml file.
+ * 
+ * <p>The script tag parents a <code>block</code> that can hold fields and
+ * methods. The script block is held in a CDATA section of the XML.<p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.mxmlblocks.api.IScriptBlock
  */
 public interface IScriptTag extends ITag
 {
@@ -42,7 +47,7 @@ public interface IScriptTag extends ITag
 	//----------------------------------
 	
 	/**
-	 * Returns the script tag's <code>IScriptBlock</code>
+	 * The script tag's <code>IScriptBlock</code>
 	 */
 	function get block():IScriptBlock;
 }

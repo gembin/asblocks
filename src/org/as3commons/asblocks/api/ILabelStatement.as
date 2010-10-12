@@ -35,7 +35,7 @@ public interface ILabelStatement extends IStatement, IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * The label's statement body, could be a block, for, while statements.
 	 */
 	function get body():IStatement;
 }

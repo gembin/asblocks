@@ -127,7 +127,7 @@ public class AssignmentExpressionNode extends ExpressionNode
 	{
 		var ast:IParserNode = expression.node;
 		//ASTBuilder.assertNoParent("expression", ast);
-		// TODO: handle operator precedence issues
+		// handle operator precedence issues
 		node.setChildAt(ast, index);
 	}
 

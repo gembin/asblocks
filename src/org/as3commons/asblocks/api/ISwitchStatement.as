@@ -49,6 +49,8 @@ package org.as3commons.asblocks.api
  * @productversion 1.0
  * 
  * @see org.as3commons.asblocks.api.IStatementContainer#newSwitch()
+ * @see org.as3commons.asblocks.api.ISwitchCase
+ * @see org.as3commons.asblocks.api.ISwitchDefault
  */
 public interface ISwitchStatement extends IStatement
 {

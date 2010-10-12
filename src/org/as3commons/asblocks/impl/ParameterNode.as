@@ -58,7 +58,7 @@ public class ParameterNode extends ScriptNode implements IParameter
 	 */	
 	public function set description(value:String):void
 	{
-		// TODO impl
+		// TODO (mschmalle) impl ParameterNode#description
 	}
 	
 	//----------------------------------

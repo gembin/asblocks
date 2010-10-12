@@ -31,11 +31,13 @@ import org.as3commons.asblocks.api.IPackage;
 import org.as3commons.asblocks.api.IType;
 
 /**
- * TODO DOCME
+ * Walks any node of a <code>IASProject</code> project.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.IASVisitor
  */
 public interface IASWalker
 {

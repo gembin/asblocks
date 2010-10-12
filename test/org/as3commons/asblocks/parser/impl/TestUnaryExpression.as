@@ -96,7 +96,7 @@ public class TestUnaryExpression extends AbstractStatementTest
 			"x--",
 			"<expr-stmnt line=\"1\" column=\"1\"><post-dec line=\"1\" column=\"2\"><primary line=\"1\" column=\"1\">x</primary></post-dec></expr-stmnt>");
 		
-		// TODO column is messed up on unary +-
+		// TODO (mschmalle) column is messed up on unary +-
 		/*
 		assertStatement("5",
 			"+x",

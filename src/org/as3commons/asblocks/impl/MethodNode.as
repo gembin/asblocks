@@ -95,7 +95,7 @@ public class MethodNode extends MemberNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#hasCode
 	 */
 	public function get hasCode():Boolean
 	{
@@ -107,7 +107,7 @@ public class MethodNode extends MemberNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#statements
 	 */
 	public function get statements():Vector.<IStatement>
 	{
@@ -483,7 +483,7 @@ public class MethodNode extends MemberNode
 	/**
 	 * @private
 	 */
-	public function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement
+	public function newSuper(arguments:Vector.<IExpression> = null):ISuperStatement
 	{
 		return containerMixin.newSuper(arguments);
 	}

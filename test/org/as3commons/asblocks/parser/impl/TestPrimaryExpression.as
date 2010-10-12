@@ -135,13 +135,13 @@ public class TestPrimaryExpression
 	[Test]
 	public function testRegularExpression():void
 	{
-		// TODO impl unit test
+		// TODO (mschmalle) impl ut testRegularExpression()
 	}
 	
 	[Test]
 	public function testXML():void
 	{
-		// TODO impl unit test
+		// TODO (mschmalle) impl ut testXML()
 	}
 	
 	[Test]

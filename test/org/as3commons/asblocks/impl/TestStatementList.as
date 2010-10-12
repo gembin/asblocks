@@ -276,7 +276,6 @@ public class TestStatementList
 	[Test]
 	public function test_parseNewFor():void
 	{
-		// TODO impl unit test
 	}
 	
 	[Test]
@@ -348,7 +347,7 @@ public class TestStatementList
 		block = factory.newBlock();
 		label = block.newForLabel("fooLoop", "for");
 		//label.addStatement("trace('Hello block label')");
-		// TODO impl for and while labels
+		// TODO (mschmalle) impl for() and while() labels
 		//assertPrint("{\n\tfooLoop : for (; ; )\n}", block);
 		//IForLabelStatement(label).statement.addStatement("trace('Hello for label')");
 		//assertPrint("{\n\tfooLoop : for (; ; )\n}", block);
@@ -373,7 +372,6 @@ public class TestStatementList
 		var suprstmt:ISuperStatement = block.newSuper(null);
 		
 		assertPrint("{\n\tsuper();\n}", block);
-		// TODO implement super() arguments
 	}
 	
 	[Test]

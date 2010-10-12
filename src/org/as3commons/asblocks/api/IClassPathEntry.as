@@ -40,7 +40,7 @@ public interface IClassPathEntry
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The native path location of the defined class path.
 	 */
 	function get filePath():String;
 }

@@ -33,6 +33,7 @@ import org.as3commons.asblocks.impl.TestMemberNode;
 import org.as3commons.asblocks.impl.TestMetaDataNode;
 import org.as3commons.asblocks.impl.TestMethodNode;
 import org.as3commons.asblocks.impl.TestNewExpressionNode;
+import org.as3commons.asblocks.impl.TestNumberLiteralNode;
 import org.as3commons.asblocks.impl.TestPackageNode;
 import org.as3commons.asblocks.impl.TestPrefixExpressionNode;
 import org.as3commons.asblocks.impl.TestStatementList;
@@ -93,6 +94,7 @@ public class AS3BlocksTestSuite
 	public var testMemberNode:TestMemberNode;
 	public var testMetaDataNode:TestMetaDataNode;
 	public var testNewExpressionNode:TestNewExpressionNode;
+	public var testNumberLiteralNode:TestNumberLiteralNode;
 	
 	public var testSuperStatementNode:TestSuperStatementNode;
 	public var testSwitchStatementNode:TestSwitchStatementNode;

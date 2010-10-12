@@ -29,13 +29,18 @@ package org.as3commons.asblocks.api
  */
 public interface IPrefixExpression extends IExpression
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
 	//  expression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The prefix expression.
 	 */
 	function get expression():IExpression;
 	
@@ -44,13 +49,12 @@ public interface IPrefixExpression extends IExpression
 	 */
 	function set expression(value:IExpression):void;
 	
-	
 	//----------------------------------
 	//  operator
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The prefix operator.
 	 */
 	function get operator():PrefixOperator;
 	

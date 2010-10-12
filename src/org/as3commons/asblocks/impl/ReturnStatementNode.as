@@ -34,6 +34,15 @@ import org.as3commons.asblocks.parser.api.IParserNode;
 public class ReturnStatementNode extends ScriptNode 
 	implements IReturnStatement
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
 	private function get hasExpression():Boolean
 	{
 		return node.numChildren > 0;
@@ -50,23 +59,27 @@ public class ReturnStatementNode extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * doc
+	 * @copy org.as3commons.asblocks.api.IReturnStatement#expression
 	 */
 	public function get expression():IExpression
 	{
 		if (!hasExpression)
-		{
 			return null;
-		}
+		
 		return ExpressionBuilder.build(node.getFirstChild());
 	}
 	
 	/**
 	 * @private
-	 */	
+	 */
 	public function set expression(value:IExpression):void
 	{
-		//TODO IMPL
+		if (!hasExpression)
+		{
+			node.addChild(value.node);
+			return;
+		}
+		node.setChildAt(value.node, 0);
 	}
 	
 	//--------------------------------------------------------------------------

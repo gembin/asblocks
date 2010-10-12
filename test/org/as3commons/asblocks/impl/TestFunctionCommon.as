@@ -169,9 +169,10 @@ public class TestFunctionCommon extends BaseASFactoryTest
 		
 	}
 	
-	//[Test] FIXME rest removal and additon
+	//[Test]
 	public function test_removeRestParameter():void
 	{
+		// FIXME (mschmalle) rest removal and additon
 		unit = factory.newClass("A");
 		type = unit.typeNode as IClassType;
 		func = type.newMethod("foo", Visibility.PUBLIC, "void");
@@ -253,7 +254,7 @@ public class TestFunctionCommon extends BaseASFactoryTest
 		Assert.assertTrue(func.parameters[0].hasType);
 	}
 	
-	//[Test] FIXME
+	//[Test] FIXME (mschmalle) ut TestFunctionCommon#test_parameter_hasDefaultValue()
 	public function test_parameter_hasDefaultValue():void
 	{
 		unit = factory.newClass("A");

@@ -388,11 +388,17 @@ public class ClassTypeNode extends TypeNode implements IClassType
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * @private
+	 */
 	protected function findExtends():IParserNode
 	{
 		return node.getKind(AS3NodeKind.EXTENDS);
 	}
 	
+	/**
+	 * @private
+	 */
 	protected function findImplements():IParserNode
 	{
 		return node.getKind(AS3NodeKind.IMPLEMENTS);
@@ -400,7 +406,7 @@ public class ClassTypeNode extends TypeNode implements IClassType
 	
 	/**
 	 * @private
-	 */	
+	 */
 	private function removeExtends():void
 	{
 		var i:ASTIterator = new ASTIterator(node);

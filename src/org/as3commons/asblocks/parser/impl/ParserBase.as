@@ -131,7 +131,7 @@ public class ParserBase implements IParser
 		}
 		catch (e:Error)
 		{
-			throw e; // TODO different error
+			throw e;
 		}
 		
 		return parseLines(lines, fileName);

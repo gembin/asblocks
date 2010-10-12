@@ -131,7 +131,7 @@ public class ForStatementNode extends ContainerDelegate
 			if (!ast)
 			{
 				ast = ASTBuilder.newAST(AS3NodeKind.COND);
-				node.addChildAt(ast, 1); // FIXME this index is not certain
+				node.addChildAt(ast, 1); // FIXME (mschmalle) this index is not certain
 			}
 			
 			ast.setChildAt(value.node, 0);
@@ -169,7 +169,7 @@ public class ForStatementNode extends ContainerDelegate
 			if (!ast)
 			{
 				ast = ASTBuilder.newAST(AS3NodeKind.ITER);
-				node.addChildAt(ast, 2); // FIXME this index is not certain
+				node.addChildAt(ast, 2); // FIXME (mschmalle) this index is not certain
 			}
 			
 			ast.setChildAt(value.node, 0);

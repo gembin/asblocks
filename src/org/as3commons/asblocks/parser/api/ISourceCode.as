@@ -21,7 +21,7 @@ package org.as3commons.asblocks.parser.api
 {
 
 /**
- * TODO DOCME
+ * A source code scanner.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

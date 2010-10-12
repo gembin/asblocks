@@ -95,7 +95,7 @@ public class TestMetaDataNode extends BaseASFactoryTest
 		
 		Assert.assertEquals(3, metadata.parameters.length);
 		Assert.assertNotNull(metadata.removeParameter("bar"));
-		// FIXME fix removla of meta parameter comma and whitespace
+		// FIXME (mschmalle) removal of meta parameter comma and whitespace
 		//assertPrint("package {\n\t[Foo(false, baz=\"string\")]\n\t" +
 		//	"public class A {\n\t}\n}", unit);
 		Assert.assertEquals(2, metadata.parameters.length);

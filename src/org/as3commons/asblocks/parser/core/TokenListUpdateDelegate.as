@@ -120,7 +120,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 	private function findTokenInsertionPointForChildWithinParent(parent:IParserNode, 
 																 child:IParserNode):LinkedListToken 
 	{
-		// FIXME: this fails to take into account am ancestor not
+		// this fails to take into account am ancestor not
 		// having the same kind of TreeTokenListUpdateDelegate
 		while (parent != null) 
 		{
@@ -144,7 +144,6 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 				var precedent:IParserNode = parent.getChild(index - 1);
 				if (precedent.stopToken == null) 
 				{
-					// TODO: loop, rather than recurse,
 					return findTokenInsertionPointForChildWithinParent(parent, precedent);
 				}
 				return precedent.stopToken;
@@ -175,7 +174,6 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 		} 
 		else 
 		{
-			// TODO: can this be simplified now?
 			append.next = parent.stopToken.next;
 			parent.stopToken.next = append;
 			append.previous = parent.stopToken;
@@ -232,7 +230,7 @@ public class TokenListUpdateDelegate implements ITokenListUpdateDelegate
 								 index:int, 
 								 child:IParserNode):void
 	{
-		// FIXME: this should update start/stop tokens for the parent
+		// this should update start/stop tokens for the parent
 		//        when the first/last child is removed
 		var start:LinkedListToken = child.startToken;
 		var stop:LinkedListToken = child.stopToken;

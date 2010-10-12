@@ -34,7 +34,7 @@ import org.as3commons.asblocks.parser.impl.ASDocFragmentParser;
 import org.as3commons.asblocks.parser.impl.ASDocParser;
 
 /**
- * TODO DOCME
+ * @private
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -176,7 +176,7 @@ public class DocCommentUtil
 		
 		if (asdoc == null)
 		{
-			// FIXME this is for parenthetic updates such as meta []
+			// FIXME (mschmalle) this is for parenthetic updates such as meta []
 			// the /** */ needs to go before the [
 			asdoc = ASTBuilder.newAST(AS3NodeKind.AS_DOC, result);
 			asdoc.startToken.text = null;

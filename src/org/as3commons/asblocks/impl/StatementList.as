@@ -77,7 +77,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#hasCode
 	 */
 	override public function get hasCode():Boolean
 	{
@@ -89,7 +89,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#statements
 	 */
 	override public function get statements():Vector.<IStatement>
 	{
@@ -137,15 +137,10 @@ public class StatementList extends ContainerDelegate implements IBlock
 	 */
 	override public function addStatement(statement:String):IStatement
 	{
-		var stmt:IParserNode = AS3FragmentParser.parseStatement(statement);
-		//stmt.stopToken.next = null;
-		// if the statement is a simple expression, the parser returns
-		// the first child, but the stmt was actually an expr-list
-		// FIXME !!! Have to implement expr-statement in parser
-		stmt.parent = null;
-		
-		_addStatement(stmt);
-		return StatementBuilder.build(stmt);
+		var ast:IParserNode = AS3FragmentParser.parseStatement(statement);
+		ast.parent = null;
+		_addStatement(ast);
+		return StatementBuilder.build(ast);
 	}
 	
 	/**
@@ -380,7 +375,7 @@ public class StatementList extends ContainerDelegate implements IBlock
 	/**
 	 * @private
 	 */
-	override public function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement
+	override public function newSuper(arguments:Vector.<IExpression> = null):ISuperStatement
 	{
 		var result:IParserNode = ASTStatementBuilder.newSuper(arguments);
 		_addStatement(result);

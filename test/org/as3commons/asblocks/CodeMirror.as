@@ -19,7 +19,7 @@ public class CodeMirror
 		var ast:IParserNode = unit.node;
 		saintyCheckTokenStream(ast);
 		saintyCheckStartStopTokens(ast);
-		// FIXME
+		// FIXME (mschmalle) impl CodeMirror.assertTokenStreamNotDisjoint()
 		//assertTokenStreamNotDisjoint(ast);
 		var writer:IASWriter = factory.newWriter();
 		var sourceCode1:SourceCode = new SourceCode();

@@ -67,7 +67,7 @@ public class TestApplicationTypeNode extends BaseASFactoryTest
 		var stag:IScriptTag = unit.mxmlNode.newScriptTag(null);
 		stag.block.newMethod("foo", Visibility.PROTECTED, "void");
 		
-		// FIXME there is an extra \t after <fx:Script>
+		// FIXME (mschmalle) there is an extra \t after <fx:Script>
 		assertPrint("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<WindowedApplication>" +
 			"\n\t<fx:Script>\n\t<![CDATA[\n\t\tprotected function foo():void {" +
 			"\n\t\t}\n\t]]>\n\t</fx:Script>\n</WindowedApplication>", unit);

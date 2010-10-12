@@ -2,6 +2,7 @@ package org.as3commons.asblocks.impl
 {
 
 import org.as3commons.asblocks.api.IArgument;
+import org.as3commons.asblocks.api.IExpression;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
@@ -279,7 +280,7 @@ public class ASTStatementBuilder
 		return ast;
 	}
 	
-	public static function newSuper(arguments:Vector.<IArgument>):IParserNode
+	public static function newSuper(arguments:Vector.<IExpression>):IParserNode
 	{
 		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.SUPER, "super");
 		var callAST:IParserNode = ASTBuilder.newAST(AS3NodeKind.CALL);
@@ -288,7 +289,10 @@ public class ASTStatementBuilder
 			AS3NodeKind.ARGUMENTS, 
 			AS3NodeKind.LPAREN, "(", 
 			AS3NodeKind.RPAREN, ")");
-		callAST.addChild(argumentAST);
+		if (argumentAST != null)
+		{
+			callAST.addChild(argumentAST);
+		}
 		ast.addChild(callAST);
 		ast.appendToken(TokenBuilder.newSemi());
 		return ast;

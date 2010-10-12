@@ -29,7 +29,7 @@ import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.impl.ASTIterator;
 
 /**
- * TODO DOCME
+ * @private
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

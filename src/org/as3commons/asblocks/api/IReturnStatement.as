@@ -39,7 +39,7 @@ public interface IReturnStatement extends IStatement
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The return expression if any.
 	 */
 	function get expression():IExpression;
 	

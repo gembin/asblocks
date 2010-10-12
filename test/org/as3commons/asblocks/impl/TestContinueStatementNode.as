@@ -69,7 +69,7 @@ public class TestContinueStatementNode
 		assertNotNull(expression);
 	}
 	
-	// FIXME implement IContinueStatement.label set correctly
+	// FIXME (mschmalle) impl IContinueStatement.label set correctly
 	//[Test]
 	public function test_label():void
 	{

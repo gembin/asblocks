@@ -45,7 +45,15 @@ public interface IMXMLParser
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * Parses the <code>ISourceCode</code>'s source code data asynchronously
+	 * when the <code>parse()</code> method of the info is called.
+	 * 
+	 * @param code An <code>ISourceCode</code> instance holding the source
+	 * code or fileName to parse into an <code>ICompilationUnit</code>.
+	 * @param entry The <code>IClassPathEntry</code> for the source code.
+	 * @return An <code>IParserInfo</code> holding the parser and source code.
+	 * 
+	 * @see org.as3commons.asblocks.impl.IParserInfo#parse()
 	 */
 	function parseAsync(sourceCode:ISourceCode, entry:IClassPathEntry):IParserInfo;
 	
@@ -54,6 +62,7 @@ public interface IMXMLParser
 	 * 
 	 * @param code An <code>ISourceCode</code> instance holding the source
 	 * code or fileName to parse into an <code>ICompilationUnit</code>.
+	 * @param entry The <code>IClassPathEntry</code> for the source code.
 	 * @return An <code>ICompilationUnit</code> detailing the source code.
 	 * @throws org.as3commons.asblocks.ASBlocksSyntaxError
 	 */

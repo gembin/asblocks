@@ -68,7 +68,7 @@ public class TestBreakStatementNode
 		assertNotNull(expression);
 	}
 	
-	// FIXME implement IBreakStatement.label set correctly
+	// FIXME (mschmalle) impl IBreakStatement.label set correctly
 	//[Test]
 	public function test_label():void
 	{

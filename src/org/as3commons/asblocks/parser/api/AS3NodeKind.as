@@ -365,7 +365,6 @@ public class AS3NodeKind
 	
 	public static const REST_PARM:String = "rest-param";
 	
-	// FIXME
 	public static const ELSE:String = "else";
 	
 	//--------------------------------------------------------------------------
@@ -443,6 +442,8 @@ public class AS3NodeKind
 	//----------------------------------
 	//  Statement
 	//----------------------------------
+	
+	public static const EXPR_STMNT:String = "expr-stmnt";
 	
 	public static const LABEL:String = "label";
 	
@@ -613,8 +614,5 @@ public class AS3NodeKind
 	public static const E4X_FILTER:String = "e4x-filter";
 	
 	public static const E4X_STAR:String = "e4x-star";
-
-	// FIXME
-	public static const EXPR_STMNT:String = "expr-stmnt";
 }
 }

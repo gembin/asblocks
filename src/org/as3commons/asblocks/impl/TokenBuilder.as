@@ -319,7 +319,7 @@ public class TokenBuilder
 	
 	public static function newSRUAssign():LinkedListToken
 	{
-		// FIXME
+		// FIXME (mschmalle) TokenBuilder#newSRUAssign()
 		return newToken(AS3NodeKind.SR_ASSIGN, Operators.SR_ASSIGN);
 	}
 	

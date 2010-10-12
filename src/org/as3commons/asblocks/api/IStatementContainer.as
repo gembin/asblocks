@@ -41,7 +41,9 @@ public interface IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether the statement container contains child statement.
+	 * 
+	 * @see #statements
 	 */
 	function get hasCode():Boolean;
 	
@@ -50,7 +52,8 @@ public interface IStatementContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * A <code>Vector</code> of <code>IStatement</code>s contained in this
+	 * statement container.
 	 */
 	function get statements():Vector.<IStatement>;
 	
@@ -61,163 +64,273 @@ public interface IStatementContainer
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Adds a line of comment text to the statement container.
+	 * 
+	 * @param comment A <code>String</code> comment.
 	 */
 	function addComment(text:String):IToken;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	function removeComment(statement:IStatement):IToken;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	function addStatement(statement:String):IStatement;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	function removeStatement(statement:IStatement):IStatement;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	function removeStatementAt(index:int):IStatement;
 	
-	// then all the new factory methods
+	//--------------------------------------------------------------------------
+	//
+	//  Factory Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>break label;</code> statement.
+	 * 
+	 * @param label The simple label name.
+	 * @return A new <code>IBreakStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IBreakStatement
 	 */
 	function newBreak(label:String = null):IBreakStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>continue label;</code> statement.
+	 * 
+	 * @param label The simple label name.
+	 * @return A new <code>IContinueStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IContinueStatement
 	 */
 	function newContinue(label:String = null):IContinueStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>var foo:int = 0</code> or 
+	 * <code>var foo:int = 0, bar:int = 42</code> statement.
+	 * 
+	 * @param declaration The String variable declaration.
+	 * @return A new <code>IContinueStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IDeclarationStatement
 	 */
 	function newDeclaration(declaration:String):IDeclarationStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>default xml namespace = ns1</code> statement.
+	 * 
+	 * @param namespace The String namespace.
+	 * @return A new <code>IDefaultXMLNamespaceStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IDefaultXMLNamespaceStatement
 	 */
 	function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>do {...} while (condition)</code> statement.
+	 * 
+	 * @param condition The <code>IExpression</code> while condition.
+	 * @return A new <code>IDoWhileStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IDoWhileStatement
 	 */
 	function newDoWhile(condition:IExpression):IDoWhileStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>expression;</code> statement.
+	 * 
+	 * @param statement The <code>String</code> expression statement.
+	 * @return A new <code>IExpressionStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IExpressionStatement
 	 */
 	function newExpressionStatement(statement:String):IExpressionStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>for(initializer; condition; iterator){...}</code> statement.
+	 * 
+	 * @param initializer The <code>IExpression</code> initializer.
+	 * @param initializer The <code>IExpression</code> condition.
+	 * @param initializer The <code>IExpression</code> iterater.
+	 * @return A new <code>IForStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IForStatement
 	 */
 	function newFor(initializer:IExpression, 
 					condition:IExpression, 
 					iterater:IExpression):IForStatement;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	function parseNewFor(initializer:String, 
 						 condition:String, 
 						 iterater:String):IForStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>for each(declaration in target){...}</code> statement.
+	 * 
+	 * @param declaration The <code>IScriptNode</code> declaration.
+	 * @param target The <code>IExpression</code> iteration target.
+	 * @return A new <code>IForStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IForStatement
 	 */
 	function newForEachIn(declaration:IScriptNode, 
 						  target:IExpression):IForEachInStatement;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	//function parseNewForEachIn(declaration:String, 
 	//						   target:String):IForEachInStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>for(declaration in target){...}</code> statement.
+	 * 
+	 * @param declaration The <code>IScriptNode</code> declaration.
+	 * @param target The <code>IExpression</code> iteration target.
+	 * @return A new <code>IForInStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IForInStatement
 	 */
 	function newForIn(declaration:IScriptNode, 
 					  target:IExpression):IForInStatement;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	//function parseNewForIn(declaration:String, 
 	//					   target:String):IForInStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>if(condition){...} else {...}</code> statement.
+	 * 
+	 * @param condition The <code>IExpression</code> condition.
+	 * @return A new <code>IIfStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IIfStatement
 	 */
 	function newIf(condition:IExpression):IIfStatement;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	function newLabel(name:String):ILabelStatement;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	function newForLabel(name:String, kind:String):ILabelStatement;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	//function newWhileLabel(name:String):ILabelStatement;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>return expression</code> statement.
+	 * 
+	 * @param expression The <code>IExpression</code> to return.
+	 * @return A new <code>IReturnStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IReturnStatement
 	 */
 	function newReturn(expression:IExpression = null):IReturnStatement
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>super(args...)</code>, <code>super.foo(args...)</code>
+	 * op <code>super.bar = expression</code> statement.
+	 * 
+	 * @param arguments A <code>Vector</code> of <code>IExpression</code>s.
+	 * @return A new <code>ISuperStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.ISuperStatement
 	 */
-	function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement;
+	function newSuper(arguments:Vector.<IExpression> = null):ISuperStatement;
 	
 	/**
-	 * @private
+	 * Creates a new <code>switch(condition){ case label: default: }</code> statement.
+	 * 
+	 * @param arguments A <code>Vector</code> of <code>IExpression</code>s.
+	 * @return A new <code>ISwitchStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.ISwitchStatement
+	 * @see org.as3commons.asblocks.api.ISwitchCase
+	 * @see org.as3commons.asblocks.api.ISwitchDefault
 	 */
 	function newSwitch(condition:IExpression):ISwitchStatement;
 	
 	/**
-	 * @private
+	 * Creates a new <code>this.expression</code> statement.
+	 * 
+	 * @param expression The <code>IExpression</code> access.
+	 * @return A new <code>IThisStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IThisStatement
 	 */
 	function newThis(expression:IExpression):IThisStatement;
 	
 	/**
-	 * @private
+	 * Creates a new <code>throw new Error(args...)</code> or 
+	 * <code>throw e1</code> statement.
+	 * 
+	 * @param expression The <code>IExpression</code> access.
+	 * @return A new <code>IThrowStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IThrowStatement
 	 */
 	function newThrow(expression:IExpression):IThrowStatement;
 	
 	/**
-	 * @private
+	 * Creates a new <code>try {...} catch(name:type) {...}</code> statement.
+	 * 
+	 * @param name The <code>String</code> error instance name.
+	 * @param type The <code>String</code> error instance type.
+	 * @return A new <code>ITryStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.ITryStatement
 	 */
 	function newTryCatch(name:String, type:String):ITryStatement;
 	
 	/**
-	 * @private
+	 * Creates a new <code>try {...} finally {...}</code> statement.
+	 * 
+	 * @return A new <code>ITryStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.ITryStatement
 	 */
 	function newTryFinally():ITryStatement;
 	
 	/**
-	 * @private
+	 * Creates a new <code>while(condition) {...}</code> statement.
+	 * 
+	 * @param condition The <code>IExpression</code> condition.
+	 * @return A new <code>IWhileStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IWhileStatement
 	 */
 	function newWhile(condition:IExpression):IWhileStatement;
 	
 	/**
-	 * @private
+	 * Creates a new <code>with(scope) {...}</code> statement.
+	 * 
+	 * @param scope The <code>IExpression</code> scope.
+	 * @return A new <code>IWithStatement</code>.
+	 * 
+	 * @see org.as3commons.asblocks.api.IWithStatement
 	 */
-	function newWith(condition:IExpression):IWithStatement;
+	function newWith(scope:IExpression):IWithStatement;
 }
 }

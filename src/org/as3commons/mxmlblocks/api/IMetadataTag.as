@@ -21,11 +21,16 @@ package org.as3commons.mxmlblocks.api
 {
 
 /**
- * TODO DOCME
+ * A Metadata tag in an mxml file.
+ * 
+ * <p>The metadata tag parents a <code>block</code> that can hold metadata 
+ * notations. The metadata block is held in a CDATA section of the XML.<p>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.mxmlblocks.api.IMetadataBlock
  */
 public interface IMetadataTag extends ITag
 {
@@ -36,7 +41,7 @@ public interface IMetadataTag extends ITag
 	//--------------------------------------------------------------------------
 	
 	//----------------------------------
-	//  metadata
+	//  block
 	//----------------------------------
 	
 	/**

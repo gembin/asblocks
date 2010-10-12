@@ -45,7 +45,7 @@ public interface IParserNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The parent node.
 	 */
 	function get parent():IParserNode;
 	
@@ -151,7 +151,7 @@ public interface IParserNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The token this nodes stops at in the token stream.
 	 */
 	function get stopToken():LinkedListToken;
 	
@@ -165,7 +165,7 @@ public interface IParserNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The token this nodes starts at in the token stream.
 	 */
 	function get startToken():LinkedListToken;
 	
@@ -179,7 +179,7 @@ public interface IParserNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The initial token insertion point after (used in parenthetic updates).
 	 */
 	function get initialInsertionAfter():LinkedListToken;
 	
@@ -193,7 +193,7 @@ public interface IParserNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The initial token insertion point before (used in parenthetic updates).
 	 */
 	function get initialInsertionBefore():LinkedListToken;
 	
@@ -209,7 +209,10 @@ public interface IParserNode
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether this node contains the other.
+	 * 
+	 * @param other The opther parser node to compare.
+	 * @return A Boolean indicating whether the node contains the other node.
 	 */
 	function contains(other:IParserNode):Boolean;
 	
@@ -239,12 +242,18 @@ public interface IParserNode
 	function getChild(index:int):IParserNode;
 	
 	/**
-	 * TODO Docme
+	 * Returns the child index of the node if it is parented by this node.
+	 * 
+	 * @param node The node to retrieve the index for.
+	 * @return An int index number.
 	 */
 	function getChildIndex(node:IParserNode):int;
 	
 	/**
-	 * TODO Docme
+	 * Returns the first child by node kind.
+	 * 
+	 * @param kind The String kind.
+	 * @return The first node or null.
 	 */
 	function getKind(kind:String):IParserNode;
 	
@@ -271,7 +280,12 @@ public interface IParserNode
 	function addChild(node:IParserNode):IParserNode;
 	
 	/**
-	 * TODO Docme
+	 * Adds an <code>IParserNode</code> child to the children of this parser node
+	 * at the specified index.
+	 * 
+	 * @param The <code>IParserNode</code> to add.
+	 * @param index The int index to add the child at.
+	 * @return The <code>IParserNode</code> added.
 	 */
 	function addChildAt(node:IParserNode, index:int):IParserNode;
 	
@@ -284,7 +298,10 @@ public interface IParserNode
 	function removeChild(node:IParserNode):IParserNode;
 	
 	/**
-	 * TODO Docme
+	 * Removes the node at the specified index.
+	 * 
+	 * @param index An int index to remove.
+	 * @return A parser node removed.
 	 */
 	function removeChildAt(index:int):IParserNode;
 	
@@ -297,7 +314,10 @@ public interface IParserNode
 	function removeKind(kind:String):Boolean;
 	
 	/**
-	 * TODO Docme
+	 * Replaces the child at the specified index.
+	 * 
+	 * @param child
+	 * @param index
 	 */
 	function setChildAt(child:IParserNode, index:int):IParserNode;
 	
@@ -306,12 +326,12 @@ public interface IParserNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Appends a token to the token stream.
 	 */
 	function appendToken(token:LinkedListToken):void;
 	
 	/**
-	 * TODO Docme
+	 * Adds a token in the token stream at the specified child index.
 	 */
 	function addTokenAt(token:LinkedListToken, index:int):void;
 }

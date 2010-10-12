@@ -94,7 +94,7 @@ public class ASTLiteralBuilder
 		var ast:IParserNode = ASTBuilder.newAST(AS3NodeKind.LAMBDA);
 		ast.appendToken(TokenBuilder.newFunction());
 		//ast.appendToken(TokenBuilder.newSpace());
-		// TODO: placeholder for name?
+		
 		var paren:IParserNode = ASTUtil.newParentheticAST(
 			AS3NodeKind.PARAMETER_LIST, 
 			AS3NodeKind.LPAREN, "(", 

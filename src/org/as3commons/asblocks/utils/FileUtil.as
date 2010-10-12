@@ -36,7 +36,7 @@ import org.as3commons.asblocks.api.ICompilationUnit;
 public class FileUtil
 {
 	/**
-	 * TODO implement OS or subclass
+	 * The OS file separator.
 	 */
 	public static var separator:String = "/";
 	

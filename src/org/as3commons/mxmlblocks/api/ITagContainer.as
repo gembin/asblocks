@@ -19,6 +19,7 @@
 
 package org.as3commons.mxmlblocks.api
 {
+
 import org.as3commons.asblocks.parser.api.IToken;
 
 /**
@@ -40,7 +41,7 @@ public interface ITagContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The tag's identifier name.
 	 */
 	function get id():String;
 	
@@ -49,7 +50,7 @@ public interface ITagContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The tag's binding.
 	 */
 	function get binding():String;
 	
@@ -63,7 +64,7 @@ public interface ITagContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The tag's localName.
 	 */
 	function get localName():String;
 	
@@ -77,7 +78,7 @@ public interface ITagContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Whether the tag has children.
 	 */
 	function get hasChildren():Boolean;
 	
@@ -86,7 +87,7 @@ public interface ITagContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The tag's namespaces
 	 */
 	function get namespaces():Vector.<IXMLNamespace>;
 	
@@ -95,7 +96,7 @@ public interface ITagContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The tag's attributes.
 	 */
 	function get attributes():Vector.<IAttribute>;
 	
@@ -104,7 +105,7 @@ public interface ITagContainer
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The tag's children.
 	 */
 	function get children():Vector.<ITag>;
 	
@@ -115,37 +116,69 @@ public interface ITagContainer
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * TODO Docme
+	 * Adds a comment to the tag.
+	 * 
+	 * @param text The String text comment.
+	 * @return The added token.
 	 */
 	function addComment(text:String):IToken;
 	
 	/**
-	 * TODO Docme
+	 * @private
 	 */
 	//function removeComment(statement:IStatement):IToken;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>xmlns:bar="bar"</code>.
+	 * 
+	 * @param localName The simple namespace name.
+	 * @param uri A String identifier.
+	 * @return A new <code>IXMLNamespace</code>.
+	 * 
+	 * @see org.as3commons.mxmlblocks.api.IXMLNamespace
 	 */
 	function newXMLNS(localName:String, uri:String):IXMLNamespace;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>bar="bar"</code>.
+	 * 
+	 * @param name The simple name.
+	 * @param value The String value.
+	 * @param state The String state of the attribute.
+	 * @return A new <code>IAttribute</code>.
+	 * 
+	 * @see org.as3commons.mxmlblocks.api.IAttribute
 	 */
 	function newAttribute(name:String, value:String, state:String = null):IAttribute;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>&lt;x:Foo&gt;&lt;/x:Foo&gt;</code> tag.
+	 * 
+	 * @param name The simple name.
+	 * @param binding The String block binding.
+	 * @return A new <code>IBlockTag</code>.
+	 * 
+	 * @see org.as3commons.mxmlblocks.api.IBlockTag
 	 */
 	function newTag(name:String, binding:String = null):IBlockTag;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>&lt;x:Script&gt;&lt;[CDATA[code]]&gt;&lt;/x:Script&gt;</code> tag.
+	 * 
+	 * @param code The script code.
+	 * @return A new <code>IScriptTag</code>.
+	 * 
+	 * @see org.as3commons.mxmlblocks.api.IScriptTag
 	 */
 	function newScriptTag(code:String = null):IScriptTag;
 	
 	/**
-	 * TODO Docme
+	 * Creates a new <code>&lt;x:Metadata&gt;&lt;[CDATA[meta]]&gt;&lt;/x:Metadata&gt;</code> tag.
+	 * 
+	 * @param code The script code.
+	 * @return A new <code>IMetadataTag</code>.
+	 * 
+	 * @see org.as3commons.mxmlblocks.api.IMetadataTag
 	 */
 	function newMetadataTag(code:String = null):IMetadataTag;
 }

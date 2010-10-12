@@ -21,7 +21,7 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * The supertype for all interfaces which represent expressions. 
+ * An expression as a statement in a statement container. 
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -29,14 +29,18 @@ package org.as3commons.asblocks.api
  */
 public interface IExpressionStatement extends IScriptNode, IStatement
 {
-	// expressionString
+	//--------------------------------------------------------------------------
+	//
+	//  Properties
+	//
+	//--------------------------------------------------------------------------
 	
 	//----------------------------------
 	//  expression
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The statement's expression.
 	 */
 	function get expression():IExpression;
 	

@@ -28,7 +28,7 @@ import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
- * TODO DOME
+ * @private
  *
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -125,7 +125,6 @@ public class ExpressionBuilder
 					ASTUtil.tokenName(ast.kind) + "'");
 			
 			/*
-			TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			case AS3Parser.REGEXP_LITERAL:
 				return new ASTASRegexpLiteral(ast);
 			case AS3Parser.E4X_DESC:

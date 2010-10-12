@@ -311,9 +311,6 @@ public class TestCompilationUnit
 			"</compilation-unit>");
 	}
 	
-	// TODO move to classCOntent
-	
-	
 	[Test]
 	public function testPackageMetaData():void
 	{

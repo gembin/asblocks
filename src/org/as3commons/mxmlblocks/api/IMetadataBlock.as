@@ -23,11 +23,13 @@ package org.as3commons.mxmlblocks.api
 import org.as3commons.asblocks.api.IMetaDataAware;
 
 /**
- * TODO DOCME
+ * A block of metadata annotations contained in a <code>IMetadataTag</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.mxmlblocks.api.IScriptBlock
  */
 public interface IMetadataBlock extends IMetaDataAware
 {

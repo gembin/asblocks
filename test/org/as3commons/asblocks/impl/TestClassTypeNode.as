@@ -1,19 +1,21 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.flexunit.asserts.assertEquals;
-import org.flexunit.asserts.assertFalse;
-import org.flexunit.asserts.assertNotNull;
-import org.flexunit.asserts.assertNull;
-import org.flexunit.asserts.assertTrue;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.SourceCode;
-import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
+import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.CodeMirror;
 import org.as3commons.asblocks.api.IClassType;
 import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.api.IField;
 import org.as3commons.asblocks.api.Visibility;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.SourceCode;
+import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
+import org.flexunit.Assert;
+import org.flexunit.asserts.assertEquals;
+import org.flexunit.asserts.assertFalse;
+import org.flexunit.asserts.assertNotNull;
+import org.flexunit.asserts.assertNull;
+import org.flexunit.asserts.assertTrue;
 
 public class TestClassTypeNode extends BaseASFactoryTest
 {
@@ -158,13 +160,21 @@ public class TestClassTypeNode extends BaseASFactoryTest
 	public function test_newField():void
 	{
 		var typeNode:IClassType = unit.typeNode as IClassType;
-		// TODO make sure dups cannot be created
+		
 		var field:IField = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
 		assertNotNull(field);
 		assertEquals(Visibility.PUBLIC, field.visibility);
 		assertEquals("fieldOne", field.name);
 		assertEquals("String", field.type);
 		assertPrint("package {\n\tpublic class A {\n\t\tpublic var fieldOne:String;\n\t}\n}", unit);
+		
+		// try adding again
+		try
+		{
+			field = typeNode.newField("fieldOne", Visibility.PUBLIC, "String");
+			Assert.fail("IField fieldOne already exists on node");
+		}
+		catch (e:ASBlocksSyntaxError) {}
 		
 		assertTrue(typeNode.removeField("fieldOne"));
 		assertPrint("package {\n\tpublic class A {\n\t}\n}", unit);

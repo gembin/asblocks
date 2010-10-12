@@ -74,7 +74,7 @@ public class ContainerDelegate extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#hasCode
 	 */
 	public function get hasCode():Boolean
 	{
@@ -86,7 +86,7 @@ public class ContainerDelegate extends ScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#statements
 	 */
 	public function get statements():Vector.<IStatement>
 	{
@@ -107,8 +107,14 @@ public class ContainerDelegate extends ScriptNode
 		super(node);
 	}
 	
+	//--------------------------------------------------------------------------
+	//
+	//  IStatementContainer API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#addComment()
 	 */
 	public function addComment(text:String):IToken
 	{
@@ -116,7 +122,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#removeComment()
 	 */
 	public function removeComment(statement:IStatement):IToken
 	{
@@ -124,7 +130,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#addStatement()
 	 */
 	public function addStatement(statement:String):IStatement
 	{
@@ -132,7 +138,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#removeStatement()
 	 */
 	public function removeStatement(statement:IStatement):IStatement
 	{
@@ -140,7 +146,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#removeStatementAt()
 	 */
 	public function removeStatementAt(index:int):IStatement
 	{
@@ -148,7 +154,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newExpressionStatement()
 	 */
 	public function newExpressionStatement(statement:String):IExpressionStatement
 	{
@@ -156,7 +162,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newBreak()
 	 */
 	public function newBreak(label:String = null):IBreakStatement
 	{
@@ -164,7 +170,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newContinue()
 	 */
 	public function newContinue(label:String = null):IContinueStatement
 	{
@@ -172,7 +178,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newDeclaration()
 	 */
 	public function newDeclaration(declaration:String):IDeclarationStatement
 	{
@@ -180,7 +186,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newDefaultXMLNamespace()
 	 */
 	public function newDefaultXMLNamespace(namespace:String):IDefaultXMLNamespaceStatement
 	{
@@ -188,7 +194,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newDoWhile()
 	 */
 	public function newDoWhile(condition:IExpression):IDoWhileStatement
 	{
@@ -196,7 +202,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newFor()
 	 */
 	public function newFor(initializer:IExpression, 
 						   condition:IExpression, 
@@ -206,7 +212,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#parseNewFor()
 	 */
 	public function parseNewFor(initializer:String, 
 								condition:String, 
@@ -216,7 +222,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newForEachIn()
 	 */
 	public function newForEachIn(declaration:IScriptNode, 
 								 expression:IExpression):IForEachInStatement
@@ -225,7 +231,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newForIn()
 	 */
 	public function newForIn(declaration:IScriptNode, 
 							 expression:IExpression):IForInStatement
@@ -234,7 +240,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * TODO Docme
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newIf()
 	 */
 	public function newIf(condition:IExpression):IIfStatement
 	{
@@ -242,7 +248,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newLabel()
 	 */
 	public function newLabel(name:String):ILabelStatement
 	{
@@ -250,7 +256,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newForLabel()
 	 */
 	public function newForLabel(name:String, kind:String):ILabelStatement
 	{
@@ -258,7 +264,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newReturn()
 	 */
 	public function newReturn(expression:IExpression = null):IReturnStatement
 	{
@@ -266,15 +272,15 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newSuper()
 	 */
-	public function newSuper(arguments:Vector.<IArgument> = null):ISuperStatement
+	public function newSuper(arguments:Vector.<IExpression> = null):ISuperStatement
 	{
 		return statementContainer.newSuper(arguments);
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newSwitch()
 	 */
 	public function newSwitch(condition:IExpression):ISwitchStatement
 	{
@@ -282,7 +288,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newThis()
 	 */
 	public function newThis(expression:IExpression):IThisStatement
 	{
@@ -290,7 +296,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newThrow()
 	 */
 	public function newThrow(expression:IExpression):IThrowStatement
 	{
@@ -298,7 +304,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newTryCatch()
 	 */
 	public function newTryCatch(name:String, type:String):ITryStatement
 	{
@@ -306,7 +312,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newTryFinally()
 	 */
 	public function newTryFinally():ITryStatement
 	{
@@ -314,7 +320,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newWhile()
 	 */
 	public function newWhile(condition:IExpression):IWhileStatement
 	{
@@ -322,7 +328,7 @@ public class ContainerDelegate extends ScriptNode
 	}
 	
 	/**
-	 * @private
+	 * @copy org.as3commons.asblocks.api.IStatementContainer#newWith()
 	 */
 	public function newWith(condition:IExpression):IWithStatement
 	{

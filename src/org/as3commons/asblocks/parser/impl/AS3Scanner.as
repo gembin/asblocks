@@ -318,7 +318,7 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 	{
 		try 
 		{
-			new XML(text);	// FIXME does this actually throw?
+			new XML(text);	// FIXME (mschmalle) does this actually throw?
 		}
 		catch (e:Error)
 		{
@@ -335,7 +335,7 @@ public class AS3Scanner extends ScannerBase implements ISourceCodeScanner
 	{
 		try
 		{
-			new RegExp(pattern); // FIXME does this actually throw?
+			new RegExp(pattern); // FIXME (mschmalle) does this actually throw?
 		}
 		catch (e:Error)
 		{

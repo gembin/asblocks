@@ -34,7 +34,7 @@ import org.as3commons.asblocks.parser.core.Node;
 import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.utils.ASTUtil;
 
-// FIXME XML and RegExp
+// FIXME (mschmalle) XML and RegExp
 
 /**
  * A port of the Java PMD de.bokelberg.flex.parser.AS3Parser.
@@ -207,7 +207,6 @@ public class AS3Parser extends ParserBase
 		var result:TokenNode = ASTUtil.newCurlyAST(
 			AS3NodeKind.CONTENT, token) as TokenNode;
 		
-		// TODO figure out all that can exist internally
 		var internalParse:Boolean = 
 			tokIs(KeyWords.CLASS) || tokIs(KeyWords.FUNCTION) 
 			|| tokIs(KeyWords.IMPORT) || tokIs(KeyWords.INCLUDE)
@@ -2544,18 +2543,16 @@ public class AS3Parser extends ParserBase
 	internal function parseExpressionStatement():IParserNode
 	{
 		var result:TokenNode = adapter.empty(AS3NodeKind.EXPR_STMNT, token);
-		
-		result.addChild(parseAssignmentExpression());
-		
-		while (tokIs(Operators.COMMA))
+		do
 		{
-			// FIXME eat comma
-			nextTokenConsume(result);
+			if (tokIs(Operators.COMMA))
+			{
+				consume(Operators.COMMA, result);
+			}
 			result.addChild(parseAssignmentExpression());
-		}
-		
+		} 
+		while (tokIs(Operators.COMMA))
 		skip(Operators.SEMI, result);
-		
 		return result;
 	}
 	/**

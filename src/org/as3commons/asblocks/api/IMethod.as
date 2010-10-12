@@ -21,11 +21,28 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * A method.
+ * A type method.
+ * 
+ * <pre>
+ * var method:IMethod = type.newMethod("foo", Visibility.PUBLIC, "int");
+ * </pre>
+ * 
+ * <p>Will produce;</p>
+ * <pre>
+ * ...
+ * {
+ * 	public function foo():int {
+ * 	}
+ * }
+ * ...
+ * </pre>
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IClassType#newMethod()
+ * @see org.as3commons.asblocks.api.IInterfaceType#newMethod()
  */
 public interface IMethod 
 	extends IFunction, IStatementContainer, IMember
@@ -41,7 +58,8 @@ public interface IMethod
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The access role of the function <code>AccessorRole#NORMAL</code>,
+	 * <code>AccessorRole#GETTER</code> or <code>AccessorRole#SETTER</code>.
 	 */
 	function get accessorRole():AccessorRole;
 	

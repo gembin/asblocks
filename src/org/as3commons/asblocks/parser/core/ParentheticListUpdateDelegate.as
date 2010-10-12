@@ -25,7 +25,7 @@ import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.ITokenListUpdateDelegate;
 
 /**
- * TODO Docme
+ * @private
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

@@ -118,7 +118,7 @@ public class SourceCode implements ISourceCode
 	 */
 	public function getSlice(startLine:int, endLine:int):String
 	{
-		// TODO implement getSlice()
+		// TODO (mschmalle) impl SourceCode#getSlice()
 		if (code == null)
 			return null;
 		

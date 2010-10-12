@@ -21,7 +21,7 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * 
+ * A document tagged paragraph.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
@@ -40,7 +40,7 @@ public interface IDocTag extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The document tag's name text.
 	 */
 	function get name():String;
 	
@@ -54,7 +54,7 @@ public interface IDocTag extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The document tag's body text.
 	 */
 	function get body():String;
 	

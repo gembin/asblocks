@@ -24,11 +24,13 @@ import org.as3commons.asblocks.api.IContentBlock;
 import org.as3commons.asblocks.api.IFieldAware;
 
 /**
- * TODO DOCME
+ * A block of code contained in a <code>IScriptTag</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.mxmlblocks.api.IScriptBlock
  */
 public interface IScriptBlock extends IContentBlock, IFieldAware
 {

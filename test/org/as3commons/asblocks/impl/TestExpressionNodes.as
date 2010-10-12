@@ -114,15 +114,6 @@ XML
 * newStarAttribute()
 
  */
-
-
-// TODO impl unit test DescendentExpression
-// TODO impl unit test ExpressionAttribute
-// TODO impl unit test FilterExpression
-// TODO impl unit test PropertyAttribute
-// TODO impl unit test StarAttribute
-// TODO impl unit test AttributeExpression
-
 public class TestExpressionNodes
 {
 	private var printer:ASTPrinter;
@@ -169,7 +160,6 @@ public class TestExpressionNodes
 	[Test]
 	public function testParseForStatement():void
 	{
-		// TODO implement
 		var statement:IBlock = factory.newBlock();
 		var forstmt:IForStatement = statement.parseNewFor("var i:int = 0", "i < 1", "i++");
 		assertPrint("{\n\tfor (var i:int = 0; i < 1; i++) {\n\t}\n}", forstmt);
@@ -243,13 +233,13 @@ public class TestExpressionNodes
 	[Test]
 	public function testDescendentExpressionNode():void
 	{
-		// TODO impl unit test
+		// TODO (mschmalle) impl ut testDescendentExpressionNode()
 	}
 	
 	[Test]
 	public function testExpressionAttrbuteNode():void
 	{
-		// TODO impl unit test
+		// TODO (mschmalle) impl ut testDescendentExpressionNode()
 	}
 	
 	[Test]
@@ -283,7 +273,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testFilterExpressionNode():void
 	{
-		// TODO impl unit test
+		// TODO (mschmalle) impl ut testFilterExpressionNode()
 	}
 	
 	[Test]
@@ -337,7 +327,7 @@ public class TestExpressionNodes
 	[Test]
 	public function testPropertyAttributeNode():void
 	{
-		// TODO impl unit test
+		// TODO (mschmalle) impl ut testPropertyAttributeNode()
 	}
 	
 	[Test]
@@ -360,13 +350,13 @@ public class TestExpressionNodes
 	[Test]
 	public function testStarAttributeNode():void
 	{
-		// TODO impl unit test
+		// TODO (mschmalle) impl ut testAttributeExpressionNode()
 	}
 	
 	[Test]
 	public function testAttributeExpressionNode():void
 	{
-		// TODO impl unit test
+		// TODO (mschmalle) impl ut testAttributeExpressionNode()
 	}
 	
 	protected function assertPrint(expected:String, 

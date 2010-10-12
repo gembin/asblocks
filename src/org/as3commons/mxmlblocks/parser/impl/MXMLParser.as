@@ -271,7 +271,7 @@ public class MXMLParser extends ParserBase
 		}
 		
 		// added to solve . error in tag name (state)
-		// TODO edit ast to include tag state
+		// edit ast to include tag state
 		if (tokIs("."))
 		{
 			nextTokenConsume(result);
@@ -369,7 +369,7 @@ public class MXMLParser extends ParserBase
 					consume(firstNode.stringValue, result);
 					consume(":", result);
 					consume(tagName, result);
-					// FIXME
+					// FIXME (mschmalle) '>' mxml parse; what is going on at the end of the 
 					try {
 						consume(">", result);
 					}

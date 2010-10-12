@@ -206,8 +206,7 @@ public class FieldNode extends MemberNode
 		if (init == null)
 		{
 			init = ASTBuilder.newAST(AS3NodeKind.INIT, "=");
-			// TODO get addTokenAt() in public API
-			TokenNode(init).addTokenAt(TokenBuilder.newSpace(), 0);
+			init.addTokenAt(TokenBuilder.newSpace(), 0);
 			init.appendToken(TokenBuilder.newSpace());
 			nti.addChild(init);
 		}

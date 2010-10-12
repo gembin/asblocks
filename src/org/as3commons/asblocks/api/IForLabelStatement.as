@@ -34,7 +34,7 @@ public interface IForLabelStatement extends ILabelStatement
 	//----------------------------------
 	
 	/**
-	 * TODO DOCME
+	 * The body of a labeled for() block.
 	 */
 	function get statement():IForStatement;
 }

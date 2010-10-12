@@ -19,10 +19,11 @@
 
 package org.as3commons.mxmlblocks.api
 {
+
 import org.as3commons.asblocks.api.IClassType;
 
 /**
- * TODO DOCME
+ * An mxml application type.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

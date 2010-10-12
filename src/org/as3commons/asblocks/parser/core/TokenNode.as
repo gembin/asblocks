@@ -122,7 +122,6 @@ public class TokenNode extends Node
 	internal function notifyChildStartTokenChange(child:IParserNode, 
 												  newStart:LinkedListToken):void
 	{
-		// TODO: maybe move to delegates
 		if (isFirst(child) && isSameStartToken(child)) 
 		{
 			startToken = newStart;
@@ -139,7 +138,6 @@ public class TokenNode extends Node
 	internal function notifyChildStopTokenChange(child:IParserNode, 
 												 newStop:LinkedListToken):void
 	{
-		// TODO: maybe move to delegates
 		if (isLast(child) && (isSameStopToken(child) || isNoStopToken(child)))
 		{
 			stopToken = newStop;

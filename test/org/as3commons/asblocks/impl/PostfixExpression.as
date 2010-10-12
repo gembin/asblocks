@@ -36,7 +36,7 @@ public class PostfixExpression
 		expression.expression = factory.newSimpleNameExpression("count");
 		assertPrint("count--", expression);
 		
-		// FIXME
+		// FIXME (mschmalle) impl IPostfixExpression#operator
 		//expression.operator = PostfixOperator.POSTINC;
 		//assertPrint("count++", expression);
 		

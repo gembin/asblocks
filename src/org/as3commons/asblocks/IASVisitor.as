@@ -31,11 +31,13 @@ import org.as3commons.asblocks.api.IPackage;
 import org.as3commons.asblocks.api.IType;
 
 /**
- * TODO DOCME
+ * Visits nodes walked by an <code>IASWalker</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.IASWalker
  */
 public interface IASVisitor
 {

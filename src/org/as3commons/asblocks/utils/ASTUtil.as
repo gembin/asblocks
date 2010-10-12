@@ -44,7 +44,7 @@ import org.as3commons.mxmlblocks.parser.api.MXMLNodeKind;
 import org.as3commons.mxmlblocks.parser.impl.MXMLParser;
 
 /**
- * TODO DOCME
+ * @private
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC

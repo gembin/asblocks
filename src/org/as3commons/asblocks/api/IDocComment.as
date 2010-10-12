@@ -21,6 +21,8 @@ package org.as3commons.asblocks.api
 {
 
 /**
+ * The comment node of an <code>IDocCommentAware</code> client.
+ * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
@@ -38,7 +40,7 @@ public interface IDocComment extends IScriptNode
 	//----------------------------------
 	
 	/**
-	 * TODO Docme
+	 * The string description minus the doc tags.
 	 */
 	function get description():String;
 	
@@ -53,9 +55,6 @@ public interface IDocComment extends IScriptNode
 	//
 	//--------------------------------------------------------------------------
 	
-	/**
-	 * TODO Docme
-	 */
 	function newDocTag(name:String, body:String = null):IDocTag;
 	
 	function removeDocTag(tag:IDocTag):Boolean;

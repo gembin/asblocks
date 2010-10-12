@@ -180,7 +180,6 @@ public class TestAS3FragmentParser
 			"</get></content>", result);
 	}
 	
-	// FIXME 
 	//[Test]
 	public function test_parseStatement():void
 	{

@@ -22,11 +22,14 @@ package org.as3commons.asblocks.api
 {
 
 /**
- * TODO DOCME
+ * A script node aware of the <code>IField</code>.
  * 
  * @author Michael Schmalle
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
+ * 
+ * @see org.as3commons.asblocks.api.IField
+ * @see org.as3commons.asblocks.api.Visibility
  */
 public interface IFieldAware extends IContentBlock
 {
