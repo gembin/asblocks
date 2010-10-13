@@ -228,7 +228,7 @@ public class ASDocParser extends ParserBase
 		if (!tokIsValid())
 			consumeLeft(result);
 		
-		while (!tokIs(ML_END))
+		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END))
 		{
 			if (token.text == AT)
 			{
@@ -429,7 +429,7 @@ public class ASDocParser extends ParserBase
 		var skip:Boolean = false;
 		
 		// token : <pre
-		while (!tokIs(ML_END))
+		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END))
 		{
 			if (tokIs("</"))
 			{

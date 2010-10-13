@@ -37,6 +37,8 @@ public class ASDocScanner extends ScannerBase
 	//
 	//--------------------------------------------------------------------------
 	
+	internal var pendingEOF:Boolean = false;
+	
 	//----------------------------------
 	// isInShort
 	//----------------------------------
@@ -120,6 +122,8 @@ public class ASDocScanner extends ScannerBase
 		_inShort = true;
 		_inDocTag = false;
 		_inInlineDocTag = false;
+		
+		pendingEOF = false;
 	}
 	
 	/**
@@ -129,15 +133,15 @@ public class ASDocScanner extends ScannerBase
 	{
 		var currentCharacter:String;
 		
+		if (pendingEOF)
+		{
+			return new Token(END, line, column);
+		}
+		
 		// while we have lines and are not at the end
 		if (lines != null && line < lines.length)
 		{
 			currentCharacter = nextChar();
-		}
-		else
-		{
-			// at the end, send the line terminator
-			return new Token(END, line, column);
 		}
 		
 		var token:Token;
@@ -162,20 +166,7 @@ public class ASDocScanner extends ScannerBase
 			
 			return token;
 		}
-		/*
-		if (currentCharacter == '.' && _inShort)
-		{
-			token = scanCharacterSequence(currentCharacter, [".\n", ".\t"]);
-			
-			if (_inShort && token.text == ".\n"
-				|| token.text == ".\t")
-			{
-				_inShort = false;
-			}
-			
-			return token;
-		}
-		*/
+		
 		if (currentCharacter == '{')
 		{
 			token = scanCharacterSequence(currentCharacter, ["{@"]);
@@ -202,9 +193,9 @@ public class ASDocScanner extends ScannerBase
 		{
 			token = scanCharacterSequence(currentCharacter, ["*/"]);
 			
-			if (_inShort && token.text == "*/")
+			if (token.text == "*/")
 			{
-				_inShort = false;
+				pendingEOF = true;
 			}
 			
 			return token;

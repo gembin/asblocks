@@ -156,7 +156,7 @@ public class DocCommentUtil
 		
 		// '\n\t * '
 		var newline:String = getNewlineText(parent, asdoc);
-		// this allows the description to start with a newline atrix
+		// this allows the description to start with a newline atrix '/**\n ws* description'
 		if (description.indexOf("\n") != 0)
 		{
 			description = "\n" + description;
@@ -167,6 +167,12 @@ public class DocCommentUtil
 		
 		// create the ast for the description
 		var newDesc:IParserNode = parseDescription(description);
+		
+		var test1:String = ASTUtil.stringifyNode(newDesc);
+		
+		trace(test1);
+		trace(test1 == description);
+		
 		// find the indent based on the parent nodes indentation
 		var indent:String = ASTUtil.findIndent(parent);
 		

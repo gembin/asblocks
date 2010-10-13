@@ -9,6 +9,8 @@ import org.as3commons.asblocks.api.IDocTag;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.core.SourceCode;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
+import org.as3commons.asblocks.utils.DocCommentUtil;
+import org.flexunit.Assert;
 
 public class TestDocCommentNode extends BaseASFactoryTest
 {
@@ -34,6 +36,22 @@ public class TestDocCommentNode extends BaseASFactoryTest
 			CodeMirror.assertASTMatch(ast, parsed);
 			CodeMirror.assertReflection(factory, unit);
 		}
+	}
+	
+	[Test]
+	public function testBasic_():void
+	{
+		var ast:IParserNode = ASTTypeBuilder.newClassAST("foo.bar.Baz");
+		
+		
+		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
+		
+		Assert.assertNotNull(comment.node);
+		Assert.assertNull(comment.asdoc);
+		
+		comment.description = "A doc comment.";
+		
+		Assert.assertEquals("", comment.description);
 	}
 	
 	[Test]

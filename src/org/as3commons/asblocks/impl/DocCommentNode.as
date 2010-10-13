@@ -33,10 +33,12 @@ import org.as3commons.asblocks.utils.DocCommentUtil;
 
 /*
 
-What needs to happen.
+The 'asdoc' holds the actual parsed AST of the node/as-doc/.stringValue
 
-- asdoc AST is created by parsing the as-doc node of the parent
-- the description is the /compilation-unit/content/body
+When the description is set;
+- Tries to find the as-doc of the node
+- if the as-doc does not exist, the method creates a new one, sets the
+stringValue of the new comment, nulls out the token
 - 
 */
 
@@ -49,7 +51,10 @@ What needs to happen.
  */
 public class DocCommentNode extends ScriptNode implements IDocComment
 {
-	private var asdoc:IParserNode;
+	/**
+	 * The asdoc AST.
+	 */
+	internal var asdoc:IParserNode;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -216,6 +221,6 @@ public class DocCommentNode extends ScriptNode implements IDocComment
 		tok.text = result;
 	}
 	
-
+	
 }
 }

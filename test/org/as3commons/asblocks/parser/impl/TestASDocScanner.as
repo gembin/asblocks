@@ -1,9 +1,8 @@
 package org.as3commons.asblocks.parser.impl
 {
-import flexunit.framework.Assert;
-
 import org.as3commons.asblocks.parser.core.Token;
 import org.as3commons.asblocks.utils.ASTUtil;
+import org.flexunit.Assert;
 
 public class TestASDocScanner
 {
@@ -11,12 +10,42 @@ public class TestASDocScanner
 	
 	private var scanner:ASDocScanner;
 	
+	private var scanner2:ASDocScanner2;
+	
 	[Before]
 	public function setUp():void
 	{
 		parser = new ASDocParser();
 		scanner = parser.scanner as ASDocScanner;
+		
+		scanner2 = new ASDocScanner2();
 	}
+	
+	[Test]
+	public function test_ws():void
+	{
+		var lines:Array =
+			[
+				"/**", 
+				" * A", 
+				" */"
+			];
+		
+		scanner.setLines(Vector.<String>(lines));
+		
+		var token:Token;
+		token = scanner2.nextToken(); // /**
+		token = scanner2.nextToken(); // \n
+		token = scanner2.nextToken(); // " "
+		token = scanner2.nextToken(); // *
+		token = scanner2.nextToken(); // " "
+		token = scanner2.nextToken(); // A
+		token = scanner2.nextToken(); // \n
+		token = scanner2.nextToken(); // " "
+		token = scanner2.nextToken(); // */
+		token = scanner2.nextToken(); // __END__
+	}
+	
 	
 	[Test]
 	public function test_code_tag():void
