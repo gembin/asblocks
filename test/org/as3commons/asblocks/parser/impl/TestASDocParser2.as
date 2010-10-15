@@ -122,13 +122,52 @@ public class TestASDocParser2
 			input,
 			"<compilation-unit><description><body><nl></nl><text-block>" +
 			"<text>A short comment</text><nl></nl><text>on another line.</text>" +
-			"<nl></nl><nl></nl></text-block><p-block><text-block><text>A paragraph 1.</text>" +
-			"<nl></nl><text>more on another line.</text></text-block></p-block>" +
-			"<nl></nl><nl></nl><p-block><text-block><text>A paragraph 2.</text></text-block>" +
-			"</p-block><nl></nl></body></description></compilation-unit>");
+			"<nl></nl><nl></nl><p-block><text>A paragraph 1.</text><nl></nl>" +
+			"<text>more on another line.</text></p-block><nl></nl><nl></nl>" +
+			"<p-block><text>A paragraph 2.</text></p-block><nl></nl></text-block>" +
+			"</body></description></compilation-unit>");
 	}
 	
-	//[Test]
+	[Test]
+	public function test_parseCode():void
+	{
+		var input:Array =
+			[
+				"/**", 
+				" * A short <code>document()</code> comment",
+				" * span 2.", 
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><nl></nl><text-block>" +
+			"<text>A short </text><code-block><text>document()</text></code-block>" +
+			"<text> comment</text><nl></nl><text>span 2.</text><nl></nl></text-block>" +
+			"</body></description></compilation-unit>");
+		
+		input =
+			[
+				"/**", 
+				" * comment me.",
+				" * ",
+				" * <p>A short <code>document()</code> comment",
+				" * span 2.</p>", 
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("2",
+			input,
+			"<compilation-unit><description><body><nl></nl><text-block>" +
+			"<text>comment me.</text><nl></nl><nl></nl><p-block><text>A short </text>" +
+			"<code-block><text>document()</text></code-block><text> comment</text>" +
+			"<nl></nl><text>span 2.</text></p-block><nl></nl></text-block></body>" +
+			"</description></compilation-unit>");
+	}
+	
+	[Test]
 	public function test_docTagName():void
 	{
 		var input:Array =
@@ -141,12 +180,12 @@ public class TestASDocParser2
 		assertPrint(input);
 		assertComment("1",
 			input,
-			"<compilation-unit><description><body><text-block><text> </text>" +
-			"</text-block></body><doctag-list><doctag><name>private</name></doctag>" +
-			"</doctag-list></description></compilation-unit>");
+			"<compilation-unit><description><body><nl></nl></body><doctag-list>" +
+			"<doctag><name>private</name><body><text-block><nl></nl></text-block>" +
+			"</body></doctag></doctag-list></description></compilation-unit>");
 	}
 	
-	//[Test]
+	[Test]
 	public function test_docTagNameAndBody():void
 	{
 		var input:Array =
@@ -159,12 +198,43 @@ public class TestASDocParser2
 		assertPrint(input);
 		assertComment("1",
 			input,
-			"<compilation-unit><description><body><text-block><text> </text>" +
-			"</text-block></body><doctag-list><doctag><name>foo</name><body>" +
-			"<text-block><text> bar </text><nl></nl></text-block></body></doctag>" +
-			"</doctag-list></description></compilation-unit>");
+			"<compilation-unit><description><body><nl></nl></body><doctag-list>" +
+			"<doctag><name>foo</name><body><text-block><text> bar </text><nl></nl>" +
+			"</text-block></body></doctag></doctag-list></description>" +
+			"</compilation-unit>");
 	}
 	
+	[Test]
+	public function test_fullFeatured():void
+	{
+		var input:Array =
+			[
+				"/**",
+				" * A short description. ",
+				" * ",
+				" * <p>Some thext that <code>can</code> be ",
+				" * used for a test.</p>",
+				" * ",
+				" * @see foo bar",
+				" * @internal foo <code>bar()</code>",
+				" * baz goo",
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><nl></nl><text-block>" +
+			"<text>A short description. </text><nl></nl><nl></nl><p-block>" +
+			"<text>Some thext that </text><code-block><text>can</text>" +
+			"</code-block><text> be </text><nl></nl><text>used for a test.</text>" +
+			"</p-block><nl></nl><nl></nl></text-block></body><doctag-list>" +
+			"<doctag><name>see</name><body><text-block><text> foo bar</text>" +
+			"<nl></nl></text-block></body></doctag><doctag><name>internal</name>" +
+			"<body><text-block><text> foo </text><code-block><text>bar()</text>" +
+			"</code-block><nl></nl><text>baz goo</text><nl></nl></text-block></body>" +
+			"</doctag></doctag-list></description></compilation-unit>");
+	}
 	
 	protected function assertPrint(input:Array):void
 	{

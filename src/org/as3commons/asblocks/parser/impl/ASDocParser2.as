@@ -182,11 +182,12 @@ public class ASDocParser2 extends ParserBase
 		{
 			if (tokIsValid())
 			{
-				if (tokenStartsWith("<") && isBlock(token.text))
-				{
-					result.addChild(parseTag(token.text.substring(1)));
-				}
-				else if (tokIs(NL))
+				//if (tokenStartsWith("<") && isBlock(token.text))
+				//{
+				//	result.addChild(parseTag(token.text.substring(1)));
+				//}
+				//else if (tokIs(NL))
+				if (tokIs(NL))
 				{
 					result.addChild(parseNewline());
 				}
@@ -233,11 +234,15 @@ public class ASDocParser2 extends ParserBase
 		var result:TokenNode = adapter.empty(ASDocNodeKind.TEXT_BLOCK, token);
 		
 		while (!tokIs(EOF) && !tokIs(ML_END) && !tokIs(AT)
-			&& !isBlock(token.text) && !tokIs("</"))
+			&& !tokIs("</"))
 		{
 			if (tokIs(NL))
 			{
 				result.addChild(parseNewline());
+			}
+			else if (tokenStartsWith("<") && isBlock(token.text))
+			{
+				result.addChild(parseTag(token.text.substring(1)));
 			}
 			else
 			{
@@ -401,18 +406,18 @@ public class ASDocParser2 extends ParserBase
 		
 		var skip:Boolean = false;
 		
-		nextTokenAppend(result, "tag", "<" + name);
+		consumeTag(result, "<" + name);
 		
 		// eat attributes
 		if (!tokIs(">"))
 		{
 			while (!tokIs(">"))
 			{
-				nextTokenAppend(result, "tag", token.text);
+				consumeTag(result, token.text);
 			}
 		}
 		
-		nextTokenAppend(result, "tag", ">");
+		consumeTag(result, ">");
 			
 		while (!tokIs(EOF) && !tokIs(ML_END))
 		{
@@ -429,15 +434,23 @@ public class ASDocParser2 extends ParserBase
 					//text += "</";
 				}
 			}
+			else if (tokIs(NL))
+			{
+				result.addChild(parseNewline());
+			}
+			else if (tokenStartsWith("<") && isBlock(token.text))
+			{
+				result.addChild(parseTag(token.text.substring(1)));
+			}
 			else
 			{
-				result.addChild(parseTextBlock());
+				parseTextStream(result);
 			}
 		}
 		
 		if (!skip)
 		{
-			nextTokenAppend(result, "tag", "</");
+			consumeTag(result, "</");
 		}
 		else
 		{
@@ -445,10 +458,16 @@ public class ASDocParser2 extends ParserBase
 			result.appendToken(TokenBuilder.newToken("tag", "</"));
 		}
 		
-		nextTokenAppend(result, "tag", name);
-		nextTokenAppend(result, "tag", ">");
+		consumeTag(result, name);
+		consumeTag(result, ">");
 		
 		return result;
+	}
+	
+	private function consumeTag(node:TokenNode, text:String):void
+	{
+		// TODO (mschmalle) throw error like consume() does
+		nextTokenAppend(node, "tag", text);
 	}
 	
 	/**
