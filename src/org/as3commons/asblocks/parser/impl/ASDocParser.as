@@ -82,6 +82,16 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
+	public static const CURLY_AT:String = "{@";
+	
+	/**
+	 * @private
+	 */
+	public static const RCURLY:String = "}";
+	
+	/**
+	 * @private
+	 */
 	public static const EOF:String = "__END__";
 	
 	//--------------------------------------------------------------------------
@@ -123,7 +133,7 @@ public class ASDocParser extends ParserBase
 	override public function parseCompilationUnit():IParserNode
 	{
 		var result:TokenNode = adapter.create(ASDocNodeKind.COMPILATION_UNIT);
-		nextToken();
+		nextToken(); // /**
 		result.addChild(parseDescription());
 		return result;
 	}
@@ -201,7 +211,8 @@ public class ASDocParser extends ParserBase
 		
 		consumeWhitespace(result);
 		
-		while (!tokIs(EOF) && !tokIs(ML_END) && !tokIs(AT))
+		while (!tokIs(EOF) && !tokIs(ML_END) 
+			&& !tokIs(AT) && !tokIs(CURLY_AT))
 		{
 			if (tokIsValid())
 			{
@@ -234,7 +245,8 @@ public class ASDocParser extends ParserBase
 	{
 		var result:TokenNode = adapter.empty(ASDocNodeKind.TEXT_BLOCK, token);
 		
-		while (!tokIs(EOF) && !tokIs(ML_END) && !tokIs(AT)
+		while (!tokIs(EOF) && !tokIs(ML_END) 
+			&& !tokIs(AT) && !tokIs(RCURLY)
 			&& !tokIs("</"))
 		{
 			if (tokIs(NL))
@@ -244,6 +256,10 @@ public class ASDocParser extends ParserBase
 			else if (tokenStartsWith("<") && isBlock(token.text))
 			{
 				result.addChild(parseTag(token.text.substring(1)));
+			}
+			else if (tokIs(CURLY_AT))
+			{
+				result.addChild(parseInlineDocTag());
 			}
 			else
 			{
@@ -266,7 +282,8 @@ public class ASDocParser extends ParserBase
 		var text:String = "";
 		
 		while (!tokIs(EOF) && !tokIs(ML_END) 
-			&& !tokIs(AT) && !tokIs(NL)
+			&& !tokIs(AT) && !tokIs(CURLY_AT) && !tokIs(RCURLY)
+			&& !tokIs(NL)
 			&& !isBlock(token.text))
 		{
 			if (tokIsValid())
@@ -354,11 +371,8 @@ public class ASDocParser extends ParserBase
 		
 		consume(AT, result);
 		
-		while (!tokIs(EOF) && !tokIs(ML_END) && !tokIs(AT))
-		{
-			result.addChild(parseDocTagName());
-			result.addChild(parseDocTagBody());
-		}
+		result.addChild(parseDocTagName());
+		result.addChild(parseDocTagBody());
 		
 		return result;
 	}
@@ -388,7 +402,7 @@ public class ASDocParser extends ParserBase
 	{
 		var result:TokenNode = adapter.empty(ASDocNodeKind.BODY, token);
 		
-		while (!tokIs(AT) && !tokIs(ML_END))
+		while (!tokIs(ML_END) && !tokIs(AT) && !tokIs(RCURLY))
 		{
 			if (tokIsValid())
 			{
@@ -399,6 +413,27 @@ public class ASDocParser extends ParserBase
 				consumeWhitespace(result);
 			}
 		}
+		
+		return result;
+	}
+	
+	//----------------------------------
+	// doctag
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	internal function parseInlineDocTag():TokenNode
+	{
+		var result:TokenNode = adapter.empty(ASDocNodeKind.INLINE_DOCTAG, token);
+		
+		consume(CURLY_AT, result);
+
+		result.addChild(parseDocTagName());
+		result.addChild(parseDocTagBody());
+		
+		consume(RCURLY, result);
 		
 		return result;
 	}
@@ -502,8 +537,8 @@ public class ASDocParser extends ParserBase
 		
 		var advanced:Boolean = false;
 		
-		while (token.kind == "ws"
-			|| token.kind == "astrix")
+		while (token.kind == ASDocNodeKind.WS
+			|| token.kind == ASDocNodeKind.ASTRIX)
 		{
 			if (token.text == " ")
 			{

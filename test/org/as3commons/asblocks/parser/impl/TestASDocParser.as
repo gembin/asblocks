@@ -451,6 +451,44 @@ public class TestASDocParser
 			"</pre-block><nl></nl></text-block></body></description></compilation-unit>");
 	}
 	
+	[Test]
+	public function test_inlineDocTag():void
+	{
+		var input:Array =
+			[
+				"/**",
+				" * A comment with {@foo bar with <strong>em</strong>} doc tag.",
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><nl></nl><text-block>" +
+			"<text>A comment with </text><inline-doctag><name>foo</name>" +
+			"<body><text-block><text> bar with </text><strong-block><text>em" +
+			"</text></strong-block></text-block></body></inline-doctag>" +
+			"<text> doc tag.</text><nl></nl></text-block></body>" +
+			"</description></compilation-unit>");
+		
+		input =
+			[
+				"/**",
+				" * @foo A tag with {@bar baz with <strong>em</strong>} doc tag.",
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><nl></nl></body><doctag-list>" +
+			"<doctag><name>foo</name><body><text-block><text> A tag with </text>" +
+			"<inline-doctag><name>bar</name><body><text-block><text> baz with </text>" +
+			"<strong-block><text>em</text></strong-block></text-block></body>" +
+			"</inline-doctag><text> doc tag.</text><nl></nl></text-block></body>" +
+			"</doctag></doctag-list></description></compilation-unit>");
+	}
+	
 	protected function assertPrint(input:Array):void
 	{
 		var printer:ASTPrinter = createPrinter();

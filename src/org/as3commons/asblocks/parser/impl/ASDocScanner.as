@@ -65,6 +65,11 @@ public class ASDocScanner extends ScannerBase
 	 */
 	private var inPre:Boolean = false;
 	
+	/**
+	 * @private
+	 */
+	private var inInlineTag:Boolean = false;
+	
 	//--------------------------------------------------------------------------
 	//
 	//  Constructor
@@ -95,6 +100,7 @@ public class ASDocScanner extends ScannerBase
 		super.setLines(lines);
 		
 		inPre = false;
+		inInlineTag = false;
 		isWhiteSpace = true;
 		length = getLength();
 		
@@ -142,7 +148,7 @@ public class ASDocScanner extends ScannerBase
 		if (currentCharacter == " "
 			|| currentCharacter == "\n"
 			|| currentCharacter == ">"
-			|| currentCharacter == '@')
+			|| currentCharacter == "@")
 		{
 			token = scanSingleCharacterToken(currentCharacter);
 		}
@@ -160,6 +166,22 @@ public class ASDocScanner extends ScannerBase
 		if (currentCharacter == "*")
 		{
 			token = scanCharacterSequence(currentCharacter, ["*/"]);
+		}
+		
+		if (currentCharacter == "{")
+		{
+			token = scanCharacterSequence(currentCharacter, ["{@"]);
+			
+			if (token.text == "{@")
+			{
+				inInlineTag = true;
+			}
+		}
+		
+		if (inInlineTag && currentCharacter == "}")
+		{
+			token = scanSingleCharacterToken(currentCharacter);
+			inInlineTag = false;
 		}
 		
 		if (token == null)

@@ -26,17 +26,13 @@ public class ASDocNodeKind
 	
 	public static const ML_END:String = "ml-end";
 	
-	public static const CODE_BLOCK:String = "code-block";
-	
-	public static const TEXT_BLOCK:String = "text-block";
-	
-	public static const PRE_BLOCK:String = "pre-block";
-	
 	public static const BODY:String = "body";
 	
 	public static const COMPILATION_UNIT:String = "compilation-unit";
 	
 	public static const DESCRIPTION:String = "description";
+	
+	public static const INLINE_DOCTAG:String = "inline-doctag";
 	
 	public static const DOCTAG:String = "doctag";
 	
@@ -44,12 +40,16 @@ public class ASDocNodeKind
 	
 	public static const LINK:String = "link";
 	
-	public static const LISTING:String = "listing";
-	
 	public static const NAME:String = "name";
 	
 	public static const TEXT:String = "text";
 	
+	public static const TEXT_BLOCK:String = "text-block";
+	
+	public static const WS:String = "ws";
+	
 	public static const NL:String = "nl";
+	
+	public static const ASTRIX:String = "astrix";
 }
 }
