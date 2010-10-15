@@ -38,7 +38,7 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		}
 	}
 	
-	[Test]
+	//[Test]
 	public function testBasic_():void
 	{
 		var ast:IParserNode = ASTTypeBuilder.newClassAST("foo.bar.Baz");
@@ -77,7 +77,7 @@ public class TestDocCommentNode extends BaseASFactoryTest
 			"*/\n\tpublic class Foo {\n\t}\n}", unit);
 	}
 	
-	[Test]
+	//[Test]
 	public function testParse():void
 	{
 		unit = project.newClass("Foo");
@@ -105,7 +105,7 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		
 		doc.description = "A document comment description\nspan two lines.";
 		
-		doc.description;
+		//doc.description;
 	}
 	
 	[Test]

@@ -218,7 +218,7 @@ public class ASDocParser extends ParserBase
 			ASDocNodeKind.ML_START, "/**", 
 			ASDocNodeKind.ML_END, "*/") as TokenNode;
 		
-		consume(ML_START); // /**
+		consumeParenthetic(ML_START); // /**
 		
 		// token after /**
 		// if the token is not valid, move to next valid token
@@ -246,11 +246,7 @@ public class ASDocParser extends ParserBase
 			}
 		}
 		
-		consume(ML_END); // */
-		
-		// FIXME (mschmalle) HACK need to drop last nl
-		// */ " " /n
-		result.stopToken.previous.previous.channel = "hidden";
+		consumeParenthetic(ML_END); // */
 		
 		return result;
 	}

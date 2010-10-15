@@ -37,7 +37,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -58,7 +65,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -94,7 +108,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -116,7 +137,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -134,7 +162,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -158,7 +193,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -179,7 +221,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -203,7 +252,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -223,7 +279,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -271,7 +334,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -436,7 +506,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -473,7 +550,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	
@@ -542,7 +626,14 @@ public class TestAS3Scanner
 		for (var i:int = 0; i < lines.length; i++)
 		{
 			assertText(lines[i]);
-			assertText("\n");
+			if (i == lines.length - 1)
+			{
+				assertText("__END__");
+			}
+			else
+			{
+				assertText("\n");
+			}
 		}
 	}
 	

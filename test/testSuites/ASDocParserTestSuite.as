@@ -2,6 +2,7 @@ package testSuites
 {
 
 import org.as3commons.asblocks.parser.impl.TestASDocParser;
+import org.as3commons.asblocks.parser.impl.TestASDocParser2;
 import org.as3commons.asblocks.parser.impl.TestASDocScanner;
 
 [Suite]
@@ -10,5 +11,6 @@ public class ASDocParserTestSuite
 {
 	public var testASDocScanner:TestASDocScanner;
 	public var testASDocParser:TestASDocParser;
+	public var testASDocParser2:TestASDocParser2;
 }
 }

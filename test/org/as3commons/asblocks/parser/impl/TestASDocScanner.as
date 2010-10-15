@@ -22,32 +22,148 @@ public class TestASDocScanner
 	}
 	
 	[Test]
+	public function test_wsSingleLine():void
+	{
+		var lines:Array =
+			[
+				"/** A comment. */"
+			];
+		
+		scanner2.setLines(Vector.<String>(lines));
+		
+		assertToken("/**", "ml-start");
+		assertToken(" ", "ws");
+		assertToken("A", "text");
+		assertToken(" ", "text");
+		assertToken("comment", "text");
+		assertToken(".", "text");
+		assertToken(" ", "text");
+		assertToken("*/", "ml-end");
+		assertToken("__END__", "eof");
+	}
+	
+	[Test]
 	public function test_ws():void
 	{
 		var lines:Array =
 			[
 				"/**", 
-				" * A", 
+				" * A comment.", 
 				" */"
 			];
 		
-		scanner.setLines(Vector.<String>(lines));
+		scanner2.setLines(Vector.<String>(lines));
 		
-		var token:Token;
-		token = scanner2.nextToken(); // /**
-		token = scanner2.nextToken(); // \n
-		token = scanner2.nextToken(); // " "
-		token = scanner2.nextToken(); // *
-		token = scanner2.nextToken(); // " "
-		token = scanner2.nextToken(); // A
-		token = scanner2.nextToken(); // \n
-		token = scanner2.nextToken(); // " "
-		token = scanner2.nextToken(); // */
-		token = scanner2.nextToken(); // __END__
+		Assert.assertTrue(scanner2.isWhiteSpace);
+		// comment start [turn on ws]
+		assertToken("/**", "ml-start");
+		
+		// newline [turn on ws]
+		assertToken("\n", "nl");
+		assertToken(" ", "ws");
+		assertToken("*", "astrix");
+		assertToken(" ", "ws");
+		Assert.assertTrue(scanner2.isWhiteSpace);
+		
+		// first identifier [turn off ws]
+		assertToken("A", "text");
+		Assert.assertFalse(scanner2.isWhiteSpace);
+		
+		assertToken(" ", "text");
+		assertToken("comment", "text");
+		assertToken(".", "text");
+		Assert.assertFalse(scanner2.isWhiteSpace);
+		
+		// newline [turn on ws]
+		assertToken("\n", "nl");
+		Assert.assertTrue(scanner2.isWhiteSpace);
+		assertToken(" ", "ws");
+		assertToken("*/", "ml-end");
 	}
 	
-	
 	[Test]
+	public function test_wsNoAstrix():void
+	{
+		var lines:Array =
+			[
+				"/**", 
+				" A comment.", 
+				" */"
+			];
+		
+		scanner2.setLines(Vector.<String>(lines));
+		
+		Assert.assertTrue(scanner2.isWhiteSpace);
+		// comment start [turn on ws]
+		assertToken("/**", "ml-start");
+		
+		// newline [turn on ws]
+		assertToken("\n", "nl");
+		assertToken(" ", "ws");
+		Assert.assertTrue(scanner2.isWhiteSpace);
+		
+		// first identifier [turn off ws]
+		assertToken("A", "text");
+		Assert.assertFalse(scanner2.isWhiteSpace);
+		
+		assertToken(" ", "text");
+		assertToken("comment", "text");
+		assertToken(".", "text");
+		Assert.assertFalse(scanner2.isWhiteSpace);
+		
+		// newline [turn on ws]
+		assertToken("\n", "nl");
+		Assert.assertTrue(scanner2.isWhiteSpace);
+		assertToken(" ", "ws");
+		assertToken("*/", "ml-end");
+	}
+	
+	//[Test]
+	public function test_wsMultipleNoAstrix():void
+	{
+		var lines:Array =
+			[
+				"/**", 
+				" A comment.", 
+				" <p>Another comment. </p>",
+				" */"
+			];
+		
+		scanner2.setLines(Vector.<String>(lines));
+		
+		assertToken("/**", "ml-start");
+		assertToken("\n", "ws");
+		assertToken(" ", "ws");
+		assertToken("A", "text");
+		assertToken(" ", "text");
+		assertToken("comment", "text");
+		assertToken(".", "text");
+		assertToken("\n", "ws");
+		assertToken(" ", "ws");
+		assertToken("<p", "text");
+		assertToken(">", "text");
+		assertToken("Another", "text");
+		assertToken(" ", "text");
+		assertToken("comment", "text");
+		assertToken(".", "text");
+		assertToken(" ", "text");
+		assertToken("</", "text");
+		assertToken("p", "text");
+		assertToken(">", "text");
+		
+		assertToken("\n", "ws");
+		assertToken(" ", "ws");
+		assertToken("*/", "ml-end");
+	}
+	
+	protected function assertToken(text:String, kind:String):void
+	{
+		var token:Token = scanner2.nextToken();
+		Assert.assertEquals(text, token.text);
+		Assert.assertEquals(kind, token.kind);
+	}
+	
+	//[Test]
 	public function test_code_tag():void
 	{
 		var lines:Array =
@@ -79,7 +195,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+	//[Test]
 	public function testCommentStartAndEnd():void
 	{
 		var lines:Array =
@@ -99,7 +215,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+	//[Test]
 	public function testShortListEnd_Period():void
 	{
 		var lines:Array =
@@ -117,7 +233,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+	//[Test]
 	public function testShortListEnd_PeriodNewline():void
 	{
 		var lines:Array =
@@ -136,7 +252,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+	//[Test]
 	public function testShortListSingleEnd_PeriodTab():void
 	{
 		var lines:Array =
@@ -155,7 +271,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+	//[Test]
 	public function testIsInShortList_Single():void
 	{
 		var lines:Array =
@@ -193,7 +309,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+	//[Test]
 	public function testIsInShortList_SingleMultiPeriod():void
 	{
 		var lines:Array =
@@ -236,7 +352,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 
-	[Test]
+	//[Test]
 	public function testIsInShortList_MultiMultiPeriod():void
 	{
 		var lines:Array =
@@ -283,7 +399,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+	//[Test]
 	public function testIsInShortList_AtOnly():void
 	{
 		var lines:Array =
@@ -308,7 +424,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+//	[Test]
 	public function testDocTag():void
 	{
 		var lines:Array =
@@ -342,7 +458,7 @@ public class TestASDocScanner
 		assertText("*/");
 	}
 	
-	[Test]
+	//[Test]
 	public function testInlineDocTag():void
 	{
 		var lines:Array =

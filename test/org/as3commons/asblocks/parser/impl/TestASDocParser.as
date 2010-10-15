@@ -21,7 +21,7 @@ public class TestASDocParser
 		scanner = parser.scanner as ASDocScanner;
 	}
 	
-	[Test]
+	//[Test]
 	public function test_parseBody():void
 	{
 		var input:String = "A document comment description.";
@@ -33,7 +33,7 @@ public class TestASDocParser
 			"</text></text-block></body>", result);
 	}
 	
-	[Test]
+	//[Test]
 	public function test_parseBodyWithNL():void
 	{
 		var input:String = "A document comment description\nwith a second line.";
@@ -45,7 +45,7 @@ public class TestASDocParser
 			"<nl></nl><text>with a second line.</text></text-block></body>", result);
 	}
 	
-	[Test]
+	//[Test]
 	public function test_shortNoSpace():void
 	{
 		var input:Array =
@@ -79,7 +79,7 @@ public class TestASDocParser
 			"</body></description></compilation-unit>");
 	}
 	
-	[Test]
+	//[Test]
 	public function test_MultipleLinesAndPara():void
 	{
 		var input:Array =
@@ -97,7 +97,7 @@ public class TestASDocParser
 		assertPrint(input);
 		assertComment("1",
 			input,
-			"<compilation-unit><description><body><text-block><text> A short comment" +
+			"<compilation-unit><description><body><text-block><text>A short comment" +
 			"</text><nl></nl><text> on another line.</text><nl></nl><text> </text><nl>" +
 			"</nl><text> &lt;p&gt;A paragraph 1.&lt;/p&gt;</text><nl></nl><text> </text>" +
 			"<nl></nl><text> &lt;p&gt;A paragraph 2.&lt;/p&gt;</text><nl></nl>" +
@@ -121,7 +121,7 @@ public class TestASDocParser
 			"");
 	}
 	
-	[Test]
+	//[Test]
 	public function test_parseMultiParasAndCodeBlocks():void
 	{
 		var input:Array =
@@ -139,7 +139,7 @@ public class TestASDocParser
 		assertPrint(input);
 		assertComment("1",
 			input,
-			"<compilation-unit><description><body><text-block><text> A short </text>" +
+			"<compilation-unit><description><body><text-block><text>A short </text>" +
 			"</text-block><code-block><text>document()</text></code-block><text-block>" +
 			"<text> comment</text><nl></nl><text> span 2.</text><nl></nl><text> " +
 			"</text><nl></nl><text> &lt;p&gt;Long </text></text-block><code-block>" +
@@ -150,7 +150,7 @@ public class TestASDocParser
 			"</body></description></compilation-unit>");
 	}
 	
-	[Test]
+	//[Test]
 	public function test_parseMultiParasAndCodeBlocksAndDocTags():void
 	{
 		var input:Array =
@@ -171,7 +171,7 @@ public class TestASDocParser
 		assertPrint(input);
 		assertComment("1",
 			input,
-			"<compilation-unit><description><body><text-block><text> A short " +
+			"<compilation-unit><description><body><text-block><text>A short " +
 			"</text></text-block><code-block><text>document()</text></code-block>" +
 			"<text-block><text> comment</text><nl></nl><text> span 2.</text>" +
 			"<nl></nl><text> </text><nl></nl><text> &lt;p&gt;Long </text>" +
@@ -187,7 +187,7 @@ public class TestASDocParser
 			"</doctag></doctag-list></description></compilation-unit>");
 	}
 	
-	[Test]
+	//[Test]
 	public function test_parseMultiParasAndPreBlock():void
 	{
 		var input:Array =
@@ -209,7 +209,7 @@ public class TestASDocParser
 		assertPrint(input);
 		assertComment("1",
 			input,
-			"<compilation-unit><description><body><text-block><text> A short </text>" +
+			"<compilation-unit><description><body><text-block><text>A short </text>" +
 			"</text-block><code-block><text>document()</text></code-block><text-block>" +
 			"<text> comment</text><nl></nl><text> span 2.</text><nl></nl><text> </text>" +
 			"<nl></nl><text> &lt;p&gt;Long </text></text-block><code-block><text>" +
@@ -220,7 +220,7 @@ public class TestASDocParser
 			"<nl></nl><text> }</text></pre-block></body></description></compilation-unit>");
 	}
 	
-	[Test]
+	//[Test]
 	public function test_parsePreBlockWithXML():void
 	{
 		var input:Array =
@@ -241,7 +241,7 @@ public class TestASDocParser
 		assertPrint(input);
 		assertComment("1",
 			input,
-			"<compilation-unit><description><body><text-block><text> A short </text>" +
+			"<compilation-unit><description><body><text-block><text>A short </text>" +
 			"</text-block><code-block><text>document()</text></code-block><text-block>" +
 			"<text> comment</text><nl></nl><text> span 2.</text><nl></nl><text> </text>" +
 			"<nl></nl><text> </text></text-block><pre-block><text> &lt;s:Rect&gt;</text>" +

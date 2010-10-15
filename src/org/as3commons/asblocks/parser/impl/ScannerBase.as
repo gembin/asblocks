@@ -188,6 +188,9 @@ public class ScannerBase implements IScanner
 		{
 			column = -1;
 			line++;
+			if (line == lines.length)
+				return END;
+			
 			return "\n";
 		}
 		
@@ -306,7 +309,7 @@ public class ScannerBase implements IScanner
 	 */
 	protected final function scanSingleCharacterToken(character:String):Token
 	{
-		return new Token(character, line, column );
+		return new Token(character, line, column);
 	}
 	
 	/**
