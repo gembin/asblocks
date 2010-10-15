@@ -560,6 +560,7 @@ public class ASDocParser extends ParserBase
 			return false;
 		}
 		
+		// TODO (mschmalle) put asdoc block types in Enum
 		var blocks:Object =
 			{
 				p:true,
@@ -568,7 +569,8 @@ public class ASDocParser extends ParserBase
 				strong:true,
 				i:true,
 				ul:true,
-				li:true
+				li:true,
+				listing:true
 			};
 		
 		return blocks[name.substring(1)];

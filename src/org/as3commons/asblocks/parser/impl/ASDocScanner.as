@@ -133,7 +133,7 @@ public class ASDocScanner extends ScannerBase
 				["</", "<listing", "<pre", "<code", "<p",
 					"<strong", "<i", "<ul", "<li"]);
 			
-			if (token.text == "<pre")
+			if (token.text == "<pre" || token.text == "<listing")
 			{
 				inPre = true;
 			}

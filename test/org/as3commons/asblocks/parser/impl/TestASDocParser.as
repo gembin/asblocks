@@ -1,5 +1,6 @@
 package org.as3commons.asblocks.parser.impl
 {
+
 import org.as3commons.asblocks.impl.ASTPrinter;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.core.SourceCode;
@@ -292,7 +293,7 @@ public class TestASDocParser
 	}
 	
 	[Test]
-	public function test_parseMultiParasAndPreBlock():void
+	public function test_preBlock():void
 	{
 		var input:Array =
 			[
@@ -318,6 +319,71 @@ public class TestASDocParser
 			"<nl></nl><text> </text>" +
 			"</pre-block>" +
 			"<nl></nl></text-block></body></description></compilation-unit>");
+	}
+	
+	[Test]
+	public function test_preBlockAndTags():void
+	{
+		var input:Array =
+			[
+				"/**",
+				" * <pre>",
+				" * class HelloWorld {",
+				" *    public function HelloWorld() {",
+				" *    }",
+				" * }",
+				" * </pre>",
+				" * ",
+				" * @foo",
+				" * @baz goo",
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><nl></nl><text-block>" +
+			"<pre-block>" +
+			"<nl></nl><text> class HelloWorld {</text>" +
+			"<nl></nl><text>    public function HelloWorld() {</text>" +
+			"<nl></nl><text>    }</text>" +
+			"<nl></nl><text> }</text>" +
+			"<nl></nl><text> </text></pre-block>" +
+			"<nl></nl><text> </text>" +
+			"<nl></nl><text> </text></text-block></body>" +
+			"<doctag-list><doctag><name>foo</name><body><text-block>" +
+			"<nl></nl><text> </text></text-block></body></doctag><doctag>" +
+			"<name>baz</name><body><text-block><text> goo</text><nl></nl>" +
+			"</text-block></body></doctag></doctag-list></description></compilation-unit>");
+	}
+	
+	[Test]
+	public function test_listingBlock():void
+	{
+		var input:Array =
+			[
+				"/**",
+				" * <listing version=\"3.0\">",
+				" * class HelloWorld {",
+				" *    public function HelloWorld() {",
+				" *    }",
+				" * }",
+				" * </listing>", 
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("1",
+			input,
+			"<compilation-unit><description><body><nl></nl><text-block>" +
+			"<listing-block>" +
+			"<nl></nl><text> class HelloWorld {</text>" +
+			"<nl></nl><text>    public function HelloWorld() {</text>" +
+			"<nl></nl><text>    }</text>" +
+			"<nl></nl><text> }</text>" +
+			"<nl></nl><text> </text>" +
+			"</listing-block><nl></nl></text-block>" +
+			"</body></description></compilation-unit>");
 	}
 	
 	[Test]
