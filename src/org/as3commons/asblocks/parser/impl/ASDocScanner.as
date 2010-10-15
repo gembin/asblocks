@@ -130,7 +130,8 @@ public class ASDocScanner extends ScannerBase
 		if (currentCharacter == "<")
 		{
 			token = scanCharacterSequence(currentCharacter, 
-				["</", "<listing", "<pre", "<code", "<p"]);
+				["</", "<listing", "<pre", "<code", "<p",
+					"<strong", "<i", "<ul", "<li"]);
 			
 			if (token.text == "<pre")
 			{

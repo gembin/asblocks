@@ -125,7 +125,7 @@ public class TestASDocParser
 			"<nl></nl></text-block></body></description></compilation-unit>");
 	}
 	
-	//[Test]
+	[Test]
 	public function test_Tags():void
 	{
 		var input:Array =
@@ -147,10 +147,12 @@ public class TestASDocParser
 		assertComment("1",
 			input,
 			"<compilation-unit><description><body><nl></nl><text-block>" +
-			"<text>A short comment</text><nl></nl><text>on another line.</text>" +
-			"<nl></nl><nl></nl><p-block><text>A paragraph 1.</text><nl></nl>" +
-			"<text>more on another line.</text></p-block><nl></nl><nl></nl>" +
-			"<p-block><text>A paragraph 2.</text></p-block><nl></nl></text-block>" +
+			"<text>A short comment.</text><nl></nl><nl></nl><p-block><text>A </text>" +
+			"<strong-block><text>paragraph</text></strong-block><text> 1.</text>" +
+			"<nl></nl><text>more </text><i-block><text>on</text></i-block>" +
+			"<text> another line.</text></p-block><nl></nl><nl></nl><ul-block>" +
+			"<nl></nl><li-block><text>one</text></li-block><nl></nl><li-block>" +
+			"<text>two</text></li-block><nl></nl></ul-block><nl></nl></text-block>" +
 			"</body></description></compilation-unit>");
 	}
 	

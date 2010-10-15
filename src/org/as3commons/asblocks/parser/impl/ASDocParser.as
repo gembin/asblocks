@@ -267,7 +267,7 @@ public class ASDocParser extends ParserBase
 		
 		while (!tokIs(EOF) && !tokIs(ML_END) 
 			&& !tokIs(AT) && !tokIs(NL)
-			&& !isBlock(token.text) && !tokIs("</"))
+			&& !isBlock(token.text))
 		{
 			if (tokIsValid())
 			{
@@ -290,6 +290,37 @@ public class ASDocParser extends ParserBase
 		}
 	}
 	
+	/**
+	 * @private
+	 */
+	private function parseTagStream(node:TokenNode):void
+	{
+		var text:String = "";
+		
+		while (!tokIs(EOF) && !tokIs(ML_END) 
+			&& !tokIs(AT) && !tokIs(NL)
+			&& !isBlock(token.text) && !tokIs("</"))
+		{
+			if (tokIsValid())
+			{
+				text += token.text;
+				nextToken();
+			}
+			else
+			{
+				if (text != "")
+				{
+					node.addChild(adapter.create(ASDocNodeKind.TEXT, text));
+					text = "";
+				}
+				consumeWhitespace(node);
+			}
+		}
+		if (text != "")
+		{
+			node.addChild(adapter.create(ASDocNodeKind.TEXT, text));
+		}
+	}
 	
 	//----------------------------------
 	// doctag-list
@@ -424,7 +455,7 @@ public class ASDocParser extends ParserBase
 			}
 			else
 			{
-				parseTextStream(result);
+				parseTagStream(result);
 			}
 		}
 		
@@ -533,7 +564,11 @@ public class ASDocParser extends ParserBase
 			{
 				p:true,
 				code:true,
-				pre:true
+				pre:true,
+				strong:true,
+				i:true,
+				ul:true,
+				li:true
 			};
 		
 		return blocks[name.substring(1)];
