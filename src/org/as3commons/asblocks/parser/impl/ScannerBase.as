@@ -340,6 +340,11 @@ public class ScannerBase implements IScanner
 			}
 		}
 		
+		if (found == "")
+		{
+			return null;
+		}
+		
 		var result:Token = new Token(found, line, column);
 		skipChars(found.length - 1);
 		return result;

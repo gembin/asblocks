@@ -24,7 +24,6 @@ import org.as3commons.asblocks.impl.TokenBuilder;
 import org.as3commons.asblocks.parser.api.ASDocNodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.IScanner;
-import org.as3commons.asblocks.parser.api.KeyWords;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.LinkedListTreeAdaptor;
 import org.as3commons.asblocks.parser.core.TokenNode;
@@ -73,33 +72,23 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	public static const AT:String = "@";
-	
-	/**
-	 * @private
-	 */
 	public static const ASTRIX:String = "*";
 	
 	/**
 	 * @private
 	 */
-	public static const DOT:String = ".";
-	
-	//--------------------------------------------------------------------------
-	//
-	// Public :: Constants
-	//
-	//--------------------------------------------------------------------------
+	public static const AT:String = "@";
 	
 	/**
 	 * @private
 	 */
-	private var _spaceFound:Boolean = false;
+	public static const EOF:String = "__END__";
 	
-	/**
-	 * @private
-	 */
-	private var _consumedLeft:Boolean = false;
+	//--------------------------------------------------------------------------
+	//
+	// Private :: Variables
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
 	 * @private
@@ -134,37 +123,9 @@ public class ASDocParser extends ParserBase
 	override public function parseCompilationUnit():IParserNode
 	{
 		var result:TokenNode = adapter.create(ASDocNodeKind.COMPILATION_UNIT);
-		
 		nextToken();
-		if (token.text == "/") // didn't find /** just /*
-		{
-			return result; // is the AS3Parser really saving /* comments? check
-		}
-		
-		_bodyFound = false;
-		_consumedLeft = false;
-		
 		result.addChild(parseDescription());
-		
 		return result;
-	}
-	
-	/**
-	 * @private
-	 */
-	override public function nextToken():void
-	{
-		super.nextToken();
-		
-		if (token.text == ASTRIX)
-		{
-			_consumedLeft = true;
-		}
-		
-		if (token.text == NL)
-		{
-			_consumedLeft = false;
-		}
 	}
 	
 	//--------------------------------------------------------------------------
@@ -186,16 +147,6 @@ public class ASDocParser extends ParserBase
 	 */
 	override protected function initialize():void
 	{
-		_bodyFound = false;
-		_consumedLeft = false;
-	}
-	
-	/**
-	 * @private
-	 */
-	override protected function consumeWhitespace(node:TokenNode):Boolean
-	{
-		return false;
 	}
 	
 	//--------------------------------------------------------------------------
@@ -220,29 +171,15 @@ public class ASDocParser extends ParserBase
 		
 		consumeParenthetic(ML_START); // /**
 		
-		// token after /**
-		// if the token is not valid, move to next valid token
-		// this should just advance the parser to the first identifier right of
-		// the astrix, or if just a single line comment, make the next token
-		// valid by setting _consumedLeft = true
-		if (!tokIsValid())
-			consumeLeft(result);
-		
-		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END))
+		while (!tokIs(EOF) && !tokIs(ML_END))
 		{
-			if (token.text == AT)
+			if (tokIs(AT))
 			{
-				_bodyFound = true;
-				
 				result.addChild(parseDocTagList());
-			}
-			else if (!_bodyFound)
-			{
-				result.addChild(parseBody());
 			}
 			else
 			{
-				nextTokenAppend(result);
+				result.addChild(parseBody());
 			}
 		}
 		
@@ -262,37 +199,26 @@ public class ASDocParser extends ParserBase
 	{
 		var result:TokenNode = adapter.empty(ASDocNodeKind.BODY, token);
 		
-		if (!tokIsValid())
-			consumeLeft(result);
+		consumeWhitespace(result);
 		
-		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END) && !tokIs(AT))
+		while (!tokIs(EOF) && !tokIs(ML_END) && !tokIs(AT))
 		{
 			if (tokIsValid())
 			{
-				if (token.text == "<code")
+				if (tokIs(NL))
 				{
-					result.addChild(parseCodeText());
-				}
-				else if (token.text == "<pre")
-				{
-					result.addChild(parsePreText("pre"));
-				}
-				else if (token.text == "<listing")
-				{
-					result.addChild(parsePreText("listing"));
+					result.addChild(parseNewline());
 				}
 				else
 				{
-					result.addChild(parseText());
+					result.addChild(parseTextBlock());
 				}
 			}
 			else
 			{
-				nextTokenAppend(result);
+				consumeWhitespace(result);
 			}
 		}
-		
-		_bodyFound = true;
 		
 		return result;
 	}
@@ -304,191 +230,66 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function parseText():TokenNode
+	private function parseTextBlock():TokenNode
 	{
 		var result:TokenNode = adapter.empty(ASDocNodeKind.TEXT_BLOCK, token);
 		
-		var text:String = "";
-		
-		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END) && !tokIs(AT) 
-			&& !tokIs("<code") && !tokIs("<pre") && !tokIs("<listing"))
+		while (!tokIs(EOF) && !tokIs(ML_END) && !tokIs(AT)
+			&& !tokIs("</"))
 		{
-			if (tokIsValid() && !tokIs(ASTRIX))
+			if (tokIs(NL))
 			{
-				text += token.text;
+				result.addChild(parseNewline());
+			}
+			else if (tokenStartsWith("<") && isBlock(token.text))
+			{
+				result.addChild(parseTag(token.text.substring(1)));
 			}
 			else
 			{
-				appendToken(result, ASDocNodeKind.TEXT, token.text);
+				parseTextStream(result);
 			}
-			
-			nextToken();
-			
-			if (tokIs(NL))
+		}
+		
+		return result;
+	}
+	
+	//----------------------------------
+	// text[i]
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function parseTextStream(node:TokenNode):void
+	{
+		var text:String = "";
+		
+		while (!tokIs(EOF) && !tokIs(ML_END) 
+			&& !tokIs(AT) && !tokIs(NL)
+			&& !isBlock(token.text) && !tokIs("</"))
+		{
+			if (tokIsValid())
 			{
-				if (text != "")
-				{
-					result.addChild(adapter.create(ASDocNodeKind.TEXT, text));
-				}
-				
-				text = "";
-				
-				var nl:TokenNode = adapter.create(ASDocNodeKind.NL);
-				
+				text += token.text;
 				nextToken();
-				
-				if (!tokIs(KeyWords.EOF))
-				{
-					nl.appendToken(TokenBuilder.newNewline())
-					result.addChild(nl);
-					consumeLeft(result);
-				}
-			}
-		}
-		
-		if (text != "")
-		{
-			result.addChild(adapter.create(ASDocNodeKind.TEXT, text));
-		}
-		
-		return result;
-	}
-	
-	//----------------------------------
-	// code-block
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private function parseCodeText():TokenNode
-	{
-		var result:TokenNode = adapter.empty(ASDocNodeKind.CODE_BLOCK, token);
-		
-		var text:String = "";
-		
-		consume("<code");
-		consume(">");
-		
-		appendToken(result, ASDocNodeKind.TEXT, "<code>");
-		
-		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END) && !tokIs("</"))
-		{
-			text += token.text;
-			nextToken();
-		}
-		
-		if (text != "")
-		{
-			result.addChild(adapter.create(ASDocNodeKind.TEXT, text));
-		}
-		
-		consume("</");
-		consume("code");
-		consume(">");
-		
-		appendToken(result, ASDocNodeKind.TEXT, "</code>");
-		
-		return result;
-	}
-	
-	//----------------------------------
-	// pre-block
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private function parsePreText(name:String):TokenNode
-	{
-		var result:TokenNode = adapter.empty(ASDocNodeKind.PRE_BLOCK, token);
-		
-		var text:String = "";
-		
-		var buffer:String = "<" + name;
-		nextToken(); // <name
-		
-		// eat attributes
-		while (!tokIs(">"))
-		{
-			buffer += token.text;
-			nextToken();
-		}
-		
-		buffer += ">";
-		nextToken(); // >
-		
-		result.appendToken(TokenBuilder.newToken(ASDocNodeKind.TEXT, buffer));
-		
-		buffer = "";
-		
-		var skip:Boolean = false;
-		
-		// token : <pre
-		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END))
-		{
-			if (tokIs("</"))
-			{
-				nextToken(); // </"
-				if (tokIs(name))
-				{
-					buffer += "</";
-					skip = true;
-					break;
-				}
-				else
-				{
-					text += "</";
-				}
-			}
-			
-			if (tokIsValid() && !tokIs(ASTRIX) && _spaceFound)
-			{
-				text += token.text;
 			}
 			else
 			{
-				appendToken(result, ASDocNodeKind.TEXT, token.text);
-			}
-			
-			nextToken();
-			
-			if (tokIs(NL))
-			{
 				if (text != "")
 				{
-					result.addChild(adapter.create(ASDocNodeKind.TEXT, text));
+					node.addChild(adapter.create(ASDocNodeKind.TEXT, text));
+					text = "";
 				}
-				
-				text = "";
-				
-				var nl:TokenNode = adapter.create(ASDocNodeKind.NL);
-				nl.appendToken(TokenBuilder.newNewline())
-				result.addChild(nl);
-				
-				consumeLeftPre(result);
+				consumeWhitespace(node);
 			}
 		}
-		
 		if (text != "")
 		{
-			result.addChild(adapter.create(ASDocNodeKind.TEXT, text));
+			node.addChild(adapter.create(ASDocNodeKind.TEXT, text));
 		}
-		
-		if (!skip)
-		{
-			buffer = "</";
-			nextToken(); // </
-		}
-		
-		nextToken(); // name
-		nextToken(); // >
-		buffer += name + ">";
-		
-		result.appendToken(TokenBuilder.newToken(ASDocNodeKind.TEXT, buffer));
-		
-		return result;
 	}
+	
 	
 	//----------------------------------
 	// doctag-list
@@ -499,10 +300,9 @@ public class ASDocParser extends ParserBase
 	 */
 	internal function parseDocTagList():IParserNode
 	{
-		// token @
 		var result:TokenNode = adapter.empty(ASDocNodeKind.DOCTAG_LIST, token);
-
-		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END))
+		
+		while (!tokIs(EOF) && !tokIs(ML_END))
 		{
 			result.addChild(parseDocTag());
 		}
@@ -523,25 +323,10 @@ public class ASDocParser extends ParserBase
 		
 		consume(AT, result);
 		
-		while (!tokIs(KeyWords.EOF) && !tokIs(ML_END) && !tokIs(AT))
+		while (!tokIs(EOF) && !tokIs(ML_END) && !tokIs(AT))
 		{
-			if (tokIsValid())
-			{
-				result.addChild(parseDocTagName());
-				
-				if (!tokIs(NL))
-				{
-					result.addChild(parseDocTagBody());
-				}
-				else
-				{
-					consumeLeft(result);
-				}
-			}
-			else
-			{
-				nextToken();
-			}
+			result.addChild(parseDocTagName());
+			result.addChild(parseDocTagBody());
 		}
 		
 		return result;
@@ -557,9 +342,7 @@ public class ASDocParser extends ParserBase
 	private function parseDocTagName():TokenNode
 	{
 		var result:TokenNode = adapter.copy(ASDocNodeKind.NAME, token);
-		
-		nextToken(); // the doctag name
-		
+		nextToken(); // name
 		return result;
 	}
 	
@@ -576,117 +359,201 @@ public class ASDocParser extends ParserBase
 		
 		while (!tokIs(AT) && !tokIs(ML_END))
 		{
-			if (token.text == "<code")
+			if (tokIsValid())
 			{
-				result.addChild(parseCodeText());
-			}
-			else if (token.text == "<pre")
-			{
-				result.addChild(parsePreText("pre"));
-			}
-			else if (token.text == "<listing")
-			{
-				result.addChild(parsePreText("listing"));
+				result.addChild(parseTextBlock());
 			}
 			else
 			{
-				result.addChild(parseText());
+				consumeWhitespace(result);
 			}
 		}
 		
 		return result;
-		
 	}
+	
+	//----------------------------------
+	// *-tag
+	//----------------------------------
 	
 	/**
 	 * @private
 	 */
-	private function consumeLeft(node:TokenNode):void
+	private function parseTag(name:String):TokenNode
 	{
-		_spaceFound = false;
+		var result:TokenNode = adapter.empty(name + "-block", token);
 		
-		do
+		var skip:Boolean = false;
+		
+		consumeTag(result, "<" + name);
+		
+		// eat attributes
+		if (!tokIs(">"))
 		{
-			if (tokIs(ML_END) || tokIs(KeyWords.EOF))
+			while (!tokIs(">"))
 			{
-				break;
+				consumeTag(result, token.text);
 			}
-			
-			if (token.text == ASTRIX)
-			{
-				_consumedLeft = true;
-				_spaceFound = false;
-			}
-			
-			if (_consumedLeft && token.text == SPACE)
-			{
-				_spaceFound = true;
-				break;
-			}
-			
-			if (token.text == NL)
-			{
-				_consumedLeft = false;
-			}
-			
-			if (isIdentifierCharacter(token.text))
-			{
-				_consumedLeft = true;
-				break;
-			}
-			
-			nextTokenAppend(node);
 		}
-		while (!_consumedLeft
-			|| ((_consumedLeft && token.text == ASTRIX) || !_spaceFound));
-	}
-	
-	/**
-	 * @private
-	 */
-	private function consumeLeftPre(node:TokenNode):void
-	{
-		do
+		
+		consumeTag(result, ">");
+		
+		while (!tokIs(EOF) && !tokIs(ML_END))
 		{
-			nextToken();
-			
 			if (tokIs("</"))
 			{
-				break; // Special case where the pre ends the comment
-			}
-			
-			if (token.text == NL)
-			{
-				_consumedLeft = false;
-				break; // <pre> needs newlines
-			}
-			
-			if (!_consumedLeft)
-			{
-				nextTokenAppend(node);
-				
-				if (token.text == ASTRIX)
+				nextToken(); // </"
+				if (tokIs(name))
 				{
-					_consumedLeft = true;
-					if (tokIs(SPACE))
-					{
-						//nextToken(); // start of pre text on the newline
-						// specail case where there is an empty line under
-						if (token.text == NL)
-						{
-							break;
-						}
-					}
+					skip = true;
+					break;
+				}
+				else
+				{
+					// this needs to be fixed; append the embeded pre end tag
+					result.addChild(adapter.create(ASDocNodeKind.TEXT, "</"));
 				}
 			}
+			else if (tokIs(NL))
+			{
+				result.addChild(parseNewline());
+			}
+			else if (tokenStartsWith("<") && isBlock(token.text))
+			{
+				result.addChild(parseTag(token.text.substring(1)));
+			}
+			else
+			{
+				parseTextStream(result);
+			}
 		}
-		while (!_consumedLeft);
+		
+		if (!skip)
+		{
+			consumeTag(result, "</");
+		}
+		else
+		{
+			// the while kicked out at '</', must record
+			result.appendToken(TokenBuilder.newToken("tag", "</"));
+		}
+		
+		consumeTag(result, name);
+		consumeTag(result, ">");
+		
+		return result;
+	}
+	
+	//----------------------------------
+	// nl
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private function parseNewline():TokenNode
+	{
+		var result:TokenNode = adapter.create(ASDocNodeKind.NL);
+		result.appendToken(TokenBuilder.newToken(ASDocNodeKind.NL, token.text));
+		nextToken();
+		return result;
 	}
 	
 	/**
 	 * @private
 	 */
-	private function appendToken(node:TokenNode, kind:String, text:String):LinkedListToken
+	override protected function consumeWhitespace(node:TokenNode):Boolean
+	{
+		if (!node || !token)
+		{
+			return false;
+		}
+		
+		var advanced:Boolean = false;
+		
+		while (token.kind == "ws"
+			|| token.kind == "astrix")
+		{
+			if (token.text == " ")
+			{
+				appendSpace(node);
+			}
+			else if (token.text == "\t")
+			{
+				appendTab(node);
+			}
+			else if (token.text == "*")
+			{
+				appendAstrix(node);
+			}
+			
+			advanced = true;
+		}
+		
+		return advanced;
+	}
+	
+	/**
+	 * @private
+	 */
+	protected function appendAstrix(node:TokenNode):void
+	{
+		if (!node || !scanner.allowWhiteSpace)
+			return;
+		
+		if (node)
+		{
+			node.appendToken(
+				adapter.createToken("astrix", "*",
+					token.line, token.column));
+		}
+		
+		nextToken();
+	}
+	
+	/**
+	 * @private
+	 */
+	private function tokIsValid():Boolean
+	{
+		return token.kind != "ws" && token.kind != "astrix";
+	}
+	
+	/**
+	 * @private
+	 */
+	private function isBlock(name:String):Boolean
+	{
+		if (!tokenStartsWith("<"))
+		{
+			return false;
+		}
+		
+		var blocks:Object =
+			{
+				p:true,
+				code:true,
+				pre:true
+			};
+		
+		return blocks[name.substring(1)];
+	}
+	
+	/**
+	 * @private
+	 */
+	private function consumeTag(node:TokenNode, text:String):void
+	{
+		// TODO (mschmalle) throw error like consume() does
+		nextTokenAppend(node, "tag", text);
+	}
+	
+	/**
+	 * @private
+	 */
+	private function appendToken(node:TokenNode, 
+								 kind:String, 
+								 text:String):LinkedListToken
 	{
 		var token:LinkedListToken = adapter.createToken(
 			kind, text,	token.line, token.column);
@@ -699,36 +566,10 @@ public class ASDocParser extends ParserBase
 	/**
 	 * @private
 	 */
-	private function nextTokenAppend(node:TokenNode):void
+	private function nextTokenAppend(node:TokenNode, kind:String, text:String):void
 	{
-		var token:LinkedListToken = appendToken(node, token.text, token.text);
-		
-		if (!_spaceFound)
-			token.channel = "hidden";
-		else
-			token.channel = "real";
-		
+		node.appendToken(TokenBuilder.newToken(kind, text));
 		nextToken();
-	}
-	
-	/**
-	 * @private
-	 */
-	private function tokIsValid():Boolean
-	{
-		if (!_consumedLeft && isIdentifierCharacter(token.text))
-			_consumedLeft = true;
-		
-		return _consumedLeft;
-	}
-	
-	/**
-	 * @private
-	 */
-	private function isIdentifierCharacter(currentCharacter:String):Boolean
-	{
-		return (currentCharacter != " " && currentCharacter != "*"
-				&& currentCharacter != "\t" && currentCharacter != "\n");
 	}
 }
 }

@@ -33,60 +33,37 @@ public class ASDocScanner extends ScannerBase
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Internal :: Properties
+	//  Public :: Constants
 	//
 	//--------------------------------------------------------------------------
 	
-	//----------------------------------
-	// isInShort
-	//----------------------------------
+	/**
+	 * An end of file.
+	 */
+	public static const EOF:String = "__END__";
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Private :: Variables
+	//
+	//--------------------------------------------------------------------------
+	
+	internal var isWhiteSpace:Boolean = false;
 	
 	/**
 	 * @private
 	 */
-	private var _inShort:Boolean = false;
+	private var length:int = -1;
 	
 	/**
 	 * @private
 	 */
-	internal function get isInShort():Boolean
-	{
-		return _inShort;
-	}
-	
-	//----------------------------------
-	// isInDocTag
-	//----------------------------------
+	private var map:Object;
 	
 	/**
 	 * @private
 	 */
-	private var _inDocTag:Boolean = false;
-	
-	/**
-	 * @private
-	 */
-	internal function get isInDocTag():Boolean
-	{
-		return _inDocTag;
-	}
-	
-	//----------------------------------
-	// isInInlineDocTag
-	//----------------------------------
-	
-	/**
-	 * @private
-	 */
-	private var _inInlineDocTag:Boolean = false;
-	
-	/**
-	 * @private
-	 */
-	internal function get isInInlineDocTag():Boolean
-	{
-		return _inInlineDocTag;
-	}
+	private var inPre:Boolean = false;
 	
 	//--------------------------------------------------------------------------
 	//
@@ -117,9 +94,19 @@ public class ASDocScanner extends ScannerBase
 	{
 		super.setLines(lines);
 		
-		_inShort = true;
-		_inDocTag = false;
-		_inInlineDocTag = false;
+		inPre = false;
+		isWhiteSpace = true;
+		length = getLength();
+		
+		map = {};
+		
+		map["/**"] = "ml-start";
+		map["*/"] = "ml-end";
+		map["*"] = "astrix";
+		map[" "] = "ws";
+		map["\t"] = "ws";
+		map["\n"] = "nl";
+		map["__END__"] = "eof";
 	}
 	
 	/**
@@ -128,71 +115,107 @@ public class ASDocScanner extends ScannerBase
 	override public function nextToken():Token
 	{
 		var currentCharacter:String;
+		var token:Token;
 		
-		// while we have lines and are not at the end
 		if (lines != null && line < lines.length)
 		{
 			currentCharacter = nextChar();
 		}
 		
-		var token:Token;
-		
-		if (currentCharacter == END)
+		if (currentCharacter == EOF)
 		{
-			token = new Token(END, line, column);
-			return token;
+			token = new Token(EOF, line, column);
 		}
 		
-		if (currentCharacter == '@' || currentCharacter == ' '
-			|| currentCharacter == '\t' || currentCharacter == '\n'
-			|| currentCharacter == '>')
-		{
-			if (currentCharacter == '@')
-			{
-				_inShort = false;
-				_inDocTag = true;
-			}
-			
-			return scanSingleCharacterToken(currentCharacter);
-		}
-		
-		if (currentCharacter == '<')
+		if (currentCharacter == "<")
 		{
 			token = scanCharacterSequence(currentCharacter, 
-				["</", "<listing", "<pre", "<code"]);
+				["</", "<listing", "<pre", "<code", "<p"]);
 			
-			return token;
-		}
-		
-		if (currentCharacter == '{')
-		{
-			token = scanCharacterSequence(currentCharacter, ["{@"]);
-			
-			if (!_inInlineDocTag && token.text == "{@")
+			if (token.text == "<pre")
 			{
-				_inInlineDocTag = true;
+				inPre = true;
 			}
+		}
+		
+		if (currentCharacter == " "
+			|| currentCharacter == "\n"
+			|| currentCharacter == ">"
+			|| currentCharacter == '@')
+		{
+			token = scanSingleCharacterToken(currentCharacter);
+		}
+		
+		if (currentCharacter == "/")
+		{
+			token = scanCharacterSequence(currentCharacter, ["/**", "/>"]);
 			
-			return token;
+			if (token.text == "/>")
+			{
+				inPre = false;
+			}
 		}
 		
-		if (currentCharacter == '}')
-		{
-			_inInlineDocTag = false;
-		}
-		
-		if (currentCharacter == '/')
-		{
-			return scanCharacterSequence(currentCharacter, ["/**", "/>"]);
-		}
-		
-		if (currentCharacter == '*')
+		if (currentCharacter == "*")
 		{
 			token = scanCharacterSequence(currentCharacter, ["*/"]);
-			return token;
 		}
 		
-		return scanWord(currentCharacter);
+		if (token == null)
+		{
+			token = scanWord(currentCharacter);
+			if (token != null)
+			{
+				isWhiteSpace = false;
+			}
+		}
+		
+		if (token.text == "\n")
+		{
+			isWhiteSpace = true;
+		}
+		
+		commitKind(token);
+		
+		return token;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function commitKind(token:Token):void
+	{
+		var result:String = map[token.text];
+		if (token.text == "/**" || token.text == "*/" || token.text == "__END__")
+		{
+			token.kind = result;
+			return;
+		}
+		
+		if (result == null || !isWhiteSpace)
+		{
+			result = "text";
+		}
+		
+		if (inPre && token.text == "*")
+		{
+			isWhiteSpace = false;
+		}
+		
+		token.kind = result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function getLength():int
+	{
+		var len:int = 0;
+		for each (var line:String in lines)
+		{
+			len += line.length;
+		}
+		return len;
 	}
 }
 }
