@@ -20,10 +20,10 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.api.IBreakStatement;
 import org.as3commons.asblocks.api.IExpression;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.LinkedListToken;
 
 /**
  * The <code>IBreakStatement</code> implementation.
@@ -32,8 +32,7 @@ import org.as3commons.asblocks.api.IExpression;
  * @copyright Teoti Graphix, LLC
  * @productversion 1.0
  */
-public class BreakStatementNode extends ScriptNode 
-	implements IBreakStatement
+public class BreakStatementNode extends ScriptNode implements IBreakStatement
 {
 	//--------------------------------------------------------------------------
 	//
@@ -61,24 +60,19 @@ public class BreakStatementNode extends ScriptNode
 	 */	
 	public function set label(value:IExpression):void
 	{
-		if (value == null && node.numChildren > 0)
+		var label:IParserNode = findLabel();
+		if (label)
 		{
-			node.removeChildAt(0);
+			var ws:LinkedListToken = label.startToken.previous;
+			if (ws.kind == "ws")
+			{
+				ws.remove();
+			}
+			node.removeChild(label);
 		}
 		
 		if (value == null)
-			return;
-		
-		if (node.numChildren == 0)
-		{
-			node.appendToken(TokenBuilder.newSpace());
-			node.addChild(value.node);
-		}
-		else
-		{
-			node.appendToken(TokenBuilder.newSpace());
-			node.setChildAt(value.node, 0);
-		}
+			return;	
 	}
 	
 	//--------------------------------------------------------------------------
@@ -93,6 +87,11 @@ public class BreakStatementNode extends ScriptNode
 	public function BreakStatementNode(node:IParserNode)
 	{
 		super(node);
+	}
+	
+	private function findLabel():IParserNode
+	{
+		return node.getFirstChild();
 	}
 }
 }

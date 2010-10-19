@@ -1,32 +1,34 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.flexunit.asserts.assertNotNull;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.SourceCode;
-import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.ASFactory;
 import org.as3commons.asblocks.CodeMirror;
 import org.as3commons.asblocks.api.IBlock;
 import org.as3commons.asblocks.api.IBreakStatement;
+import org.as3commons.asblocks.api.ISimpleNameExpression;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.core.SourceCode;
+import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
+import org.flexunit.Assert;
+import org.flexunit.asserts.assertNotNull;
 
-public class TestBreakStatementNode
+public class TestBreakStatementNode extends BaseASFactoryTest
 {
-	private var factory:ASFactory = new ASFactory();
-	
 	private var block:IBlock;
 	
 	private var expression:IBreakStatement;
 	
 	[Before]
-	public function setUp():void
+	override public function setUp():void
 	{
+		super.setUp();
+		
 		block = null;
 		expression = null;
 	}
 	
 	[After]
-	public function tearDown():void
+	override public function tearDown():void
 	{
 		if (expression)
 		{
@@ -43,6 +45,7 @@ public class TestBreakStatementNode
 	{
 		block = factory.newBlock();
 		expression = block.newBreak();
+		assertPrint("{\n\tbreak;\n}", expression);
 	}
 	
 	[Test]
@@ -50,6 +53,7 @@ public class TestBreakStatementNode
 	{
 		block = factory.newBlock();
 		expression = block.newBreak("foo");
+		assertPrint("{\n\tbreak foo;\n}", expression);
 	}
 	
 	[Test]
@@ -69,17 +73,19 @@ public class TestBreakStatementNode
 	}
 	
 	// FIXME (mschmalle) impl IBreakStatement.label set correctly
-	//[Test]
+	[Test]
 	public function test_label():void
 	{
 		block = factory.newBlock();
 		expression = block.addStatement("break foo") as IBreakStatement;
-		//assertNotNull(expression.label);
-		//assertEquals("foo", ISimpleNameExpression(expression.label).name);
-		//expression.label = null;
-		//assertNull(expression.label);
+		assertNotNull(expression.label);
+		Assert.assertEquals("foo", ISimpleNameExpression(expression.label).name);
+		expression.label = null;
+		assertPrint("{\n\tbreak;\n}", expression);
+		//Assert.assertNull(expression.label);
 		//expression.label = factory.newExpression("bar");
-		//assertEquals("bar", ISimpleNameExpression(expression.label).name);
+		//Assert.assertEquals("bar", ISimpleNameExpression(expression.label).name);
+		//assertPrint("{\n\tbreak bar;\n}", expression);
 	}
 	
 	//[Test]

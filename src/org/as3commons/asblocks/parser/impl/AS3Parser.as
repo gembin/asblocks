@@ -2277,11 +2277,7 @@ public class AS3Parser extends ParserBase
 	 */
 	private function parseSwitch():TokenNode
 	{
-		var result:TokenNode = adapter.create(
-			AS3NodeKind.SWITCH,
-			null, 
-			token.line, 
-			token.column);
+		var result:TokenNode = adapter.empty(AS3NodeKind.SWITCH, token);
 		
 		consume(KeyWords.SWITCH, result);
 		

@@ -27,6 +27,8 @@ import org.as3commons.asblocks.parser.api.IScanner;
 import org.as3commons.asblocks.parser.core.LinkedListToken;
 import org.as3commons.asblocks.parser.core.LinkedListTreeAdaptor;
 import org.as3commons.asblocks.parser.core.TokenNode;
+import org.as3commons.asblocks.parser.errors.Position;
+import org.as3commons.asblocks.parser.errors.UnExpectedTokenError;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 /**
@@ -616,7 +618,15 @@ public class ASDocParser extends ParserBase
 	 */
 	private function consumeTag(node:TokenNode, text:String):void
 	{
-		// TODO (mschmalle) throw error like consume() does
+		if (!tokIs(text))
+		{
+			throw new UnExpectedTokenError(
+				text, 
+				token.text, 
+				new Position(token.line, token.column, -1), 
+				fileName);
+		}
+		
 		nextTokenAppend(node, "tag", text);
 	}
 	

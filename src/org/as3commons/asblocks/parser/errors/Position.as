@@ -20,7 +20,7 @@
 package org.as3commons.asblocks.parser.errors
 {
 
-[ExcludeClass]
+//[ExcludeClass]
 
 /**
  * @private
