@@ -181,6 +181,20 @@ public class AS3FragmentParser
 	}
 	
 	/**
+	 * Parses a <code>AS3NodeKind.BLOCK</code> node.
+	 * 
+	 * @param source A String source to be parsed into AST.
+	 * @return Returns a <code>AS3NodeKind.BLOCK</code> node.
+	 */
+	public static function parseBlock(source:String):IParserNode
+	{
+		var parser:AS3Parser = createParser("{" + source + "}");
+		parser.nextToken(); // {
+		var node:IParserNode = parser.parseBlock();
+		return node;
+	}
+	
+	/**
 	 * Parses a <code>AS3NodeKind.STATEMENT</code> node.
 	 * 
 	 * @param statement A String statement to be parsed into AST.
