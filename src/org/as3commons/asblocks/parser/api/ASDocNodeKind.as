@@ -51,5 +51,9 @@ public class ASDocNodeKind
 	public static const NL:String = "nl";
 	
 	public static const ASTRIX:String = "astrix";
+	
+	// token
+	
+	public static const AT:String = "at";
 }
 }

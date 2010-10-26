@@ -367,6 +367,10 @@ public class AS3NodeKind
 	
 	public static const ELSE:String = "else";
 	
+	public static const ML_COMMENT:String = "ml-comment";
+	
+	public static const SL_COMMENT:String = "sl-comment";
+	
 	//--------------------------------------------------------------------------
 	
 	//--------------------------------------------------------------------------

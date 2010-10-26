@@ -22,25 +22,8 @@ package org.as3commons.asblocks.impl
 
 import org.as3commons.asblocks.api.IDocComment;
 import org.as3commons.asblocks.api.IDocTag;
-import org.as3commons.asblocks.parser.api.AS3NodeKind;
-import org.as3commons.asblocks.parser.api.ASDocNodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.LinkedListToken;
-import org.as3commons.asblocks.parser.core.TokenNode;
-import org.as3commons.asblocks.parser.impl.ASTIterator;
-import org.as3commons.asblocks.utils.ASTUtil;
 import org.as3commons.asblocks.utils.DocCommentUtil;
-
-/*
-
-The 'asdoc' holds the actual parsed AST of the node/as-doc/.stringValue
-
-When the description is set;
-- Tries to find the as-doc of the node
-- if the as-doc does not exist, the method creates a new one, sets the
-stringValue of the new comment, nulls out the token
-- 
-*/
 
 /**
  * The <code>IDocComment</code> implementation.
@@ -51,16 +34,36 @@ stringValue of the new comment, nulls out the token
  */
 public class DocCommentNode extends ScriptNode implements IDocComment
 {
-	/**
-	 * The asdoc AST.
-	 */
-	internal var asdoc:IParserNode;
-	
 	//--------------------------------------------------------------------------
 	//
 	//  IDocComment API :: Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  asdocNode
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _asdocNode:IParserNode;
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IDocComment#asdocNode
+	 */
+	public function get asdocNode():IParserNode
+	{
+		return _asdocNode;
+	}
+	
+	/**
+	 * @private
+	 */	
+	public function set asdocNode(value:IParserNode):void
+	{
+		_asdocNode = value;
+	}
 	
 	//----------------------------------
 	//  description
@@ -71,7 +74,7 @@ public class DocCommentNode extends ScriptNode implements IDocComment
 	 */
 	public function get description():String
 	{
-		return DocCommentUtil.getDescription(node);
+		return DocCommentUtil.getDescription(this);
 	}
 	
 	/**
@@ -79,7 +82,7 @@ public class DocCommentNode extends ScriptNode implements IDocComment
 	 */	
 	public function set description(value:String):void
 	{
-		DocCommentUtil.setDescription(node, value);
+		DocCommentUtil.setDescription(this, value);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -95,7 +98,7 @@ public class DocCommentNode extends ScriptNode implements IDocComment
 	{
 		super(node); // node is IDocCommentAware.node
 		
-		asdoc = DocCommentUtil.buildASDoc(node);
+		asdocNode = DocCommentUtil.buildCompilationUnit(node);
 	}
 	
 	//--------------------------------------------------------------------------
@@ -104,123 +107,39 @@ public class DocCommentNode extends ScriptNode implements IDocComment
 	//
 	//--------------------------------------------------------------------------
 	
-	private function findContent():IParserNode
-	{
-		if (!asdoc)
-			return null;
-		
-		return asdoc.getKind(ASDocNodeKind.DESCRIPTION);
-	}
-	
-	private function findDoctagList():IParserNode
-	{
-		var content:IParserNode = findContent();
-		
-		if (!content)
-			return null;
-		
-		return content.getKind(ASDocNodeKind.DOCTAG_LIST);
-	}
-	
 	/**
 	 * @copy org.as3commons.asblocks.api.IDocComment#newDocTag()
 	 */
 	public function newDocTag(name:String, body:String = null):IDocTag
 	{
-		if (!asdoc)
-		{
-			// create a as-doc node
-			asdoc = DocCommentUtil.buildOrAddAsDocAST(node);
-		}
-		//compilation-unit/content/short-list
-		//compilation-unit/content/short-list/text
-		//compilation-unit/content/doctag-list
-		//compilation-unit/content/doctag-list/doctag
-		//compilation-unit/content/doctag-list/doctag/name
-		//compilation-unit/content/doctag-list/doctag/body
-		
-		var list:TokenNode = findDoctagList() as TokenNode;
-		if (!list)
-		{
-			list = ASTBuilder.newAST(ASDocNodeKind.DOCTAG_LIST) as TokenNode;
-			var content:IParserNode = asdoc.getKind(ASDocNodeKind.DESCRIPTION);
-			content.addChild(list);
-			
-			var i:String = ASTUtil.findIndent(node);
-			var newline:String = DocCommentUtil.getNewlineText(node, list);
-			var ws:LinkedListToken = TokenBuilder.newWhiteSpace("* \n" + i + " ");
-			list.startToken.prepend(ws);
-			list.startToken = ws;
-		}
-		
-		var tag:IParserNode = ASTBuilder.newAST(ASDocNodeKind.DOCTAG);
-		//tag.appendToken(TokenBuilder.newToken("\t", "\t"));
-		tag.appendToken(TokenBuilder.newToken("*", "*"));
-		tag.appendToken(TokenBuilder.newToken(" ", " "));
-		tag.appendToken(TokenBuilder.newToken("@", "@"));
-		tag.addChild(ASTBuilder.newNameAST(name));
-		if (body)
-		{
-			tag.appendToken(TokenBuilder.newSpace());
-			var nl:String = DocCommentUtil.getNewlineText(node, tag);
-			
-			body = body.replace(/\n/g, nl);
-			tag.addChild(ASTBuilder.newAST(ASDocNodeKind.BODY, body));
-		}
-		
-		tag.appendToken(TokenBuilder.newToken("\n", "\n"));
-		var indent:String = ASTUtil.findIndent(node);
-		//tag.appendToken(TokenBuilder.newToken("\t", "\t"));
-		tag.appendToken(TokenBuilder.newToken("ws", indent));
-		tag.appendToken(TokenBuilder.newToken(" ", " "));
-		list.addChild(tag);
-		
-		commitAST();
-		
-		return new DocTagNode(tag);
+		return DocCommentUtil.newDocTag(this, name, body);
 	}
 	
+	/**
+	 * @copy org.as3commons.asblocks.api.IDocComment#removeDocTag()
+	 */
 	public function removeDocTag(tag:IDocTag):Boolean
 	{
-		var list:TokenNode = findDoctagList() as TokenNode;
-		if (!list)
-			return false;
-		
-		var i:ASTIterator = new ASTIterator(list);
-		while (i.hasNext())
-		{
-			var t:IParserNode = i.next();
-			if (t === tag.node)
-			{
-				list.removeChild(t);
-				if (list.numChildren == 0)
-				{
-					list.parent.removeChild(list);
-				}
-				commitAST();
-				return true;
-			}
-		}
-		return false;
+		return DocCommentUtil.removeDocTag(this, tag);
 	}
 	
+	/**
+	 * @copy org.as3commons.asblocks.api.IDocComment#hasDocTag()
+	 */
 	public function hasDocTag(name:String):Boolean
 	{
-		return false;
+		//if (!asdocNode)
+		//{
+		//	asdocNode = DocCommentUtil.buildASDoc(node);
+		//}
+		
+		return DocCommentUtil.hasDocTag(node, name);
 	}
 	
-	private function commitAST():void
+	
+	public function commitModifiedAST():void
 	{
-		var result:String = ASTUtil.stringifyNode(asdoc);
 		
-		var asdoc:IParserNode = node.getKind(AS3NodeKind.AS_DOC);
-		asdoc.stringValue = result;
-		asdoc.startToken.text = null;
-		
-		var tok:LinkedListToken = DocCommentUtil.getASDocToken(asdoc);
-		tok.text = result;
 	}
-	
-	
 }
 }

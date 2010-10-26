@@ -195,6 +195,11 @@ public class ASDocParser extends ParserBase
 			}
 		}
 		
+		if (currentNL)
+		{
+			currentNL.startToken.channel = "hidden";
+		}
+		
 		consumeParenthetic(ML_END); // */
 		
 		return result;
@@ -209,6 +214,9 @@ public class ASDocParser extends ParserBase
 	 */
 	internal function parseBody():IParserNode
 	{
+		foundNL = false;
+		currentNL = null;
+		
 		var result:TokenNode = adapter.empty(ASDocNodeKind.BODY, token);
 		
 		consumeWhitespace(result);
@@ -516,15 +524,24 @@ public class ASDocParser extends ParserBase
 	// nl
 	//----------------------------------
 	
+	private var foundNL:Boolean = false;
+	
+	private var currentNL:TokenNode;
+	
 	/**
 	 * @private
 	 */
 	private function parseNewline():TokenNode
 	{
-		var result:TokenNode = adapter.create(ASDocNodeKind.NL);
-		result.appendToken(TokenBuilder.newToken(ASDocNodeKind.NL, token.text));
+		currentNL = adapter.create(ASDocNodeKind.NL);
+		if (!foundNL)
+		{
+			currentNL.startToken.channel = "hidden";
+			foundNL = true;
+		}
+		currentNL.appendToken(TokenBuilder.newToken(ASDocNodeKind.NL, token.text));
 		nextToken();
-		return result;
+		return currentNL;
 	}
 	
 	/**

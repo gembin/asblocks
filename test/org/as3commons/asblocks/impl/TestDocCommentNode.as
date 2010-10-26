@@ -12,6 +12,13 @@ import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.asblocks.utils.DocCommentUtil;
 import org.flexunit.Assert;
 
+// - set description
+// - unset description
+// - add doctag w/o body
+// - add doctag w/body
+// - remove doctag w/o body
+// - remove doctag w/body
+
 public class TestDocCommentNode extends BaseASFactoryTest
 {
 	private var unit:ICompilationUnit;
@@ -38,23 +45,73 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		}
 	}
 	
-	//[Test]
-	public function testBasic_():void
+	[Test]
+	public function testBasicDocComment():void
 	{
 		var ast:IParserNode = ASTTypeBuilder.newClassAST("foo.bar.Baz");
-		
 		
 		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
 		
 		Assert.assertNotNull(comment.node);
-		Assert.assertNull(comment.asdoc);
+		Assert.assertNull(comment.asdocNode);
 		
 		comment.description = "A doc comment.";
+		Assert.assertEquals("A doc comment.", comment.description);
 		
-		Assert.assertEquals("", comment.description);
+		comment.description = "A doc comment\nwith newline.";
+		Assert.assertEquals("A doc comment\nwith newline.", comment.description);
+		
+		comment.description = "A short foo.\n\n<p>With a para.</p>\n\n<p>And a bar para.</p>";
+		Assert.assertEquals("A short foo.\n\n<p>With a para.</p>\n\n<p>And a bar para.</p>", comment.description);
+		
+		comment.description = "A doc comment.";
+		Assert.assertEquals("A doc comment.", comment.description);
 	}
 	
-	[Test]
+	//[Test]
+	public function testBasicDocTag():void
+	{
+		var ast:IParserNode = ASTTypeBuilder.newClassAST("Foo");
+		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
+		
+		var foo:IDocTag = comment.newDocTag("foo");
+		assertPrint("/**\n * @foo\n */" +
+			"\npublic class Foo {\n}", comment);
+		
+		
+		
+		
+		//var bar:IDocTag = comment.newDocTag("bar", "baz goo");
+		//assertPrint("/**\n * A doc comment.\n * \n * @foo\n */" +
+		//	"\npublic class foo.bar.Baz {\n}", comment);
+	}
+	
+	//[Test]
+	public function testBasicDocCommentAndDocTag():void
+	{
+		var ast:IParserNode = ASTTypeBuilder.newClassAST("foo.bar.Baz");
+		
+		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
+		
+		Assert.assertNotNull(comment.node);
+		Assert.assertNull(comment.asdocNode);
+		
+		comment.description = "A doc comment.";
+		Assert.assertEquals("A doc comment.", comment.description);
+		
+		var foo:IDocTag = comment.newDocTag("foo");
+		// make sure body stays the same
+		Assert.assertEquals("A doc comment.", comment.description);
+		assertPrint("/**\n * A doc comment.\n * \n * @foo\n */" +
+			"\npublic class foo.bar.Baz {\n}", comment);
+		
+		comment.removeDocTag(foo);
+		// make sure body stays the same
+		Assert.assertEquals("A doc comment.", comment.description);
+		assertPrint("/**\n * A doc comment.\n */\npublic class foo.bar.Baz {\n}", comment);
+	}
+	
+	//[Test]
 	public function testBasic():void
 	{
 		unit = project.newClass("Foo");
@@ -108,7 +165,7 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		//doc.description;
 	}
 	
-	[Test]
+	//[Test]
 	public function test_description():void
 	{
 		

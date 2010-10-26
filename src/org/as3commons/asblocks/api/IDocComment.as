@@ -19,6 +19,7 @@
 
 package org.as3commons.asblocks.api
 {
+import org.as3commons.asblocks.parser.api.IParserNode;
 
 /**
  * The comment node of an <code>IDocCommentAware</code> client.
@@ -34,6 +35,20 @@ public interface IDocComment extends IScriptNode
 	//  Properties
 	//
 	//--------------------------------------------------------------------------
+	
+	//----------------------------------
+	//  asdocNode
+	//----------------------------------
+	
+	/**
+	 * TODO Docme
+	 */
+	function get asdocNode():IParserNode;
+	
+	/**
+	 * @private
+	 */
+	function set asdocNode(value:IParserNode):void;
 	
 	//----------------------------------
 	//  description
