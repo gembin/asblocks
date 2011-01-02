@@ -443,6 +443,11 @@ public class AS3Parser extends ParserBase
 				result.addChild(parseClassFunction(pendingMember));
 				pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
 			}
+			else if (tokIs(KeyWords.NAMESPACE))
+			{
+				result.addChild(parseClassNamespace(pendingMember));
+				pendingMember = adapter.empty(AS3NodeKind.PRIMARY, token);
+			}
 			else if (tokIs(KeyWords.CONFIG))
 			{
 				originalResult = result;
@@ -736,6 +741,40 @@ public class AS3Parser extends ParserBase
 		
 		consume(KeyWords.FUNCTION, result);
 		parseFunction(result);
+		
+		return result;
+	}
+	
+	/**
+	 * @private
+	 */
+	private function parseClassNamespace(result:TokenNode):TokenNode
+	{
+		if (!result)
+		{
+			result = adapter.copy(AS3NodeKind.NAMESPACE, token);
+		}
+		
+		result.kind = AS3NodeKind.NAMESPACE;
+		var mod:LinkedListToken = findToken(result.token, AS3NodeKind.MODIFIER);
+		if (mod)
+		{
+			result.line = mod.line;
+			result.column = mod.column;
+		}
+		
+		consume(KeyWords.NAMESPACE, result); // 'namespace'
+		result.addChild(adapter.copy(AS3NodeKind.NAME, token)); // 'name'
+		nextTokenConsume(result);
+		if (tokIs(Operators.ASSIGN))
+		{
+			consume(Operators.ASSIGN, result); // =
+			var value:TokenNode = adapter.empty(AS3NodeKind.VALUE, token);
+			value.addChild(parseExpression());
+			result.addChild(value);
+		}
+		
+		skip(Operators.SEMI);
 		
 		return result;
 	}

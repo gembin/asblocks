@@ -219,6 +219,21 @@ public class TestClassContent
 			"line=\"2\" column=\"16\">a</name></name-type-init></field-list>" );
 	}
 	
+	[Test]
+	public function testNamespace():void
+	{
+		assertClassContent("1", "protected namespace my_namespace;",
+			"<namespace line=\"2\" column=\"1\"><mod-list line=\"2\" column=\"1\">" +
+			"<mod line=\"2\" column=\"1\">protected</mod></mod-list><name line=\"2\" " +
+			"column=\"21\">my_namespace</name></namespace>");
+		
+		assertClassContent("2", "protected namespace my_namespace = \"my://namespace\"",
+			"<namespace line=\"2\" column=\"1\"><mod-list line=\"2\" column=\"1\">" +
+			"<mod line=\"2\" column=\"1\">protected</mod></mod-list><name line=\"2\" " +
+			"column=\"21\">my_namespace</name><value line=\"2\" column=\"36\"><string " +
+			"line=\"2\" column=\"36\">\"my://namespace\"</string></value></namespace>");
+	}
+	
 	private function assertClassContent(message:String, 
 										input:String, 
 										expected:String):void
