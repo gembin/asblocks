@@ -65,7 +65,7 @@ public class TestFunctionTypeNode extends BaseASFactoryTest
 			"void {\n\t\treturn;\n\t}\n}", type);
 	}
 	
-	[Test]
+	//[Test]
 	public function testAddDocCommentAndMetadata():void
 	{
 		unit = factory.newFunction("foo", "void");

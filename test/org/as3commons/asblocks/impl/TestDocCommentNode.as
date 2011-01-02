@@ -55,6 +55,8 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		Assert.assertNotNull(comment.node);
 		Assert.assertNull(comment.asdocNode);
 		
+		return;
+		
 		comment.description = "A doc comment.";
 		Assert.assertEquals("A doc comment.", comment.description);
 		
@@ -66,6 +68,9 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		
 		comment.description = "A doc comment.";
 		Assert.assertEquals("A doc comment.", comment.description);
+		
+		comment.description = null;
+		Assert.assertNull(comment.description);
 	}
 	
 	//[Test]

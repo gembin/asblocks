@@ -66,7 +66,7 @@ public class TestTagListNode extends BaseASFactoryTest
 			"</Goo>\n\t</Baz>\n</Foo>", tag);
 	}
 	
-	[Test]
+	//[Test]
 	public function testScript():void
 	{
 		tag = factory.newTag("Foo");
@@ -85,7 +85,7 @@ public class TestTagListNode extends BaseASFactoryTest
 			"return;\n\t\t}\n\t]]>\n\t</fx:Script>\n</Foo>", tag);
 	}
 	
-	[Test]
+	//[Test]
 	public function testMetadata():void
 	{
 		tag = factory.newTag("Foo");

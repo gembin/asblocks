@@ -156,14 +156,14 @@ public class DocCommentUtil
 		description = description.replace(/\n/g, newline);
 		
 		// create the ast for the description
-		var bodyAST:IParserNode = parseBody(description); // /body
+		var descriptionAST:IParserNode = parseDescription(description);
 		
 		// find the indent based on the parent nodes indentation
 		var indent:String = ASTUtil.findIndent(parent);
 		
 		// token before this comment takes care of it's own \n\t indent
 		// !!! Tokens and blocks always end with [newline][indent]
-		var result:String = "/**" + ASTUtil.stringifyNode(bodyAST) + "\n" + indent + " */";
+		var result:String = "/**" + ASTUtil.stringifyNode(descriptionAST) + "\n" + indent + " */";
 		
 		if (asdoc == null)
 		{
