@@ -52,6 +52,11 @@ public interface IASProject extends IEventDispatcher
 	
 	/**
 	 * The current <code>ASFactory</code> used within the project.
+	 * 
+	 * <p><strong>Note:</strong> This reference cannot be changed once the project
+	 * is created.</p>
+	 * 
+	 * @since 1.0
 	 */
 	function get factory():ASFactory;
 	
@@ -66,6 +71,8 @@ public interface IASProject extends IEventDispatcher
 	 * 
 	 * @see #addCompilationUnit()
 	 * @see #removeCompilationUnit()
+	 * 
+	 * @since 1.0
 	 */
 	function get compilationUnits():Vector.<ICompilationUnit>;
 	
@@ -80,8 +87,26 @@ public interface IASProject extends IEventDispatcher
 	 * 
 	 * @see #addClassPath()
 	 * @see #removeClassPath()
+	 * 
+	 * @since 1.0
 	 */
 	function get classPathEntries():Vector.<IClassPathEntry>;
+	
+	//----------------------------------
+	//  resourceRoots
+	//----------------------------------
+	
+	/**
+	 * The <code>Vector</code> of <code>IResourceRoot</code>.
+	 * 
+	 * <p>Note: Do not edit this vector, use the add and remove methods.</p>
+	 * 
+	 * @see #addResourceRoot()
+	 * @see #removeResourceRoot()
+	 * 
+	 * @since 1.0
+	 */
+	function get resourceRoots():Vector.<IResourceRoot>;
 	
 	//----------------------------------
 	//  outputLocation
@@ -89,6 +114,13 @@ public interface IASProject extends IEventDispatcher
 	
 	/**
 	 * The location where the source files are output.
+	 * 
+	 * <p>The output location is completly determined by the project and
+	 * factories implementation. This could be a native file path or url,
+	 * whatever the case, the application domain will know how to interpret
+	 * the string location.<p>
+	 * 
+	 * @since 1.0
 	 */
 	function get outputLocation():String;
 	
@@ -106,22 +138,34 @@ public interface IASProject extends IEventDispatcher
 	/**
 	 * Adds an <code>ICompilationUnit</code> to the project.
 	 * 
+	 * <p>If the project contains a reference to the same unit, the method
+	 * will return false and short circut.</p>
+	 * 
 	 * @param unit The <code>ICompilationUnit</code> to add.
 	 * @return A <code>Boolean</code> indicating whether the unit was
 	 * added correctly.
 	 * 
 	 * @see #compilationUnits
+	 * @see #removeCompilationUnit()
+	 * 
+	 * @since 1.0
 	 */
 	function addCompilationUnit(unit:ICompilationUnit):Boolean;
 	
 	/**
 	 * Removes an <code>ICompilationUnit</code> from the project.
 	 * 
+	 * <p>If the project does not contain a reference to the same unit, 
+	 * the method will return false and short circut.</p>
+	 * 
 	 * @param unit The <code>ICompilationUnit</code> to add.
 	 * @return A <code>Boolean</code> indicating whether the unit was
 	 * removed correctly.
 	 * 
 	 * @see #compilationUnits
+	 * @see #addCompilationUnit()
+	 * 
+	 * @since 1.0
 	 */
 	function removeCompilationUnit(unit:ICompilationUnit):Boolean;
 	
@@ -131,6 +175,11 @@ public interface IASProject extends IEventDispatcher
 	 * @param classPath A <code>String</code> base path location 
 	 * for source files.
 	 * @return A <code>IClassPathEntry</code>.
+	 * 
+	 * @see #classPathEntries
+	 * @see #removeClassPath()
+	 * 
+	 * @since 1.0
 	 */
 	function addClassPath(classPath:String):IClassPathEntry;
 	
@@ -141,6 +190,11 @@ public interface IASProject extends IEventDispatcher
 	 * for source files.
 	 * @return A <code>Boolean</code> indicating whether the path was
 	 * removed successfully.
+	 * 
+	 * @see #classPathEntries
+	 * @see #addClassPath()
+	 * 
+	 * @since 1.0
 	 */
 	function removeClassPath(classPath:String):Boolean;
 	
@@ -149,36 +203,56 @@ public interface IASProject extends IEventDispatcher
 	 * 
 	 * @param resource A <code>IResourceRoot</code> location for source 
 	 * file definitions.
+	 * @return A <code>Boolean</code> indicating whether the resource root was
+	 * added successfully.
+	 * 
+	 * @since 1.0
 	 */
-	function addResourceRoot(resource:IResourceRoot):void;
+	function addResourceRoot(resource:IResourceRoot):Boolean;
 	
 	/**
 	 * Removes a <code>IResourceRoot</code> from the project.
 	 * 
 	 * @param resource A <code>IResourceRoot</code> location for source 
 	 * file definitions.
+	 * @return A <code>Boolean</code> indicating whether the resource root was
+	 * removed successfully.
+	 * 
+	 * @since 1.0
 	 */
-	function removeResourceRoot(resource:IResourceRoot):void;
+	function removeResourceRoot(resource:IResourceRoot):Boolean;
 	
 	/**
 	 * Creates and returns a new public <code>class</code> by qualified name.
 	 * 
+	 * <p>Subclasses should call <code>addCompilationUnit()</code> after the
+	 * unit has been created.</p>
+	 * 
 	 * @param qualifiedName A <code>String</code> qualified name.
 	 * @return A new class <code>ICompilationUnit</code>.
 	 * 
+	 * @see #addCompilationUnit()
 	 * @see org.as3commons.asblocks.api.ICompilationUnit
 	 * @see org.as3commons.asblocks.api.IClassType
+	 * 
+	 * @since 1.0
 	 */
 	function newClass(qualifiedName:String):ICompilationUnit;
 	
 	/**
 	 * Creates and returns a new public <code>interface</code> by qualified name.
 	 * 
+	 * <p>Subclasses should call <code>addCompilationUnit()</code> after the
+	 * unit has been created.</p>
+	 * 
 	 * @param qualifiedName A <code>String</code> qualified name.
 	 * @return A new interface <code>ICompilationUnit</code>.
 	 * 
+	 * @see #addCompilationUnit()
 	 * @see org.as3commons.asblocks.api.ICompilationUnit
 	 * @see org.as3commons.asblocks.api.IInterfaceType
+	 * 
+	 * @since 1.0
 	 */
 	function newInterface(qualifiedName:String):ICompilationUnit;
 	

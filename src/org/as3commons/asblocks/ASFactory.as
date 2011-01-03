@@ -83,17 +83,31 @@ import org.as3commons.mxmlblocks.impl.ASTMXMLBuilder;
 import org.as3commons.mxmlblocks.impl.MXMLParserImpl;
 import org.as3commons.mxmlblocks.impl.TagList;
 
+// TODO (mschmalle) figure out how to separate MXML implementation
+
 /**
- * The <code>ASFactory</code> is the main interface for asblocks.
+ * The <code>ASFactory</code> is the default concrete interface factory for the
+ * creation of ActionScript 3 building blocks in the ASBlocks library.
+ * 
+ * <p>Creating a factory allows the developer to create and write projects, 
+ * classes, interfaces and other ActionScript 3 building blocks. The factory
+ * also allows the developer to read and parse ActionScript 3 code files and 
+ * Strings into Abstract Syntax Trees (AST). After the AST has been created,
+ * the ASBlocks API can then be used to modifiy the source code.</p>
+ * 
+ * <p>The default base implementation of the <code>ASFactory</code> allows 
+ * for creation of expressions, literals, blocks, parsers and writers. This 
+ * implementation of the factory does not allow for file system access do
+ * to the restriction on AIR dependencies (see the ASBuilder library).</p>
  * 
  * <pre>
+ * // create a class unit with out the project overhead
  * var factory:ASFactory = new ASFactory();
  * var cunit:ICompilationUnit = factory.newClass("foo.bar.Baz");
- * // or
+ * // or create a class unit using the project
  * var factory:ASFactory = new ASFactory();
- * var project:ASProject = new ASProject(factory);
- * // this is a short-cut that automatically adds the compilation unit
- * // to the project
+ * var project:IASProject = factory.newEmptyASProject(".");
+ * // creates and adds the compilation unit to the project
  * var cunit:ICompilationUnit = project.newClass("foo.bar.Baz");
  * </pre>
  * 
@@ -126,21 +140,23 @@ public class ASFactory
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Creates a new <code>IASProject</code> project.
+	 * Creates a new <code>IASProject</code> project and sets it's 
+	 * <code>outputLocation</code>.
 	 * 
-	 * <p>Note: Subclasses can override the default behavior and return their
-	 * own custom instances of <code>IASProject</code>.</p>
+	 * <p><strong>Note:</strong> Subclasses can override the default behavior 
+	 * and return their own custom instances of <code>IASProject</code>. This
+	 * is true for the <code>ASBuilderFactory</code> which returns an AIR dependent 
+	 * project which can access the file system and load SWC resources.</p>
 	 * 
 	 * @param outputLocation A <code>String</code> indicating the output location
 	 * of the project's source code.
 	 * @return The implemented <code>IASProject</code> project.
 	 * 
 	 * @see org.as3commons.asblocks.IASProject
-	 * @see org.as3commons.asblocks.impl.ASProject
 	 */
 	public function newEmptyASProject(outputLocation:String):IASProject
 	{
-		var result:IASProject = new ASProject(this);
+		var result:IASProject = createASProject();
 		result.outputLocation = outputLocation;
 		return result;
 	}
@@ -1116,6 +1132,24 @@ public class ASFactory
 		var ast:IParserNode = AS3FragmentParser.parseDecList(declaration);
 		ast.parent = null;
 		return StatementBuilder.build(ast) as IDeclarationStatement;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Protected Creation :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Returns an instance of the <code>IASProject</code> project for the 
+	 * specific factory implementation.
+	 * 
+	 * return The implemented <code>IASProject</code> project.
+	 */
+	protected function createASProject():IASProject
+	{
+		var result:IASProject = new ASProject(this);
+		return result;
 	}
 }
 }

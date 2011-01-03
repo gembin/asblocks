@@ -40,16 +40,6 @@ public class ASProject extends EventDispatcher implements IASProject
 {
 	//--------------------------------------------------------------------------
 	//
-	//  Private :: Variables
-	//
-	//--------------------------------------------------------------------------
-	
-	
-	
-	private var resources:Vector.<IResourceRoot>;
-	
-	//--------------------------------------------------------------------------
-	//
 	//  IASProject API :: Properties
 	//
 	//--------------------------------------------------------------------------
@@ -90,7 +80,6 @@ public class ASProject extends EventDispatcher implements IASProject
 		for (var i:int = 0; i < len; i++)
 		{
 			result.push(_compilationUnits[i]);
-			
 		}
 		return result;
 	}
@@ -115,6 +104,29 @@ public class ASProject extends EventDispatcher implements IASProject
 		{
 			result.push(_classPathEntries[i]);
 			
+		}
+		return result;
+	}
+	
+	//----------------------------------
+	//  resourceRoots
+	//----------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected var _resourceRoots:Vector.<IResourceRoot> = new Vector.<IResourceRoot>();
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#resourceRoots
+	 */
+	public function get resourceRoots():Vector.<IResourceRoot>
+	{
+		var result:Vector.<IResourceRoot> = new Vector.<IResourceRoot>();
+		var len:int = _resourceRoots.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			result.push(_resourceRoots[i]);
 		}
 		return result;
 	}
@@ -151,7 +163,10 @@ public class ASProject extends EventDispatcher implements IASProject
 	//--------------------------------------------------------------------------
 	
 	/**
-	 * Constructor.
+	 * Constructor, creates a new project with the associated factory.
+	 * 
+	 * @param factory The <code>ASFactory</code> implementation used with the
+	 * project. This instance will be used when creating types.
 	 */
 	public function ASProject(factory:ASFactory)
 	{
@@ -163,6 +178,108 @@ public class ASProject extends EventDispatcher implements IASProject
 	//  IASProject API :: Methods
 	//
 	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#addCompilationUnit()
+	 * 
+	 * @see #compilationUnitAdded()
+	 */
+	public function addCompilationUnit(unit:ICompilationUnit):Boolean
+	{
+		if (_compilationUnits.indexOf(unit) != -1)
+			return false;
+		
+		_compilationUnits.push(unit);
+		compilationUnitAdded(unit);
+		return true;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#removeCompilationUnit()
+	 * 
+	 * @see #compilationUnitRemoved()
+	 */
+	public function removeCompilationUnit(unit:ICompilationUnit):Boolean
+	{
+		var len:int = _compilationUnits.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:ICompilationUnit = _compilationUnits[i] as ICompilationUnit;
+			if (element === unit)
+			{
+				_compilationUnits.splice(i, 1);
+				compilationUnitRemoved(unit);
+				return true;
+			}	
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#addClassPath()
+	 */
+	public function addClassPath(classPath:String):IClassPathEntry
+	{
+		var entry:IClassPathEntry;
+		
+		for each (entry in _classPathEntries) 
+		{
+			if (entry.filePath == classPath)
+				return null;
+		}
+		
+		entry = new ClassPathEntry(classPath);
+		_classPathEntries.push(entry);
+		return entry;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#removeClassPath()
+	 */
+	public function removeClassPath(classPath:String):Boolean
+	{
+		var len:int = _classPathEntries.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IClassPathEntry = _classPathEntries[i] as IClassPathEntry;
+			if (element.filePath == classPath)
+			{
+				_classPathEntries.splice(i, 1);
+				return true;
+			}	
+		}
+		return false;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#addResourceRoot()
+	 */
+	public function addResourceRoot(resource:IResourceRoot):Boolean
+	{
+		if (_resourceRoots.indexOf(resource) != -1)
+			return false;
+		
+		_resourceRoots.push(resource);
+		return true;
+	}
+	
+	/**
+	 * @copy org.as3commons.asblocks.IASProject#removeResourceRoot()
+	 */
+	public function removeResourceRoot(resource:IResourceRoot):Boolean
+	{
+		var len:int = _resourceRoots.length;
+		for (var i:int = 0; i < len; i++)
+		{
+			var element:IResourceRoot = _resourceRoots[i] as IResourceRoot;
+			if (element == resource)
+			{
+				_resourceRoots.splice(i, 1);
+				return true;
+			}	
+		}
+		return false;
+	}
 	
 	/**
 	 * @copy org.as3commons.asblocks.IASProject#newClass()
@@ -196,108 +313,6 @@ public class ASProject extends EventDispatcher implements IASProject
 	}
 	
 	/**
-	 * @copy org.as3commons.asblocks.IASProject#addCompilationUnit()
-	 */
-	public function addCompilationUnit(unit:ICompilationUnit):Boolean
-	{
-		if (_compilationUnits.indexOf(unit) != -1)
-		{
-			return false;
-		}
-		
-		_compilationUnits.push(unit);
-		compilationUnitAdded(unit);
-		return true;
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.IASProject#removeCompilationUnit()
-	 */
-	public function removeCompilationUnit(unit:ICompilationUnit):Boolean
-	{
-		var len:int = _compilationUnits.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var element:ICompilationUnit = _compilationUnits[i] as ICompilationUnit;
-			if (element === unit)
-			{
-				_compilationUnits.splice(i, 1);
-				compilationUnitRemoved(unit);
-				return true;
-			}	
-		}
-		return false;
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.IASProject#addClassPath()
-	 */
-	public function addClassPath(classPath:String):IClassPathEntry
-	{
-		var entry:IClassPathEntry;
-		
-		for each (entry in _classPathEntries) 
-		{
-			if (entry.filePath == classPath)
-			{
-				return null;
-			}
-		}
-		
-		entry = new ClassPathEntry(classPath);
-		_classPathEntries.push(entry);
-		return entry;
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.IASProject#removeClassPath()
-	 */
-	public function removeClassPath(classPath:String):Boolean
-	{
-		var len:int = _classPathEntries.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var element:IClassPathEntry = _classPathEntries[i] as IClassPathEntry;
-			if (element.filePath == classPath)
-			{
-				_classPathEntries.splice(i, 1);
-				return true;
-			}	
-		}
-		return false;
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.IASProject#addResourceRoot()
-	 */
-	public function addResourceRoot(resource:IResourceRoot):void
-	{
-		if (!resources)
-		{
-			resources = new Vector.<IResourceRoot>();
-		}
-		
-		resources.push(resource);
-	}
-	
-	/**
-	 * @copy org.as3commons.asblocks.IASProject#removeResourceRoot()
-	 */
-	public function removeResourceRoot(resource:IResourceRoot):void
-	{
-		var len:int = resources.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var element:IResourceRoot = resources[i] as IResourceRoot;
-			if (element == resource)
-			{
-				_classPathEntries.splice(i, 1);
-				return;
-			}	
-		}
-	}
-	
-	/**
 	 * @copy org.as3commons.asblocks.IASProject#readAllAsync()
 	 */
 	public function readAllAsync():void
@@ -313,6 +328,8 @@ public class ASProject extends EventDispatcher implements IASProject
 	
 	/**
 	 * @copy org.as3commons.asblocks.IASProject#writeAll()
+	 * 
+	 * @see #write()
 	 */
 	public function writeAll():void
 	{
@@ -340,18 +357,15 @@ public class ASProject extends EventDispatcher implements IASProject
 	//
 	//--------------------------------------------------------------------------
 	
-	private var _sourceCodeList:Array = [];
-	
-	public function get sourceCodeList():Array
-	{
-		return _sourceCodeList;
-	}
-	
 	/**
-	 * @private
+	 * Addition hook.
+	 * 
+	 * @param unit A successfully added compilation unit.
+	 * @see #addCompilationUnit()
 	 */
 	protected function compilationUnitAdded(unit:ICompilationUnit):void
 	{
+		// TODO (mschmalle) remove this concrete CompilationUnitNode ref
 		if (unit is CompilationUnitNode)
 		{
 			CompilationUnitNode(unit)._project = this;
@@ -359,10 +373,14 @@ public class ASProject extends EventDispatcher implements IASProject
 	}
 	
 	/**
-	 * @private
+	 * Removal hook.
+	 * 
+	 * @param unit A successfully removed compilation unit.
+	 * @see #removeCompilationUnit()
 	 */
 	protected function compilationUnitRemoved(unit:ICompilationUnit):void
 	{
+		// TODO (mschmalle) remove this concrete CompilationUnitNode ref
 		if (unit is CompilationUnitNode)
 		{
 			CompilationUnitNode(unit)._project = null;
@@ -389,6 +407,25 @@ public class ASProject extends EventDispatcher implements IASProject
 		factory.newWriter().write(code, unit);
 		
 		_sourceCodeList.push(code);
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  TODO
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	private var _sourceCodeList:Array = [];
+	
+	/**
+	 * @private
+	 */
+	public function get sourceCodeList():Array
+	{
+		return _sourceCodeList;
 	}
 }
 }
