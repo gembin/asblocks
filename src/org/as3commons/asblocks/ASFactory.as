@@ -76,6 +76,8 @@ import org.as3commons.asblocks.impl.UndefinedLiteralNode;
 import org.as3commons.asblocks.impl.VectorExpressionNode;
 import org.as3commons.asblocks.parser.api.AS3NodeKind;
 import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.api.ISourceCode;
+import org.as3commons.asblocks.parser.core.SourceCode;
 import org.as3commons.asblocks.parser.impl.AS3FragmentParser;
 import org.as3commons.mxmlblocks.IMXMLParser;
 import org.as3commons.mxmlblocks.api.IBlockTag;
@@ -183,6 +185,17 @@ public class ASFactory
 	public function newMXMLParser():IMXMLParser
 	{
 		return new MXMLParserImpl();
+	}
+	
+	/**
+	 * Returns a new <code>ISourceCode</code> implementation.
+	 * 
+	 * @return The implemented <code>ISourceCode</code> instance.
+	 */
+	public function newSourceCode(code:String = null,
+								  filePath:String = null):ISourceCode
+	{
+		return new SourceCode(code, filePath);
 	}
 	
 	/**

@@ -20,15 +20,14 @@
 package org.as3commons.asblocks.impl
 {
 
-import org.flexunit.Assert;
-import org.as3commons.asblocks.parser.api.IParserNode;
-import org.as3commons.asblocks.parser.core.SourceCode;
-import org.as3commons.asblocks.parser.impl.AS3Parser;
-import org.as3commons.asblocks.parser.impl.AS3Scanner;
 import org.as3commons.asblocks.ASFactory;
 import org.as3commons.asblocks.IASParser;
 import org.as3commons.asblocks.api.IScriptNode;
+import org.as3commons.asblocks.parser.api.IParserNode;
+import org.as3commons.asblocks.parser.impl.AS3Parser;
+import org.as3commons.asblocks.parser.impl.AS3Scanner;
 import org.as3commons.asblocks.utils.ASTUtil;
+import org.flexunit.Assert;
 
 /**
  * Base ASFactory test case.
@@ -54,7 +53,7 @@ public class BaseASFactoryTest
 	{
 		parser = new AS3Parser();
 		scanner = parser.scanner as AS3Scanner;
-		printer = new ASTPrinter(new SourceCode());
+		printer = new ASTPrinter(factory.newSourceCode());
 		factory = new ASFactory();
 		project = new ASProject(factory);
 		asparser = factory.newParser();
