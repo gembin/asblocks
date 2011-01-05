@@ -1,5 +1,6 @@
 package org.as3commons.asblocks.parser.impl
 {
+
 import org.as3commons.asblocks.parser.core.Token;
 import org.flexunit.Assert;
 
@@ -113,7 +114,6 @@ public class TestASDocScanner
 		assertToken("*/", "ml-end");
 	}
 	
-	
 	[Test]
 	public function test_pre():void
 	{
@@ -150,44 +150,6 @@ public class TestASDocScanner
 		assertToken("</", "text");
 		assertToken("pre", "text");
 		assertToken(">", "text");
-	}
-	
-	//[Test]
-	public function test_wsMultipleNoAstrix():void
-	{
-		var lines:Array =
-			[
-				"/**", 
-				" A comment.", 
-				" <p>Another comment. </p>",
-				" */"
-			];
-		
-		scanner.setLines(Vector.<String>(lines));
-		
-		assertToken("/**", "ml-start");
-		assertToken("\n", "ws");
-		assertToken(" ", "ws");
-		assertToken("A", "text");
-		assertToken(" ", "text");
-		assertToken("comment", "text");
-		assertToken(".", "text");
-		assertToken("\n", "ws");
-		assertToken(" ", "ws");
-		assertToken("<p", "text");
-		assertToken(">", "text");
-		assertToken("Another", "text");
-		assertToken(" ", "text");
-		assertToken("comment", "text");
-		assertToken(".", "text");
-		assertToken(" ", "text");
-		assertToken("</", "text");
-		assertToken("p", "text");
-		assertToken(">", "text");
-		
-		assertToken("\n", "ws");
-		assertToken(" ", "ws");
-		assertToken("*/", "ml-end");
 	}
 	
 	protected function assertToken(text:String, kind:String):void

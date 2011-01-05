@@ -20,6 +20,78 @@ public class TestASDocParser
 		scanner = parser.scanner as ASDocScanner;
 	}
 	
+	// If the body nodes first child is not n, it's a single line doc comment
+	
+	[Test]
+	public function test_parseCompilationUnit():void
+	{
+		var input:Array;
+		
+		// compilation-unit
+		//  - description
+		//    - body
+		//      - text-block [A document comment description. ]
+		//        - text
+		input = 
+			[
+				"/** A document comment description. */"
+			];
+		
+		assertPrint(input);
+		assertComment("1", input, "<compilation-unit><description><body><text-block>" +
+			"<text>A document comment description. </text></text-block></body>" +
+			"</description></compilation-unit>");
+		
+		// compilation-unit
+		//  - description
+		//    - body
+		//      - nl
+		//      - text-block [A document comment description. ]
+		//        - text
+		//        - nl
+		input = 
+			[
+				"/** ",
+				" A document comment description. ",
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("2", input, "<compilation-unit><description><body><nl></nl>" +
+			"<text-block><text>A document comment description. </text><nl></nl>" +
+			"</text-block></body></description></compilation-unit>");
+		
+		input = 
+			[
+				"/** ",
+				" * A document comment description. ",
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("3", input, "<compilation-unit><description><body><nl></nl>" +
+			"<text-block><text>A document comment description. </text><nl></nl>" +
+			"</text-block></body></description></compilation-unit>");
+		
+		input = 
+			[
+				"/** ",
+				" * A document comment description. ",
+				" * ",
+				" * <p>foo bar baz</p>",
+				" */"
+			];
+		
+		assertPrint(input);
+		assertComment("4", input, "<compilation-unit><description><body><nl>" +
+			"</nl><text-block><text>A document comment description. </text><nl>" +
+			"</nl><nl></nl><p-block><text>foo bar baz</text></p-block><nl></nl>" +
+			"</text-block></body></description></compilation-unit>");
+	}
+	
+	
+	
+	
 	[Test]
 	public function test_parseBody():void
 	{
