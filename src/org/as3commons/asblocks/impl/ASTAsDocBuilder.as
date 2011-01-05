@@ -11,9 +11,9 @@ public class ASTAsDocBuilder
 	public static function newDocTagList(parent:IParserNode):IParserNode
 	{
 		var ast:IParserNode = ASTBuilder.newAST(ASDocNodeKind.DOCTAG_LIST);	
-		ast.appendToken(TokenBuilder.newNewline());
-		var indent:String = ASTUtil.findIndent(parent);
-		ast.appendToken(TokenBuilder.newWhiteSpace(indent + " * "));
+//		ast.appendToken(TokenBuilder.newNewline());
+//		var indent:String = ASTUtil.findIndent(parent);
+//		ast.appendToken(TokenBuilder.newWhiteSpace(indent + " * "));
 		return ast;
 	}
 	
@@ -34,6 +34,9 @@ public class ASTAsDocBuilder
 		ast.appendToken(TokenBuilder.newToken(ASDocNodeKind.WS, " "));
 		ast.appendToken(TokenBuilder.newToken(ASDocNodeKind.AT, "@"));
 		ast.addChild(ASTBuilder.newNameAST(name));
+		
+		//\n * @foo
+		var result:String = ASTUtil.stringifyNode(ast);
 		
 		if (body)
 		{

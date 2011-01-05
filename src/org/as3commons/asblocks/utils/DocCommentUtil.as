@@ -70,8 +70,7 @@ public class DocCommentUtil
 			return null;
 		
 		// rebuild an ast of the asdoc using the existing string value of the token
-		var asdocAST:IParserNode = ASDocFragmentParser.
-			parseCompilationUnit(ast.stringValue);
+		var asdocAST:IParserNode = ASDocFragmentParser.parseCompilationUnit(ast.stringValue);
 		
 		return asdocAST;
 	}
@@ -85,8 +84,10 @@ public class DocCommentUtil
 		ast = ASTBuilder.newAST(AS3NodeKind.AS_DOC, "/**\n */");
 		
 		var index:int = !parent.hasKind(AS3NodeKind.META_LIST) ? 0 : 1;
-		parent.appendToken(TokenBuilder.newMLComment(""));
 		parent.addChildAt(ast, index);
+		var comtok:LinkedListToken = TokenBuilder.newMLComment("/**\n */");
+		parent.startToken.prepend(comtok);
+		comtok.append(TokenBuilder.newNewline());
 		
 		return buildCompilationUnit(parent);
 	}
@@ -297,15 +298,17 @@ public class DocCommentUtil
 		var asdoc:IParserNode = buildCompilationUnit(comment.node);
 		if (!asdoc)
 		{
-			asdoc = newAsDocAST(comment.node, "/**\n */");
+			//asdoc = newAsDocAST(comment.node, "/***/");
+			//DocCommentNode(comment).asdocNode = ASDocFragmentParser.parseCompilationUnit(asdoc.stringValue);
+			asdoc = buildOrAddCompilationUnit(comment.node);
 			DocCommentNode(comment).asdocNode = asdoc;
 		}
 		
-		var list:IParserNode = findDoctagList(comment.node);
+		var list:IParserNode = findDoctagList(DocCommentNode(comment).asdocNode);
 		if (!list)
 		{
 			list = ASTAsDocBuilder.newDocTagList(comment.node);
-			var description:IParserNode = asdoc.getKind(ASDocNodeKind.DESCRIPTION);
+			var description:IParserNode = DocCommentNode(comment).asdocNode.getKind(ASDocNodeKind.DESCRIPTION);
 			description.addChild(list);
 			
 			//var i:String = ASTUtil.findIndent(node);
@@ -321,7 +324,7 @@ public class DocCommentUtil
 		
 		list.addChild(tag);
 		
-		rebuildAST(comment.node, asdoc);
+		rebuildAST(comment.node, DocCommentNode(comment).asdocNode);
 		
 		return new DocTagNode(tag);
 	}
@@ -386,21 +389,6 @@ public class DocCommentUtil
 		tok.text = result;
 	}
 	
-	private static function _convertDescription(description:String, indent:String):String
-	{
-		var result:String = "";
-		
-		var split:Array = description.split("\n");
-		var len:int = split.length;
-		for (var i:int = 0; i < len; i++)
-		{
-			var middle:String = (i == 0) ? "" : " * ";
-			result += indent + middle + split[i] + "\n";
-		}
-		
-		return result;
-	}
-	
 	private static function parseDescription(input:String):IParserNode
 	{
 		// parseDescription requires the /** */ for parenthetic
@@ -420,7 +408,7 @@ public class DocCommentUtil
 		return result.substring(3, result.length - 2);
 	}
 	
-	private static function findContent(ast:IParserNode):IParserNode
+	private static function findDescription(ast:IParserNode):IParserNode
 	{
 		if (!ast)
 			return null;
@@ -429,7 +417,7 @@ public class DocCommentUtil
 	
 	private static function findDoctagList(ast:IParserNode):IParserNode
 	{
-		var ast:IParserNode = findContent(ast);
+		var ast:IParserNode = findDescription(ast);
 		if (!ast)
 			return null;
 		return ast.getKind(ASDocNodeKind.DOCTAG_LIST);

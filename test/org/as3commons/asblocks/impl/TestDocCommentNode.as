@@ -45,21 +45,10 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		}
 	}
 	
-	/*
-	
-	What do we have;
-	
-	- ASDoc AST Needs to be tight
-	
-	
-	
-	
-	*/
-	
 	[Test]
 	public function testBasicDocComment():void
 	{
-		var ast:IParserNode = ASTTypeBuilder.newClassAST("foo.bar.Baz");
+		var ast:IParserNode = ASTTypeBuilder.newClassAST("Baz");
 		
 		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
 		
@@ -81,27 +70,49 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		comment.description = "A doc comment.";
 		Assert.assertEquals("A doc comment.", comment.description);
 		
+		// remove the description, which here removes ALL refs to as-doc ast
 		comment.description = null;
 		Assert.assertNull(comment.description);
+		
+		// try adding a description again after the asdocNode has been removed
+		comment.description = "A doc comment\nwith newline.";
+		Assert.assertEquals("A doc comment\nwith newline.", comment.description);
 	}
 	
-	//[Test]
+	[Test]
 	public function testBasicDocTag():void
 	{
 		var ast:IParserNode = ASTTypeBuilder.newClassAST("Foo");
 		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
 		
 		var foo:IDocTag = comment.newDocTag("foo");
-		assertPrint("/**\n * @foo\n */" +
-			"\npublic class Foo {\n}", comment);
+		assertPrint("/**\n * @foo\n */\npublic class Foo {\n}", comment);
 		
+		var bar:IDocTag = comment.newDocTag("bar", "with description");
+		assertPrint("/**\n * @foo\n * @bar with description\n */\npublic class Foo {\n}", comment);
 		
+		comment.removeDocTag(foo);
+		assertPrint("/**\n * @bar with description\n */\npublic class Foo {\n}", comment);
 		
-		
-		//var bar:IDocTag = comment.newDocTag("bar", "baz goo");
-		//assertPrint("/**\n * A doc comment.\n * \n * @foo\n */" +
-		//	"\npublic class foo.bar.Baz {\n}", comment);
+		comment.removeDocTag(bar);
+		assertPrint("/**\n */\npublic class Foo {\n}", comment);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	//[Test]
 	public function testBasicDocCommentAndDocTag():void
