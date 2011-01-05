@@ -128,21 +128,41 @@ public class DocCommentUtil
 		return stringify(body);
 	}
 	
+	// this method is completly overridding the whole 'body' node of the as-doc
+	// node, this means that the tags are held in the nodes description, not the body
+	// we should be checking for the as-doc, if it exists, get the body node, reparse
+	// then add the body node back into the as-doc description
 	public static function setDescription(comment:IDocComment, description:String):void
 	{
 		// find the token in the parent
 		var parent:IParserNode = comment.node;
+		// the asdoc node holds the 'stringValue' of the current nodes asdoc
 		var asdoc:IParserNode = parent.getKind(AS3NodeKind.AS_DOC);
 		
-		//if (!asdoc)
-		//{
-		//	var body:String = getCommentBody(asdoc);
-		//	asdoc = parse(body);
-		//}
-		//else
-		//{
-		//	
-		//}
+		if (description == null)
+		{
+			// must remove the body node making sure if there is an as-doc node
+			// the tags stay in tact
+			// must parse a whole compilation unit, remove the body
+			var string:String = asdoc.stringValue;
+			var asdocUnit:IParserNode = ASDocFragmentParser.parseCompilationUnit(string);
+			var desc:IParserNode = asdocUnit.getKind(ASDocNodeKind.DESCRIPTION);
+			
+			if (desc.hasKind(ASDocNodeKind.DOCTAG_LIST))
+			{
+				// remove the body node
+				desc.removeKind(ASDocNodeKind.BODY);
+			}
+			else
+			{
+				// remove the whole as-doc node from the comment, there is nothing left
+				parent.removeKind(AS3NodeKind.AS_DOC);
+				// unset the asdocNode since nothing exists anymore
+				comment.asdocNode = null;
+			}
+			
+			return;
+		}
 		
 		// '\n\t * '
 		var newline:String = getNewlineText(parent, asdoc);
@@ -156,14 +176,16 @@ public class DocCommentUtil
 		description = description.replace(/\n/g, newline);
 		
 		// create the ast for the description
-		var descriptionAST:IParserNode = parseDescription(description);
+		var bodyAST:IParserNode = parseBody(description);
 		
 		// find the indent based on the parent nodes indentation
 		var indent:String = ASTUtil.findIndent(parent);
 		
+		
+		// !!! THIS IS WRON AND IS OVERWRITTING the tags
 		// token before this comment takes care of it's own \n\t indent
 		// !!! Tokens and blocks always end with [newline][indent]
-		var result:String = "/**" + ASTUtil.stringifyNode(descriptionAST) + "\n" + indent + " */";
+		var result:String = "/**" + ASTUtil.stringifyNode(bodyAST) + "\n" + indent + " */";
 		
 		if (asdoc == null)
 		{
@@ -176,6 +198,8 @@ public class DocCommentUtil
 			asdoc.startToken.text = null;
 			var atok:LinkedListToken = getASDocToken(asdoc);
 			atok.text = asdoc.stringValue;
+			
+			DocCommentNode(comment).asdocNode = ASDocFragmentParser.parseCompilationUnit(result);
 		}
 	}
 	
@@ -379,7 +403,8 @@ public class DocCommentUtil
 	
 	private static function parseDescription(input:String):IParserNode
 	{
-		var ast:IParserNode = ASDocFragmentParser.parseDescription(input);
+		// parseDescription requires the /** */ for parenthetic
+		var ast:IParserNode = ASDocFragmentParser.parseDescription("/**" + input + "*/");
 		return ast;
 	}
 	

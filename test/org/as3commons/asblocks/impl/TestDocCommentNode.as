@@ -45,6 +45,17 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		}
 	}
 	
+	/*
+	
+	What do we have;
+	
+	- ASDoc AST Needs to be tight
+	
+	
+	
+	
+	*/
+	
 	[Test]
 	public function testBasicDocComment():void
 	{
@@ -55,14 +66,15 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		Assert.assertNotNull(comment.node);
 		Assert.assertNull(comment.asdocNode);
 		
-		return;
-		
+		// set the description
 		comment.description = "A doc comment.";
 		Assert.assertEquals("A doc comment.", comment.description);
 		
+		// try with a nl
 		comment.description = "A doc comment\nwith newline.";
 		Assert.assertEquals("A doc comment\nwith newline.", comment.description);
 		
+		// try complex nl
 		comment.description = "A short foo.\n\n<p>With a para.</p>\n\n<p>And a bar para.</p>";
 		Assert.assertEquals("A short foo.\n\n<p>With a para.</p>\n\n<p>And a bar para.</p>", comment.description);
 		

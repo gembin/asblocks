@@ -128,11 +128,6 @@ public class DocCommentNode extends ScriptNode implements IDocComment
 	 */
 	public function hasDocTag(name:String):Boolean
 	{
-		//if (!asdocNode)
-		//{
-		//	asdocNode = DocCommentUtil.buildASDoc(node);
-		//}
-		
 		return DocCommentUtil.hasDocTag(node, name);
 	}
 	
