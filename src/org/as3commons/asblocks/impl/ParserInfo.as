@@ -1,5 +1,6 @@
 package org.as3commons.asblocks.impl
 {
+import flash.events.ErrorEvent;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
@@ -8,10 +9,39 @@ import org.as3commons.asblocks.ASBlocksSyntaxError;
 import org.as3commons.asblocks.IASParser;
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.api.IParserInfo;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 
+[Event(name="complete",type="flash.events.Event")]
+
+[Event(name="error",type="flash.events.Event")]
+
+/**
+ * Implementation of the <code>IParserInfo</code> for .as files.
+ * 
+ * @author Michael Schmalle
+ * @copyright Teoti Graphix, LLC
+ * @productversion 1.0
+ */
 public class ParserInfo extends EventDispatcher implements IParserInfo
 {
+	//--------------------------------------------------------------------------
+	//
+	//  Protected :: Variables
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @private
+	 */
+	protected var parser:Object;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IParserInfo API :: Properties
+	//
+	//--------------------------------------------------------------------------
+	
 	//----------------------------------
 	//  sourceCode
 	//----------------------------------
@@ -22,7 +52,7 @@ public class ParserInfo extends EventDispatcher implements IParserInfo
 	private var _sourceCode:ISourceCode;
 	
 	/**
-	 * doc
+	 * @copy org.as3commons.asblocks.api.IParserInfo#sourceCode
 	 */
 	public function get sourceCode():ISourceCode
 	{
@@ -39,7 +69,7 @@ public class ParserInfo extends EventDispatcher implements IParserInfo
 	private var _entry:IClassPathEntry;
 	
 	/**
-	 * doc
+	 * @copy org.as3commons.asblocks.api.IParserInfo#entry
 	 */
 	public function get entry():IClassPathEntry
 	{
@@ -56,7 +86,7 @@ public class ParserInfo extends EventDispatcher implements IParserInfo
 	protected var _unit:ICompilationUnit;
 	
 	/**
-	 * doc
+	 * @copy org.as3commons.asblocks.api.IParserInfo#unit
 	 */
 	public function get unit():ICompilationUnit
 	{
@@ -73,7 +103,7 @@ public class ParserInfo extends EventDispatcher implements IParserInfo
 	private var _error:ASBlocksSyntaxError;
 	
 	/**
-	 * doc
+	 * @copy org.as3commons.asblocks.api.IParserInfo#error
 	 */
 	public function get error():ASBlocksSyntaxError
 	{
@@ -88,11 +118,40 @@ public class ParserInfo extends EventDispatcher implements IParserInfo
 		_error = value;
 	}
 	
-	public var parser:Object;
+	//----------------------------------
+	//  parseBlocks
+	//----------------------------------
 	
-	public var parseBlocks:Boolean;
+	/**
+	 * @private
+	 */
+	private var _parseBlocks:Boolean;
 	
+	/**
+	 * @copy org.as3commons.asblocks.api.IParserInfo#parseBlocks
+	 */
+	public function get parseBlocks():Boolean
+	{
+		return _parseBlocks;
+	}
 	
+	/**
+	 * @private
+	 */	
+	public function set parseBlocks(value:Boolean):void
+	{
+		_parseBlocks = value;
+	}
+	
+	//--------------------------------------------------------------------------
+	//
+	//  Constructor
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * Constructor.
+	 */
 	public function ParserInfo(parser:Object, 
 							   sourceCode:ISourceCode, 
 							   entry:IClassPathEntry, 
@@ -106,11 +165,30 @@ public class ParserInfo extends EventDispatcher implements IParserInfo
 		this.parseBlocks = parseBlocks;
 	}
 	
-	public function parse():ICompilationUnit
+	//--------------------------------------------------------------------------
+	//
+	//  IParserInfo API :: Methods
+	//
+	//--------------------------------------------------------------------------
+	
+	/**
+	 * @copy org.as3commons.asblocks.api.IParserInfo#parse()
+	 */
+	public function parse():void
 	{
 		var asparser:IASParser = IASParser(parser);
-		_unit = asparser.parse(sourceCode, parseBlocks);
-		return _unit;
+		
+		try {
+			_unit = asparser.parse(sourceCode, parseBlocks);
+		}
+		catch (e:ASBlocksSyntaxError)
+		{
+			error = e;
+			dispatchEvent(new ErrorEvent(ErrorEvent.ERROR));
+			return;
+		}
+		
+		dispatchEvent(new Event(Event.COMPLETE));
 	}
 }
 }

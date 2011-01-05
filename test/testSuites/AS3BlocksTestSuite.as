@@ -2,6 +2,7 @@ package testSuites
 {
 
 import org.as3commons.asblocks.TestASFactory;
+import org.as3commons.asblocks.impl.TestASParser;
 import org.as3commons.asblocks.impl.TestASProject;
 import org.as3commons.asblocks.impl.TestArrayAccessExpressionNode;
 import org.as3commons.asblocks.impl.TestArrayLiteralNode;
@@ -58,6 +59,7 @@ public class AS3BlocksTestSuite
 {
 	public var testASFactory:TestASFactory;
 	public var testASProject:TestASProject;
+	public var testASParser:TestASParser;
 	public var testCompilationUnitNode:TestCompilationUnitNode;
 	public var testPackageNode:TestPackageNode;
 	public var testTypeNode:TestTypeNode;

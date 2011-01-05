@@ -28,7 +28,7 @@ import org.as3commons.asblocks.api.ICompilationUnit;
 import org.as3commons.asblocks.impl.ASTBuilder;
 import org.as3commons.asblocks.impl.ASTTypeBuilder;
 import org.as3commons.asblocks.impl.ApplicationUnitNode;
-import org.as3commons.asblocks.impl.IParserInfo;
+import org.as3commons.asblocks.api.IParserInfo;
 import org.as3commons.asblocks.impl.ParserInfo;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.ISourceCode;

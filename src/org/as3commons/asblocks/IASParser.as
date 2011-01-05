@@ -22,7 +22,7 @@ package org.as3commons.asblocks
 
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
-import org.as3commons.asblocks.impl.IParserInfo;
+import org.as3commons.asblocks.api.IParserInfo;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 
 /**
@@ -46,15 +46,22 @@ public interface IASParser
 	 * Parses the <code>ISourceCode</code>'s source code data asynchronously
 	 * when the <code>parse()</code> method of the info is called.
 	 * 
+	 * <p><strong>Note:</strong> This method is not entirely asynchronous yet, 
+	 * the method will return a <code>IParserInfo</code> that can be called in a
+	 * batch parse. Until a parser with async capabilities is written using some
+	 * type of concurency, all parser methods execute synchronously.</p>
+	 * 
 	 * @param sourceCode An <code>ISourceCode</code> instance holding the source
 	 * code or fileName to parse into an <code>ICompilationUnit</code>.
 	 * @param entry The <code>IClassPathEntry</code> for the source code.
 	 * @return An <code>IParserInfo</code> holding the parser and source code.
 	 * 
-	 * @see org.as3commons.asblocks.impl.IParserInfo#parse()
+	 * @see org.as3commons.asblocks.api.IParserInfo#parse()
+	 * 
+	 * @since 1.0
 	 */
 	function parseAsync(sourceCode:ISourceCode, 
-						entry:IClassPathEntry, 
+						entry:IClassPathEntry = null, 
 						parseBlocks:Boolean = true):IParserInfo;
 	
 	/**
@@ -65,6 +72,8 @@ public interface IASParser
 	 * code or fileName to parse into an <code>ICompilationUnit</code>.
 	 * @return An <code>ICompilationUnit</code> detailing the source code.
 	 * @throws org.as3commons.asblocks.ASBlocksSyntaxError
+	 * 
+	 * @since 1.0
 	 */
 	function parse(sourceCode:ISourceCode, parseBlocks:Boolean = true):ICompilationUnit;
 	
@@ -75,6 +84,8 @@ public interface IASParser
 	 * @param parseBlocks Whether to parse script blocks in the source code.
 	 * @return An <code>ICompilationUnit</code> detailing the source code.
 	 * @throws org.as3commons.asblocks.ASBlocksSyntaxError
+	 * 
+	 * @since 1.0
 	 */
 	function parseString(sourceCode:String, parseBlocks:Boolean = true):ICompilationUnit;
 }

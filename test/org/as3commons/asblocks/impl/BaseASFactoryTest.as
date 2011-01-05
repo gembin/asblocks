@@ -53,8 +53,8 @@ public class BaseASFactoryTest
 	{
 		parser = new AS3Parser();
 		scanner = parser.scanner as AS3Scanner;
-		printer = new ASTPrinter(factory.newSourceCode());
 		factory = new ASFactory();
+		printer = new ASTPrinter(factory.newSourceCode());
 		project = new ASProject(factory);
 		asparser = factory.newParser();
 	}

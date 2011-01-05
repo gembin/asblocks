@@ -20,11 +20,10 @@
 package org.as3commons.asblocks.impl
 {
 
-import flash.events.IEventDispatcher;
-
 import org.as3commons.asblocks.IASParser;
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
+import org.as3commons.asblocks.api.IParserInfo;
 import org.as3commons.asblocks.parser.api.IParserNode;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 import org.as3commons.asblocks.parser.core.SourceCode;
@@ -43,19 +42,32 @@ public class ASParserImpl implements IASParser
 {
 	//--------------------------------------------------------------------------
 	//
-	//  IASParser API :: Methods
+	//  Private Class :: Variables
 	//
 	//--------------------------------------------------------------------------
 	
+	/**
+	 * @private
+	 */
 	private static var parser:AS3Parser;
+	
+	//--------------------------------------------------------------------------
+	//
+	//  IASParser API :: Methods
+	//
+	//--------------------------------------------------------------------------
 	
 	/**
 	 * @copy org.as3commons.asblocks.IASParser#parseAsync()
 	 */
 	public function parseAsync(sourceCode:ISourceCode, 
-							   entry:IClassPathEntry, 
+							   entry:IClassPathEntry = null, 
 							   parseBlocks:Boolean = true):IParserInfo
 	{
+		if (entry == null)
+		{
+			entry = new ClassPathEntry("");
+		}
 		var parserInfo:ParserInfo = new ParserInfo(this, sourceCode, entry, parseBlocks);
 		return parserInfo;
 	}
@@ -70,19 +82,22 @@ public class ASParserImpl implements IASParser
 		{
 			parser = ASTUtil.parseAS();
 		}
-		//var parser:AS3Parser = ASTUtil.parseAS();
+		
 		parser.parseBlocks = parseBlocks;
+		
 		var ast:IParserNode;
 		try
 		{
-			var source:String = sourceCode.code;
-			source = source.split("\r\n").join("\n");
-			ast = parser.buildAst(Vector.<String>(source.split("\n")), sourceCode.filePath);
+			ast = parser.buildAst(Vector.<String>(sourceCode.code.split("\n")), sourceCode.filePath);
 		}
 		catch (e:UnExpectedTokenError)
 		{
 			throw ASTUtil.constructSyntaxError(null, parser, e);
 		}
+		
+		// default is always true for this impl
+		parser.parseBlocks = true;
+		
 		return new CompilationUnitNode(ast);
 	}
 	

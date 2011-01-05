@@ -24,7 +24,7 @@ import flash.events.IEventDispatcher;
 
 import org.as3commons.asblocks.api.IClassPathEntry;
 import org.as3commons.asblocks.api.ICompilationUnit;
-import org.as3commons.asblocks.impl.IParserInfo;
+import org.as3commons.asblocks.api.IParserInfo;
 import org.as3commons.asblocks.parser.api.ISourceCode;
 
 /**

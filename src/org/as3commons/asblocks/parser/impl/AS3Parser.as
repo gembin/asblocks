@@ -35,6 +35,7 @@ import org.as3commons.asblocks.parser.core.TokenNode;
 import org.as3commons.asblocks.utils.ASTUtil;
 
 // FIXME (mschmalle) XML and RegExp
+// FIXME (mschmalle) create a timeout handler for infinate loops
 
 /**
  * A port of the Java PMD de.bokelberg.flex.parser.AS3Parser.
