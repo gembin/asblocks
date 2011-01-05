@@ -126,6 +126,9 @@ public class DocCommentUtil
 		
 		var desc:IParserNode = ast.getKind(ASDocNodeKind.DESCRIPTION);
 		var body:IParserNode = desc.getKind(ASDocNodeKind.BODY);
+		// this is an empty comment that hasn't been deleted '/**\n */'
+		if (body.numChildren == 1 && body.getChild(0).isKind("nl"))
+			return null;
 		return stringify(body);
 	}
 	
@@ -139,6 +142,8 @@ public class DocCommentUtil
 		var parent:IParserNode = comment.node;
 		// the asdoc node holds the 'stringValue' of the current nodes asdoc
 		var asdoc:IParserNode = parent.getKind(AS3NodeKind.AS_DOC);
+		// find the indent based on the parent nodes indentation
+		var indent:String = ASTUtil.findIndent(parent);
 		
 		if (description == null)
 		{
@@ -156,10 +161,16 @@ public class DocCommentUtil
 			}
 			else
 			{
-				// remove the whole as-doc node from the comment, there is nothing left
-				parent.removeKind(AS3NodeKind.AS_DOC);
-				// unset the asdocNode since nothing exists anymore
-				comment.asdocNode = null;
+				var i:ASTIterator = new ASTIterator(desc);
+				i.find(ASDocNodeKind.BODY);
+				var btok:IParserNode = ASTBuilder.newAST(ASDocNodeKind.BODY);
+				btok.appendToken(TokenBuilder.newNewline());
+				// for now, the space is to push the */ over one column
+				btok.appendToken(TokenBuilder.newWhiteSpace(indent + " "));
+				
+				i.replace(btok);
+				
+				rebuildAST(parent, asdocUnit);
 			}
 			
 			return;
@@ -178,9 +189,6 @@ public class DocCommentUtil
 		
 		// create the ast for the description
 		var bodyAST:IParserNode = parseBody(description);
-		
-		// find the indent based on the parent nodes indentation
-		var indent:String = ASTUtil.findIndent(parent);
 		
 		
 		// !!! THIS IS WRON AND IS OVERWRITTING the tags

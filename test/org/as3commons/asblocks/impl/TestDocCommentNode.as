@@ -57,21 +57,26 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		
 		// set the description
 		comment.description = "A doc comment.";
+		assertPrint("/**\n * A doc comment.\n */\npublic class Baz {\n}", comment);
 		Assert.assertEquals("A doc comment.", comment.description);
 		
 		// try with a nl
 		comment.description = "A doc comment\nwith newline.";
+		assertPrint("/**\n * A doc comment\n * with newline.\n */\npublic class Baz {\n}", comment);
 		Assert.assertEquals("A doc comment\nwith newline.", comment.description);
 		
 		// try complex nl
 		comment.description = "A short foo.\n\n<p>With a para.</p>\n\n<p>And a bar para.</p>";
+		assertPrint("/**\n * A short foo.\n * \n * <p>With a para.</p>\n * \n * <p>And a bar para.</p>\n */\npublic class Baz {\n}", comment);
 		Assert.assertEquals("A short foo.\n\n<p>With a para.</p>\n\n<p>And a bar para.</p>", comment.description);
 		
 		comment.description = "A doc comment.";
+		assertPrint("/**\n * A doc comment.\n */\npublic class Baz {\n}", comment);
 		Assert.assertEquals("A doc comment.", comment.description);
 		
 		// remove the description, which here removes ALL refs to as-doc ast
 		comment.description = null;
+		assertPrint("/**\n */\npublic class Baz {\n}", comment);
 		Assert.assertNull(comment.description);
 		
 		// try adding a description again after the asdocNode has been removed
@@ -98,7 +103,16 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		assertPrint("/**\n */\npublic class Foo {\n}", comment);
 	}
 	
-	
+	[Test]
+	public function testBasicDocCommentAndDocTag():void
+	{
+		var ast:IParserNode = ASTTypeBuilder.newClassAST("Baz");
+		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
+		
+		// set the description
+		comment.description = "A doc comment.";
+		Assert.assertEquals("A doc comment.", comment.description);
+	}
 	
 	
 	
@@ -115,7 +129,7 @@ public class TestDocCommentNode extends BaseASFactoryTest
 	
 	
 	//[Test]
-	public function testBasicDocCommentAndDocTag():void
+	public function _testBasicDocCommentAndDocTag():void
 	{
 		var ast:IParserNode = ASTTypeBuilder.newClassAST("foo.bar.Baz");
 		
