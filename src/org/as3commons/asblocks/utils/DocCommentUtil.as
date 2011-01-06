@@ -127,16 +127,12 @@ public class DocCommentUtil
 		var desc:IParserNode = ast.getKind(ASDocNodeKind.DESCRIPTION);
 		var body:IParserNode = desc.getKind(ASDocNodeKind.BODY);
 		// this is an empty comment that hasn't been deleted '/**\n */'
-		if (body.numChildren == 1 && body.getChild(0).isKind("nl"))
+		if (!ASTAsDocBuilder.hasValidBody(ast))
 			return null;
 		return stringify(body);
 	}
 	
-	// this method is completly overridding the whole 'body' node of the as-doc
-	// node, this means that the tags are held in the nodes description, not the body
-	// we should be checking for the as-doc, if it exists, get the body node, reparse
-	// then add the body node back into the as-doc description
-	public static function setDescription(comment:IDocComment, description:String):void
+	private static function unsetDescription(comment:IDocComment):void
 	{
 		// find the token in the parent
 		var parent:IParserNode = comment.node;
@@ -145,37 +141,78 @@ public class DocCommentUtil
 		// find the indent based on the parent nodes indentation
 		var indent:String = ASTUtil.findIndent(parent);
 		
-		if (description == null)
-		{
-			// must remove the body node making sure if there is an as-doc node
-			// the tags stay in tact
-			// must parse a whole compilation unit, remove the body
-			var string:String = asdoc.stringValue;
-			var asdocUnit:IParserNode = ASDocFragmentParser.parseCompilationUnit(string);
-			var desc:IParserNode = asdocUnit.getKind(ASDocNodeKind.DESCRIPTION);
-			
-			if (desc.hasKind(ASDocNodeKind.DOCTAG_LIST))
-			{
-				// remove the body node
-				desc.removeKind(ASDocNodeKind.BODY);
-			}
-			else
-			{
-				var i:ASTIterator = new ASTIterator(desc);
-				i.find(ASDocNodeKind.BODY);
-				var btok:IParserNode = ASTBuilder.newAST(ASDocNodeKind.BODY);
-				btok.appendToken(TokenBuilder.newNewline());
-				// for now, the space is to push the */ over one column
-				btok.appendToken(TokenBuilder.newWhiteSpace(indent + " "));
-				
-				i.replace(btok);
-				
-				rebuildAST(parent, asdocUnit);
-			}
-			
-			return;
-		}
+		// must remove the body node making sure if there is an as-doc node
+		// the tags stay in tact
+		// must parse a whole compilation unit, remove the body
+		var string:String = asdoc.stringValue;
+		var asdocUnit:IParserNode = ASDocFragmentParser.parseCompilationUnit(string);
+		var desc:IParserNode = asdocUnit.getKind(ASDocNodeKind.DESCRIPTION);
 		
+		if (desc.hasKind(ASDocNodeKind.DOCTAG_LIST))
+		{
+			// remove the body node
+			desc.removeKind(ASDocNodeKind.BODY);
+		}
+		else
+		{
+			var i:ASTIterator = new ASTIterator(desc);
+			i.find(ASDocNodeKind.BODY);
+			var btok:IParserNode = ASTBuilder.newAST(ASDocNodeKind.BODY);
+			btok.appendToken(TokenBuilder.newNewline());
+			// for now, the space is to push the */ over one column
+			btok.appendToken(TokenBuilder.newWhiteSpace(indent + " "));
+			
+			i.replace(btok);
+			
+			rebuildAST(parent, asdocUnit);
+		}
+	}
+	
+	private static function setNewDescription(comment:IDocComment,
+											  description:String):void
+	{
+		// find the token in the parent
+		var parent:IParserNode = comment.node;
+		// the asdoc node holds the 'stringValue' of the current nodes asdoc
+		var asdoc:IParserNode = parent.getKind(AS3NodeKind.AS_DOC);
+		// find the indent based on the parent nodes indentation
+		var indent:String = ASTUtil.findIndent(parent);
+		
+		description = documentizeDescription(comment, description);
+		var newCommentString:String = "/**" + description + "\n" + indent + " */";
+		comment.asdocNode = ASDocFragmentParser.parseCompilationUnit(newCommentString);
+		
+		var asdocAST:IParserNode = newAsDocAST(parent, newCommentString);
+	}
+	
+	private static function resetNewDescription(comment:IDocComment,
+												description:String):void
+	{
+		// find the token in the parent
+		var parent:IParserNode = comment.node;
+		// the asdoc node holds the 'stringValue' of the current nodes asdoc
+		var asdocAST:IParserNode = parent.getKind(AS3NodeKind.AS_DOC);
+		// find the indent based on the parent nodes indentation
+		var indent:String = ASTUtil.findIndent(parent);
+		
+		description = documentizeDescription(comment, description);
+		var newCommentString:String = "/**" + description + "\n" + indent + " */";
+		comment.asdocNode = ASDocFragmentParser.parseCompilationUnit(newCommentString);
+		
+		asdocAST.stringValue = newCommentString;
+		
+		asdocAST.startToken.text = null;
+		var atok:LinkedListToken = getASDocToken(asdocAST);
+		atok.text = asdocAST.stringValue;
+	}
+	
+	private static function documentizeDescription(comment:IDocComment, 
+												   description:String):String
+	{
+		// find the token in the parent
+		var parent:IParserNode = comment.node;
+		// the asdoc node holds the 'stringValue' of the current nodes asdoc
+		var asdoc:IParserNode = parent.getKind(AS3NodeKind.AS_DOC);
 		// '\n\t * '
 		var newline:String = getNewlineText(parent, asdoc);
 		// this allows the description to start with a newline atrix '/**\n ws* description'
@@ -187,29 +224,95 @@ public class DocCommentUtil
 		// replace all \n in the description with proper '\n\t * ' newline headers
 		description = description.replace(/\n/g, newline);
 		
+		return description;
+	}
+	
+	// this method is completly overridding the whole 'body' node of the as-doc
+	// node, this means that the tags are held in the nodes description, not the body
+	// we should be checking for the as-doc, if it exists, get the body node, reparse
+	// then add the body node back into the as-doc description
+	public static function setDescription(comment:IDocComment, description:String):void
+	{
+		// find the token in the parent
+		var parent:IParserNode = comment.node;
+		// the asdoc node holds the 'stringValue' of the current nodes asdoc
+		var asdocAST:IParserNode = parent.getKind(AS3NodeKind.AS_DOC);
+		// find the indent based on the parent nodes indentation
+		var indent:String = ASTUtil.findIndent(parent);
+		
+		// 1) description needs to be unset
+		if (description == null)
+		{
+			unsetDescription(comment);
+			return;
+		}
+		
+		// 2) we have no asdoc and no doctags
+		if (asdocAST == null)
+		{
+			setNewDescription(comment, description);
+			return;
+		}
+		
+		var i:ASTIterator;
+		var asdocUnit:IParserNode;
+		var descAST:IParserNode;
+		var listAST:IParserNode;
+		
+		// check to see if we have doc tags
+		// parse the old asdoc comment
+		asdocUnit = ASDocFragmentParser.parseCompilationUnit(asdocAST.stringValue);
+		descAST = asdocUnit.getKind(ASDocNodeKind.DESCRIPTION);
+		listAST = descAST.getKind(ASDocNodeKind.DOCTAG_LIST);
+		
+		// 3) we have a current as-doc stringValue and no doc tags
+		if (listAST == null)
+		{
+			resetNewDescription(comment, description);
+			return;
+		}
+		
+		// 4) we have a new description pending and have an existing doc list
+		// replace the body
+		if (listAST)
+		{
+			description = description + "\n";
+		}
+		
+		description = documentizeDescription(comment, description);
+		
 		// create the ast for the description
 		var bodyAST:IParserNode = parseBody(description);
 		
-		
-		// !!! THIS IS WRON AND IS OVERWRITTING the tags
 		// token before this comment takes care of it's own \n\t indent
 		// !!! Tokens and blocks always end with [newline][indent]
-		var result:String = "/**" + ASTUtil.stringifyNode(bodyAST) + "\n" + indent + " */";
+		var result:String;
 		
-		if (asdoc == null)
+		asdocUnit = ASDocFragmentParser.parseCompilationUnit(asdocAST.stringValue);
+		descAST = asdocUnit.getKind(ASDocNodeKind.DESCRIPTION);
+		
+		i = new ASTIterator(descAST);
+		i.search(ASDocNodeKind.BODY);
+		i.replace(bodyAST);
+		
+		listAST = descAST.getKind(ASDocNodeKind.DOCTAG_LIST);
+		if (listAST)
 		{
-			asdoc = newAsDocAST(parent, result);
-			DocCommentNode(comment).asdocNode = asdoc;
+			ASTAsDocBuilder.addDocTagListLineBreak(listAST, parent, true);
 		}
-		else
-		{
-			asdoc.stringValue = "/**" + description + "\n" + indent + " */";
-			asdoc.startToken.text = null;
-			var atok:LinkedListToken = getASDocToken(asdoc);
-			atok.text = asdoc.stringValue;
-			
-			DocCommentNode(comment).asdocNode = ASDocFragmentParser.parseCompilationUnit(result);
-		}
+		
+		result = ASTUtil.stringifyNode(asdocUnit);
+		
+		
+		asdocAST.stringValue = result;
+		
+		asdocAST.startToken.text = null;
+		var atok:LinkedListToken = getASDocToken(asdocAST);
+		atok.text = asdocAST.stringValue;
+		
+		comment.asdocNode = asdocUnit;
+		
+		
 	}
 	
 	public static function getASDocToken(asdoc:IParserNode):LinkedListToken
@@ -306,8 +409,6 @@ public class DocCommentUtil
 		var asdoc:IParserNode = buildCompilationUnit(comment.node);
 		if (!asdoc)
 		{
-			//asdoc = newAsDocAST(comment.node, "/***/");
-			//DocCommentNode(comment).asdocNode = ASDocFragmentParser.parseCompilationUnit(asdoc.stringValue);
 			asdoc = buildOrAddCompilationUnit(comment.node);
 			DocCommentNode(comment).asdocNode = asdoc;
 		}
@@ -318,12 +419,11 @@ public class DocCommentUtil
 			list = ASTAsDocBuilder.newDocTagList(comment.node);
 			var description:IParserNode = DocCommentNode(comment).asdocNode.getKind(ASDocNodeKind.DESCRIPTION);
 			description.addChild(list);
-			
-			//var i:String = ASTUtil.findIndent(node);
-			//var newline:String = DocCommentUtil.getNewlineText(node, list);
-			//var ws:LinkedListToken = TokenBuilder.newWhiteSpace("\n" + i + " * ");
-			//list.startToken.prepend(ws);
-			//list.startToken = ws;
+			// if the asdoc has a valid body, add the line break
+			if (ASTAsDocBuilder.hasValidBody(asdoc))
+			{
+				ASTAsDocBuilder.addDocTagListLineBreak(list, comment.node);
+			}
 		}
 		
 		// "
@@ -339,10 +439,6 @@ public class DocCommentUtil
 	
 	public static function removeDocTag(comment:IDocComment, tag:IDocTag):Boolean
 	{
-		//var asdoc:IParserNode = buildASDoc(comment.node);
-		//if (!asdoc)
-		//	return false;
-		
 		var asdoc:IParserNode = comment.asdocNode;
 		if (!asdoc)
 			return false;
@@ -362,6 +458,12 @@ public class DocCommentUtil
 				{
 					list.parent.removeChild(list);
 				}
+				
+				//if (list.numChildren == 0)
+				//{
+				//	ASTAsDocBuilder.removeDocTagListLineBreak(list, comment.node);
+				//}
+				
 				rebuildAST(comment.node, asdoc);
 				return true;
 			}

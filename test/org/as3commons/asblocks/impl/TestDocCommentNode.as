@@ -74,7 +74,7 @@ public class TestDocCommentNode extends BaseASFactoryTest
 		assertPrint("/**\n * A doc comment.\n */\npublic class Baz {\n}", comment);
 		Assert.assertEquals("A doc comment.", comment.description);
 		
-		// remove the description, which here removes ALL refs to as-doc ast
+		// remove the description, which in this case leaves an empty comment.
 		comment.description = null;
 		assertPrint("/**\n */\npublic class Baz {\n}", comment);
 		Assert.assertNull(comment.description);
@@ -104,16 +104,43 @@ public class TestDocCommentNode extends BaseASFactoryTest
 	}
 	
 	[Test]
-	public function testBasicDocCommentAndDocTag():void
+	public function testDescriptionAndDocTagLineBreak():void
 	{
 		var ast:IParserNode = ASTTypeBuilder.newClassAST("Baz");
 		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
 		
-		// set the description
+		// 1) set the description
 		comment.description = "A doc comment.";
+		assertPrint("/**\n * A doc comment.\n */\npublic class Baz {\n}", comment);
 		Assert.assertEquals("A doc comment.", comment.description);
+		
+		// 2) add a tag which will then add a doctag-list-break
+		var tag:IDocTag = comment.newDocTag("foo", "with goo");
+		assertPrint("/**\n * A doc comment.\n * \n * @foo with goo\n */\npublic class Baz {\n}", comment);
+		
+		// 3) remove the tag, which will remove the break
+		comment.removeDocTag(tag);
+		assertPrint("/**\n * A doc comment.\n */\npublic class Baz {\n}", comment);
 	}
 	
+	[Test]
+	public function testDocTagAndDescriptionLineBreak():void
+	{
+		var ast:IParserNode = ASTTypeBuilder.newClassAST("Baz");
+		var comment:DocCommentNode = DocCommentUtil.createDocComment(ast) as DocCommentNode;
+		
+		// 1) add a tag
+		var tag:IDocTag = comment.newDocTag("foo", "with goo");
+		assertPrint("/**\n * @foo with goo\n */\npublic class Baz {\n}", comment);
+		
+		// 2) set the description which will add the doctag-list-break
+		comment.description = "A doc comment.";
+		assertPrint("/**\n * A doc comment.\n * \n * @foo with goo\n */\npublic class Baz {\n}", comment);
+		
+		// 3) unset the description, which will remove the break
+		//comment.description = null;
+		//assertPrint("/**\n * A doc comment.\n */\npublic class Baz {\n}", comment);
+	}
 	
 	
 	
